@@ -1,4 +1,4 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[cfg(test)]
 mod tests;
@@ -6,10 +6,10 @@ mod paste_id;
 
 use std::io;
 
-use rocket::data::{Data, ToByteUnit};
-use rocket::http::uri::Absolute;
-use rocket::response::content::RawText;
-use rocket::tokio::fs::{self, File};
+use rkt::data::{Data, ToByteUnit};
+use rkt::http::uri::Absolute;
+use rkt::response::content::RawText;
+use rkt::tokio::fs::{self, File};
 
 use paste_id::PasteId;
 
@@ -54,5 +54,5 @@ fn index() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index, upload, delete, retrieve])
+    rkt::build().mount("/", routes![index, upload, delete, retrieve])
 }

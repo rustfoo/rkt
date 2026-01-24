@@ -108,9 +108,8 @@ impl<'r> File<'r> {
 /// # Example
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// use rocket::fs::FileServer;
-/// use rocket::fs::rewrite::Prefix;
+/// use rkt::fs::FileServer;
+/// use rkt::fs::rewrite::Prefix;
 ///
 /// FileServer::identity()
 ///    .filter(|f, _| f.is_visible())
@@ -160,9 +159,8 @@ impl Rewriter for PathBuf {
 /// # Example
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// use rocket::fs::FileServer;
-/// use rocket::fs::rewrite::{Prefix, TrailingDirs};
+/// use rkt::fs::FileServer;
+/// use rkt::fs::rewrite::{Prefix, TrailingDirs};
 ///
 /// FileServer::identity()
 ///     .filter(|f, _| f.is_visible())
@@ -191,9 +189,8 @@ impl Rewriter for TrailingDirs {
 /// Rewrites all directory requests to `directory/index.html`.
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// use rocket::fs::FileServer;
-/// use rocket::fs::rewrite::DirIndex;
+/// use rkt::fs::FileServer;
+/// use rkt::fs::rewrite::DirIndex;
 ///
 /// FileServer::without_index("static")
 ///     .rewrite(DirIndex::if_exists("index.htm"))

@@ -1,9 +1,9 @@
 use std::borrow::Cow;
 
-use rocket::State;
-use rocket::tokio::sync::Mutex;
-use rocket::serde::json::{Json, Value, json};
-use rocket::serde::{Serialize, Deserialize};
+use rkt::State;
+use rkt::tokio::sync::Mutex;
+use rkt::serde::json::{Json, Value, json};
+use rkt::serde::{Serialize, Deserialize};
 
 // The type to represent the ID of a message.
 type Id = usize;
@@ -13,7 +13,7 @@ type MessageList = Mutex<Vec<String>>;
 type Messages<'r> = &'r State<MessageList>;
 
 #[derive(Serialize, Deserialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Message<'r> {
     id: Option<Id>,
     message: Cow<'r, str>
@@ -56,8 +56,8 @@ fn not_found() -> Value {
     })
 }
 
-pub fn stage() -> rocket::fairing::AdHoc {
-    rocket::fairing::AdHoc::on_ignite("JSON", |rocket| async {
+pub fn stage() -> rkt::fairing::AdHoc {
+    rkt::fairing::AdHoc::on_ignite("JSON", |rocket| async {
         rocket.mount("/json", routes![new, update, get])
             .register("/json", catchers![not_found])
             .manage(MessageList::new(vec![]))

@@ -1,10 +1,10 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 use std::path::PathBuf;
 
-use rocket::fairing::AdHoc;
-use rocket::local::blocking::Client;
+use rkt::fairing::AdHoc;
+use rkt::local::blocking::Client;
 
 #[get("/foo")]
 fn foo() -> &'static str {
@@ -49,7 +49,7 @@ macro_rules! assert_response {
 
 #[test]
 fn test_adhoc_normalizer_works_as_expected() {
-    let rocket = rocket::build()
+    let rocket = rkt::build()
         .mount("/", routes![foo, bar, not_bar, baz, doggy])
         .mount("/base", routes![foo, bar, not_bar, baz, doggy, rest])
         .attach(AdHoc::uri_normalizer());

@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 const RESPONSE_STRING: &str = "This is the body. Hello, world!";
 
@@ -20,13 +20,13 @@ mod fairing_before_head_strip {
     use std::io::Cursor;
     use std::sync::atomic::{AtomicUsize, Ordering};
 
-    use rocket::fairing::AdHoc;
-    use rocket::http::{Method, Status};
-    use rocket::local::blocking::Client;
+    use rkt::fairing::AdHoc;
+    use rkt::http::{Method, Status};
+    use rkt::local::blocking::Client;
 
     #[test]
     fn not_auto_handled() {
-        let rocket = rocket::build()
+        let rocket = rkt::build()
             .mount("/", routes![head])
             .attach(AdHoc::on_request("Check HEAD", |req, _| {
                 Box::pin(async move {
@@ -54,7 +54,7 @@ mod fairing_before_head_strip {
         struct Counter(AtomicUsize);
 
         let counter = Counter::default();
-        let rocket = rocket::build()
+        let rocket = rkt::build()
             .mount("/", routes![auto])
             .manage(counter)
             .attach(AdHoc::on_request("Check HEAD + Count", |req, _| {

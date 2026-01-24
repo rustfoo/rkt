@@ -9,7 +9,7 @@ use std::{fmt, io};
 use futures::future::BoxFuture;
 use http::Version;
 use ref_swap::OptionRefSwap;
-use rocket_http::HttpVersion;
+use rkt_http::HttpVersion;
 use state::{InitCell, TypeMap};
 
 use crate::data::Limits;
@@ -121,10 +121,9 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::HttpVersion;
+    /// use rkt::http::HttpVersion;
     ///
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # req.override_version(HttpVersion::Http11);
     /// assert_eq!(req.version(), Some(HttpVersion::Http11));
@@ -138,10 +137,9 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::Method;
+    /// use rkt::http::Method;
     ///
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let get = |uri| c.get(uri);
     /// # let post = |uri| c.post(uri);
     /// assert_eq!(get("/").method(), Method::Get);
@@ -157,9 +155,8 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::Method;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::http::Method;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # let request = req.inner_mut();
     ///
@@ -178,8 +175,7 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let get = |uri| c.get(uri);
     /// assert_eq!(get("/hello/rocketeer").uri().path(), "/hello/rocketeer");
     /// assert_eq!(get("/hello").uri().query(), None);
@@ -194,9 +190,8 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::uri::Origin;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::http::uri::Origin;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # let request = req.inner_mut();
     ///
@@ -240,10 +235,9 @@ impl<'r> Request<'r> {
     /// Retrieve the raw host, unusable to construct safe URIs:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::uri::Host;
-    /// # use rocket::uri;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::http::uri::Host;
+    /// # use rkt::uri;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # let request = req.inner_mut();
     ///
@@ -264,12 +258,12 @@ impl<'r> Request<'r> {
     /// URI:
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
+    /// #[macro_use] extern crate rkt;
     /// # type Token = String;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # let request = req.inner_mut();
-    /// use rocket::http::uri::Host;
+    /// use rkt::http::uri::Host;
     ///
     /// // A sensitive URI we want to prefix with safe hosts.
     /// #[get("/token?<secret>")]
@@ -325,10 +319,9 @@ impl<'r> Request<'r> {
     /// Set the host to `rocket.rs:443`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::uri::Host;
-    /// # use rocket::uri;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::http::uri::Host;
+    /// # use rkt::uri;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # let request = req.inner_mut();
     ///
@@ -361,10 +354,9 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::net::{IpAddr, Ipv4Addr, SocketAddr};
-    /// use rocket::listener::Endpoint;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::listener::Endpoint;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # let request = req.inner_mut();
     ///
@@ -386,10 +378,9 @@ impl<'r> Request<'r> {
     /// Set the remote address to be 127.0.0.1:8111:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::net::{IpAddr, Ipv4Addr, SocketAddr};
-    /// use rocket::listener::Endpoint;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::listener::Endpoint;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # let request = req.inner_mut();
     ///
@@ -411,11 +402,10 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::net::Ipv4Addr;
-    /// use rocket::http::Header;
+    /// use rkt::http::Header;
     ///
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let req = c.get("/");
     /// assert_eq!(req.real_ip(), None);
     ///
@@ -443,10 +433,9 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::{Header, ProxyProto};
+    /// use rkt::http::{Header, ProxyProto};
     ///
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let req = c.get("/");
     /// // By default, no `proxy_proto_header` is configured.
     /// let req = req.header(Header::new("x-forwarded-proto", "https"));
@@ -454,9 +443,9 @@ impl<'r> Request<'r> {
     ///
     /// // We can configure one by setting the `proxy_proto_header` parameter.
     /// // Here we set it to `x-forwarded-proto`, considered de-facto standard.
-    /// # let figment = rocket::figment::Figment::from(rocket::Config::debug_default());
+    /// # let figment = rkt::figment::Figment::from(rkt::Config::debug_default());
     /// let figment = figment.merge(("proxy_proto_header", "x-forwarded-proto"));
-    /// # let c = rocket::local::blocking::Client::debug(rocket::custom(figment)).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug(rkt::custom(figment)).unwrap();
     /// # let req = c.get("/");
     /// let req = req.header(Header::new("x-forwarded-proto", "https"));
     /// assert_eq!(req.proxy_proto(), Some(ProxyProto::Https));
@@ -492,10 +481,9 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::{Header, ProxyProto};
+    /// use rkt::http::{Header, ProxyProto};
     ///
-    /// # let client = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let client = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let req = client.get("/");
     /// // If TLS and proxy_proto are disabled, we are not in a secure context.
     /// assert_eq!(req.context_is_likely_secure(), false);
@@ -503,9 +491,9 @@ impl<'r> Request<'r> {
     /// // Configuring proxy_proto and receiving a header value of `https` is
     /// // interpreted as likely being in a secure context.
     /// // Here we set it to `x-forwarded-proto`, considered de-facto standard.
-    /// # let figment = rocket::figment::Figment::from(rocket::Config::debug_default());
+    /// # let figment = rkt::figment::Figment::from(rkt::Config::debug_default());
     /// let figment = figment.merge(("proxy_proto_header", "x-forwarded-proto"));
-    /// # let c = rocket::local::blocking::Client::debug(rocket::custom(figment)).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug(rkt::custom(figment)).unwrap();
     /// # let req = c.get("/");
     /// let req = req.header(Header::new("x-forwarded-proto", "https"));
     /// assert_eq!(req.context_is_likely_secure(), true);
@@ -520,8 +508,7 @@ impl<'r> Request<'r> {
     /// can be used to retrieve the same information in a handler:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::get;
+    /// # use rkt::get;
     /// use std::net::IpAddr;
     ///
     /// #[get("/")]
@@ -538,13 +525,12 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::http::Header;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # use rkt::http::Header;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # let request = req.inner_mut();
     /// # use std::net::{SocketAddr, IpAddr, Ipv4Addr};
-    /// # use rocket::listener::Endpoint;
+    /// # use rkt::listener::Endpoint;
     ///
     /// // starting without an "X-Real-IP" header or remote address
     /// assert!(request.client_ip().is_none());
@@ -573,10 +559,9 @@ impl<'r> Request<'r> {
     /// Add a new cookie to a request's cookies:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::Cookie;
+    /// use rkt::http::Cookie;
     ///
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let request = c.get("/");
     /// # let req = request.inner();
     /// req.cookies().add(("key", "val"));
@@ -595,10 +580,9 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::{Accept, ContentType};
+    /// use rkt::http::{Accept, ContentType};
     ///
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let get = |uri| c.get(uri);
     /// assert!(get("/").headers().is_empty());
     ///
@@ -617,9 +601,8 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::ContentType;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::http::ContentType;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # let request = req.inner_mut();
     ///
@@ -643,9 +626,8 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::ContentType;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::http::ContentType;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let mut req = c.get("/");
     /// # let request = req.inner_mut();
     ///
@@ -672,10 +654,9 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::ContentType;
+    /// use rkt::http::ContentType;
     ///
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let get = |uri| c.get(uri);
     /// assert_eq!(get("/").content_type(), None);
     ///
@@ -700,10 +681,9 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::Accept;
+    /// use rkt::http::Accept;
     ///
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let get = |uri| c.get(uri);
     /// assert_eq!(get("/").accept(), None);
     /// assert_eq!(get("/").header(Accept::JSON).accept(), Some(&Accept::JSON));
@@ -743,9 +723,8 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::{Accept, ContentType, MediaType};
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::http::{Accept, ContentType, MediaType};
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let get = |uri| c.get(uri);
     /// # let post = |uri| c.post(uri);
     ///
@@ -785,8 +764,7 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let request = c.get("/");
     /// # type Pool = usize;
     /// // Retrieve the application config via `Rocket::config()`.
@@ -809,8 +787,7 @@ impl<'r> Request<'r> {
     /// This is convenience function equivalent to:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let request = c.get("/");
     /// &request.rocket().config().limits
     /// # ;
@@ -819,9 +796,8 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::ToByteUnit;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::data::ToByteUnit;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let request = c.get("/");
     ///
     /// // This is the default `form` limit.
@@ -844,8 +820,7 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let request = c.get("/");
     /// let route = request.route();
     /// ```
@@ -861,10 +836,9 @@ impl<'r> Request<'r> {
     /// Assuming a `User` request guard exists, invoke it:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # type User = rocket::http::Method;
-    /// # rocket::async_test(async move {
-    /// # let c = rocket::local::asynchronous::Client::debug_with(vec![]).await.unwrap();
+    /// # type User = rkt::http::Method;
+    /// # rkt::async_test(async move {
+    /// # let c = rkt::local::asynchronous::Client::debug_with(vec![]).await.unwrap();
     /// # let request = c.get("/");
     /// let outcome = request.guard::<User>().await;
     /// # })
@@ -895,8 +869,7 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let request = c.get("/");
     /// // The first store into local cache for a given type wins.
     /// let value = request.local_cache(|| "hello");
@@ -925,15 +898,14 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::Request;
+    /// # use rkt::Request;
     /// # type User = ();
     /// async fn current_user<'r>(request: &Request<'r>) -> User {
     ///     // validate request for a given user, load from database, etc
     /// }
     ///
-    /// # rocket::async_test(async move {
-    /// # let c = rocket::local::asynchronous::Client::debug_with(vec![]).await.unwrap();
+    /// # rkt::async_test(async move {
+    /// # let c = rkt::local::asynchronous::Client::debug_with(vec![]).await.unwrap();
     /// # let request = c.get("/");
     /// let current_user = request.local_cache_async(async {
     ///     current_user(&request).await
@@ -970,10 +942,9 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let get = |uri| c.get(uri);
-    /// use rocket::error::Empty;
+    /// use rkt::error::Empty;
     ///
     /// assert_eq!(get("/a/b/c").param(0), Some(Ok("a")));
     /// assert_eq!(get("/a/b/c").param(1), Some(Ok("b")));
@@ -1010,10 +981,9 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::path::PathBuf;
     ///
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let get = |uri| c.get(uri);
     /// assert_eq!(get("/").segments(0..), Ok(PathBuf::new()));
     /// assert_eq!(get("/").segments(2..), Ok(PathBuf::new()));
@@ -1054,8 +1024,7 @@ impl<'r> Request<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::FromForm;
+    /// use rkt::form::FromForm;
     ///
     /// #[derive(Debug, PartialEq, FromForm)]
     /// struct Dog<'r> {
@@ -1063,7 +1032,7 @@ impl<'r> Request<'r> {
     ///     age: usize
     /// }
     ///
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let get = |uri| c.get(uri);
     /// let req = get("/?a=apple&z=zebra&a=aardvark");
     /// assert_eq!(req.query_value::<&str>("a").unwrap(), Ok("apple"));

@@ -13,8 +13,7 @@ use crate::request::{FromRequest, Outcome, Request};
 /// raw bytes.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::config::Config;
+/// use rkt::config::Config;
 ///
 /// // NOTE: Don't (!) use this key! Generate your own and keep it private!
 /// //       e.g. via `head -c64 /dev/urandom | base64`
@@ -33,15 +32,14 @@ use crate::request::{FromRequest, Outcome, Request};
 /// random source if available.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::config::Config;
-/// use rocket::local::blocking::Client;
+/// use rkt::config::Config;
+/// use rkt::local::blocking::Client;
 ///
 /// let figment = Config::figment()
 ///     .merge(("secret_key", vec![0u8; 64]))
 ///     .select("debug");
 ///
-/// let rocket = rocket::custom(figment);
+/// let rocket = rkt::custom(figment);
 /// let client = Client::tracked(rocket).expect("okay in debug");
 /// assert!(!client.rocket().config().secret_key.is_zero());
 /// ```
@@ -51,18 +49,17 @@ use crate::request::{FromRequest, Outcome, Request};
 /// launch-time:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::config::Config;
-/// use rocket::figment::Profile;
-/// use rocket::local::blocking::Client;
-/// use rocket::error::ErrorKind;
+/// use rkt::config::Config;
+/// use rkt::figment::Profile;
+/// use rkt::local::blocking::Client;
+/// use rkt::error::ErrorKind;
 ///
 /// let profile = Profile::const_new("staging");
 /// let figment = Config::figment()
 ///     .merge(("secret_key", vec![0u8; 64]))
 ///     .select(profile.clone());
 ///
-/// let rocket = rocket::custom(figment);
+/// let rocket = rkt::custom(figment);
 /// let error = Client::tracked(rocket).expect_err("error in non-debug");
 /// assert!(matches!(error.kind(), ErrorKind::InsecureSecretKey(profile)));
 /// ```
@@ -95,8 +92,7 @@ impl SecretKey {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::config::SecretKey;
+    /// use rkt::config::SecretKey;
     ///
     /// # let master = vec![0u8; 64];
     /// let key = SecretKey::from(&master);
@@ -118,8 +114,7 @@ impl SecretKey {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::config::SecretKey;
+    /// use rkt::config::SecretKey;
     ///
     /// # let material = vec![0u8; 32];
     /// let key = SecretKey::derive_from(&material);
@@ -137,8 +132,7 @@ impl SecretKey {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::config::SecretKey;
+    /// use rkt::config::SecretKey;
     ///
     /// let key = SecretKey::generate();
     /// ```
@@ -154,8 +148,7 @@ impl SecretKey {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::config::SecretKey;
+    /// use rkt::config::SecretKey;
     ///
     /// let master = vec![0u8; 64];
     /// let key = SecretKey::from(&master);
@@ -170,8 +163,7 @@ impl SecretKey {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::config::SecretKey;
+    /// use rkt::config::SecretKey;
     ///
     /// let master = vec![0u8; 64];
     /// let key = SecretKey::generate().unwrap();

@@ -1,13 +1,13 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 use std::io::Cursor;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
-use rocket::{Rocket, Request, State, Data, Build};
-use rocket::fairing::{self, AdHoc, Fairing, Info, Kind};
-use rocket::trace::Trace;
-use rocket::http::Method;
+use rkt::{Rocket, Request, State, Data, Build};
+use rkt::fairing::{self, AdHoc, Fairing, Info, Kind};
+use rkt::trace::Trace;
+use rkt::http::Method;
 
 struct Token(i64);
 
@@ -19,7 +19,7 @@ struct Counter {
     post: Arc<AtomicUsize>,
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl Fairing for Counter {
     fn info(&self) -> Info {
         Info {
@@ -60,7 +60,7 @@ fn token(token: &State<Token>) -> String {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![hello, token])
         .attach(Counter::default())
         .attach(AdHoc::try_on_ignite("Token State", |rocket| async {

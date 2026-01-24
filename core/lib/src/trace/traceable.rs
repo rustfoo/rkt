@@ -7,7 +7,7 @@ use crate::util::Formatter;
 use crate::{route, Catcher, Config, Error, Request, Response, Route};
 
 use figment::Figment;
-use rocket::http::Header;
+use rkt::http::Header;
 use tracing::Level;
 
 pub trait Trace {

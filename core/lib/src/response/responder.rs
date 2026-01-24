@@ -12,7 +12,7 @@ use crate::response::{self, Response};
 /// handler:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type T = ();
 /// #
 /// // This works for any `T` that implements `Responder`.
@@ -29,11 +29,11 @@ use crate::response::{self, Response};
 /// used as response headers:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # #[cfg(feature = "json")] mod _main {
 /// # type Template = String;
-/// use rocket::http::ContentType;
-/// use rocket::serde::{Serialize, json::Json};
+/// use rkt::http::ContentType;
+/// use rkt::serde::{Serialize, json::Json};
 ///
 /// #[derive(Responder)]
 /// enum Error<T> {
@@ -168,9 +168,8 @@ use crate::response::{self, Response};
 /// In practice, you are likely choosing between four signatures:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::request::Request;
-/// # use rocket::response::{self, Responder};
+/// # use rkt::request::Request;
+/// # use rkt::response::{self, Responder};
 /// # struct A;
 /// // If the response contains no borrowed data.
 /// impl<'r> Responder<'r, 'static> for A {
@@ -219,7 +218,7 @@ use crate::response::{self, Response};
 /// `Person` directly from a handler:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// # type Person = String;
 /// #[get("/person/<id>")]
 /// fn person(id: usize) -> Option<Person> {
@@ -236,16 +235,16 @@ use crate::response::{self, Response};
 /// following `Responder` implementation accomplishes this:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// #
 /// # #[derive(Debug)]
 /// # struct Person { name: String, age: u16 }
 /// #
 /// use std::io::Cursor;
 ///
-/// use rocket::request::Request;
-/// use rocket::response::{self, Response, Responder};
-/// use rocket::http::ContentType;
+/// use rkt::request::Request;
+/// use rkt::response::{self, Response, Responder};
+/// use rkt::http::ContentType;
 ///
 /// impl<'r> Responder<'r, 'static> for Person {
 ///     fn respond_to(self, req: &'r Request<'_>) -> response::Result<'static> {
@@ -267,9 +266,8 @@ use crate::response::{self, Response};
 /// in a slightly different manner:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::http::Header;
-/// use rocket::response::Responder;
+/// use rkt::http::Header;
+/// use rkt::response::Responder;
 ///
 /// #[derive(Responder)]
 /// #[response(content_type = "application/x-person")]
@@ -289,7 +287,7 @@ use crate::response::{self, Response};
 ///     }
 /// }
 /// #
-/// # #[rocket::get("/person")]
+/// # #[rkt::get("/person")]
 /// # fn person() -> Person { Person::new("Bob", 29) }
 /// ```
 pub trait Responder<'r, 'o: 'r> {
@@ -411,9 +409,8 @@ impl<'r> Responder<'r, 'static> for Box<[u8]> {
 /// does not support `Box<dyn Responder>`.
 ///
 /// ```rust,compile_fail
-/// #[macro_use] extern crate rocket_community as rocket;
 ///
-/// use rocket::response::Responder;
+/// use rkt::response::Responder;
 ///
 /// #[get("/")]
 /// fn f() -> Box<dyn Responder<'static,'static>> {
@@ -424,11 +421,11 @@ impl<'r> Responder<'r, 'static> for Box<[u8]> {
 /// However, this `impl` allows boxing sized responders:
 ///
 /// ```rust
-/// #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 ///
 /// #[derive(Responder)]
 /// enum Content {
-///     Redirect(Box<rocket::response::Redirect>),
+///     Redirect(Box<rkt::response::Redirect>),
 ///     Text(String),
 /// }
 ///

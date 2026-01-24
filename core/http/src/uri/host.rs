@@ -33,9 +33,9 @@ use crate::uri::{Absolute, Authority};
 /// these mechanisms:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type Token = String;
-/// use rocket::http::uri::Host;
+/// use rkt::http::uri::Host;
 ///
 /// // A sensitive URI we want to prefix with safe hosts.
 /// #[get("/token?<secret>")]
@@ -72,7 +72,7 @@ use crate::uri::{Absolute, Authority};
 /// # #[cfg(feature = "serde")] mod serde_impl {
 /// # use serde as serde;
 /// use serde::{Serialize, Deserialize};
-/// use rocket::http::uri::Host;
+/// use rkt::http::uri::Host;
 ///
 /// #[derive(Deserialize, Serialize)]
 /// # #[serde(crate = "serde")]
@@ -95,8 +95,8 @@ impl<'a> Host<'a> {
     /// parts are preserved.
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Host;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Host;
     ///
     /// let host = Host::new(uri!("developer.mozilla.org"));
     /// assert_eq!(host.to_string(), "developer.mozilla.org");
@@ -119,8 +119,8 @@ impl<'a> Host<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Host;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Host;
     ///
     /// // Parse from a valid authority URI.
     /// let host = Host::parse("user:pass@domain").expect("valid host");
@@ -161,8 +161,8 @@ impl<'a> Host<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::uri::Host;
+    /// # extern crate rkt;
+    /// use rkt::http::uri::Host;
     ///
     /// let source = format!("rocket.rs:8000");
     /// let host = Host::parse_owned(source).expect("valid host");
@@ -178,8 +178,8 @@ impl<'a> Host<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Host;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Host;
     ///
     /// let host = Host::new(uri!("domain.com:123"));
     /// assert_eq!(host.domain(), "domain.com");
@@ -200,8 +200,8 @@ impl<'a> Host<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Host;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Host;
     ///
     /// // With a port.
     /// let host = Host::new(uri!("domain:123"));
@@ -228,8 +228,8 @@ impl<'a> Host<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Host;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Host;
     ///
     /// let whitelist = &[Host::new(uri!("domain.tld"))];
     ///
@@ -270,8 +270,8 @@ impl<'a> Host<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Host;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Host;
     ///
     /// let whitelist = &[Host::new(uri!("domain.tld:443"))];
     ///

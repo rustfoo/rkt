@@ -292,7 +292,7 @@ impl Rocket<Orbit> {
             .map(|result| result.map_err(Some))
             .unwrap_or_else(|| Err(None))
         } else {
-            info!(name: "catcher", name = "rocket::default", "uri.base" = "/", code = status.code,
+            info!(name: "catcher", name = "rkt::default", "uri.base" = "/", code = status.code,
                 "no registered catcher: using Rocket default");
             Ok(catcher::default_handler(status, req))
         }

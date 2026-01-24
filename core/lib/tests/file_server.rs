@@ -1,12 +1,12 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 use std::path::Path;
 use std::{fs, io::Read};
 
-use rocket::fs::{relative, rewrite::*, FileServer};
-use rocket::http::Status;
-use rocket::local::blocking::Client;
-use rocket::{Build, Rocket, Route};
+use rkt::fs::{relative, rewrite::*, FileServer};
+use rkt::http::Status;
+use rkt::local::blocking::Client;
+use rkt::{Build, Rocket, Route};
 
 fn static_root() -> &'static Path {
     Path::new(relative!("/tests/static"))
@@ -14,7 +14,7 @@ fn static_root() -> &'static Path {
 
 fn rocket() -> Rocket<Build> {
     let root = static_root();
-    rocket::build()
+    rkt::build()
         .mount("/default", FileServer::new(root))
         .mount(
             "/no_index",
@@ -203,7 +203,7 @@ fn test_ranking() {
 
 #[test]
 fn test_forwarding() {
-    use rocket::{get, routes};
+    use rkt::{get, routes};
 
     #[get("/<value>", rank = 20)]
     fn catch_one(value: String) -> String {

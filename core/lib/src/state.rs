@@ -26,8 +26,8 @@ use crate::{Ignite, Phase, Rocket, Sentinel};
 /// following example does just this:
 ///
 /// ```rust,no_run
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::State;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::State;
 ///
 /// // In a real application, this would likely be more complex.
 /// struct MyConfig {
@@ -46,7 +46,7 @@ use crate::{Ignite, Phase, Rocket, Sentinel};
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build()
+///     rkt::build()
 ///         .mount("/", routes![index, raw_config_value])
 ///         .manage(MyConfig { user_val: "user input".to_string() })
 /// }
@@ -60,17 +60,16 @@ use crate::{Ignite, Phase, Rocket, Sentinel};
 /// the `Item` request guard retrieves `MyConfig` from managed state:
 ///
 /// ```rust
-/// extern crate rocket_community as rocket;
 ///
-/// use rocket::State;
-/// use rocket::request::{self, Request, FromRequest};
-/// use rocket::outcome::IntoOutcome;
-/// use rocket::http::Status;
+/// use rkt::State;
+/// use rkt::request::{self, Request, FromRequest};
+/// use rkt::outcome::IntoOutcome;
+/// use rkt::http::Status;
 ///
 /// # struct MyConfig { user_val: String };
 /// struct Item<'r>(&'r str);
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromRequest<'r> for Item<'r> {
 ///     type Error = ();
 ///
@@ -96,8 +95,8 @@ use crate::{Ignite, Phase, Rocket, Sentinel};
 /// [`State::get()`] static method or the `From<&T>` implementation:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::State;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::State;
 ///
 /// struct MyManagedState(usize);
 ///
@@ -106,7 +105,7 @@ use crate::{Ignite, Phase, Rocket, Sentinel};
 ///     state.0.to_string()
 /// }
 ///
-/// let mut rocket = rocket::build().manage(MyManagedState(127));
+/// let mut rocket = rkt::build().manage(MyManagedState(127));
 /// let state = State::get(&rocket).expect("managed `MyManagedState`");
 /// assert_eq!(handler(state), "127");
 ///
@@ -124,9 +123,8 @@ impl<T: Send + Sync + 'static> State<T> {
     /// # Example
     ///
     /// ```rust
-    /// extern crate rocket_community as rocket;
     ///
-    /// use rocket::State;
+    /// use rkt::State;
     ///
     /// #[derive(Debug, PartialEq)]
     /// struct Managed(usize);
@@ -134,7 +132,7 @@ impl<T: Send + Sync + 'static> State<T> {
     /// #[derive(Debug, PartialEq)]
     /// struct Unmanaged(usize);
     ///
-    /// let rocket = rocket::build().manage(Managed(7));
+    /// let rocket = rkt::build().manage(Managed(7));
     ///
     /// let state: Option<&State<Managed>> = State::get(&rocket);
     /// assert_eq!(state.map(|s| s.inner()), Some(&Managed(7)));
@@ -165,9 +163,8 @@ impl<T: Send + Sync + 'static> State<T> {
     /// # Example
     ///
     /// ```rust
-    /// extern crate rocket_community as rocket;
     ///
-    /// use rocket::State;
+    /// use rkt::State;
     ///
     /// #[derive(Clone)]
     /// struct MyConfig {

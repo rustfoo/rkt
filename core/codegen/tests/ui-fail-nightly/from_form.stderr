@@ -33,7 +33,7 @@ error: at least one field is required
 note: error occurred while deriving `FromForm`
   --> tests/ui-fail-nightly/from_form.rs:9:10
    |
-9  | #[derive(FromForm)]
+ 9 | #[derive(FromForm)]
    |          ^^^^^^^^
    = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
@@ -446,16 +446,38 @@ error[E0308]: mismatched types
     = note: expected enum `Result<(), Errors<'_>>`
                found type `{integer}`
 
+error[E0282]: type annotations needed
+   --> tests/ui-fail-nightly/from_form.rs:147:13
+    |
+147 |     #[field(validate = 123)]
+    |             ^^^^^^^^
+    |
+help: consider giving this closure parameter an explicit type
+    |
+147 |     #[field(validate: /* Type */ = 123)]
+    |                     ++++++++++++
+
 error[E0425]: cannot find function `unknown` in this scope
    --> tests/ui-fail-nightly/from_form.rs:153:24
     |
 153 |     #[field(validate = unknown())]
     |                        ^^^^^^^ not found in this scope
 
+error[E0282]: type annotations needed
+   --> tests/ui-fail-nightly/from_form.rs:153:13
+    |
+153 |     #[field(validate = unknown())]
+    |             ^^^^^^^^
+    |
+help: consider giving this closure parameter an explicit type
+    |
+153 |     #[field(validate: /* Type */ = unknown())]
+    |                     ++++++++++++
+
 error[E0308]: mismatched types
    --> tests/ui-fail-nightly/from_form.rs:160:12
     |
-159 |     #[field(validate = ext(rocket::http::ContentType::HTML))]
+159 |     #[field(validate = ext(rkt::http::ContentType::HTML))]
     |                        --- arguments to this function are incorrect
 160 |     first: String,
     |            ^^^^^^ expected `&TempFile<'_>`, found `&String`
@@ -488,7 +510,7 @@ error[E0308]: mismatched types
    --> tests/ui-fail-nightly/from_form.rs:171:23
     |
 171 |     #[field(default = 123)]
-    |                       ^^^- help: try using a conversion method: `.to_string()`
+    |                       ^^^
     |                       |
     |                       expected `String`, found integer
     |                       arguments to this enum variant are incorrect
@@ -503,18 +525,18 @@ help: the type constructed contains `{integer}` due to the type of the argument 
     |                       ^^^ this argument influences the type of `Some`
 note: tuple variant defined here
    --> $RUST/core/src/option.rs
-    |
-    |     Some(#[stable(feature = "rust1", since = "1.0.0")] T),
-    |     ^^^^
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
+help: try using a conversion method
+    |
+171 |     #[field(default = 123.to_string())]
+    |                          ++++++++++++
 
 error[E0308]: mismatched types
    --> tests/ui-fail-nightly/from_form.rs:203:33
     |
 203 |     #[field(default_with = Some("hi"))]
-    |                            ---- ^^^^- help: try using a conversion method: `.to_string()`
-    |                            |    |
-    |                            |    expected `String`, found `&str`
+    |                            ---- ^^^^ expected `String`, found `&str`
+    |                            |
     |                            arguments to this enum variant are incorrect
     |
 help: the type constructed contains `&'static str` due to the type of the argument passed
@@ -526,9 +548,10 @@ help: the type constructed contains `&'static str` due to the type of the argume
     |                                 this argument influences the type of `Some`
 note: tuple variant defined here
    --> $RUST/core/src/option.rs
+help: try using a conversion method
     |
-    |     Some(#[stable(feature = "rust1", since = "1.0.0")] T),
-    |     ^^^^
+203 |     #[field(default_with = Some("hi".to_string()))]
+    |                                     ++++++++++++
 
 error[E0277]: the trait bound `bool: From<&str>` is not satisfied
    --> tests/ui-fail-nightly/from_form.rs:209:23
@@ -539,7 +562,7 @@ error[E0277]: the trait bound `bool: From<&str>` is not satisfied
 209 |     #[field(default = "no conversion")]
     |                       ^^^^^^^^^^^^^^^
     |                       |
-    |                       the trait `From<&str>` is not implemented for `bool`, which is required by `&str: Into<_>`
+    |                       the trait `From<&str>` is not implemented for `bool`
     |                       this tail expression is of type `&str`
     |
     = help: the following other types implement trait `From<T>`:

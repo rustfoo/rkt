@@ -6,9 +6,9 @@ use super::EntryAttr;
 use crate::attribute::suppress::Lint;
 use crate::exports::{_ExitCode, _error, mixed};
 
-/// `#[rocket::launch]`: generates a `main` function that calls the attributed
+/// `#[rkt::launch]`: generates a `main` function that calls the attributed
 /// function to generate a `Rocket` instance. Then calls `.launch()` on the
-/// returned instance inside of an `rocket::async_main`.
+/// returned instance inside of an `rkt::async_main`.
 pub struct Launch;
 
 /// Determines if `f` likely spawns an async task, returning the spawn call.
@@ -67,7 +67,7 @@ impl EntryAttr for Launch {
         // Always infer the type as `Rocket<Build>`.
         if let syn::ReturnType::Type(_, ref mut ty) = &mut f.sig.output {
             if let syn::Type::Infer(_) = &mut **ty {
-                *ty = syn::parse_quote_spanned!(ty.span() => ::rocket::Rocket<::rocket::Build>);
+                *ty = syn::parse_quote_spanned!(ty.span() => ::rkt::Rocket<::rkt::Build>);
             }
         }
 
@@ -83,7 +83,7 @@ impl EntryAttr for Launch {
         let block = &f.block;
         let rocket = quote_spanned!(mixed(ty.span()) => {
             let ___rocket: #ty = #block;
-            let ___rocket: ::rocket::Rocket<::rocket::Build> = ___rocket;
+            let ___rocket: ::rkt::Rocket<::rkt::Build> = ___rocket;
             ___rocket
         });
 
@@ -118,7 +118,7 @@ impl EntryAttr for Launch {
             #[allow(dead_code)] #f
 
             #vis #sig {
-                #_error::Error::report(::rocket::async_main(#launch))
+                #_error::Error::report(::rkt::async_main(#launch))
             }
         ))
     }

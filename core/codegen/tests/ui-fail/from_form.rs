@@ -1,4 +1,4 @@
-use rocket::form::FromForm;
+use rkt::form::FromForm;
 
 #[derive(FromForm)]
 enum Thing { }
@@ -156,7 +156,7 @@ struct Validate1 {
 
 #[derive(FromForm)]
 struct Validate2 {
-    #[field(validate = ext(rocket::http::ContentType::HTML))]
+    #[field(validate = ext(rkt::http::ContentType::HTML))]
     first: String,
 }
 

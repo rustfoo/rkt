@@ -108,11 +108,11 @@ fn query_decls(route: &Route) -> Option<TokenStream> {
             )*
 
             if !__e.is_empty() {
-                ::rocket::trace::span_info!(
+                ::rkt::trace::span_info!(
                     "codegen",
                     "query string failed to match route declaration" =>
-                        { for _err in __e { ::rocket::trace::info!(
-                            target: concat!("rocket::codegen::route::", module_path!()),
+                        { for _err in __e { ::rkt::trace::info!(
+                            target: concat!("rkt::codegen::route::", module_path!()),
                             "{_err}"
                         ); } }
                 );
@@ -135,9 +135,9 @@ fn request_guard_decl(guard: &Guard) -> TokenStream {
         let #ident: #ty = match <#ty as #FromRequest>::from_request(#__req).await {
             #Outcome::Success(__v) => __v,
             #Outcome::Forward(__e) => {
-                ::rocket::trace::info!(
+                ::rkt::trace::info!(
                     name: "forward",
-                    target: concat!("rocket::codegen::route::", module_path!()),
+                    target: concat!("rkt::codegen::route::", module_path!()),
                     parameter = stringify!(#ident),
                     type_name = stringify!(#ty),
                     status = __e.code,
@@ -148,9 +148,9 @@ fn request_guard_decl(guard: &Guard) -> TokenStream {
             },
             #[allow(unreachable_code)]
             #Outcome::Error((__c, __e)) => {
-                ::rocket::trace::info!(
+                ::rkt::trace::info!(
                     name: "failure",
-                    target: concat!("rocket::codegen::route::", module_path!()),
+                    target: concat!("rkt::codegen::route::", module_path!()),
                     parameter = stringify!(#ident),
                     type_name = stringify!(#ty),
                     reason = %#display_hack!(__e),
@@ -172,9 +172,9 @@ fn param_guard_decl(guard: &Guard) -> TokenStream {
 
     // Returned when a dynamic parameter fails to parse.
     let parse_error = quote!({
-        ::rocket::trace::info!(
+        ::rkt::trace::info!(
             name: "forward",
-            target: concat!("rocket::codegen::route::", module_path!()),
+            target: concat!("rkt::codegen::route::", module_path!()),
             parameter = #name,
             type_name = stringify!(#ty),
             reason = %#display_hack!(__error),
@@ -195,8 +195,8 @@ fn param_guard_decl(guard: &Guard) -> TokenStream {
                     #_Err(__error) => return #parse_error,
                 },
                 #_None => {
-                    ::rocket::trace::error!(
-                        target: concat!("rocket::codegen::route::", module_path!()),
+                    ::rkt::trace::error!(
+                        target: concat!("rkt::codegen::route::", module_path!()),
                         "Internal invariant broken: dyn param {} not found.\n\
                         Please report this to the Rocket issue tracker.\n\
                         https://github.com/rwf2/Rocket/issues",
@@ -228,9 +228,9 @@ fn data_guard_decl(guard: &Guard) -> TokenStream {
         let #ident: #ty = match <#ty as #FromData>::from_data(#__req, #__data).await {
             #Outcome::Success(__d) => __d,
             #Outcome::Forward((__d, __e)) => {
-                ::rocket::trace::info!(
+                ::rkt::trace::info!(
                     name: "forward",
-                    target: concat!("rocket::codegen::route::", module_path!()),
+                    target: concat!("rkt::codegen::route::", module_path!()),
                     parameter = stringify!(#ident),
                     type_name = stringify!(#ty),
                     status = __e.code,
@@ -241,9 +241,9 @@ fn data_guard_decl(guard: &Guard) -> TokenStream {
             }
             #[allow(unreachable_code)]
             #Outcome::Error((__c, __e)) => {
-                ::rocket::trace::info!(
+                ::rkt::trace::info!(
                     name: "failure",
-                    target: concat!("rocket::codegen::route::", module_path!()),
+                    target: concat!("rkt::codegen::route::", module_path!()),
                     parameter = stringify!(#ident),
                     type_name = stringify!(#ty),
                     reason = %#display_hack!(__e),
@@ -291,7 +291,7 @@ fn internal_uri_macro_decl(route: &Route) -> TokenStream {
             /// Rocket generated URI macro.
             macro_rules! #inner_macro_name {
                 ($($token:tt)*) => {{
-                    ::rocket::rocket_internal_uri!(#route_uri, (#(#uri_args),*), $($token)*)
+                    ::rkt::rocket_internal_uri!(#route_uri, (#(#uri_args),*), $($token)*)
                 }};
             }
 

@@ -62,7 +62,7 @@ use crate::shutdown::Sig;
 /// guarantees that the server process terminates, prohibiting uncooperative,
 /// runaway I/O from preventing shutdown altogether.
 ///
-/// A "Rocket configured runtime" is one started by the `#[rocket::main]` and
+/// A "Rocket configured runtime" is one started by the `#[rkt::main]` and
 /// `#[launch]` attributes. Rocket _never_ forcefully terminates a custom
 /// runtime. A server that creates its own async runtime must take care to
 /// terminate itself if tasks it spawns fail to cooperate.
@@ -85,10 +85,9 @@ use crate::shutdown::Sig;
 /// defaults.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 ///
-/// # use rocket::figment::{Figment, providers::{Format, Toml}};
-/// use rocket::Config;
+/// # use rkt::figment::{Figment, providers::{Format, Toml}};
+/// use rkt::Config;
 ///
 /// // If these are the contents of `Rocket.toml`...
 /// # let toml = Toml::string(r#"
@@ -108,7 +107,7 @@ use crate::shutdown::Sig;
 /// # assert_eq!(config.shutdown.force, false);
 ///
 /// # #[cfg(unix)] {
-/// use rocket::config::Sig;
+/// use rkt::config::Sig;
 ///
 /// assert_eq!(config.shutdown.signals.len(), 2);
 /// assert!(config.shutdown.signals.contains(&Sig::Term));
@@ -119,13 +118,12 @@ use crate::shutdown::Sig;
 /// Or, as with all configuration options, programmatically:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 ///
-/// # use rocket::figment::{Figment, providers::{Format, Toml}};
-/// use rocket::config::{Config, ShutdownConfig};
+/// # use rkt::figment::{Figment, providers::{Format, Toml}};
+/// use rkt::config::{Config, ShutdownConfig};
 ///
 /// #[cfg(unix)]
-/// use rocket::config::Sig;
+/// use rkt::config::Sig;
 ///
 /// let config = Config {
 ///     shutdown: ShutdownConfig {
@@ -198,9 +196,8 @@ pub struct ShutdownConfig {
     /// _always_ be done using a public constructor or update syntax:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::config::ShutdownConfig;
+    /// use rkt::config::ShutdownConfig;
     ///
     /// let config = ShutdownConfig {
     ///     grace: 5,

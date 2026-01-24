@@ -1,8 +1,8 @@
 use std::fs::File;
 use std::io::Read;
 
-use rocket::local::blocking::Client;
-use rocket::http::Status;
+use rkt::local::blocking::Client;
+use rkt::http::Status;
 
 use super::rocket;
 

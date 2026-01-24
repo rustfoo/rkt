@@ -46,14 +46,14 @@ use crate::tls::{Error, Result};
 /// Programmatically, configuration might look like:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::mtls::MtlsConfig;
-/// use rocket::figment::providers::Serialized;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::mtls::MtlsConfig;
+/// use rkt::figment::providers::Serialized;
 ///
 /// #[launch]
 /// fn rocket() -> _ {
 ///     let mtls = MtlsConfig::from_path("/ssl/ca_cert.pem");
-///     rocket::custom(rocket::Config::figment().merge(("tls.mutual", mtls)))
+///     rkt::custom(rkt::Config::figment().merge(("tls.mutual", mtls)))
 /// }
 /// ```
 ///
@@ -89,8 +89,7 @@ impl MtlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::mtls::MtlsConfig;
+    /// use rkt::mtls::MtlsConfig;
     ///
     /// let tls_config = MtlsConfig::from_path("/ssl/ca_certs.pem");
     /// ```
@@ -111,8 +110,7 @@ impl MtlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::mtls::MtlsConfig;
+    /// use rkt::mtls::MtlsConfig;
     ///
     /// # let ca_certs_buf = &[];
     /// let mtls_config = MtlsConfig::from_bytes(ca_certs_buf);
@@ -135,8 +133,7 @@ impl MtlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::mtls::MtlsConfig;
+    /// use rkt::mtls::MtlsConfig;
     ///
     /// # let ca_certs_buf = &[];
     /// let mtls_config = MtlsConfig::from_bytes(ca_certs_buf).mandatory(true);
@@ -151,8 +148,7 @@ impl MtlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::mtls::MtlsConfig;
+    /// use rkt::mtls::MtlsConfig;
     ///
     /// # let ca_certs_buf = &[];
     /// let mtls_config = MtlsConfig::from_bytes(ca_certs_buf).mandatory(true);

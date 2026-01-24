@@ -54,9 +54,9 @@ use crate::tls::resolver::DynResolver;
 /// With a custom programmatic configuration, this might look like:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::tls::{TlsConfig, CipherSuite};
-/// use rocket::figment::providers::Serialized;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::tls::{TlsConfig, CipherSuite};
+/// use rkt::figment::providers::Serialized;
 ///
 /// #[launch]
 /// fn rocket() -> _ {
@@ -64,17 +64,16 @@ use crate::tls::resolver::DynResolver;
 ///         .with_ciphers(CipherSuite::TLS_V13_SET)
 ///         .with_preferred_server_cipher_order(true);
 ///
-///     rocket::custom(rocket::Config::figment().merge(("tls", tls)))
+///     rkt::custom(rkt::Config::figment().merge(("tls", tls)))
 /// }
 /// ```
 ///
 /// Or by creating a custom figment:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 ///
-/// use rocket::figment::Figment;
-/// use rocket::tls::TlsConfig;
+/// use rkt::figment::Figment;
+/// use rkt::tls::TlsConfig;
 ///
 /// let figment = Figment::new()
 ///     .merge(("certs", "path/to/certs.pem"))
@@ -157,9 +156,8 @@ impl TlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::tls::TlsConfig;
+    /// use rkt::tls::TlsConfig;
     ///
     /// let tls_config = TlsConfig::from_paths("/ssl/certs.pem", "/ssl/key.pem");
     /// ```
@@ -183,9 +181,8 @@ impl TlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::tls::TlsConfig;
+    /// use rkt::tls::TlsConfig;
     ///
     /// # let certs_buf = &[];
     /// # let key_buf = &[];
@@ -212,9 +209,8 @@ impl TlsConfig {
     /// Disable TLS v1.2 by selecting only TLS v1.3 cipher suites:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::tls::{TlsConfig, CipherSuite};
+    /// use rkt::tls::{TlsConfig, CipherSuite};
     ///
     /// # let certs_buf = &[];
     /// # let key_buf = &[];
@@ -225,9 +221,8 @@ impl TlsConfig {
     /// Enable only ChaCha20-Poly1305 based TLS v1.2 and TLS v1.3 cipher suites:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::tls::{TlsConfig, CipherSuite};
+    /// use rkt::tls::{TlsConfig, CipherSuite};
     ///
     /// # let certs_buf = &[];
     /// # let key_buf = &[];
@@ -242,9 +237,8 @@ impl TlsConfig {
     /// Later duplicates are ignored.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::tls::{TlsConfig, CipherSuite};
+    /// use rkt::tls::{TlsConfig, CipherSuite};
     ///
     /// # let certs_buf = &[];
     /// # let key_buf = &[];
@@ -289,9 +283,8 @@ impl TlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::tls::{TlsConfig, CipherSuite};
+    /// use rkt::tls::{TlsConfig, CipherSuite};
     ///
     /// # let certs_buf = &[];
     /// # let key_buf = &[];
@@ -310,10 +303,9 @@ impl TlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::tls::TlsConfig;
-    /// use rocket::mtls::MtlsConfig;
+    /// use rkt::tls::TlsConfig;
+    /// use rkt::mtls::MtlsConfig;
     ///
     /// # let certs = &[];
     /// # let key = &[];
@@ -333,11 +325,10 @@ impl TlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
     /// # use std::path::Path;
-    /// use rocket::tls::TlsConfig;
-    /// use rocket::figment::Figment;
+    /// use rkt::tls::TlsConfig;
+    /// use rkt::figment::Figment;
     ///
     /// let figment = Figment::new()
     ///     .merge(("certs", "/path/to/certs.pem"))
@@ -363,11 +354,10 @@ impl TlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
     /// # use std::path::Path;
-    /// use rocket::tls::TlsConfig;
-    /// use rocket::figment::Figment;
+    /// use rkt::tls::TlsConfig;
+    /// use rkt::figment::Figment;
     ///
     /// let figment = Figment::new()
     ///     .merge(("certs", vec![0; 32]))
@@ -394,9 +384,8 @@ impl TlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::tls::{TlsConfig, CipherSuite};
+    /// use rkt::tls::{TlsConfig, CipherSuite};
     ///
     /// # let certs_buf = &[];
     /// # let key_buf = &[];
@@ -421,9 +410,8 @@ impl TlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::tls::TlsConfig;
+    /// use rkt::tls::TlsConfig;
     ///
     /// # let certs_buf = &[];
     /// # let key_buf = &[];
@@ -446,12 +434,11 @@ impl TlsConfig {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
     /// use std::path::Path;
     ///
-    /// use rocket::tls::TlsConfig;
-    /// use rocket::mtls::MtlsConfig;
+    /// use rkt::tls::TlsConfig;
+    /// use rkt::mtls::MtlsConfig;
     ///
     /// # let certs = &[];
     /// # let key = &[];

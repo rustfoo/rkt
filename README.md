@@ -25,7 +25,7 @@ Rocket is an async web framework for Rust with a focus on usability, security,
 extensibility, and speed.
 
 ```rust
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[get("/<name>/<age>")]
 fn hello(name: &str, age: u8) -> String {
@@ -34,7 +34,7 @@ fn hello(name: &str, age: u8) -> String {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/hello", routes![hello])
+    rkt::build().mount("/hello", routes![hello])
 }
 ```
 

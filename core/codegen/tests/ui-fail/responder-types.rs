@@ -1,4 +1,4 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[derive(Responder)]
 struct Thing1 {
@@ -20,7 +20,7 @@ struct Thing3 {
 #[derive(Responder)]
 struct Thing4 {
     thing: String,
-    other: rocket::http::ContentType,
+    other: rkt::http::ContentType,
     then: String,
 }
 

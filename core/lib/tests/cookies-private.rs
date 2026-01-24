@@ -1,10 +1,10 @@
 #![cfg(feature = "secrets")]
 #![deny(warnings)]
 
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::{Cookie, CookieJar, SameSite};
-use rocket::{get, post, routes};
+use rkt::http::{Cookie, CookieJar, SameSite};
+use rkt::{get, post, routes};
 
 #[post("/")]
 fn cookie_add_private(jar: &CookieJar<'_>) {
@@ -65,11 +65,11 @@ fn cookie_get(jar: &CookieJar<'_>) -> String {
 #[cfg(test)]
 mod cookies_private_tests {
     use super::*;
-    use rocket::local::blocking::Client;
-    use rocket::{Build, Rocket};
+    use rkt::local::blocking::Client;
+    use rkt::{Build, Rocket};
 
     fn rocket() -> Rocket<Build> {
-        rocket::build().mount(
+        rkt::build().mount(
             "/",
             routes![cookie_add_private, cookie_get, cookie_get_private],
         )

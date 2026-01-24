@@ -14,7 +14,7 @@ struct DatabaseAttribute {
 }
 
 pub fn derive_database(input: TokenStream) -> TokenStream {
-    DeriveGenerator::build_for(input, quote!(impl rocket_db_pools::Database))
+    DeriveGenerator::build_for(input, quote!(impl rkt_db_pools::Database))
         .support(Support::TupleStruct)
         .validator(ValidatorBuild::new().struct_validate(|_, s| {
             if s.fields.len() == 1 {
@@ -31,7 +31,7 @@ pub fn derive_database(input: TokenStream) -> TokenStream {
 
             let decorated_type = &s.ident;
             let db_ty = quote_spanned!(decorated_type.span() =>
-                <#decorated_type as rocket_db_pools::Database>
+                <#decorated_type as rkt_db_pools::Database>
             );
 
             quote_spanned! { decorated_type.span() =>
@@ -55,29 +55,29 @@ pub fn derive_database(input: TokenStream) -> TokenStream {
                     }
                 }
 
-                #[rocket::async_trait]
-                impl<'r> rocket::request::FromRequest<'r> for &'r #decorated_type {
+                #[rkt::async_trait]
+                impl<'r> rkt::request::FromRequest<'r> for &'r #decorated_type {
                     type Error = ();
 
                     async fn from_request(
-                        req: &'r rocket::request::Request<'_>
-                    ) -> rocket::request::Outcome<Self, Self::Error> {
+                        req: &'r rkt::request::Request<'_>
+                    ) -> rkt::request::Outcome<Self, Self::Error> {
                         match #db_ty::fetch(req.rocket()) {
-                            Some(db) => rocket::outcome::Outcome::Success(db),
-                            None => rocket::outcome::Outcome::Error((
-                                rocket::http::Status::InternalServerError, ()))
+                            Some(db) => rkt::outcome::Outcome::Success(db),
+                            None => rkt::outcome::Outcome::Error((
+                                rkt::http::Status::InternalServerError, ()))
                         }
                     }
                 }
 
-                impl rocket::Sentinel for &#decorated_type {
-                    fn abort(rocket: &rocket::Rocket<rocket::Ignite>) -> bool {
+                impl rkt::Sentinel for &#decorated_type {
+                    fn abort(rocket: &rkt::Rocket<rkt::Ignite>) -> bool {
                         #db_ty::fetch(rocket).is_none()
                     }
                 }
             }
         }))
-        .outer_mapper(quote!(#[rocket::async_trait]))
+        .outer_mapper(quote!(#[rkt::async_trait]))
         .inner_mapper(MapperBuild::new().try_struct_map(|_, s| {
             let db_name = DatabaseAttribute::one_from_attrs("database", &s.attrs)?
                 .map(|attr| attr.name)
@@ -95,8 +95,8 @@ pub fn derive_database(input: TokenStream) -> TokenStream {
 
                 const NAME: &'static str = #db_name;
 
-                fn init() -> rocket_db_pools::Initializer<Self> {
-                    rocket_db_pools::Initializer::with_name(#fairing_name)
+                fn init() -> rkt_db_pools::Initializer<Self> {
+                    rkt_db_pools::Initializer::with_name(#fairing_name)
                 }
             })
         }))

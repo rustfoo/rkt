@@ -63,11 +63,11 @@ And finally, create a skeleton Rocket application to work off of in
 `src/main.rs`:
 
 ```rust
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
 }
 ```
 
@@ -89,7 +89,7 @@ declare the route and its handler by adding the `index` function below to
 `src/main.rs`:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -121,12 +121,12 @@ Remember that routes first need to be mounted before Rocket dispatches requests
 to them. To mount the `index` route, modify the main function so that it reads:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # #[get("/")] fn index() { }
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index])
+    rkt::build().mount("/", routes![index])
 }
 ```
 
@@ -258,10 +258,10 @@ as a **404** error, which is exactly what we want to return when the requested
 paste doesn't exist.
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 use std::path::Path;
-use rocket::tokio::fs::File;
+use rkt::tokio::fs::File;
 
 #[get("/<id>")]
 async fn retrieve(id: &str) -> Option<File> {
@@ -274,14 +274,14 @@ async fn retrieve(id: &str) -> Option<File> {
 Make sure that the route is mounted at the root path:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 # #[get("/")] fn index() {}
 # #[get("/<id>")] fn retrieve(id: String) {}
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index, retrieve])
+    rkt::build().mount("/", routes![index, retrieve])
 }
 ```
 
@@ -323,7 +323,7 @@ Here's the `FromParam` implementation for `PasteId` in `src/paste_id.rs`:
 [`FromParam`]: @api/master/rocket/request/trait.FromParam.html
 
 ```rust
-use rocket::request::FromParam;
+use rkt::request::FromParam;
 # use std::borrow::Cow;
 # pub struct PasteId<'a>(Cow<'a, str>);
 
@@ -352,12 +352,12 @@ Given this implementation, we can change the type of `id` in `retrieve` to
 before calling the `retrieve` route, preventing the previous attack entirely:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::tokio::fs::File;
+use rkt::tokio::fs::File;
 # use std::borrow::Cow;
 # use std::path::PathBuf;
-# use rocket::request::FromParam;
+# use rkt::request::FromParam;
 # pub struct PasteId<'a>(Cow<'a, str>);
 # impl PasteId<'_> {
 #     pub fn new(size: usize) -> PasteId<'static> { todo!() }
@@ -399,8 +399,8 @@ Before we show you the code, you should attempt to write the route yourself.
 Here's a hint: one possible route and handler signature look like this:
 
 ```rust
-# #[macro_use] extern crate rocket;
-use rocket::Data;
+# #[macro_use] extern crate rkt;
+use rkt::Data;
 
 #[post("/", data = "<paste>")]
 async fn upload(paste: Data<'_>) -> std::io::Result<String> {
@@ -425,12 +425,12 @@ Your code should:
 Here's our version:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 // We derive `UriDisplayPath` for `PasteId` in `paste_id.rs`:
 # use std::borrow::Cow;
 # use std::path::{Path, PathBuf};
-# use rocket::request::FromParam;
+# use rkt::request::FromParam;
 
 #[derive(UriDisplayPath)]
 pub struct PasteId<'a>(Cow<'a, str>);
@@ -446,9 +446,9 @@ pub struct PasteId<'a>(Cow<'a, str>);
 # }
 // We implement the `upload` route in `main.rs`:
 
-use rocket::data::{Data, ToByteUnit};
-use rocket::http::uri::Absolute;
-# use rocket::tokio::fs::File;
+use rkt::data::{Data, ToByteUnit};
+use rkt::http::uri::Absolute;
+# use rkt::tokio::fs::File;
 
 // In a real application, these would be retrieved dynamically from a config.
 const ID_LENGTH: usize = 3;
@@ -483,7 +483,7 @@ We note the following Rocket APIs being used in our implementation:
 Ensure that the route is mounted at the root path:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 # #[get("/")] fn index() {}
 # #[get("/<id>")] fn retrieve(id: &str) {}
@@ -491,7 +491,7 @@ Ensure that the route is mounted at the root path:
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index, retrieve, upload])
+    rkt::build().mount("/", routes![index, retrieve, upload])
 }
 ```
 

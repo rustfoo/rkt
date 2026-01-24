@@ -41,14 +41,14 @@ For any deployment, it's important to keep in mind:
      working directory** that your application binary starts in.
 
      ```rust
-     # #[macro_use] extern crate rocket;
+     # #[macro_use] extern crate rkt;
 
-     use rocket::fs::FileServer;
-     use rocket_dyn_templates::Template;
+     use rkt::fs::FileServer;
+     use rkt_dyn_templates::Template;
 
      #[launch]
      fn rocket() -> _ {
-         rocket::build()
+         rkt::build()
              .mount("/", FileServer::new("./static"))
              .attach(Template::fairing())
      }

@@ -50,8 +50,8 @@ impl StatusClass {
 /// not possible to set a custom reason phrase.
 ///
 /// ```rust
-/// # extern crate rocket;
-/// use rocket::http::Status;
+/// # extern crate rkt;
+/// use rkt::http::Status;
 ///
 /// // Create a status from a known constant.
 /// let ok = Status::Ok;
@@ -81,9 +81,9 @@ impl StatusClass {
 /// response may be invalid if it requires additional headers.
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # use rocket::get;
-/// use rocket::http::Status;
+/// # extern crate rkt;
+/// # use rkt::get;
+/// use rkt::http::Status;
 ///
 /// #[get("/")]
 /// fn index() -> (Status, &'static str) {
@@ -103,7 +103,7 @@ impl StatusClass {
 /// # #[cfg(feature = "serde")] mod serde_impl {
 /// # use serde as serde;
 /// use serde::{Serialize, Deserialize};
-/// use rocket::http::Status;
+/// use rkt::http::Status;
 ///
 /// #[derive(Deserialize, Serialize)]
 /// # #[serde(crate = "serde")]
@@ -143,8 +143,8 @@ macro_rules! ctrs {
         /// Create a custom `299` status:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::Status;
+        /// # extern crate rkt;
+        /// use rkt::http::Status;
         ///
         /// let custom = Status::new(299);
         /// assert_eq!(custom.code, 299);
@@ -158,8 +158,8 @@ macro_rules! ctrs {
         /// # Example
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::{Status, StatusClass};
+        /// # extern crate rkt;
+        /// use rkt::http::{Status, StatusClass};
         ///
         /// let processing = Status::Processing;
         /// assert_eq!(processing.class(), StatusClass::Informational);
@@ -198,8 +198,8 @@ macro_rules! ctrs {
         /// Create a `Status` from a known `code`:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::Status;
+        /// # extern crate rkt;
+        /// use rkt::http::Status;
         ///
         /// let not_found = Status::from_code(404);
         /// assert_eq!(not_found, Some(Status::NotFound));
@@ -208,8 +208,8 @@ macro_rules! ctrs {
         /// Create a `Status` from an unknown `code`:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::Status;
+        /// # extern crate rkt;
+        /// use rkt::http::Status;
         ///
         /// let unknown = Status::from_code(600);
         /// assert!(unknown.is_none());
@@ -229,8 +229,8 @@ macro_rules! ctrs {
         /// Reason phrase from a known `code`:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::Status;
+        /// # extern crate rkt;
+        /// use rkt::http::Status;
         ///
         /// assert_eq!(Status::Created.reason(), Some("Created"));
         /// assert_eq!(Status::new(200).reason(), Some("OK"));
@@ -239,8 +239,8 @@ macro_rules! ctrs {
         /// Absent phrase from an unknown `code`:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::Status;
+        /// # extern crate rkt;
+        /// use rkt::http::Status;
         ///
         /// assert_eq!(Status::new(499).reason(), None);
         /// ```
@@ -258,8 +258,8 @@ macro_rules! ctrs {
         /// # Example
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::Status;
+        /// # extern crate rkt;
+        /// use rkt::http::Status;
         ///
         /// assert_eq!(Status::NotFound.reason_lossy(), "Not Found");
         /// assert_eq!(Status::new(100).reason_lossy(), "Continue");

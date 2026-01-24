@@ -6,7 +6,7 @@ This section lists file paths and approximate line numbers where current
 version package numbers are mentions - these need to be consistent for
 a release.
 
-## rocket(_codegen,_http)-community
+## rkt(_codegen,_http)
 
 * ./contrib/db_pools/lib/Cargo.toml (36)
 * ./contrib/dyn_templates/Cargo.toml (39)
@@ -33,7 +33,7 @@ a release.
 * ./README.md (15, 21)
 
 
-## rocket_db_pools(_codegen)_-community
+## rkt_db_pools(_codegen)
 
 * ./contrib/db_pools/codegen/Cargo.toml (3)
 * ./contrib/db_pools/lib/Cargo.toml (3, 45)
@@ -45,7 +45,7 @@ a release.
 * ./docs/guide/07-state.md (240, 309)
 
 
-## rocket_dyn_templates-community
+## rkt_dyn_templates
 
 * ./contrib/dyn_templates/Cargo.toml (3)
 
@@ -54,7 +54,7 @@ a release.
 * ./contrib/dyn_templates/README.md (26)
 
 
-## rocket_sync_db_pools(_codegen)-community
+## rkt_sync_db_pools(_codegen)
 
 * ./contrib/sync_db_pools/codegen/Cargo.toml (3)
 * ./contrib/sync_db_pools/lib/Cargo.toml (3, 41)
@@ -64,7 +64,7 @@ a release.
 * ./contrib/sync_db_pools/README.md (23)
 
 
-## rocket_ws-community
+## rkt_ws
 
 * ./contrib/ws/Cargo.toml (3)
 

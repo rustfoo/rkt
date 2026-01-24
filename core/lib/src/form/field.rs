@@ -50,8 +50,7 @@ impl<'v> ValueField<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::ValueField;
+    /// use rkt::form::ValueField;
     ///
     /// let parsed = ValueField::parse("a cat=an A+ pet");
     /// assert_eq!(parsed.name, "a cat");
@@ -82,8 +81,7 @@ impl<'v> ValueField<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::ValueField;
+    /// use rkt::form::ValueField;
     ///
     /// let parsed = ValueField::from_value("A+=kitten");
     /// assert_eq!(parsed.name, "");
@@ -100,8 +98,7 @@ impl<'v> ValueField<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::ValueField;
+    /// use rkt::form::ValueField;
     ///
     /// let parsed = ValueField::parse("cat.food=yum?");
     /// assert_eq!(parsed.name, "cat");
@@ -128,9 +125,8 @@ impl<'v> ValueField<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::ValueField;
-    /// use rocket::form::error::{ErrorKind, Entity};
+    /// use rkt::form::ValueField;
+    /// use rkt::form::error::{ErrorKind, Entity};
     ///
     /// let field = ValueField::parse("cat.food=yum?");
     /// let error = field.unexpected();
@@ -158,9 +154,8 @@ impl<'v> ValueField<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::ValueField;
-    /// use rocket::form::error::{ErrorKind, Entity};
+    /// use rkt::form::ValueField;
+    /// use rkt::form::error::{ErrorKind, Entity};
     ///
     /// let field = ValueField::parse("cat.food=yum?");
     /// let error = field.missing();
@@ -187,8 +182,7 @@ impl<'v> DataField<'v, '_> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::DataField;
+    /// use rkt::form::DataField;
     ///
     /// fn push_data(field: DataField<'_, '_>) {
     ///     let shifted = field.shift();
@@ -210,8 +204,7 @@ impl<'v> DataField<'v, '_> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::DataField;
+    /// use rkt::form::DataField;
     ///
     /// fn push_data(field: DataField<'_, '_>) {
     ///     let error = field.unexpected();

@@ -6,7 +6,7 @@ use std::ops::Deref;
 
 use devise::ext::{PathExt, TypeExt as _};
 use proc_macro2::{Span, TokenStream};
-use rocket_http::ext::IntoOwned;
+use rkt_http::ext::IntoOwned;
 use syn::{ext::IdentExt as _, visit::Visit, Ident};
 
 pub trait IdentExt {

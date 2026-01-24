@@ -1,4 +1,4 @@
-use rocket::request::FromParam;
+use rkt::request::FromParam;
 
 #[derive(FromParam)]
 struct Foo1 {

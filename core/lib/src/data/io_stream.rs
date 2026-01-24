@@ -42,15 +42,14 @@ enum IoStreamKind {
 /// to the client.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 /// use std::pin::Pin;
 ///
-/// use rocket::tokio::io;
-/// use rocket::data::{IoHandler, IoStream};
+/// use rkt::tokio::io;
+/// use rkt::data::{IoHandler, IoStream};
 ///
 /// struct EchoHandler;
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl IoHandler for EchoHandler {
 ///     async fn io(self: Box<Self>, io: IoStream) -> io::Result<()> {
 ///         let (mut reader, mut writer) = io::split(io);
@@ -59,8 +58,8 @@ enum IoStreamKind {
 ///     }
 /// }
 ///
-/// # use rocket::Response;
-/// # rocket::async_test(async {
+/// # use rkt::Response;
+/// # rkt::async_test(async {
 /// # let mut response = Response::new();
 /// # response.add_upgrade("raw-echo", EchoHandler);
 /// # assert!(response.upgrade("raw-echo").is_some());

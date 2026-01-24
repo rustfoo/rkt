@@ -3,9 +3,9 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
 use reqwest::tls::TlsInfo;
-use rocket::http::Header;
-use rocket::http::uri::Host;
-use rocket::tls::{ClientHello, Resolver, ServerConfig, TlsConfig};
+use rkt::http::Header;
+use rkt::http::uri::Host;
+use rkt::tls::{ClientHello, Resolver, ServerConfig, TlsConfig};
 
 use crate::prelude::*;
 
@@ -28,9 +28,9 @@ struct SniResolver {
     map: HashMap<Host<'static>, Arc<ServerConfig>>,
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl Resolver for SniResolver {
-    async fn init(rocket: &Rocket<Build>) -> rocket::tls::Result<Self> {
+    async fn init(rocket: &Rocket<Build>) -> rkt::tls::Result<Self> {
         let default: TlsConfig = rocket.figment().extract_inner("tls")?;
         let sni: HashMap<Host<'_>, TlsConfig> = rocket.figment().extract_inner("tls.sni")?;
 
@@ -100,9 +100,9 @@ struct CountingResolver {
     counter: Arc<AtomicUsize>,
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl Resolver for CountingResolver {
-    async fn init(rocket: &Rocket<Build>) -> rocket::tls::Result<Self> {
+    async fn init(rocket: &Rocket<Build>) -> rkt::tls::Result<Self> {
         let config: TlsConfig = rocket.figment().extract_inner("tls")?;
         let config = Arc::new(config.server_config().await?);
         let counter = rocket.state::<Arc<AtomicUsize>>().unwrap().clone();

@@ -75,8 +75,8 @@ pub fn database_attr(attr: TokenStream, input: TokenStream) -> Result<TokenStrea
     let span = conn_type.span();
 
     // A few useful paths.
-    let root = quote_spanned!(span => ::rocket_sync_db_pools);
-    let rocket = quote!(#root::rocket);
+    let root = quote_spanned!(span => ::rkt_sync_db_pools);
+    let rkt = quote!(#root::rkt);
 
     let request_guard_type = quote_spanned! { span =>
         #(#attrs)* #vis struct #guard_type(#[allow(dead_code,clippy::needless_borrow)]
@@ -92,13 +92,13 @@ pub fn database_attr(attr: TokenStream, input: TokenStream) -> Result<TokenStrea
         #[allow(dead_code)]
         impl #guard_type {
             /// Returns a fairing that initializes the database connection pool.
-            pub fn fairing() -> impl #rocket::fairing::Fairing {
+            pub fn fairing() -> impl #rkt::fairing::Fairing {
                 <#pool>::fairing(#fairing_name, #name)
             }
 
             /// Returns an opaque type that represents the connection pool
             /// backing connections of type `Self`.
-            pub fn pool<P: #rocket::Phase>(__rocket: &#rocket::Rocket<P>) -> Option<&#pool> {
+            pub fn pool<P: #rkt::Phase>(__rocket: &#rkt::Rocket<P>) -> Option<&#pool> {
                 <#pool>::pool(&__rocket)
             }
 
@@ -112,24 +112,24 @@ pub fn database_attr(attr: TokenStream, input: TokenStream) -> Result<TokenStrea
             }
 
             /// Retrieves a connection of type `Self` from the `rocket` instance.
-            pub async fn get_one<P: #rocket::Phase>(__rocket: &#rocket::Rocket<P>) -> Option<Self> {
+            pub async fn get_one<P: #rkt::Phase>(__rocket: &#rkt::Rocket<P>) -> Option<Self> {
                 <#pool>::get_one(&__rocket).await.map(Self)
             }
         }
 
-        #[#rocket::async_trait]
-        impl<'r> #rocket::request::FromRequest<'r> for #guard_type {
+        #[#rkt::async_trait]
+        impl<'r> #rkt::request::FromRequest<'r> for #guard_type {
             type Error = ();
 
             async fn from_request(
-                __r: &'r #rocket::request::Request<'_>
-            ) -> #rocket::request::Outcome<Self, ()> {
+                __r: &'r #rkt::request::Request<'_>
+            ) -> #rkt::request::Outcome<Self, ()> {
                 <#conn>::from_request(__r).await.map(Self)
             }
         }
 
-        impl #rocket::Sentinel for #guard_type {
-            fn abort(__r: &#rocket::Rocket<#rocket::Ignite>) -> bool {
+        impl #rkt::Sentinel for #guard_type {
+            fn abort(__r: &#rkt::Rocket<#rkt::Ignite>) -> bool {
                 <#conn>::abort(__r)
             }
         }

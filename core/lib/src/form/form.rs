@@ -37,9 +37,9 @@ use crate::Request;
 /// implements the `FromForm` trait:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::form::Form;
-/// use rocket::http::RawStr;
+/// #[macro_use] extern crate rkt;
+/// use rkt::form::Form;
+/// use rkt::http::RawStr;
 ///
 /// #[derive(FromForm)]
 /// struct UserInput<'r> {
@@ -144,8 +144,8 @@ impl<T> Form<T> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::form::Form;
+/// #[macro_use] extern crate rkt;
+    /// use rkt::form::Form;
     ///
     /// #[derive(FromForm)]
     /// struct MyForm {
@@ -185,8 +185,7 @@ impl<'r, T: FromForm<'r>> Form<T> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::{Form, FromForm};
+    /// use rkt::form::{Form, FromForm};
     ///
     /// #[derive(FromForm)]
     /// struct Pet<'r> {
@@ -214,8 +213,7 @@ impl<'r, T: FromForm<'r>> Form<T> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::{Form, FromForm, ValueField};
+    /// use rkt::form::{Form, FromForm, ValueField};
     ///
     /// #[derive(FromForm)]
     /// struct Pet<'r> {
@@ -254,9 +252,8 @@ impl<T: for<'a> FromForm<'a> + 'static> Form<T> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::RawStr;
-    /// use rocket::form::{Form, FromForm};
+    /// use rkt::http::RawStr;
+    /// use rkt::form::{Form, FromForm};
     ///
     /// #[derive(FromForm)]
     /// struct Pet {
@@ -291,8 +288,7 @@ impl Form<()> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::{Form, ValueField};
+    /// use rkt::form::{Form, ValueField};
     ///
     /// let string = "name=Bobby Brown&&&email=me@rocket.rs";
     /// let mut values = Form::values(string);

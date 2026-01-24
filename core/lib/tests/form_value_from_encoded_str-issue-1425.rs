@@ -1,9 +1,9 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 use std::net::{Ipv4Addr, Ipv6Addr, SocketAddrV4, SocketAddrV6};
 
-use rocket::form::Form;
-use rocket::http::RawStr;
+use rkt::form::Form;
+use rkt::http::RawStr;
 
 macro_rules! assert_from_form_field_eq {
     ($string:literal as $T:ty, $expected:expr) => {

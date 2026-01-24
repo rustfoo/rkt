@@ -1,12 +1,12 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[cfg(test)] mod tests;
 
 mod session;
 mod message;
 
-use rocket::response::content::RawHtml;
-use rocket_dyn_templates::Template;
+use rkt::response::content::RawHtml;
+use rkt_dyn_templates::Template;
 
 #[get("/")]
 fn index() -> RawHtml<&'static str> {
@@ -15,7 +15,7 @@ fn index() -> RawHtml<&'static str> {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .attach(Template::fairing())
         .mount("/", routes![index])
         .mount("/message", message::routes())

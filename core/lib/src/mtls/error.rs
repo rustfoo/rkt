@@ -9,9 +9,8 @@ use crate::mtls::x509::{self, nom};
 /// guard type:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::get;
-/// use rocket::mtls::{self, Certificate};
+/// # use rkt::get;
+/// use rkt::mtls::{self, Certificate};
 ///
 /// #[get("/auth")]
 /// fn auth(cert: mtls::Result<Certificate<'_>>) {

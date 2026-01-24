@@ -1,20 +1,18 @@
 #![cfg(feature = "diesel_sqlite_pool")]
 
-extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
-
-use rocket::figment::Figment;
-use rocket_sync_db_pools::database;
+use rkt::figment::Figment;
+use rkt_sync_db_pools::database;
 
 #[database("example")]
 struct ExampleDb(diesel::SqliteConnection);
 
 #[test]
 fn can_drop_connection_in_sync_context() {
-    let conn = rocket::execute(async {
-        let figment = Figment::from(rocket::Config::debug_default())
+    let conn = rkt::execute(async {
+        let figment = Figment::from(rkt::Config::debug_default())
             .merge(("databases.example.url", ":memory:"));
 
-        let rocket = rocket::custom(figment)
+        let rocket = rkt::custom(figment)
             .attach(ExampleDb::fairing())
             .ignite()
             .await

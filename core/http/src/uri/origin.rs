@@ -33,8 +33,8 @@ use crate::{RawStr, RawStrBuf};
 /// As an example, the following URIs are all valid, normalized URIs:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # use rocket::http::uri::Origin;
+/// # extern crate rkt;
+/// # use rkt::http::uri::Origin;
 /// # let valid_uris = [
 /// "/",
 /// "/?",
@@ -55,8 +55,8 @@ use crate::{RawStr, RawStrBuf};
 /// By contrast, the following are valid but _non-normal_ URIs:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # use rocket::http::uri::Origin;
+/// # extern crate rkt;
+/// # use rkt::http::uri::Origin;
 /// # let invalid = [
 /// "//",               // an empty segment
 /// "/a/ab//c//d",      // two empty segments
@@ -72,8 +72,8 @@ use crate::{RawStr, RawStrBuf};
 /// method can be used to normalize any `Origin`:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # use rocket::http::uri::Origin;
+/// # extern crate rkt;
+/// # use rkt::http::uri::Origin;
 /// # let invalid = [
 /// // non-normal versions
 /// "//", "/a/b//c", "/a/ab//c//d/", "/a?a&&b&",
@@ -96,7 +96,7 @@ use crate::{RawStr, RawStrBuf};
 /// # #[cfg(feature = "serde")] mod serde_impl {
 /// # use serde as serde;
 /// use serde::{Serialize, Deserialize};
-/// use rocket::http::uri::Origin;
+/// use rkt::http::uri::Origin;
 ///
 /// #[derive(Deserialize, Serialize)]
 /// # #[serde(crate = "serde")]
@@ -195,8 +195,8 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// // Parse a valid origin URI.
     /// let uri = Origin::parse("/a/b/c?query").expect("valid URI");
@@ -246,8 +246,8 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// let source = format!("/foo/{}/three", 2);
     /// let uri = Origin::parse_owned(source).expect("valid URI");
@@ -270,7 +270,7 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/a/b/c");
     /// assert_eq!(uri.path(), "/a/b/c");
     ///
@@ -291,7 +291,7 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/a/b/c?alphabet=true");
     /// assert_eq!(uri.query().unwrap(), "alphabet=true");
     ///
@@ -316,7 +316,7 @@ impl<'a> Origin<'a> {
     /// Affix a trailing slash if one isn't present.
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/a/b/c");
     /// let expected_uri = uri!("/a/b/c/d");
     /// assert_eq!(uri.map_path(|p| format!("{}/d", p)), Some(expected_uri));
@@ -359,7 +359,7 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let mut uri = uri!("/a/b/c?query=some");
     /// assert_eq!(uri.query().unwrap(), "query=some");
     ///
@@ -379,8 +379,8 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// assert!(Origin::parse("/").unwrap().is_normalized());
     /// assert!(Origin::parse("/a/b/c").unwrap().is_normalized());
@@ -416,8 +416,8 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// let mut abnormal = Origin::parse("/a/b/c//d").unwrap();
     /// assert!(!abnormal.is_normalized());
@@ -437,8 +437,8 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// let abnormal = Origin::parse("/a/b/c//d").unwrap();
     /// assert!(!abnormal.is_normalized());
@@ -457,7 +457,7 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     ///
     /// assert!(!uri!("/").has_trailing_slash());
     /// assert!(!uri!("/a").has_trailing_slash());
@@ -478,8 +478,8 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// let origin = Origin::parse("/").unwrap();
     /// assert!(origin.is_normalized_nontrailing());
@@ -508,8 +508,8 @@ impl<'a> Origin<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// let origin = Origin::parse("/").unwrap();
     /// assert!(origin.is_normalized_nontrailing());

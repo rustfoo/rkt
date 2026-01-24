@@ -1,11 +1,11 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use rocket::fairing::AdHoc;
-use rocket::http::Method;
-use rocket::{Build, Rocket, State};
+use rkt::fairing::AdHoc;
+use rkt::http::Method;
+use rkt::{Build, Rocket, State};
 
 #[derive(Default)]
 struct Counter {
@@ -21,7 +21,7 @@ fn index(counter: &State<Counter>) -> String {
 }
 
 fn rocket() -> Rocket<Build> {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![index])
         .attach(AdHoc::on_ignite("Outer", |rocket| async {
             let counter = Counter::default();
@@ -43,7 +43,7 @@ fn rocket() -> Rocket<Build> {
 
 mod nested_fairing_attaches_tests {
     use super::*;
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     #[test]
     fn test_counts() {

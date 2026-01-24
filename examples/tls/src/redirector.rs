@@ -2,20 +2,20 @@
 
 use std::net::SocketAddr;
 
-use rocket::{Rocket, Ignite, Orbit, State, Error};
-use rocket::http::uri::{Origin, Host};
-use rocket::tracing::Instrument;
-use rocket::fairing::{Fairing, Info, Kind};
-use rocket::response::Redirect;
-use rocket::listener::tcp::TcpListener;
-use rocket::trace::Trace;
+use rkt::{Rocket, Ignite, Orbit, State, Error};
+use rkt::http::uri::{Origin, Host};
+use rkt::tracing::Instrument;
+use rkt::fairing::{Fairing, Info, Kind};
+use rkt::response::Redirect;
+use rkt::listener::tcp::TcpListener;
+use rkt::trace::Trace;
 
 #[derive(Debug, Clone, Copy, Default)]
 pub struct Redirector(u16);
 
 #[derive(Debug, Clone)]
 pub struct Config {
-    server: rocket::Config,
+    server: rkt::Config,
     tls_addr: SocketAddr,
 }
 
@@ -38,12 +38,12 @@ impl Redirector {
 
     // Launch an instance of Rocket than handles redirection on `self.port`.
     pub async fn try_launch(self, config: Config) -> Result<Rocket<Ignite>, Error> {
-        rocket::span_info!("HTTP -> HTTPS Redirector" => {
+        rkt::span_info!("HTTP -> HTTPS Redirector" => {
             info!(from = self.0, to = config.tls_addr.port(),  "redirecting");
         });
 
         let addr = SocketAddr::new(config.tls_addr.ip(), self.0);
-        rocket::custom(&config.server)
+        rkt::custom(&config.server)
             .manage(config)
             .mount("/", routes![redirect])
             .try_launch_on(TcpListener::bind(addr))
@@ -51,7 +51,7 @@ impl Redirector {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl Fairing for Redirector {
     fn info(&self) -> Info {
         Info {
@@ -73,7 +73,7 @@ impl Fairing for Redirector {
         let shutdown = rocket.shutdown();
         let span = tracing::info_span!("HTTP -> HTTPS Redirector");
         let config = Config { tls_addr, server: rocket.config().clone() };
-        rocket::tokio::spawn(async move {
+        rkt::tokio::spawn(async move {
             if let Err(e) = this.try_launch(config).await {
                 e.trace_error();
                 info!("shutting down main instance");

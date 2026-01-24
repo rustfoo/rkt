@@ -40,9 +40,9 @@ impl std::ops::Deref for N {
 /// locations and limits.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::data::Capped;
-/// use rocket::fs::TempFile;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::data::Capped;
+/// use rkt::fs::TempFile;
 ///
 /// #[post("/upload", data = "<file>")]
 /// async fn upload(mut file: Capped<TempFile<'_>>) -> std::io::Result<()> {
@@ -76,8 +76,7 @@ impl<T> Capped<T> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Capped, N};
+    /// use rkt::data::{Capped, N};
     ///
     /// let n = N { written: 2, complete: true };
     /// let capped = Capped::new("hi".to_string(), n);
@@ -94,8 +93,7 @@ impl<T> Capped<T> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Capped, N};
+    /// use rkt::data::{Capped, N};
     ///
     /// let string = "hi";
     /// let capped = Capped::complete("hi", string.len());
@@ -117,8 +115,7 @@ impl<T> Capped<T> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Capped, N};
+    /// use rkt::data::{Capped, N};
     ///
     /// let n = N { written: 2, complete: true };
     /// let capped: Capped<usize> = Capped::new(10usize, n);
@@ -138,8 +135,7 @@ impl<T> Capped<T> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Capped, N};
+    /// use rkt::data::{Capped, N};
     ///
     /// let n = N { written: 2, complete: true };
     /// let capped = Capped::new("hi".to_string(), n);
@@ -160,8 +156,7 @@ impl<T> Capped<T> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Capped, N};
+    /// use rkt::data::{Capped, N};
     ///
     /// let n = N { written: 2, complete: true };
     /// let capped = Capped::new("hi".to_string(), n);
@@ -181,8 +176,7 @@ impl<T> Capped<T> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Capped, N};
+    /// use rkt::data::{Capped, N};
     ///
     /// let n = N { written: 2, complete: true };
     /// let capped = Capped::new("hi".to_string(), n);

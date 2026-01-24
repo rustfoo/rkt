@@ -19,7 +19,7 @@ use crate::{Header, MediaType};
 /// [`Request::accept()`] method. The [`preferred()`] method can be used to
 /// retrieve the client's preferred media type.
 ///
-/// [`Request::accept()`]: rocket::Request::accept()
+/// [`Request::accept()`]: rkt::Request::accept()
 /// [`preferred()`]: Accept::preferred()
 ///
 /// An `Accept` type with a single, common media type can be easily constructed
@@ -30,8 +30,8 @@ use crate::{Header, MediaType};
 /// Construct an `Accept` header with a single `application/json` media type:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// use rocket::http::Accept;
+/// # extern crate rkt;
+/// use rkt::http::Accept;
 ///
 /// # #[allow(unused_variables)]
 /// let accept_json = Accept::JSON;
@@ -43,9 +43,9 @@ use crate::{Header, MediaType};
 /// where an `Into<Header>` is expected:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// use rocket::http::Accept;
-/// use rocket::response::Response;
+/// # extern crate rkt;
+/// use rkt::http::Accept;
+/// use rkt::response::Response;
 ///
 /// let response = Response::build().header(Accept::JSON).finalize();
 /// ```
@@ -82,8 +82,8 @@ impl Accept {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{QMediaType, MediaType, Accept};
+    /// # extern crate rkt;
+    /// use rkt::http::{QMediaType, MediaType, Accept};
     ///
     /// // Construct an `Accept` via a `Vec<MediaType>`.
     /// let json_then_html = vec![MediaType::JSON, MediaType::HTML];
@@ -108,8 +108,8 @@ impl Accept {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{QMediaType, MediaType, Accept};
+    /// # extern crate rkt;
+    /// use rkt::http::{QMediaType, MediaType, Accept};
     ///
     /// let mut accept = Accept::new(QMediaType(MediaType::JSON, Some(0.1)));
     /// assert_eq!(accept.preferred().media_type(), &MediaType::JSON);
@@ -137,8 +137,8 @@ impl Accept {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{QMediaType, MediaType, Accept};
+    /// # extern crate rkt;
+    /// use rkt::http::{QMediaType, MediaType, Accept};
     ///
     /// let media_types = vec![
     ///     QMediaType(MediaType::JSON, Some(0.3)),
@@ -184,8 +184,8 @@ impl Accept {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{QMediaType, MediaType, Accept};
+    /// # extern crate rkt;
+    /// use rkt::http::{QMediaType, MediaType, Accept};
     ///
     /// let accept = Accept::new(QMediaType(MediaType::XML, None));
     /// assert_eq!(accept.first(), Some(&MediaType::XML.into()));
@@ -202,8 +202,8 @@ impl Accept {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{QMediaType, MediaType, Accept};
+    /// # extern crate rkt;
+    /// use rkt::http::{QMediaType, MediaType, Accept};
     ///
     /// let qmedia_types = vec![
     ///     QMediaType(MediaType::JSON, Some(0.3)),
@@ -228,8 +228,8 @@ impl Accept {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{QMediaType, MediaType, Accept};
+    /// # extern crate rkt;
+    /// use rkt::http::{QMediaType, MediaType, Accept};
     ///
     /// let qmedia_types = vec![
     ///     QMediaType(MediaType::JSON, Some(0.3)),
@@ -303,8 +303,8 @@ impl QMediaType {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{MediaType, QMediaType};
+    /// # extern crate rkt;
+    /// use rkt::http::{MediaType, QMediaType};
     ///
     /// let q_type = QMediaType(MediaType::HTML, Some(0.3));
     /// assert_eq!(q_type.weight(), Some(0.3));
@@ -319,8 +319,8 @@ impl QMediaType {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{MediaType, QMediaType};
+    /// # extern crate rkt;
+    /// use rkt::http::{MediaType, QMediaType};
     ///
     /// let q_type = QMediaType(MediaType::HTML, Some(0.3));
     /// assert_eq!(q_type.weight_or(0.9), 0.3);
@@ -338,8 +338,8 @@ impl QMediaType {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{MediaType, QMediaType};
+    /// # extern crate rkt;
+    /// use rkt::http::{MediaType, QMediaType};
     ///
     /// let q_type = QMediaType(MediaType::HTML, Some(0.3));
     /// assert_eq!(q_type.media_type(), &MediaType::HTML);

@@ -1,9 +1,9 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
 
-use rocket::fairing::AdHoc;
+use rkt::fairing::AdHoc;
 
 // Want to test:
 //
@@ -20,9 +20,9 @@ struct Flags {
 
 #[test]
 fn shutdown_fairing_runs() {
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
-    let rocket = rocket::build()
+    let rocket = rkt::build()
         .manage(Flags::default())
         .attach(AdHoc::on_liftoff("Liftoff Flag", |rocket| {
             Box::pin(async move {
@@ -49,9 +49,9 @@ fn shutdown_fairing_runs() {
 
 #[async_test]
 async fn async_shutdown_fairing_runs() {
-    use rocket::local::asynchronous::Client;
+    use rkt::local::asynchronous::Client;
 
-    let rocket = rocket::build()
+    let rocket = rkt::build()
         .manage(Flags::default())
         .attach(AdHoc::on_liftoff("Liftoff Flag", |rocket| {
             Box::pin(async move {
@@ -78,9 +78,9 @@ async fn async_shutdown_fairing_runs() {
 
 #[async_test]
 async fn multiple_shutdown_fairing_runs() {
-    use rocket::local::asynchronous::Client;
+    use rkt::local::asynchronous::Client;
 
-    let rocket = rocket::build()
+    let rocket = rkt::build()
         .manage(Flags::default())
         .attach(AdHoc::on_shutdown("Shutdown Flag 1", |rocket| {
             Box::pin(async move {
@@ -106,13 +106,13 @@ async fn multiple_shutdown_fairing_runs() {
 
 #[async_test]
 async fn async_slow_shutdown_doesnt_elongate_grace() {
-    use rocket::local::asynchronous::Client;
+    use rkt::local::asynchronous::Client;
 
-    let mut config = rocket::Config::debug_default();
+    let mut config = rkt::Config::debug_default();
     config.shutdown.grace = 1;
     config.shutdown.mercy = 1;
 
-    let rocket = rocket::build()
+    let rocket = rkt::build()
         .manage(Flags::default())
         .reconfigure(config)
         .attach(AdHoc::on_shutdown("Slow Shutdown", |rocket| {
@@ -139,7 +139,7 @@ async fn async_slow_shutdown_doesnt_elongate_grace() {
 
 #[test]
 fn background_tasks_dont_prevent_terminate() {
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     #[get("/")]
     fn index() {
@@ -152,11 +152,11 @@ fn background_tasks_dont_prevent_terminate() {
         });
     }
 
-    let mut config = rocket::Config::debug_default();
+    let mut config = rkt::Config::debug_default();
     config.shutdown.grace = 1;
     config.shutdown.mercy = 1;
 
-    let rocket = rocket::build()
+    let rocket = rkt::build()
         .reconfigure(config)
         .mount("/", routes![index]);
 

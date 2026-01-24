@@ -1,7 +1,7 @@
-use rocket::response::Redirect;
-use rocket::Request;
+use rkt::response::Redirect;
+use rkt::Request;
 
-use rocket_dyn_templates::{context, minijinja::Environment, Template};
+use rkt_dyn_templates::{context, minijinja::Environment, Template};
 
 // use self::minijinja::;
 

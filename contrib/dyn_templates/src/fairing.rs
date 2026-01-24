@@ -1,7 +1,7 @@
-use rocket::fairing::{self, Fairing, Info, Kind};
-use rocket::figment::{value::magic::RelativePathBuf, Source};
-use rocket::trace::Trace;
-use rocket::{Build, Orbit, Rocket};
+use rkt::fairing::{self, Fairing, Info, Kind};
+use rkt::figment::{value::magic::RelativePathBuf, Source};
+use rkt::trace::Trace;
+use rkt::{Build, Orbit, Rocket};
 
 use crate::context::{Callback, Context, ContextManager};
 use crate::engine::Engines;
@@ -18,7 +18,7 @@ pub struct TemplateFairing {
     pub callback: Callback,
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl Fairing for TemplateFairing {
     fn info(&self) -> Info {
         let kind = Kind::Ignite | Kind::Liftoff;
@@ -71,7 +71,7 @@ impl Fairing for TemplateFairing {
     }
 
     #[cfg(debug_assertions)]
-    async fn on_request(&self, req: &mut rocket::Request<'_>, _data: &mut rocket::Data<'_>) {
+    async fn on_request(&self, req: &mut rkt::Request<'_>, _data: &mut rkt::Data<'_>) {
         let cm = req
             .rocket()
             .state::<ContextManager>()

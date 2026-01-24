@@ -35,7 +35,7 @@ impl ProxyProto<'_> {
     /// # Example
     ///
     /// ```rust
-    /// use rocket::http::ProxyProto;
+    /// use rkt::http::ProxyProto;
     ///
     /// assert!(ProxyProto::Https.is_https());
     /// assert!(!ProxyProto::Http.is_https());

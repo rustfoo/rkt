@@ -24,13 +24,12 @@ use crate::{Catcher, Ignite, Orbit, Phase, Rocket, Route};
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::*;
-/// use rocket::trace::Trace;
-/// use rocket::error::ErrorKind;
+/// # use rkt::*;
+/// use rkt::trace::Trace;
+/// use rkt::error::ErrorKind;
 ///
-/// # async fn run() -> Result<(), rocket::error::Error> {
-/// if let Err(e) = rocket::build().ignite().await {
+/// # async fn run() -> Result<(), rkt::error::Error> {
+/// if let Err(e) = rkt::build().ignite().await {
 ///     match e.kind() {
 ///         ErrorKind::Bind(_, e) => info!("binding failed: {}", e),
 ///         ErrorKind::Io(e) => info!("I/O error: {}", e),
@@ -93,18 +92,18 @@ pub struct Empty;
 /// An error that occurs when a value doesn't match one of the expected options.
 ///
 /// This error is returned by the [`FromParam`] trait implementation generated
-/// by the [`FromParam` derive](macro@rocket::FromParam) when the value of a
+/// by the [`FromParam` derive](macro@rkt::FromParam) when the value of a
 /// dynamic path segment does not match one of the expected variants. The
 /// `value` field will contain the value that was provided, and `options` will
 /// contain each of possible stringified variants.
 ///
-/// [`FromParam`]: trait@rocket::request::FromParam
+/// [`FromParam`]: trait@rkt::request::FromParam
 ///
 /// # Example
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::error::InvalidOption;
+/// #[macro_use] extern crate rkt;
+/// use rkt::error::InvalidOption;
 ///
 /// #[derive(FromParam)]
 /// enum MyParam {
@@ -159,13 +158,12 @@ impl Error {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::*;
-    /// use rocket::trace::Trace;
-    /// use rocket::error::ErrorKind;
+    /// # use rkt::*;
+    /// use rkt::trace::Trace;
+    /// use rkt::error::ErrorKind;
     ///
-    /// # async fn run() -> Result<(), rocket::error::Error> {
-    /// if let Err(e) = rocket::build().ignite().await {
+    /// # async fn run() -> Result<(), rkt::error::Error> {
+    /// if let Err(e) = rkt::build().ignite().await {
     ///     match e.kind() {
     ///         ErrorKind::Bind(_, e) => info!("binding failed: {}", e),
     ///         ErrorKind::Io(e) => info!("I/O error: {}", e),
@@ -189,13 +187,12 @@ impl Error {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::*;
+    /// # use rkt::*;
     /// use std::process::ExitCode;
-    /// use rocket::error::Error;
+    /// use rkt::error::Error;
     ///
     /// async fn run() -> ExitCode {
-    ///     Error::report(rocket::build().launch().await)
+    ///     Error::report(rkt::build().launch().await)
     /// }
     /// ```
     pub fn report<P: Phase>(result: Result<Rocket<P>, Error>) -> process::ExitCode {

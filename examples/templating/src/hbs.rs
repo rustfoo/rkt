@@ -1,7 +1,7 @@
-use rocket::Request;
-use rocket::response::Redirect;
+use rkt::Request;
+use rkt::response::Redirect;
 
-use rocket_dyn_templates::{Template, handlebars, context};
+use rkt_dyn_templates::{Template, handlebars, context};
 
 use self::handlebars::{Handlebars, JsonRender};
 

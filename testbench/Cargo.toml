@@ -19,8 +19,7 @@ inventory = "0.3.15"
 version = "0.28"
 features = ["signal"]
 
-[dependencies.rocket]
-package = "rocket-community"
+[dependencies.rkt]
 path = "../core/lib/"
 features = ["secrets", "tls", "mtls"]
 

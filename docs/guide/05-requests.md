@@ -9,7 +9,7 @@ about a request in order for the route's handler to be called. You've already
 seen an example of this in action:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 #[get("/world")]
@@ -45,7 +45,7 @@ match again _any_ method. Consider the following examples:
   * Match a `POST` request to `/`:
 
     ```rust
-    # use rocket::post;
+    # use rkt::post;
     #[post("/")]
     # fn handler() {}
     ```
@@ -53,7 +53,7 @@ match again _any_ method. Consider the following examples:
   * Match a `PATCH` request to `/fix`:
 
     ```rust
-    # use rocket::patch;
+    # use rkt::patch;
     #[patch("/fix")]
     # fn handler() {}
     ```
@@ -61,7 +61,7 @@ match again _any_ method. Consider the following examples:
   * Match a `PROPFIND` request to `/collection`:
 
     ```rust
-    # use rocket::route;
+    # use rkt::route;
     #[route("/collection", method = PROPFIND)]
     # fn handler() {}
     ```
@@ -69,7 +69,7 @@ match again _any_ method. Consider the following examples:
   * Match a `VERSION-CONTROL` request to `/collection`:
 
     ```rust
-    # use rocket::route;
+    # use rkt::route;
     #[route("/resource", method = "VERSION-CONTROL")]
     # fn handler() {}
     ```
@@ -77,7 +77,7 @@ match again _any_ method. Consider the following examples:
   * Match a request to `/page` with _any_ method:
 
     ```rust
-    # use rocket::route;
+    # use rkt::route;
     #[route("/page")]
     # fn handler() {}
     ```
@@ -112,7 +112,7 @@ names in a route's path. For example, if we want to say _Hello!_ to anything,
 not just the world, we can declare a route like so:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 #[get("/hello/<name>")]
@@ -134,7 +134,7 @@ the full list of provided implementations, see the [`FromParam` API docs].
 Here's a more complete route to illustrate varied usage:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 #[get("/hello/<name>/<age>/<cool>")]
@@ -161,7 +161,7 @@ As an example, the following route matches against all paths that begin with
 `/page`:
 
 ```rust
-# use rocket::get;
+# use rkt::get;
 use std::path::PathBuf;
 
 #[get("/page/<path..>")]
@@ -175,11 +175,11 @@ empty for paths that are simply `/page`, `/page/`, `/page//`, and so on. The
 implemented in just 4 lines:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 use std::path::{Path, PathBuf};
-use rocket::fs::NamedFile;
+use rkt::fs::NamedFile;
 
 #[get("/<file..>")]
 async fn files(file: PathBuf) -> Option<NamedFile> {
@@ -195,13 +195,13 @@ async fn files(file: PathBuf) -> Option<NamedFile> {
   [`FileServer`], which makes it as simple as:
 
   ```rust
-  # #[macro_use] extern crate rocket;
+  # #[macro_use] extern crate rkt;
 
-  use rocket::fs::FileServer;
+  use rkt::fs::FileServer;
 
   #[launch]
   fn rocket() -> _ {
-      rocket::build()
+      rkt::build()
            // serve files from `/www/static` at path `/public`
           .mount("/public", FileServer::new("/www/static"))
   }
@@ -224,8 +224,8 @@ As an example, the `foo_bar` route below matches any `GET` request with a
 route below matches _every_ GET request.
 
 ```rust
-# #[macro_use] extern crate rocket;
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
+# #[macro_use] extern crate rkt;
+# extern crate rkt_docs_tests;
 
 #[get("/foo/<_>/bar")]
 fn foo_bar() -> &'static str {
@@ -238,7 +238,7 @@ fn everything() -> &'static str {
 }
 
 # // Ensure there are no collisions.
-# rocket_docs_tests::client(routes![foo_bar, everything]);
+# rkt_docs_tests::client(routes![foo_bar, everything]);
 ```
 
 ## Forwarding
@@ -247,7 +247,7 @@ Let's take a closer look at this route attribute and signature pair from a
 previous example:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 #[get("/hello/<name>/<age>/<cool>")]
@@ -268,7 +268,7 @@ section](#default-ranking), but a route's rank can also be manually set with the
 `rank` attribute. To illustrate, consider the following routes:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 #[get("/user/<id>")]
 fn user(id: usize) { /* ... */ }
@@ -281,7 +281,7 @@ fn user_str(id: &str) { /* ... */ }
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![user, user_int, user_str])
+    rkt::build().mount("/", routes![user, user_int, user_str])
 }
 ```
 
@@ -360,8 +360,8 @@ Recall that _lower_ ranks have _higher_ precedence. As an example, consider this
 application from before:
 
 ```rust
-# #[macro_use] extern crate rocket;
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
+# #[macro_use] extern crate rkt;
+# extern crate rkt_docs_tests;
 
 #[get("/foo/<_>/bar")]
 fn foo_bar() { }
@@ -370,7 +370,7 @@ fn foo_bar() { }
 fn everything() { }
 #
 # // Ensure there are no collisions.
-# rocket_docs_tests::client(routes![foo_bar, everything]);
+# rkt_docs_tests::client(routes![foo_bar, everything]);
 ```
 
 Default ranking ensures that `foo_bar`, with a "partial" path color, has higher
@@ -397,10 +397,10 @@ For instance, the following dummy handler makes use of three request guards,
 named in the route attribute.
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-# type A = rocket::http::Method;
+# type A = rkt::http::Method;
 # type B = A;
 # type C = A;
 
@@ -425,9 +425,9 @@ headers, you might create an `ApiKey` type that implements `FromRequest` and
 then use it as a request guard:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
-# type ApiKey = rocket::http::Method;
+# type ApiKey = rkt::http::Method;
 
 #[get("/sensitive")]
 fn sensitive(key: ApiKey) { /* .. */ }
@@ -507,14 +507,14 @@ following three routes, each leading to an administrative control panel at
 `/admin`:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 # type Template = ();
-# type AdminUser = rocket::http::Method;
-# type User = rocket::http::Method;
+# type AdminUser = rkt::http::Method;
+# type User = rkt::http::Method;
 
-use rocket::response::Redirect;
+use rkt::response::Redirect;
 
 #[get("/login")]
 fn login() -> Template { /* .. */ }
@@ -556,16 +556,16 @@ forward in `admin_panel_user`, we might want to detect it and handle it
 dynamically:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 # type Template = ();
-# type AdminUser = rocket::http::Method;
-# type User = rocket::http::Method;
+# type AdminUser = rkt::http::Method;
+# type User = rkt::http::Method;
 # #[get("/login")]
 # fn login() -> Template { /* .. */ }
 
-use rocket::response::Redirect;
+use rkt::response::Redirect;
 
 #[get("/admin", rank = 2)]
 fn admin_panel_user(user: Option<User>) -> Result<&'static str, Redirect> {
@@ -584,10 +584,10 @@ type. The value can be retrieved in a handler by using a `Result<Certificate,
 Error>` guard:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket::mtls;
+use rkt::mtls;
 
 #[get("/login")]
 fn login(cert: Result<mtls::Certificate, mtls::Error>) {
@@ -603,10 +603,10 @@ however, chain both catching responders to determine if a guard `T` forwards or
 fails, and retrieve the error if it fails, with `Option<Result<T, E>>`:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket::mtls;
+use rkt::mtls;
 
 #[get("/login")]
 fn login(cert: Option<Result<mtls::Certificate, mtls::Error>>) {
@@ -628,9 +628,9 @@ allows you to get, set, and remove cookies. Because `&CookieJar` is a request
 guard, an argument of its type can simply be added to a handler:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
-use rocket::http::CookieJar;
+use rkt::http::CookieJar;
 
 #[get("/")]
 fn index(cookies: &CookieJar<'_>) -> Option<String> {
@@ -671,11 +671,11 @@ that most methods are suffixed with `_private`. These methods are:
 usage is below:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket::http::{Cookie, CookieJar};
-use rocket::response::{Flash, Redirect};
+use rkt::http::{Cookie, CookieJar};
+use rkt::response::{Flash, Redirect};
 
 /// Retrieve the user's ID, if any.
 #[get("/user_id")]
@@ -730,7 +730,7 @@ When a route indicates a payload-supporting method (`PUT`, `POST`, `DELETE`, and
 As an example, consider the following route:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 # type User = String;
@@ -756,7 +756,7 @@ route.
 As an example, consider the following route:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 # type User = ();
 
@@ -780,7 +780,7 @@ an argument in the handler. The argument's type must implement the [`FromData`]
 trait. It looks like this, where `T` is assumed to implement `FromData`:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 # type T = String;
 
@@ -799,12 +799,12 @@ data as JSON. The only condition is that the generic type `T` implements the
 `Deserialize` trait from [`serde`](https://serde.rs).
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::serde::{Deserialize, json::Json};
+use rkt::serde::{Deserialize, json::Json};
 
 #[derive(Deserialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Task<'r> {
     description: &'r str,
     complete: bool
@@ -817,9 +817,9 @@ fn new(task: Json<Task<'_>>) { /* .. */ }
 ! warning: Using Rocket's `serde` derive re-exports requires a bit more effort.
 
   For convenience, Rocket re-exports `serde`'s `Serialize` and `Deserialize`
-  traits and derive macros from `rocket::serde`. However, due to Rust's limited
+  traits and derive macros from `rkt::serde`. However, due to Rust's limited
   support for derive macro re-exports, using the re-exported derive macros
-  requires annotating structures with `#[serde(crate = "rocket::serde")]`. If
+  requires annotating structures with `#[serde(crate = "rkt::serde")]`. If
   you'd like to avoid this extra annotation, you must depend on `serde` directly
   via your crate's `Cargo.toml`:
 
@@ -850,9 +850,9 @@ The [`TempFile`] data guard streams data directly to a temporary file which can
 then be persisted. It makes accepting file uploads trivial:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::fs::TempFile;
+use rkt::fs::TempFile;
 
 #[post("/upload", format = "plain", data = "<file>")]
 async fn upload(mut file: TempFile<'_>) -> std::io::Result<()> {
@@ -870,11 +870,11 @@ want to stream the incoming data to some sink. Rocket makes this as simple as
 possible via the [`Data`](@api/master/rocket/data/struct.Data.html) type:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::tokio;
+use rkt::tokio;
 
-use rocket::data::{Data, ToByteUnit};
+use rkt::data::{Data, ToByteUnit};
 
 #[post("/debug", data = "<data>")]
 async fn debug(data: Data<'_>) -> std::io::Result<()> {
@@ -911,9 +911,9 @@ form contains two fields: `complete`, a checkbox, and `type`, a text field. You
 can easily handle the form request in Rocket as follows:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::form::Form;
+use rkt::form::Form;
 
 #[derive(FromForm)]
 struct Task<'r> {
@@ -937,7 +937,7 @@ invalid, a customizable error is returned. As before, a forward or error can
 be caught by using the `Option` and `Result` types:
 
 ```rust
-# use rocket::{post, form::Form};
+# use rkt::{post, form::Form};
 # type Task<'r> = &'r str;
 
 #[post("/todo", data = "<task>")]
@@ -952,10 +952,10 @@ example, here's a form and route that accepts a multipart file upload using
 [`TempFile`]:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::form::Form;
-use rocket::fs::TempFile;
+use rkt::form::Form;
+use rkt::fs::TempFile;
 
 #[derive(FromForm)]
 struct Upload<'r> {
@@ -986,9 +986,9 @@ parameter is also required to implement `FromForm`. For instance, we can simply
 replace `Form<T>` with `Form<Strict<T>>` above to get strict parsing:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::form::{Form, Strict};
+use rkt::form::{Form, Strict};
 
 # #[derive(FromForm)] struct Task<'r> { complete: bool, description: &'r str, }
 
@@ -1000,8 +1000,8 @@ fn new(task: Form<Strict<Task<'_>>>) { /* .. */ }
 overall structure and remaining fields lenient:
 
 ```rust
-# #[macro_use] extern crate rocket;
-# use rocket::form::{Form, Strict};
+# #[macro_use] extern crate rkt;
+# use rkt::form::{Form, Strict};
 
 #[derive(FromForm)]
 struct Input {
@@ -1033,9 +1033,9 @@ defaults to `Err(Missing)` or otherwise collects errors in an `Err` of
 [`Errors<'_>`]. Defaulting guards can be used just like any other form guard:
 
 ```rust
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
-# use rocket::form::FromForm;
-use rocket::form::{self, Errors};
+# extern crate rkt_docs_tests;
+# use rkt::form::FromForm;
+use rkt::form::{self, Errors};
 
 #[derive(FromForm)]
 struct MyForm<'v> {
@@ -1043,7 +1043,7 @@ struct MyForm<'v> {
     ok_or_error: form::Result<'v, Vec<&'v str>>,
     here_or_false: bool,
 }
-# rocket_docs_tests::assert_form_parses_ok!(MyForm, "");
+# rkt_docs_tests::assert_form_parses_ok!(MyForm, "");
 ```
 
 The default can be overridden or unset using the `#[field(default = expr)]`
@@ -1052,7 +1052,7 @@ default value of the field to be `expr.into()`. If `expr` _is_ `None`, the
 parameter _unsets_ the default value of the field, if any.
 
 ```rust
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm)]
 struct MyForm {
@@ -1092,7 +1092,7 @@ external service. The external service `POST`s a form with a field named
 structure can be written as:
 
 ```rust
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm)]
 struct External<'r> {
@@ -1105,7 +1105,7 @@ If you want to accept both `firstName` case-insensitively as well as
 `first_name` case-sensitively, you'll need to use two annotations:
 
 ```rust
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm)]
 struct External<'r> {
@@ -1122,7 +1122,7 @@ If instead you wanted to match any of `first-name`, `first_name` or `firstName`,
 in each instance case-insensitively, you would write:
 
 ```rust
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm)]
 struct External<'r> {
@@ -1144,7 +1144,7 @@ attribute. As an example, consider a form field `age: u16` which we'd like to
 ensure is greater than `21`. The following structure accomplishes this:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 #[derive(FromForm)]
 struct Person {
@@ -1166,7 +1166,7 @@ that the value of the field `confirm` is equal to the value of the field `value`
 and that it doesn't contain `no`:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 #[derive(FromForm)]
 struct Password<'r> {
@@ -1189,10 +1189,10 @@ you wanted to implement an ad-hoc Luhn validator for credit-card-like numbers,
 you might write:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::time::Date;
-use rocket::form::{self, Error};
+use rkt::time::Date;
+use rkt::form::{self, Error};
 
 #[derive(FromForm)]
 struct CreditCard {
@@ -1225,7 +1225,7 @@ application often validates `age` fields, consider creating a custom `Age` form
 guard that always applies the validation:
 
 ```rust
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm)]
 #[field(validate = range(18..150))]
@@ -1237,7 +1237,7 @@ other form. For instance, the following example leverages [`try_with`] and an
 existing `FromStr` implementation on a `Token` type to validate a string:
 
 ```rust
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 # impl FromStr for Token<'_> {
 #     type Err = &'static str;
@@ -1286,7 +1286,7 @@ for structures that need more than one value to allow indexing.
 Form structs can be nested:
 
 ```rust
-use rocket::form::FromForm;
+use rkt::form::FromForm;
 
 #[derive(FromForm)]
 struct MyForm<'r> {
@@ -1316,9 +1316,9 @@ To parse into a `MyForm`, a form with the following fields must be submitted:
 Such a form, URL-encoded, may look like:
 
 ```rust
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
-# use rocket::form::FromForm;
-# use rocket_docs_tests::{assert_form_parses, assert_not_form_parses};
+# extern crate rkt_docs_tests;
+# use rkt::form::FromForm;
+# use rkt_docs_tests::{assert_form_parses, assert_not_form_parses};
 # #[derive(FromForm, Debug, PartialEq)] struct MyForm { owner: Person, pet: Pet, }
 # #[derive(FromForm, Debug, PartialEq)] struct Person { name: String }
 # #[derive(FromForm, Debug, PartialEq)] struct Pet { name: String, good_pet: bool, }
@@ -1348,9 +1348,9 @@ Note that `.` is used to separate each field. Identically, `[]` can be used in
 place of or in addition to `.`:
 
 ```rust
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
-# use rocket::form::FromForm;
-# use rocket_docs_tests::{assert_form_parses, assert_not_form_parses};
+# extern crate rkt_docs_tests;
+# use rkt::form::FromForm;
+# use rkt_docs_tests::{assert_form_parses, assert_not_form_parses};
 # #[derive(FromForm, Debug, PartialEq)] struct MyForm { owner: Person, pet: Pet, }
 # #[derive(FromForm, Debug, PartialEq)] struct Person { name: String }
 # #[derive(FromForm, Debug, PartialEq)] struct Pet { name: String, good_pet: bool, }
@@ -1383,7 +1383,7 @@ Any level of nesting is allowed.
 A form can also contain sequences:
 
 ```rust
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm)]
 struct MyForm {
@@ -1405,9 +1405,9 @@ not remembered by `Vec`. The special blank key is never equal to any other key.
 Consider the following examples.
 
 ```rust
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
-# use rocket::form::FromForm;
-# use rocket_docs_tests::{assert_form_parses, assert_not_form_parses};
+# extern crate rkt_docs_tests;
+# use rkt::form::FromForm;
+# use rkt_docs_tests::{assert_form_parses, assert_not_form_parses};
 # #[derive(FromForm, PartialEq, Debug)] struct MyForm { numbers: Vec<usize>, }
 // These form strings...
 # assert_form_parses! { MyForm,
@@ -1450,7 +1450,7 @@ parsed leniently, keeping only the _first_ field.
 Any `FromForm` type can appear in a sequence:
 
 ```rust
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm)]
 struct MyForm {
@@ -1475,9 +1475,9 @@ To parse into a `MyForm`, a form with the following fields must be submitted:
 Examples include:
 
 ```rust
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
-# use rocket::form::FromForm;
-# use rocket_docs_tests::{assert_form_parses, assert_not_form_parses};
+# extern crate rkt_docs_tests;
+# use rkt::form::FromForm;
+# use rkt_docs_tests::{assert_form_parses, assert_not_form_parses};
 # #[derive(FromForm, Debug, PartialEq)] struct MyForm { name: String, pets: Vec<Pet>, }
 # #[derive(FromForm, Debug, PartialEq)] struct Pet { name: String, good_pet: bool, }
 // These form strings...
@@ -1505,7 +1505,7 @@ MyForm {
 Since vectors are `FromForm` themselves, they can appear inside of vectors:
 
 ```rust
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm)]
 struct MyForm {
@@ -1516,9 +1516,9 @@ struct MyForm {
 The rules are exactly the same.
 
 ```rust
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
-# use rocket::form::FromForm;
-# use rocket_docs_tests::assert_form_parses;
+# extern crate rkt_docs_tests;
+# use rkt::form::FromForm;
+# use rkt_docs_tests::assert_form_parses;
 # #[derive(FromForm, Debug, PartialEq)] struct MyForm { v: Vec<Vec<usize>>, }
 # assert_form_parses! { MyForm,
 "v=1&v=2&v=3" => MyForm { v: vec![vec![1], vec![2], vec![3]] },
@@ -1536,7 +1536,7 @@ The rules are exactly the same.
 A form can also contain maps:
 
 ```rust
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 use std::collections::HashMap;
 
 #[derive(FromForm)]
@@ -1558,11 +1558,11 @@ As an example, the following are equivalent and all parse to `{ "a" => 1, "b" =>
 2 }`:
 
 ```rust
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
+# extern crate rkt_docs_tests;
 # use std::collections::HashMap;
 #
-# use rocket::form::FromForm;
-# use rocket_docs_tests::{map, assert_form_parses};
+# use rkt::form::FromForm;
+# use rkt_docs_tests::{map, assert_form_parses};
 #
 # #[derive(Debug, PartialEq, FromForm)]
 # struct MyForm {
@@ -1592,7 +1592,7 @@ Both the key and value of a `HashMap` can be any type that implements
 ```rust
 # use std::collections::HashMap;
 
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm)]
 struct MyForm {
@@ -1614,11 +1614,11 @@ To parse into a `MyForm`, a form with the following fields must be submitted:
 Examples include:
 
 ```rust
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
+# extern crate rkt_docs_tests;
 # use std::collections::HashMap;
 #
-# use rocket::form::FromForm;
-# use rocket_docs_tests::{map, assert_form_parses};
+# use rkt::form::FromForm;
+# use rkt_docs_tests::{map, assert_form_parses};
 #
 
 # #[derive(FromForm, Debug, PartialEq)] struct MyForm { ids: HashMap<usize, Person>, }
@@ -1647,7 +1647,7 @@ structures:
 ```rust
 # use std::collections::HashMap;
 
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm)]
 struct MyForm {
@@ -1690,11 +1690,11 @@ parsed into the map.
 Examples include:
 
 ```rust
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
+# extern crate rkt_docs_tests;
 # use std::collections::HashMap;
 #
-# use rocket::form::FromForm;
-# use rocket_docs_tests::{map, assert_form_parses};
+# use rkt::form::FromForm;
+# use rkt_docs_tests::{map, assert_form_parses};
 #
 
 # #[derive(FromForm, Debug, PartialEq)] struct MyForm { m: HashMap<Person, Pet>, }
@@ -1741,7 +1741,7 @@ sequences. Consider the extravagantly contrived type:
 
 ```rust
 use std::collections::{BTreeMap, HashMap};
-# use rocket::form::FromForm;
+# use rkt::form::FromForm;
 
 #[derive(FromForm, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 struct Person {
@@ -1782,12 +1782,12 @@ Where we have the following symbolic keys:
   * `$j`: symbolic name and/or value top-level value's key
 
 ```rust
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
+# extern crate rkt_docs_tests;
 # use std::collections::BTreeMap;
 # use std::collections::HashMap;
 #
-# use rocket::form::FromForm;
-# use rocket_docs_tests::{map, bmap, assert_form_parses};
+# use rkt::form::FromForm;
+# use rkt_docs_tests::{map, bmap, assert_form_parses};
 # #[derive(FromForm, Debug, PartialEq, Eq, Hash, PartialOrd, Ord)]
 # struct Person { name: String, age: usize }
 
@@ -1837,10 +1837,10 @@ guard, where `T` implements `FromForm`. The `context` field contains the form's
 [`Context`]:
 
 ```rust
-# use rocket::post;
+# use rkt::post;
 # type T = String;
 
-use rocket::form::{Form, Contextual};
+use rkt::form::{Form, Contextual};
 
 #[post("/submit", data = "<form>")]
 fn submit(form: Form<Contextual<'_, T>>) {
@@ -1902,8 +1902,8 @@ For example, the route below will match requests with path `/` and _at least_
 the query segments `hello` and `cat=♥`:
 
 ```rust
-# #[macro_use] extern crate rocket;
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
+# #[macro_use] extern crate rkt;
+# extern crate rkt_docs_tests;
 
 #[get("/?hello&cat=♥")]
 fn cats() -> &'static str {
@@ -1911,18 +1911,18 @@ fn cats() -> &'static str {
 }
 
 // The following GET requests match `cats`. `%E2%99%A5` is encoded `♥`.
-# let status = rocket_docs_tests::client(routes![cats]).get(
+# let status = rkt_docs_tests::client(routes![cats]).get(
 "/?cat=%E2%99%A5&hello"
 # ).dispatch().status();
-# assert_eq!(status, rocket::http::Status::Ok);
-# let status = rocket_docs_tests::client(routes![cats]).get(
+# assert_eq!(status, rkt::http::Status::Ok);
+# let status = rkt_docs_tests::client(routes![cats]).get(
 "/?hello&cat=%E2%99%A5"
 # ).dispatch().status();
-# assert_eq!(status, rocket::http::Status::Ok);
-# let status = rocket_docs_tests::client(routes![cats]).get(
+# assert_eq!(status, rkt::http::Status::Ok);
+# let status = rkt_docs_tests::client(routes![cats]).get(
 "/?dogs=amazing&hello&there&cat=%E2%99%A5"
 # ).dispatch().status();
-# assert_eq!(status, rocket::http::Status::Ok);
+# assert_eq!(status, rkt::http::Status::Ok);
 ```
 
 ### Dynamic Parameters
@@ -1935,8 +1935,8 @@ this with a single value `name`, a collection `color`, a nested form `person`,
 and an `other` value that will default to `None`:
 
 ```rust
-# #[macro_use] extern crate rocket;
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
+# #[macro_use] extern crate rkt;
+# extern crate rkt_docs_tests;
 
 #[derive(Debug, PartialEq, FromFormField)]
 enum Color {
@@ -1967,7 +1967,7 @@ fn hello(name: &str, color: Vec<Color>, person: Person<'_>, other: Option<usize>
 }
 
 // A request with these query segments matches as above.
-# let status = rocket_docs_tests::client(routes![hello]).get("/?\
+# let status = rkt_docs_tests::client(routes![hello]).get("/?\
 name=George&\
 color=red&\
 color=green&\
@@ -1977,7 +1977,7 @@ person.pet.age=1&\
 color=blue&\
 extra=yes\
 # ").dispatch().status();
-# assert_eq!(status, rocket::http::Status::Ok);
+# assert_eq!(status, rkt::http::Status::Ok);
 ```
 
 Note that, like forms, parsing is field-ordering insensitive and lenient by
@@ -1991,10 +1991,10 @@ words, the otherwise unmatched segments are pushed, unshifted, to the
 `<param..>` type:
 
 ```rust
-# #[macro_use] extern crate rocket;
-# extern crate rocket_docs_tests_community as rocket_docs_tests;
+# #[macro_use] extern crate rkt;
+# extern crate rkt_docs_tests;
 
-use rocket::form::Form;
+use rkt::form::Form;
 
 #[derive(FromForm)]
 struct User<'r> {
@@ -2010,13 +2010,13 @@ fn user(id: usize, user: User<'_>) {
 }
 
 // A request with these query segments matches as above.
-# let status = rocket_docs_tests::client(routes![user]).get("/?\
+# let status = rkt_docs_tests::client(routes![user]).get("/?\
 hello&\
 name=Bob+Smith&\
 id=1337&\
 active=yes\
 # ").dispatch().status();
-# assert_eq!(status, rocket::http::Status::Ok);
+# assert_eq!(status, rkt::http::Status::Ok);
 ```
 
 ## Error Catchers
@@ -2044,10 +2044,10 @@ takes a single integer corresponding to the HTTP status code to catch. For
 instance, to declare a catcher for `404 Not Found` errors, you'd write:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket::Request;
+use rkt::Request;
 
 #[catch(404)]
 fn not_found(req: &Request) { /* .. */ }
@@ -2059,10 +2059,10 @@ argument, it must be of type [`&Request`]. It it takes two, they must be of type
 implement `Responder`. A concrete implementation may look like:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-# use rocket::Request;
+# use rkt::Request;
 
 #[catch(404)]
 fn not_found(req: &Request) -> String {
@@ -2077,13 +2077,13 @@ mounting a route: call the [`register()`] method with a list of catchers via the
 looks like:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-# use rocket::Request;
+# use rkt::Request;
 # #[catch(404)] fn not_found(req: &Request) { /* .. */ }
 
 fn main() {
-    rocket::build().register("/", catchers![not_found]);
+    rkt::build().register("/", catchers![not_found]);
 }
 ```
 
@@ -2098,7 +2098,7 @@ with the longest base takes precedence.
 As an example, consider the following application:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 #[catch(404)]
 fn general_not_found() -> &'static str {
@@ -2112,12 +2112,12 @@ fn foo_not_found() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .register("/", catchers![general_not_found])
         .register("/foo", catchers![foo_not_found])
 }
 
-# let client = rocket::local::blocking::Client::debug(rocket()).unwrap();
+# let client = rkt::local::blocking::Client::debug(rocket()).unwrap();
 #
 # let response = client.get("/").dispatch();
 # assert_eq!(response.into_string().unwrap(), "General 404");
@@ -2148,17 +2148,17 @@ error. Declaring a default catcher is done with `#[catch(default)]` and must
 similarly be registered with [`register()`]:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::Request;
-use rocket::http::Status;
+use rkt::Request;
+use rkt::http::Status;
 
 #[catch(default)]
 fn default_catcher(status: Status, request: &Request) { /* .. */ }
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().register("/", catchers![default_catcher])
+    rkt::build().register("/", catchers![default_catcher])
 }
 ```
 

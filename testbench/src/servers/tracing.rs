@@ -3,10 +3,10 @@
 
 use std::fmt;
 
-use rocket::data::{self, FromData};
-use rocket::http::uri::{fmt::Path, Segments};
-use rocket::http::Status;
-use rocket::request::{self, FromParam, FromRequest, FromSegments};
+use rkt::data::{self, FromData};
+use rkt::http::uri::{fmt::Path, Segments};
+use rkt::http::Status;
+use rkt::request::{self, FromParam, FromRequest, FromSegments};
 
 use crate::prelude::*;
 
@@ -36,7 +36,7 @@ impl FromParam<'_> for UseDebug {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for UseDisplay {
     type Error = Self;
     async fn from_request(_: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
@@ -44,7 +44,7 @@ impl<'r> FromRequest<'r> for UseDisplay {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for UseDebug {
     type Error = Self;
     async fn from_request(_: &'r Request<'_>) -> request::Outcome<Self, Self::Error> {
@@ -52,7 +52,7 @@ impl<'r> FromRequest<'r> for UseDebug {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromData<'r> for UseDisplay {
     type Error = Self;
     async fn from_data(_: &'r Request<'_>, _: Data<'r>) -> data::Outcome<'r, Self> {
@@ -60,7 +60,7 @@ impl<'r> FromData<'r> for UseDisplay {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromData<'r> for UseDebug {
     type Error = Self;
     async fn from_data(_: &'r Request<'_>, _: Data<'r>) -> data::Outcome<'r, Self> {

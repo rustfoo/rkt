@@ -18,12 +18,12 @@ use crate::{Request, Response};
 /// body can be read directly:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// use std::io;
 ///
-/// use rocket::local::asynchronous::Client;
-/// use rocket::tokio::io::AsyncReadExt;
-/// use rocket::http::Status;
+/// use rkt::local::asynchronous::Client;
+/// use rkt::tokio::io::AsyncReadExt;
+/// use rkt::http::Status;
 ///
 /// #[get("/")]
 /// fn hello_world() -> &'static str {
@@ -32,8 +32,8 @@ use crate::{Request, Response};
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build().mount("/", routes![hello_world])
-///     #    .reconfigure(rocket::Config::debug_default())
+///     rkt::build().mount("/", routes![hello_world])
+///     #    .reconfigure(rkt::Config::debug_default())
 /// }
 ///
 /// # async fn read_body_manually() -> io::Result<()> {
@@ -51,7 +51,7 @@ use crate::{Request, Response};
 /// assert_eq!(buffer, "Hello, wor".as_bytes());
 /// # Ok(())
 /// # }
-/// # rocket::async_test(read_body_manually()).expect("read okay");
+/// # rkt::async_test(read_body_manually()).expect("read okay");
 /// ```
 ///
 /// For more, see [the top-level documentation](../index.html#localresponse).
@@ -209,8 +209,8 @@ impl LocalResponse<'_> {
     }
 
     // Generates the public API methods, which call the private methods above.
-    pub_response_impl!("# use rocket::local::asynchronous::Client;\n\
-        use rocket::local::asynchronous::LocalResponse;" async await);
+    pub_response_impl!("# use rkt::local::asynchronous::Client;\n\
+        use rkt::local::asynchronous::LocalResponse;" async await);
 }
 
 impl AsyncRead for LocalResponse<'_> {

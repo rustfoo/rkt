@@ -3,9 +3,9 @@ mod runner;
 mod servers;
 
 pub mod prelude {
-    pub use rocket::fairing::*;
-    pub use rocket::response::stream::*;
-    pub use rocket::*;
+    pub use rkt::fairing::*;
+    pub use rkt::response::stream::*;
+    pub use rkt::*;
 
     pub use crate::config::*;
     pub use crate::register;

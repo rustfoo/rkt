@@ -15,7 +15,7 @@ use crate::http::uri::{error::PathError, fmt::Path, Segments};
 /// # Deriving
 ///
 /// The `FromParam` trait can be automatically derived for C-like enums. See
-/// [`FromParam` derive](macro@rocket::FromParam) for more information.
+/// [`FromParam` derive](macro@rkt::FromParam) for more information.
 ///
 /// # Forwarding
 ///
@@ -24,7 +24,7 @@ use crate::http::uri::{error::PathError, fmt::Path, Segments};
 /// handler for the dynamic `"/<id>"` path:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// #[get("/<id>")]
 /// fn hello(id: usize) -> String {
 /// # let _id = id;
@@ -79,8 +79,8 @@ use crate::http::uri::{error::PathError, fmt::Path, Segments};
 /// For instance, consider the following route and handler:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::either::{Either, Left, Right};
+/// #[macro_use] extern crate rkt;
+/// use rkt::either::{Either, Left, Right};
 ///
 /// #[get("/<id>")]
 /// fn hello(id: Either<usize, &str>) -> String {
@@ -157,8 +157,7 @@ use crate::http::uri::{error::PathError, fmt::Path, Segments};
 /// The following implementation accomplishes this:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::request::FromParam;
+/// use rkt::request::FromParam;
 /// # #[allow(dead_code)]
 /// # struct MyParam<'r> { key: &'r str, value: usize }
 ///
@@ -188,8 +187,8 @@ use crate::http::uri::{error::PathError, fmt::Path, Segments};
 /// dynamic path segment:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// # use rocket::request::FromParam;
+/// #[macro_use] extern crate rkt;
+/// # use rkt::request::FromParam;
 /// # #[allow(dead_code)]
 /// # struct MyParam<'r> { key: &'r str, value: usize }
 /// # impl<'r> FromParam<'r> for MyParam<'r> {

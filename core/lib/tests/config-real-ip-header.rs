@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 #[get("/")]
 fn inspect_ip(ip: Option<std::net::IpAddr>) -> String {
@@ -7,19 +7,19 @@ fn inspect_ip(ip: Option<std::net::IpAddr>) -> String {
 }
 
 mod tests {
-    use rocket::figment::Figment;
-    use rocket::http::Header;
-    use rocket::local::blocking::Client;
-    use rocket::{Build, Rocket, Route};
+    use rkt::figment::Figment;
+    use rkt::http::Header;
+    use rkt::local::blocking::Client;
+    use rkt::{Build, Rocket, Route};
 
     fn routes() -> Vec<Route> {
         routes![super::inspect_ip]
     }
 
     fn rocket_with_custom_ip_header(header: Option<&'static str>) -> Rocket<Build> {
-        let mut config = rocket::Config::debug_default();
+        let mut config = rkt::Config::debug_default();
         config.ip_header = header.map(|h| h.into());
-        rocket::custom(config).mount("/", routes())
+        rkt::custom(config).mount("/", routes())
     }
 
     #[test]
@@ -55,9 +55,9 @@ mod tests {
         assert_eq!(response.into_string(), Some("1.2.3.4".into()));
 
         let config =
-            Figment::from(rocket::Config::debug_default()).merge(("ip_header", "x-forward-ip"));
+            Figment::from(rkt::Config::debug_default()).merge(("ip_header", "x-forward-ip"));
 
-        let client = Client::debug(rocket::custom(config).mount("/", routes())).unwrap();
+        let client = Client::debug(rkt::custom(config).mount("/", routes())).unwrap();
         let response = client
             .get("/")
             .header(Header::new("X-Forward-IP", "1.2.3.4"))
@@ -87,9 +87,9 @@ mod tests {
 
         assert_eq!(response.into_string(), Some("<none>".into()));
 
-        let config = Figment::from(rocket::Config::debug_default()).merge(("ip_header", false));
+        let config = Figment::from(rkt::Config::debug_default()).merge(("ip_header", false));
 
-        let client = Client::debug(rocket::custom(config).mount("/", routes())).unwrap();
+        let client = Client::debug(rkt::custom(config).mount("/", routes())).unwrap();
         let response = client
             .get("/")
             .header(Header::new("X-Real-IP", "1.2.3.4"))
@@ -97,8 +97,8 @@ mod tests {
 
         assert_eq!(response.into_string(), Some("<none>".into()));
 
-        let config = Figment::from(rocket::Config::debug_default());
-        let client = Client::debug(rocket::custom(config).mount("/", routes())).unwrap();
+        let config = Figment::from(rkt::Config::debug_default());
+        let client = Client::debug(rkt::custom(config).mount("/", routes())).unwrap();
         let response = client
             .get("/")
             .header(Header::new("X-Real-IP", "1.2.3.4"))

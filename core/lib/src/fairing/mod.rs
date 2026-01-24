@@ -20,11 +20,10 @@
 //! write:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::fairing::AdHoc;
+//! # use rkt::fairing::AdHoc;
 //! # let req_fairing = AdHoc::on_request("Request", |_, _| Box::pin(async move {}));
 //! # let res_fairing = AdHoc::on_response("Response", |_, _| Box::pin(async move {}));
-//! let rocket = rocket::build()
+//! let rocket = rkt::build()
 //!     .attach(req_fairing)
 //!     .attach(res_fairing);
 //! ```
@@ -247,15 +246,14 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 /// ## Async Trait
 ///
 /// [`Fairing`] is an _async_ trait. Implementations of `Fairing` must be
-/// decorated with an attribute of `#[rocket::async_trait]`:
+/// decorated with an attribute of `#[rkt::async_trait]`:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::{Rocket, Request, Data, Response, Build, Orbit};
-/// use rocket::fairing::{self, Fairing, Info, Kind};
+/// use rkt::{Rocket, Request, Data, Response, Build, Orbit};
+/// use rkt::fairing::{self, Fairing, Info, Kind};
 ///
 /// # struct MyType;
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl Fairing for MyType {
 ///     fn info(&self) -> Info {
 ///         /* ... */
@@ -302,15 +300,14 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 /// path.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 /// use std::future::Future;
 /// use std::io::Cursor;
 /// use std::pin::Pin;
 /// use std::sync::atomic::{AtomicUsize, Ordering};
 ///
-/// use rocket::{Request, Data, Response};
-/// use rocket::fairing::{Fairing, Info, Kind};
-/// use rocket::http::{Method, ContentType, Status};
+/// use rkt::{Request, Data, Response};
+/// use rkt::fairing::{Fairing, Info, Kind};
+/// use rkt::http::{Method, ContentType, Status};
 ///
 /// #[derive(Default)]
 /// struct Counter {
@@ -318,7 +315,7 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 ///     post: AtomicUsize,
 /// }
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl Fairing for Counter {
 ///     fn info(&self) -> Info {
 ///         Info {
@@ -365,14 +362,13 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 /// request guard.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 /// # use std::future::Future;
 /// # use std::pin::Pin;
 /// # use std::time::{Duration, SystemTime};
-/// # use rocket::{Request, Data, Response};
-/// # use rocket::fairing::{Fairing, Info, Kind};
-/// # use rocket::http::Status;
-/// # use rocket::request::{self, FromRequest};
+/// # use rkt::{Request, Data, Response};
+/// # use rkt::fairing::{Fairing, Info, Kind};
+/// # use rkt::http::Status;
+/// # use rkt::request::{self, FromRequest};
 /// #
 /// /// Fairing for timing requests.
 /// pub struct RequestTimer;
@@ -381,7 +377,7 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 /// #[derive(Copy, Clone)]
 /// struct TimerStart(Option<SystemTime>);
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl Fairing for RequestTimer {
 ///     fn info(&self) -> Info {
 ///         Info {
@@ -414,7 +410,7 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 /// pub struct StartTime(pub SystemTime);
 ///
 /// // Allows a route to access the time a request was initiated.
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromRequest<'r> for StartTime {
 ///     type Error = ();
 ///
@@ -450,8 +446,7 @@ pub trait Fairing: Send + Sync + AsAny + 'static {
     /// Fairing" that is both an ignite and response fairing.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fairing::{Fairing, Info, Kind};
+    /// use rkt::fairing::{Fairing, Info, Kind};
     ///
     /// struct MyFairing;
     ///

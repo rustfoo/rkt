@@ -140,3 +140,37 @@ note: error occurred while deriving `Responder`
 48 | #[derive(Responder)]
    |          ^^^^^^^^^
    = note: this error originates in the derive macro `Responder` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error[E0433]: failed to resolve: use of unresolved module or unlinked crate `rocket`
+  --> tests/ui-fail-nightly/responder.rs:57:14
+   |
+57 |     NotFound(rocket::fs::NamedFile),
+   |              ^^^^^^ use of unresolved module or unlinked crate `rocket`
+   |
+   = help: if you wanted to use a crate named `rocket`, use `cargo add rocket` to add it to your `Cargo.toml`
+help: consider importing this module
+   |
+ 1 + use rkt::fs;
+   |
+help: if you import `fs`, refer to it directly
+   |
+57 -     NotFound(rocket::fs::NamedFile),
+57 +     NotFound(fs::NamedFile),
+   |
+
+error[E0433]: failed to resolve: use of unresolved module or unlinked crate `rocket`
+  --> tests/ui-fail-nightly/responder.rs:59:16
+   |
+59 |     A(&'r str, rocket::http::ContentType),
+   |                ^^^^^^ use of unresolved module or unlinked crate `rocket`
+   |
+   = help: if you wanted to use a crate named `rocket`, use `cargo add rocket` to add it to your `Cargo.toml`
+help: consider importing this module
+   |
+ 1 + use rkt::http;
+   |
+help: if you import `http`, refer to it directly
+   |
+59 -     A(&'r str, rocket::http::ContentType),
+59 +     A(&'r str, http::ContentType),
+   |

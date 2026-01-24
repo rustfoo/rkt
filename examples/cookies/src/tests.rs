@@ -1,6 +1,6 @@
 use super::{rocket, session, message};
-use rocket::local::blocking::{Client, LocalResponse};
-use rocket::http::{Status, Cookie, ContentType};
+use rkt::local::blocking::{Client, LocalResponse};
+use rkt::http::{Status, Cookie, ContentType};
 
 fn user_id_cookie(response: &LocalResponse<'_>) -> Option<Cookie<'static>> {
     let cookie = response.headers()

@@ -150,8 +150,7 @@ impl<'r> DataStream<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Data, ToByteUnit};
+    /// use rkt::data::{Data, ToByteUnit};
     ///
     /// async fn f(data: Data<'_>) {
     ///     let definitely_have_n_bytes = data.open(1.kibibytes()).hint();
@@ -181,9 +180,8 @@ impl<'r> DataStream<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io;
-    /// use rocket::data::{Data, ToByteUnit};
+    /// use rkt::data::{Data, ToByteUnit};
     ///
     /// async fn data_guard(mut data: Data<'_>) -> io::Result<String> {
     ///     // write all of the data to stdout
@@ -211,9 +209,8 @@ impl<'r> DataStream<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io;
-    /// use rocket::data::{Data, ToByteUnit};
+    /// use rkt::data::{Data, ToByteUnit};
     ///
     /// async fn data_guard(mut data: Data<'_>) -> io::Result<String> {
     ///     // write all of the data to stdout
@@ -236,9 +233,8 @@ impl<'r> DataStream<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io;
-    /// use rocket::data::{Data, ToByteUnit};
+    /// use rkt::data::{Data, ToByteUnit};
     ///
     /// async fn data_guard(data: Data<'_>) -> io::Result<Vec<u8>> {
     ///     let bytes = data.open(4.kibibytes()).into_bytes().await?;
@@ -260,9 +256,8 @@ impl<'r> DataStream<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io;
-    /// use rocket::data::{Data, ToByteUnit};
+    /// use rkt::data::{Data, ToByteUnit};
     ///
     /// async fn data_guard(data: Data<'_>) -> io::Result<String> {
     ///     let string = data.open(10.bytes()).into_string().await?;
@@ -290,9 +285,8 @@ impl<'r> DataStream<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io;
-    /// use rocket::data::{Data, ToByteUnit};
+    /// use rkt::data::{Data, ToByteUnit};
     ///
     /// async fn data_guard(mut data: Data<'_>) -> io::Result<String> {
     ///     let file = data.open(1.megabytes()).into_file("/static/file").await?;

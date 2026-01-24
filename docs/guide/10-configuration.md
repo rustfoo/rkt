@@ -83,7 +83,7 @@ profile supplant any values with the same name in any profile.
 ## Default Provider
 
 Rocket's default configuration provider is [`Config::figment()`]; this is the
-provider that's used when calling [`rocket::build()`].
+provider that's used when calling [`rkt::build()`].
 
 The default figment reads from and merges, at a per-key level, the following
 sources in ascending priority order:
@@ -306,7 +306,7 @@ ciphers = [
   [`Request::sni`] method.
 
 [`Fairing`]: ../fairings
-[`Request::sni`]: https://docs.rs/rocket-community/latest/rocket_community/struct.Request.html#method.sni
+[`Request::sni`]: https://docs.rs/rocket-community/latest/rkt_community/struct.Request.html#method.sni
 
 ### Mutual TLS
 
@@ -360,8 +360,8 @@ Once mutual TLS is properly enabled, the [`mtls::Certificate`] request guard can
 be used to retrieve validated, verified client certificates:
 
 ```rust
-# #[macro_use] extern crate rocket;
-use rocket::mtls::Certificate;
+# #[macro_use] extern crate rkt;
+use rkt::mtls::Certificate;
 
 #[get("/auth")]
 fn auth(cert: Certificate<'_>) {
@@ -423,12 +423,12 @@ rustls = { version = "0.23", features = ["aws_lc_rs"] }
 Then, before the application starts, install the provider as the default:
 
 ```rust,ignore
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 #[launch]
 fn rocket() -> _ {
     let _ = rustls::crypto::aws_lc_rs::default_provider().install_default();
-    rocket::build()
+    rkt::build()
 }
 ```
 
@@ -458,11 +458,11 @@ corresponding to `max_blocking` are not always active and will exit if idling.
 In general, the default value of `512` should not be changed unless physical or
 virtual resources are scarce. Rocket only executes work on blocking threads when
 required such as when performing file system I/O via [`TempFile`] or wrapping
-synchronous work via [`rocket_sync_db_pools`].
+synchronous work via [`rkt_sync_db_pools`].
 
 [`spawn_blocking`]: @tokio/task/fn.spawn_blocking.html
 [`TempFile`]: @api/master/rocket/fs/enum.TempFile.html
-[`rocket_sync_db_pools`]: @api/master/rocket_sync_db_pools/index.html
+[`rkt_sync_db_pools`]: @api/master/rkt_sync_db_pools/index.html
 
 ## Extracting Values
 
@@ -470,17 +470,17 @@ Your application can extract any configuration that implements [`Deserialize`]
 from the configured provider, which is exposed via [`Rocket::figment()`]:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::serde::Deserialize;
+use rkt::serde::Deserialize;
 
 #[launch]
 fn rocket() -> _ {
-    let rocket = rocket::build();
+    let rocket = rkt::build();
     let figment = rocket.figment();
 
     #[derive(Deserialize)]
-    #[serde(crate = "rocket::serde")]
+    #[serde(crate = "rkt::serde")]
     struct Config {
         port: u16,
         custom: Vec<String>,
@@ -506,16 +506,16 @@ Because it is common to store configuration in managed state, Rocket provides an
 2) pretty prints any errors, and 3) stores the value in managed state:
 
 ```rust
-# #[macro_use] extern crate rocket;
-# use rocket::serde::Deserialize;
+# #[macro_use] extern crate rkt;
+# use rkt::serde::Deserialize;
 # #[derive(Deserialize)]
-# #[serde(crate = "rocket::serde")]
+# #[serde(crate = "rkt::serde")]
 # struct Config {
 #     port: u16,
 #     custom: Vec<String>,
 # }
 
-use rocket::{State, fairing::AdHoc};
+use rkt::{State, fairing::AdHoc};
 
 #[get("/custom")]
 fn custom(config: &State<Config>) -> String {
@@ -524,7 +524,7 @@ fn custom(config: &State<Config>) -> String {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![custom])
         .attach(AdHoc::config::<Config>())
 }
@@ -534,8 +534,8 @@ fn rocket() -> _ {
 
 ## Custom Providers
 
-A custom provider can be set via [`rocket::custom()`], which replaces calls to
-[`rocket::build()`]. The configured provider can be built on top of
+A custom provider can be set via [`rkt::custom()`], which replaces calls to
+[`rkt::build()`]. The configured provider can be built on top of
 [`Config::figment()`], [`Config::default()`], both, or neither. The
 [Figment](@figment) documentation has full details on instantiating existing
 providers like [`Toml`] and [`Json`] as well as creating custom providers for
@@ -544,8 +544,8 @@ more complex cases.
 ! note: You may need to depend on `figment` and `serde` directly.
 
   Rocket reexports `figment` and `serde` from its crate root, so you can refer
-  to `figment` types via `rocket::figment` and `serde` types via
-  `rocket::serde`. However, Rocket does not enable all features from either
+  to `figment` types via `rkt::figment` and `serde` types via
+  `rkt::serde`. However, Rocket does not enable all features from either
   crate. As such, you may need to import crates directly:
 
   `
@@ -556,17 +556,17 @@ As a first example, we override configuration values at runtime by merging
 figment's tuple providers with Rocket's default provider:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::data::{Limits, ToByteUnit};
+use rkt::data::{Limits, ToByteUnit};
 
 #[launch]
 fn rocket() -> _ {
-    let figment = rocket::Config::figment()
+    let figment = rkt::Config::figment()
         .merge(("port", 1111))
         .merge(("limits", Limits::new().limit("json", 2.mebibytes())));
 
-    rocket::custom(figment).mount("/", routes![/* .. */])
+    rkt::custom(figment).mount("/", routes![/* .. */])
 }
 ```
 
@@ -577,15 +577,15 @@ be configured via an `App.toml` file that uses top-level keys as profiles
 and `APP_PROFILE` to configure the selected profile:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::serde::{Serialize, Deserialize};
-use rocket::fairing::AdHoc;
+use rkt::serde::{Serialize, Deserialize};
+use rkt::fairing::AdHoc;
 
 use figment::{Figment, Profile, providers::{Format, Toml, Serialized, Env}};
 
 #[derive(Debug, Deserialize, Serialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Config {
     app_value: usize,
     /* and so on.. */
@@ -599,13 +599,13 @@ impl Default for Config {
 
 #[launch]
 fn rocket() -> _ {
-    let figment = Figment::from(rocket::Config::default())
+    let figment = Figment::from(rkt::Config::default())
         .merge(Serialized::defaults(Config::default()))
         .merge(Toml::file("App.toml").nested())
         .merge(Env::prefixed("APP_").global())
         .select(Profile::from_env_or("APP_PROFILE", "default"));
 
-    rocket::custom(figment)
+    rkt::custom(figment)
         .mount("/", routes![/* .. */])
         .attach(AdHoc::config::<Config>())
 }
@@ -616,5 +616,5 @@ that if values like `port` and `address` are configured in `Config`, `App.toml`
 or `APP_` environment variables, Rocket will make use of them. The application
 can also extract its configuration, done here via the `Adhoc::config()` fairing.
 
-[`rocket::custom()`]: @api/master/rocket/fn.custom.html
-[`rocket::build()`]: @api/master/rocket/fn.build.html
+[`rkt::custom()`]: @api/master/rocket/fn.custom.html
+[`rkt::build()`]: @api/master/rocket/fn.build.html

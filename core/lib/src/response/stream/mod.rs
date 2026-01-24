@@ -16,9 +16,8 @@
 //! be defined using `yield` and `for await` syntax:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! use rocket::futures::stream::Stream;
-//! use rocket::response::stream::stream;
+//! use rkt::futures::stream::Stream;
+//! use rkt::response::stream::stream;
 //!
 //! fn make_stream() -> impl Stream<Item = u8> {
 //!     stream! {
@@ -54,10 +53,9 @@
 //! `"hello"`s, one per second:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::get;
-//! use rocket::tokio::time::{self, Duration};
-//! use rocket::response::stream::TextStream;
+//! # use rkt::get;
+//! use rkt::tokio::time::{self, Duration};
+//! use rkt::response::stream::TextStream;
 //!
 //! /// Produce an infinite series of `"hello"`s, one per second.
 //! #[get("/infinite-hellos")]
@@ -75,10 +73,9 @@
 //! The `TextStream![&'static str]` invocation expands to:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::response::stream::TextStream;
-//! # use rocket::futures::stream::Stream;
-//! # use rocket::response::stream::stream;
+//! # use rkt::response::stream::TextStream;
+//! # use rkt::futures::stream::Stream;
+//! # use rkt::response::stream::stream;
 //! # fn f() ->
 //! TextStream<impl Stream<Item = &'static str>>
 //! # { TextStream::from(stream! { yield "hi" }) }
@@ -87,8 +84,7 @@
 //! While the inner `TextStream! { .. }` invocation expands to:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::response::stream::{TextStream, stream};
+//! # use rkt::response::stream::{TextStream, stream};
 //! TextStream::from(stream! { /* .. */ })
 //! # ;
 //! ```
@@ -101,10 +97,9 @@
 //! A stream can _yield_ borrowed values with no extra effort:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::get;
-//! use rocket::State;
-//! use rocket::response::stream::TextStream;
+//! # use rkt::get;
+//! use rkt::State;
+//! use rkt::response::stream::TextStream;
 //!
 //! /// Produce a single string borrowed from the request.
 //! #[get("/infinite-hellos")]
@@ -119,10 +114,9 @@
 //! requires this fact be explicit with a lifetime annotation:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::get;
-//! use rocket::State;
-//! use rocket::response::stream::TextStream;
+//! # use rkt::get;
+//! use rkt::State;
+//! use rkt::response::stream::TextStream;
 //!
 //! #[get("/")]
 //! fn borrow1(ctxt: &State<bool>) -> TextStream![&'static str + '_] {
@@ -170,12 +164,11 @@
 //! `hello` with shutdown detection:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::get;
-//! use rocket::Shutdown;
-//! use rocket::response::stream::TextStream;
-//! use rocket::tokio::select;
-//! use rocket::tokio::time::{self, Duration};
+//! # use rkt::get;
+//! use rkt::Shutdown;
+//! use rkt::response::stream::TextStream;
+//! use rkt::tokio::select;
+//! use rkt::tokio::time::{self, Duration};
 //!
 //! /// Produce an infinite series of `"hello"`s, 1/second, until shutdown.
 //! #[get("/infinite-hellos")]
@@ -236,9 +229,8 @@ crate::export! {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::stream;
-    /// use rocket::futures::stream::Stream;
+    /// use rkt::response::stream::stream;
+    /// use rkt::futures::stream::Stream;
     ///
     /// fn f(stream: impl Stream<Item = u8>) -> impl Stream<Item = String> {
     ///     stream! {
@@ -252,8 +244,8 @@ crate::export! {
     ///     }
     /// }
     ///
-    /// # rocket::async_test(async {
-    /// use rocket::futures::stream::{self, StreamExt};
+    /// # rkt::async_test(async {
+    /// use rkt::futures::stream::{self, StreamExt};
     ///
     /// let stream = f(stream::iter(vec![3, 7, 11]));
     /// let strings: Vec<_> = stream.collect().await;
@@ -264,11 +256,10 @@ crate::export! {
     /// Using `?` on an `Err` short-circuits stream termination:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io;
     ///
-    /// use rocket::response::stream::stream;
-    /// use rocket::futures::stream::Stream;
+    /// use rkt::response::stream::stream;
+    /// use rkt::futures::stream::Stream;
     ///
     /// fn g<S>(stream: S) -> impl Stream<Item = io::Result<u8>>
     ///     where S: Stream<Item = io::Result<&'static str>>
@@ -282,8 +273,8 @@ crate::export! {
     ///     }
     /// }
     ///
-    /// # rocket::async_test(async {
-    /// use rocket::futures::stream::{self, StreamExt};
+    /// # rkt::async_test(async {
+    /// use rkt::futures::stream::{self, StreamExt};
     ///
     /// let e = io::Error::last_os_error();
     /// let stream = g(stream::iter(vec![Ok("3"), Ok("four"), Err(e), Ok("2")]));

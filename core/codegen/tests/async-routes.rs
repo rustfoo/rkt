@@ -1,9 +1,9 @@
 #![allow(dead_code)]
 
 #[macro_use]
-extern crate rocket;
-use rocket::http::uri::Origin;
-use rocket::request::Request;
+extern crate rkt;
+use rkt::http::uri::Origin;
+use rkt::request::Request;
 
 async fn noop() {}
 

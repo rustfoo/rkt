@@ -1,10 +1,10 @@
-use rocket::tokio::net::TcpListener;
+use rkt::tokio::net::TcpListener;
 
 use crate::prelude::*;
 
 #[cfg(unix)]
 fn tcp_unix_listener_fail() -> Result<()> {
-    use rocket::listener::unix::UnixListener;
+    use rkt::listener::unix::UnixListener;
 
     let server = spawn! {
         Rocket::default().reconfigure_with_toml("[default]\naddress = 123")

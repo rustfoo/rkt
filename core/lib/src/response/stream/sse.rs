@@ -23,9 +23,8 @@ use crate::response::{
 /// [`Event::data()`], [`Event::json()`], and [`Event::retry()`].
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::tokio::time::Duration;
-/// use rocket::response::stream::Event;
+/// use rkt::tokio::time::Duration;
+/// use rkt::response::stream::Event;
 ///
 /// // A `data` event with message "Hello, SSE!".
 /// let event = Event::data("Hello, SSE!");
@@ -147,8 +146,7 @@ impl Event {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::Event;
+    /// use rkt::response::stream::Event;
     ///
     /// let event = Event::empty();
     /// ```
@@ -161,12 +159,11 @@ impl Event {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::serde::Serialize;
-    /// use rocket::response::stream::Event;
+    /// use rkt::serde::Serialize;
+    /// use rkt::response::stream::Event;
     ///
     /// #[derive(Serialize)]
-    /// #[serde(crate = "rocket::serde")]
+    /// #[serde(crate = "rkt::serde")]
     /// struct MyData<'r> {
     ///     string: &'r str,
     ///     number: usize,
@@ -197,8 +194,7 @@ impl Event {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::Event;
+    /// use rkt::response::stream::Event;
     ///
     /// // A `data` event with message "Hello, SSE!".
     /// let event = Event::data("Hello, SSE!");
@@ -220,8 +216,7 @@ impl Event {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::Event;
+    /// use rkt::response::stream::Event;
     ///
     /// let event = Event::comment("bet you'll never see me!");
     /// ```
@@ -237,9 +232,8 @@ impl Event {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::Event;
-    /// use rocket::tokio::time::Duration;
+    /// use rkt::response::stream::Event;
+    /// use rkt::tokio::time::Duration;
     ///
     /// let event = Event::retry(Duration::from_millis(250));
     /// ```
@@ -259,8 +253,7 @@ impl Event {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::Event;
+    /// use rkt::response::stream::Event;
     ///
     /// // The event name is "start".
     /// let event = Event::data("hi").event("start");
@@ -282,8 +275,7 @@ impl Event {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::Event;
+    /// use rkt::response::stream::Event;
     ///
     /// // The event ID is "start".
     /// let event = Event::data("hi").id("start");
@@ -302,8 +294,7 @@ impl Event {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::Event;
+    /// use rkt::response::stream::Event;
     ///
     /// // The data "hello" will be sent.
     /// let event = Event::data("hi").with_data("hello");
@@ -322,8 +313,7 @@ impl Event {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::Event;
+    /// use rkt::response::stream::Event;
     ///
     /// // The comment "🚀" will be sent.
     /// let event = Event::comment("Rocket is great!").with_comment("🚀");
@@ -342,9 +332,8 @@ impl Event {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::Event;
-    /// use rocket::tokio::time::Duration;
+    /// use rkt::response::stream::Event;
+    /// use rkt::tokio::time::Duration;
     ///
     /// // The reconnection will be set to 10 seconds.
     /// let event = Event::retry(Duration::from_millis(500))
@@ -403,10 +392,9 @@ impl Event {
 /// the client, one per second:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::*;
-/// use rocket::response::stream::{Event, EventStream};
-/// use rocket::tokio::time::{self, Duration};
+/// # use rkt::*;
+/// use rkt::response::stream::{Event, EventStream};
+/// use rkt::tokio::time::{self, Duration};
 ///
 /// #[get("/events")]
 /// fn stream() -> EventStream![] {
@@ -423,10 +411,9 @@ impl Event {
 /// Yield 9 events: 3 triplets of `retry`, `data`, and `comment` events:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::get;
-/// use rocket::response::stream::{Event, EventStream};
-/// use rocket::tokio::time::Duration;
+/// # use rkt::get;
+/// use rkt::response::stream::{Event, EventStream};
+/// use rkt::tokio::time::Duration;
 ///
 /// #[get("/events")]
 /// fn events() -> EventStream![] {
@@ -451,10 +438,9 @@ impl Event {
 /// `EventStream![Event + '_]` must be used:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::get;
-/// use rocket::State;
-/// use rocket::response::stream::{Event, EventStream};
+/// # use rkt::get;
+/// use rkt::State;
+/// use rkt::response::stream::{Event, EventStream};
 ///
 /// #[get("/events")]
 /// fn events(ctxt: &State<bool>) -> EventStream![Event + '_] {
@@ -538,19 +524,18 @@ impl<S: Stream<Item = Event>> EventStream<S> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::get;
-    /// use rocket::response::stream::{Event, EventStream};
-    /// use rocket::tokio::time::Duration;
+    /// # use rkt::get;
+    /// use rkt::response::stream::{Event, EventStream};
+    /// use rkt::tokio::time::Duration;
     ///
     /// #[get("/events")]
     /// fn events() -> EventStream![] {
     ///     // Remove the default heartbeat.
-    ///     # let event_stream = rocket::futures::stream::pending();
+    ///     # let event_stream = rkt::futures::stream::pending();
     ///     EventStream::from(event_stream).heartbeat(None);
     ///
     ///     // Set the heartbeat interval to 15 seconds.
-    ///     # let event_stream = rocket::futures::stream::pending();
+    ///     # let event_stream = rkt::futures::stream::pending();
     ///     EventStream::from(event_stream).heartbeat(Duration::from_secs(15));
     ///
     ///     // Do the same but for a generated `EventStream`:
@@ -595,9 +580,8 @@ impl<S: Stream<Item = Event>> From<S> for EventStream<S> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::stream::{Event, EventStream};
-    /// use rocket::futures::stream;
+    /// use rkt::response::stream::{Event, EventStream};
+    /// use rkt::futures::stream;
     ///
     /// let raw = stream::iter(vec![Event::data("a"), Event::data("b")]);
     /// let stream = EventStream::from(raw);

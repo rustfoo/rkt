@@ -21,14 +21,14 @@ pub struct Fairing<T: ?Sized>(PhantomData<T>);
 /// This is an async trait. Implement it as follows:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// use std::sync::Arc;
-/// use rocket::tls::{self, Resolver, TlsConfig, ClientHello, ServerConfig};
-/// use rocket::{Rocket, Build};
+/// use rkt::tls::{self, Resolver, TlsConfig, ClientHello, ServerConfig};
+/// use rkt::{Rocket, Build};
 ///
 /// struct MyResolver(Arc<ServerConfig>);
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl Resolver for MyResolver {
 ///     async fn init(rocket: &Rocket<Build>) -> tls::Result<Self> {
 ///         // This is equivalent to what the default resolver would do.
@@ -45,7 +45,7 @@ pub struct Fairing<T: ?Sized>(PhantomData<T>);
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build().attach(MyResolver::fairing())
+///     rkt::build().attach(MyResolver::fairing())
 /// }
 /// ```
 #[crate::async_trait]

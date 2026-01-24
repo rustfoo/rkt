@@ -13,11 +13,10 @@ use crate::response::{self, Responder};
 /// returned directly without the need for `Debug`:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 /// use std::io;
 ///
-/// # use rocket::get;
-/// use rocket::fs::NamedFile;
+/// # use rkt::get;
+/// use rkt::fs::NamedFile;
 ///
 /// #[get("/")]
 /// async fn index() -> io::Result<NamedFile> {
@@ -32,11 +31,10 @@ use crate::response::{self, Responder};
 /// automatically:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 /// use std::string::FromUtf8Error;
 ///
-/// # use rocket::get;
-/// use rocket::response::Debug;
+/// # use rkt::get;
+/// use rkt::response::Debug;
 ///
 /// #[get("/")]
 /// fn rand_str() -> Result<String, Debug<FromUtf8Error>> {
@@ -52,11 +50,10 @@ use crate::response::{self, Responder};
 /// [`Result::map_err()`]:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 /// use std::string::FromUtf8Error;
 ///
-/// # use rocket::get;
-/// use rocket::response::Debug;
+/// # use rkt::get;
+/// use rkt::response::Debug;
 ///
 /// #[get("/")]
 /// fn rand_str() -> Result<String, Debug<FromUtf8Error>> {

@@ -9,7 +9,7 @@
 //! This crate implements the code generation portions of Rocket. This includes
 //! custom derives, custom attributes, and procedural macros. The documentation
 //! here is purely technical. The code generation facilities are documented
-//! thoroughly in the [Rocket programming guide](https://rocket.rs/master/guide).
+//! thoroughly in the [Rocket programming guide](https://rkt.rs/guide).
 //!
 //! # Usage
 //!
@@ -19,26 +19,26 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rocket = { package = "rocket-community", version = "0.6.0" }
+//! rkt = { version = "0.6.0" }
 //! ```
 //!
 //! And to import all macros, attributes, and derives via `#[macro_use]` in the
 //! crate root:
 //!
 //! ```rust
-//! #[macro_use] extern crate rocket;
+//! #[macro_use] extern crate rkt;
 //! # #[get("/")] fn hello() { }
-//! # fn main() { rocket::build().mount("/", routes![hello]); }
+//! # fn main() { rkt::build().mount("/", routes![hello]); }
 //! ```
 //!
 //! Or, alternatively, selectively import from the top-level scope:
 //!
 //! ```rust
-//! # extern crate rocket;
+//! # extern crate rkt;
 //!
-//! use rocket::{get, routes};
+//! use rkt::{get, routes};
 //! # #[get("/")] fn hello() { }
-//! # fn main() { rocket::build().mount("/", routes![hello]); }
+//! # fn main() { rkt::build().mount("/", routes![hello]); }
 //! ```
 //!
 //! # Debugging Codegen
@@ -55,7 +55,7 @@
 #[macro_use]
 extern crate quote;
 
-use rocket_http as http;
+use rkt_http as http;
 
 #[macro_use]
 mod exports;
@@ -99,7 +99,7 @@ macro_rules! route_attribute {
         /// functions:
         ///
         /// ```rust
-        /// # #[macro_use] extern crate rocket;
+        /// # #[macro_use] extern crate rkt;
         /// #
         /// #[get("/")]
         /// fn index() -> &'static str {
@@ -122,7 +122,7 @@ macro_rules! route_attribute {
         /// method:
         ///
         /// ```rust
-        /// # #[macro_use] extern crate rocket;
+        /// # #[macro_use] extern crate rkt;
         ///
         /// #[route("/", method = GET)]
         /// fn get_index() { /* ... */ }
@@ -189,8 +189,8 @@ macro_rules! route_attribute {
         /// `rest`, and `form`:
         ///
         /// ```rust
-        /// # #[macro_use] extern crate rocket;
-        /// # use rocket::form::Form;
+        /// # #[macro_use] extern crate rkt;
+        /// # use rkt::form::Form;
         /// # use std::path::PathBuf;
         /// # #[derive(FromForm)] struct F { a: usize }
         /// #[get("/<foo>/bar/<baz..>?<msg>&closed&<rest..>", data = "<form>")]
@@ -298,10 +298,10 @@ route_attribute!(options => Method::Options);
 /// This attribute can only be applied to free functions:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #
-/// use rocket::Request;
-/// use rocket::http::Status;
+/// use rkt::Request;
+/// use rkt::http::Status;
 ///
 /// #[catch(404)]
 /// fn not_found(req: &Request) -> String {
@@ -374,7 +374,7 @@ pub fn catch(args: TokenStream, input: TokenStream) -> TokenStream {
 /// # Example
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 ///
 /// #[suppress(dubious_payload)]
 /// #[get("/", data = "<_a>")]
@@ -394,7 +394,7 @@ pub fn suppress(args: TokenStream, input: TokenStream) -> TokenStream {
 /// Simply decorate a test `async fn` with `#[async_test]` instead of `#[test]`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[cfg(test)]
 /// mod tests {
 ///     #[async_test]
@@ -413,14 +413,14 @@ pub fn async_test(args: TokenStream, input: TokenStream) -> TokenStream {
 
 /// Retrofits `async fn` support in `main` functions.
 ///
-/// A `main` `async fn` function decorated with `#[rocket::main]` is transformed
+/// A `main` `async fn` function decorated with `#[rkt::main]` is transformed
 /// into a regular `main` function that internally initializes a Rocket-specific
 /// tokio runtime and runs the attributed `async fn` inside of it:
 ///
 /// ```rust,no_run
-/// #[rocket::main]
-/// async fn main() -> Result<(), rocket::Error> {
-///     let _rocket = rocket::build()
+/// #[rkt::main]
+/// async fn main() -> Result<(), rkt::Error> {
+///     let _rocket = rkt::build()
 ///         .ignite().await?
 ///         .launch().await?;
 ///
@@ -432,9 +432,9 @@ pub fn async_test(args: TokenStream, input: TokenStream) -> TokenStream {
 /// are to be inspected:
 ///
 /// ```rust,no_run
-/// #[rocket::main]
-/// async fn main() -> Result<(), rocket::Error> {
-///     let rocket = rocket::build().ignite().await?;
+/// #[rkt::main]
+/// async fn main() -> Result<(), rkt::Error> {
+///     let rocket = rkt::build().ignite().await?;
 ///     println!("Hello, Rocket: {:?}", rocket);
 ///
 ///     let rocket = rocket.launch().await?;
@@ -446,7 +446,7 @@ pub fn async_test(args: TokenStream, input: TokenStream) -> TokenStream {
 ///
 /// For all other cases, use [`#[launch]`](launch) instead.
 ///
-/// The function attributed with `#[rocket::main]` _must_ be `async` and _must_
+/// The function attributed with `#[rkt::main]` _must_ be `async` and _must_
 /// be called `main`. Violation of either results in a compile-time error.
 #[proc_macro_attribute]
 pub fn main(args: TokenStream, input: TokenStream) -> TokenStream {
@@ -460,24 +460,24 @@ pub fn main(args: TokenStream, input: TokenStream) -> TokenStream {
 /// launches the function's returned instance:
 ///
 /// ```rust,no_run
-/// # use rocket::launch;
-/// use rocket::{Rocket, Build};
+/// # use rkt::launch;
+/// use rkt::{Rocket, Build};
 ///
 /// #[launch]
 /// fn rocket() -> Rocket<Build> {
-///     rocket::build()
+///     rkt::build()
 /// }
 /// ```
 ///
 /// This generates code equivalent to the following:
 ///
 /// ```rust,no_run
-/// # use rocket::{Rocket, Build};
+/// # use rkt::{Rocket, Build};
 /// # fn rocket() -> Rocket<Build> {
-/// #     rocket::build()
+/// #     rkt::build()
 /// # }
 /// #
-/// #[rocket::main]
+/// #[rkt::main]
 /// async fn main() {
 ///     // Recall that an uninspected `Error` will cause a pretty-printed panic,
 ///     // so rest assured errors do not go undetected when using `#[launch]`.
@@ -489,22 +489,22 @@ pub fn main(args: TokenStream, input: TokenStream) -> TokenStream {
 /// attribute will infer a return type written as `_` as `Rocket<Build>`:
 ///
 /// ```rust,no_run
-/// # use rocket::launch;
+/// # use rkt::launch;
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build()
+///     rkt::build()
 /// }
 /// ```
 ///
 /// The attributed function may be `async`:
 ///
 /// ```rust,no_run
-/// # use rocket::launch;
+/// # use rkt::launch;
 /// # async fn some_async_work() {}
 /// #[launch]
 /// async fn rocket() -> _ {
 ///     some_async_work().await;
-///     rocket::build()
+///     rkt::build()
 /// }
 /// ```
 #[proc_macro_attribute]
@@ -518,7 +518,7 @@ pub fn launch(args: TokenStream, input: TokenStream) -> TokenStream {
 /// (zero-length) fields:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #
 /// #[derive(FromFormField)]
 /// enum MyValue {
@@ -543,7 +543,7 @@ pub fn launch(args: TokenStream, input: TokenStream) -> TokenStream {
 /// compared against for a given variant:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #
 /// #[derive(FromFormField)]
 /// enum MyValue {
@@ -585,7 +585,7 @@ pub fn derive_from_form_field(input: TokenStream) -> TokenStream {
 /// fields:
 ///
 /// ```rust
-/// use rocket::form::FromForm;
+/// use rkt::form::FromForm;
 ///
 /// #[derive(FromForm)]
 /// struct MyStruct<'r> {
@@ -650,7 +650,7 @@ pub fn derive_from_form_field(input: TokenStream) -> TokenStream {
 /// `default_with` can be present per field.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[derive(FromForm)]
 /// struct MyStruct {
 ///     #[field(name = uncased("number"))]
@@ -668,7 +668,7 @@ pub fn derive_from_form_field(input: TokenStream) -> TokenStream {
 /// itself:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[derive(FromForm)]
 /// #[field(default = 42, validate = eq(42))]
 /// struct Meaning(usize);
@@ -710,7 +710,7 @@ pub fn derive_from_form_field(input: TokenStream) -> TokenStream {
 ///     attributed field is missing in the incoming form.
 ///
 ///     ```rust
-///     # #[macro_use] extern crate rocket;
+///     # #[macro_use] extern crate rkt;
 ///     use std::num::NonZeroUsize;
 ///
 ///     #[derive(FromForm)]
@@ -733,8 +733,8 @@ pub fn derive_from_form_field(input: TokenStream) -> TokenStream {
 /// FromForm<'r>` will be added to the generated implementation.
 ///
 /// ```rust
-/// use rocket::form::FromForm;
-/// use rocket::serde::json::Json;
+/// use rkt::form::FromForm;
+/// use rkt::serde::json::Json;
 ///
 /// // The bounds `A: FromForm<'r>`, `B: FromForm<'r>` will be required.
 /// #[derive(FromForm)]
@@ -755,7 +755,7 @@ pub fn derive_from_form_field(input: TokenStream) -> TokenStream {
 /// generated implementation `impl FromForm<'r>`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// // Generates `impl<'r> FromForm<'r> for MyWrapper<'r>`.
 /// #[derive(FromForm)]
 /// struct MyWrapper<'a>(&'a str);
@@ -764,7 +764,7 @@ pub fn derive_from_form_field(input: TokenStream) -> TokenStream {
 /// Both type generics and one lifetime generic may be used:
 ///
 /// ```rust
-/// use rocket::form::{self, FromForm};
+/// use rkt::form::{self, FromForm};
 ///
 /// // The bound `form::Result<'r, T>: FromForm<'r>` will be required.
 /// #[derive(FromForm)]
@@ -793,8 +793,8 @@ pub fn derive_from_form(input: TokenStream) -> TokenStream {
 /// # Example
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// use rocket::request::FromParam;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::request::FromParam;
 ///
 /// #[derive(FromParam, Debug, PartialEq)]
 /// enum MyParam {
@@ -829,9 +829,9 @@ pub fn derive_from_param(input: TokenStream) -> TokenStream {
 /// applied to structs, the struct must have at least one field.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// # use std::fs::File;
-/// # use rocket::http::ContentType;
+/// # use rkt::http::ContentType;
 /// # type OtherResponder = MyResponderA;
 /// #
 /// #[derive(Responder)]
@@ -861,10 +861,10 @@ pub fn derive_from_param(input: TokenStream) -> TokenStream {
 /// ignored by the derive:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// # use std::fs::File;
-/// # use rocket::http::ContentType;
-/// # use rocket::fs::NamedFile;
+/// # use rkt::http::ContentType;
+/// # use rkt::fs::NamedFile;
 /// # type Other = usize;
 /// #
 /// #[derive(Responder)]
@@ -905,9 +905,9 @@ pub fn derive_from_param(input: TokenStream) -> TokenStream {
 /// It can be used as follows:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// # use rocket::http::ContentType;
-/// # use rocket::fs::NamedFile;
+/// # #[macro_use] extern crate rkt;
+/// # use rkt::http::ContentType;
+/// # use rkt::fs::NamedFile;
 /// # type Other = usize;
 /// # type InnerResponder = String;
 /// #
@@ -967,11 +967,11 @@ pub fn derive_from_param(input: TokenStream) -> TokenStream {
 ///   * `H: Into<Header<'o>>`
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// use rocket::serde::Serialize;
-/// use rocket::serde::json::Json;
-/// use rocket::http::ContentType;
-/// use rocket::response::Responder;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::serde::Serialize;
+/// use rkt::serde::json::Json;
+/// use rkt::http::ContentType;
+/// use rkt::response::Responder;
 ///
 /// // The bound `T: Responder` will be added.
 /// #[derive(Responder)]
@@ -995,7 +995,7 @@ pub fn derive_from_param(input: TokenStream) -> TokenStream {
 /// generated implementation `impl Responder<'r, 'o>`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// // Generates `impl<'r, 'o> Responder<'r, 'o> for NotFoundHtmlString<'o>`.
 /// #[derive(Responder)]
 /// #[response(status = 404, content_type = "html")]
@@ -1005,8 +1005,8 @@ pub fn derive_from_param(input: TokenStream) -> TokenStream {
 /// Both type generics and lifetime generic may be used:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// # use rocket::response::Responder;
+/// # #[macro_use] extern crate rkt;
+/// # use rkt::response::Responder;
 /// #[derive(Responder)]
 /// struct SomeResult<'o, T>(Result<T, &'o str>);
 /// ```
@@ -1022,7 +1022,7 @@ pub fn derive_responder(input: TokenStream) -> TokenStream {
 /// a struct, the struct must have at least one field.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[derive(UriDisplayQuery)]
 /// enum Kind {
 ///     A(String),
@@ -1059,7 +1059,7 @@ pub fn derive_responder(input: TokenStream) -> TokenStream {
 /// as follows:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// # #[derive(UriDisplayQuery)]
 /// # struct Kind(String);
 /// #[derive(UriDisplayQuery)]
@@ -1083,7 +1083,7 @@ pub fn derive_responder(input: TokenStream) -> TokenStream {
 /// contain `value` and looks as follows:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[derive(UriDisplayQuery)]
 /// enum Kind {
 ///     File,
@@ -1115,7 +1115,7 @@ pub fn derive_uri_display_query(input: TokenStream) -> TokenStream {
 /// one field.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[derive(UriDisplayPath)]
 /// struct Name(String);
 ///
@@ -1141,7 +1141,7 @@ pub fn derive_uri_display_path(input: TokenStream) -> TokenStream {
 /// corresponding [`Route`] structures. For example, given the following routes:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #
 /// #[get("/")]
 /// fn index() { /* .. */ }
@@ -1155,9 +1155,9 @@ pub fn derive_uri_display_path(input: TokenStream) -> TokenStream {
 /// The `routes!` macro can be used as:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #
-/// # use rocket::http::Method;
+/// # use rkt::http::Method;
 /// #
 /// # #[get("/")] fn index() { /* .. */ }
 /// # mod person {
@@ -1198,7 +1198,7 @@ pub fn routes(input: TokenStream) -> TokenStream {
 /// catchers:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #
 /// #[catch(404)]
 /// fn not_found() { /* .. */ }
@@ -1215,7 +1215,7 @@ pub fn routes(input: TokenStream) -> TokenStream {
 /// The `catchers!` macro can be used as:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #
 /// # #[catch(404)] fn not_found() { /* .. */ }
 /// # #[catch(default)] fn default_catcher() { /* .. */ }
@@ -1276,8 +1276,8 @@ pub fn catchers(input: TokenStream) -> TokenStream {
 /// ## Examples
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// use rocket::http::uri::Absolute;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::http::uri::Absolute;
 ///
 /// // Values returned from `uri!` are `const` and `'static`.
 /// const ROOT_CONST: Absolute<'static> = uri!("https://rocket.rs");
@@ -1290,7 +1290,7 @@ pub fn catchers(input: TokenStream) -> TokenStream {
 /// let absolute = uri!("https://rocket.rs:443");
 /// let reference = uri!("foo?bar#baz");
 ///
-/// # use rocket::http::uri::{Asterisk, Origin, Authority, Reference};
+/// # use rkt::http::uri::{Asterisk, Origin, Authority, Reference};
 /// # // Ensure we get the types we expect.
 /// # let asterisk: Asterisk = asterisk;
 /// # let origin: Origin<'static> = origin;
@@ -1310,7 +1310,7 @@ pub fn catchers(input: TokenStream) -> TokenStream {
 /// More concretely, for the route `person` defined below:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[get("/person/<name>?<age>")]
 /// fn person(name: &str, age: Option<u8>) { }
 /// ```
@@ -1318,7 +1318,7 @@ pub fn catchers(input: TokenStream) -> TokenStream {
 /// ...a URI can be created as follows:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// # #[get("/person/<name>?<age>")]
 /// # fn person(name: &str, age: Option<u8>) { }
 /// // with unnamed parameters, in route path declaration order
@@ -1344,7 +1344,7 @@ pub fn catchers(input: TokenStream) -> TokenStream {
 /// be used in-place of `None` or `Err`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// # #[get("/person/<name>?<age>")]
 /// # fn person(name: &str, age: Option<u8>) { }
 /// // with named values ignored
@@ -1366,7 +1366,7 @@ pub fn catchers(input: TokenStream) -> TokenStream {
 /// target a type of `T`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[get("/person/<name>")]
 /// fn maybe(name: Option<&str>) { }
 ///
@@ -1390,7 +1390,7 @@ pub fn catchers(input: TokenStream) -> TokenStream {
 /// arguments.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[get("/ignore/<_>/<other>")]
 /// fn ignore(other: &str) { }
 ///
@@ -1409,7 +1409,7 @@ pub fn catchers(input: TokenStream) -> TokenStream {
 /// value as empty.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[get("/person/<name>?<age>")]
 /// fn person(name: &str, age: Option<u8>) { }
 ///

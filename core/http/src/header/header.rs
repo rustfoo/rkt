@@ -27,8 +27,8 @@ impl<'h> Header<'h> {
     /// value`.
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::Header;
+    /// # extern crate rkt;
+    /// use rkt::http::Header;
     ///
     /// let header = Header::new("X-Custom-Header", "custom value");
     /// assert_eq!(header.to_string(), "X-Custom-Header: custom value");
@@ -37,8 +37,8 @@ impl<'h> Header<'h> {
     /// Use a `String` as a value to do the same.
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::Header;
+    /// # extern crate rkt;
+    /// use rkt::http::Header;
     ///
     /// let value = format!("{} value", "custom");
     /// let header = Header::new("X-Custom-Header", value);
@@ -74,8 +74,8 @@ impl<'h> Header<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::Header;
+    /// # extern crate rkt;
+    /// use rkt::http::Header;
     ///
     /// assert!(!Header::is_valid_name(""));
     /// assert!(!Header::is_valid_name("some header"));
@@ -146,8 +146,8 @@ impl<'h> Header<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::Header;
+    /// # extern crate rkt;
+    /// use rkt::http::Header;
     ///
     /// assert!(!Header::is_valid_value("", false));
     /// assert!(!Header::is_valid_value(" " , false));
@@ -200,8 +200,8 @@ impl<'h> Header<'h> {
     /// A case-sensitive equality check:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::Header;
+    /// # extern crate rkt;
+    /// use rkt::http::Header;
     ///
     /// let value = format!("{} value", "custom");
     /// let header = Header::new("X-Custom-Header", value);
@@ -212,8 +212,8 @@ impl<'h> Header<'h> {
     /// A case-insensitive equality check:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::Header;
+    /// # extern crate rkt;
+    /// use rkt::http::Header;
     ///
     /// let header = Header::new("X-Custom-Header", "custom value");
     /// assert_eq!(header.name(), "X-Custom-Header");
@@ -231,8 +231,8 @@ impl<'h> Header<'h> {
     /// A case-sensitive equality check:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::Header;
+    /// # extern crate rkt;
+    /// use rkt::http::Header;
     ///
     /// let header = Header::new("X-Custom-Header", "custom value");
     /// assert_eq!(header.value(), "custom value");
@@ -269,8 +269,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let map = HeaderMap::new();
     /// ```
@@ -286,8 +286,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{HeaderMap, ContentType};
+    /// # extern crate rkt;
+    /// use rkt::http::{HeaderMap, ContentType};
     ///
     /// let mut map = HeaderMap::new();
     /// map.add(ContentType::HTML);
@@ -305,8 +305,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let mut map = HeaderMap::new();
     /// assert_eq!(map.len(), 0);
@@ -334,8 +334,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let map = HeaderMap::new();
     /// assert!(map.is_empty());
@@ -351,8 +351,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let mut map = HeaderMap::new();
     /// map.add_raw("X-Custom", "value_1");
@@ -381,8 +381,8 @@ impl<'h> HeaderMap<'h> {
     /// Retrieve the first value when one exists:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let mut map = HeaderMap::new();
     /// map.add_raw("X-Custom", "value_1");
@@ -397,8 +397,8 @@ impl<'h> HeaderMap<'h> {
     /// Attempt to retrieve a value that doesn't exist:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let mut map = HeaderMap::new();
     /// map.add_raw("X-Custom", "value_1");
@@ -427,8 +427,8 @@ impl<'h> HeaderMap<'h> {
     /// Replace a header that doesn't yet exist:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{HeaderMap, ContentType};
+    /// # extern crate rkt;
+    /// use rkt::http::{HeaderMap, ContentType};
     ///
     /// let mut map = HeaderMap::new();
     /// map.replace(ContentType::JSON);
@@ -439,8 +439,8 @@ impl<'h> HeaderMap<'h> {
     /// Replace a header that already exists:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{HeaderMap, ContentType};
+    /// # extern crate rkt;
+    /// use rkt::http::{HeaderMap, ContentType};
     ///
     /// let mut map = HeaderMap::new();
     ///
@@ -455,8 +455,8 @@ impl<'h> HeaderMap<'h> {
     /// An example of case-insensitivity.
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{HeaderMap, Header, ContentType};
+    /// # extern crate rkt;
+    /// use rkt::http::{HeaderMap, Header, ContentType};
     ///
     /// let mut map = HeaderMap::new();
     ///
@@ -481,8 +481,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let mut map = HeaderMap::new();
     ///
@@ -509,8 +509,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let mut map = HeaderMap::new();
     /// map.add_raw("X-Custom", "value_1");
@@ -536,8 +536,8 @@ impl<'h> HeaderMap<'h> {
     /// previously added, that header will have one more value.
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{Cookie, HeaderMap};
+    /// # extern crate rkt;
+    /// use rkt::http::{Cookie, HeaderMap};
     ///
     /// let mut map = HeaderMap::new();
     ///
@@ -562,8 +562,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let mut map = HeaderMap::new();
     ///
@@ -590,8 +590,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let mut map = HeaderMap::new();
     ///
@@ -625,8 +625,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::HeaderMap;
+    /// # extern crate rkt;
+    /// use rkt::http::HeaderMap;
     ///
     /// let mut map = HeaderMap::new();
     /// map.add_raw("X-Custom", "value_1");
@@ -650,8 +650,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{HeaderMap, Header};
+    /// # extern crate rkt;
+    /// use rkt::http::{HeaderMap, Header};
     /// use std::collections::HashSet;
     ///
     /// // The headers we'll be storing.
@@ -691,8 +691,8 @@ impl<'h> HeaderMap<'h> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{HeaderMap, Header};
+    /// # extern crate rkt;
+    /// use rkt::http::{HeaderMap, Header};
     ///
     /// // The headers we'll be storing.
     /// let all_headers = vec![
@@ -752,8 +752,8 @@ impl<'h> HeaderMap<'h> {
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket;
-/// use rocket::http::{HeaderMap, Header};
+/// # extern crate rkt;
+/// use rkt::http::{HeaderMap, Header};
 ///
 /// // The headers we'll be storing.
 /// let all_headers = vec![

@@ -7,12 +7,11 @@
 //!
 //! # Usage
 //!
-//!   1. Depend on `rocket_dyn_templates`. Enable the feature(s) corresponding
+//!   1. Depend on `rkt_dyn_templates`. Enable the feature(s) corresponding
 //!      to your templating engine(s) of choice:
 //!
 //!      ```toml
-//!      [dependencies.rocket_dyn_templates]
-//!      package = "rocket_dyn_templates-community"
+//!      [dependencies.rkt_dyn_templates]
 //!      version = "0.3.2"
 //!      features = ["handlebars", "tera", "minijinja"]
 //!      ```
@@ -38,9 +37,8 @@
 //!      **minus the last two extensions**:
 //!
 //!      ```rust
-//!      # #[macro_use] extern crate rocket;
-//!      # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
-//!      use rocket_dyn_templates::{Template, context};
+//!      # #[macro_use] extern crate rkt;
+//!      use rkt_dyn_templates::{Template, context};
 //!
 //!      #[get("/")]
 //!      fn index() -> Template {
@@ -49,7 +47,7 @@
 //!
 //!      #[launch]
 //!      fn rocket() -> _ {
-//!          rocket::build().attach(Template::fairing())
+//!          rkt::build().attach(Template::fairing())
 //!      }
 //!      ```
 //!
@@ -119,13 +117,12 @@
 //! to an `Object` (a dictionary) value. The [`context!`] macro can be used to
 //! create inline `Serialize`-able context objects.
 //!
-//! [`Serialize`]: rocket::serde::Serialize
+//! [`Serialize`]: rkt::serde::Serialize
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket;
-//! # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
-//! use rocket::serde::Serialize;
-//! use rocket_dyn_templates::{Template, context};
+//! # #[macro_use] extern crate rkt;
+//! use rkt::serde::Serialize;
+//! use rkt_dyn_templates::{Template, context};
 //!
 //! #[get("/")]
 //! fn index() -> Template {
@@ -139,7 +136,7 @@
 //! #[get("/")]
 //! fn index2() -> Template {
 //!     #[derive(Serialize)]
-//!     #[serde(crate = "rocket::serde")]
+//!     #[serde(crate = "rkt::serde")]
 //!     struct IndexContext {
 //!         site_name: &'static str,
 //!         version: u8
@@ -170,7 +167,7 @@
 //! builds, template reloading is disabled to improve performance and cannot be
 //! enabled.
 //!
-//! [attached]: rocket::Rocket::attach()
+//! [attached]: rkt::Rocket::attach()
 //!
 //! ### Metadata and Rendering to `String`
 //!
@@ -179,12 +176,12 @@
 //! ([`Metadata::contains_template()`]), and to render templates to `String`
 //! ([`Metadata::render()`]).
 
-#![doc(html_root_url = "https://api.rocket.rs/master/rocket_dyn_templates")]
+#![doc(html_root_url = "https://api.rocket.rs/master/rkt_dyn_templates")]
 #![doc(html_favicon_url = "https://rocket.rs/images/favicon.ico")]
 #![doc(html_logo_url = "https://rocket.rs/images/logo-boxed.png")]
 
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
 #[doc(inline)]
 #[cfg(feature = "tera")]
@@ -202,7 +199,7 @@ pub use handlebars;
 pub use minijinja;
 
 #[doc(hidden)]
-pub use rocket::serde;
+pub use rkt::serde;
 
 mod context;
 mod engine;

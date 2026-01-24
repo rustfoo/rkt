@@ -1,9 +1,9 @@
-use rocket::{Rocket, Build};
-use rocket::fairing::AdHoc;
-use rocket::serde::{Serialize, Deserialize, json::Json};
-use rocket::response::{Debug, status::Created};
+use rkt::{Rocket, Build};
+use rkt::fairing::AdHoc;
+use rkt::serde::{Serialize, Deserialize, json::Json};
+use rkt::response::{Debug, status::Created};
 
-use rocket_sync_db_pools::rusqlite;
+use rkt_sync_db_pools::rusqlite;
 
 use self::rusqlite::params;
 
@@ -11,7 +11,7 @@ use self::rusqlite::params;
 struct Db(rusqlite::Connection);
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Post {
     #[serde(skip_deserializing, skip_serializing_if = "Option::is_none")]
     id: Option<i64>,

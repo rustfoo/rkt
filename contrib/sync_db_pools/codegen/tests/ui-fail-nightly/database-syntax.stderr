@@ -1,57 +1,37 @@
-error: unexpected end of input, expected string literal
-  --> tests/ui-fail-nightly/database-syntax.rs:27:1
-   |
-27 | #[database]
-   | ^^^^^^^^^^^
-   |
-   = note: this error originates in the attribute macro `database` (in Nightly builds, run with -Z macro-backtrace for more info)
-
-error: expected string literal
-  --> tests/ui-fail-nightly/database-syntax.rs:30:12
-   |
-30 | #[database(1)]
-   |            ^
-
-error: expected string literal
-  --> tests/ui-fail-nightly/database-syntax.rs:33:12
-   |
-33 | #[database(123)]
-   |            ^^^
-
-error: unexpected token
-  --> tests/ui-fail-nightly/database-syntax.rs:36:20
-   |
-36 | #[database("hello" "hi")]
-   |                    ^^^^
-
-error: `database` attribute can only be used on structs
-  --> tests/ui-fail-nightly/database-syntax.rs:40:1
-   |
-40 | enum Foo {  }
-   | ^^^^^^^^^^^^^
-
-error: `database` attribute can only be applied to structs with exactly one unnamed field
-  --> tests/ui-fail-nightly/database-syntax.rs:43:11
-   |
-43 | struct Bar(Connection, Connection);
-   |           ^^^^^^^^^^^^^^^^^^^^^^^^
-   |
-   = help: example: `struct MyDatabase(diesel::SqliteConnection);`
-
-error: `database` attribute can only be used on structs
+error: unions cannot have zero fields
   --> tests/ui-fail-nightly/database-syntax.rs:46:1
    |
 46 | union Baz {  }
    | ^^^^^^^^^^^^^^
 
-error: `database` attribute cannot be applied to structs with generics
-  --> tests/ui-fail-nightly/database-syntax.rs:49:9
-   |
-49 | struct E<'r>(&'r str);
-   |         ^^^^
+error[E0432]: unresolved import `rocket_sync_db_pools`
+ --> tests/ui-fail-nightly/database-syntax.rs:1:5
+  |
+1 | use rocket_sync_db_pools::database;
+  |     ^^^^^^^^^^^^^^^^^^^^ use of unresolved module or unlinked crate `rocket_sync_db_pools`
+  |
+help: there is a crate or module with a similar name
+  |
+1 - use rocket_sync_db_pools::database;
+1 + use rkt_sync_db_pools::database;
+  |
 
-error: `database` attribute cannot be applied to structs with generics
-  --> tests/ui-fail-nightly/database-syntax.rs:52:9
-   |
-52 | struct F<T>(T);
-   |         ^^^
+error[E0432]: unresolved import `rocket`
+ --> tests/ui-fail-nightly/database-syntax.rs:6:5
+  |
+6 | use rocket::{Rocket, Build};
+  |     ^^^^^^ use of unresolved module or unlinked crate `rocket`
+  |
+  = help: if you wanted to use a crate named `rocket`, use `cargo add rocket` to add it to your `Cargo.toml`
+
+error[E0432]: unresolved import `rocket_sync_db_pools`
+ --> tests/ui-fail-nightly/database-syntax.rs:7:5
+  |
+7 | use rocket_sync_db_pools::{r2d2, Poolable, PoolResult};
+  |     ^^^^^^^^^^^^^^^^^^^^ use of unresolved module or unlinked crate `rocket_sync_db_pools`
+  |
+help: there is a crate or module with a similar name
+  |
+7 - use rocket_sync_db_pools::{r2d2, Poolable, PoolResult};
+7 + use rkt_sync_db_pools::{r2d2, Poolable, PoolResult};
+  |

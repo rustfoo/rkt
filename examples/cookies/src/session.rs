@@ -1,10 +1,10 @@
-use rocket::outcome::IntoOutcome;
-use rocket::request::{self, FlashMessage, FromRequest, Request};
-use rocket::response::{Redirect, Flash};
-use rocket::http::{CookieJar, Status};
-use rocket::form::Form;
+use rkt::outcome::IntoOutcome;
+use rkt::request::{self, FlashMessage, FromRequest, Request};
+use rkt::response::{Redirect, Flash};
+use rkt::http::{CookieJar, Status};
+use rkt::form::Form;
 
-use rocket_dyn_templates::{Template, context};
+use rkt_dyn_templates::{Template, context};
 
 #[derive(FromForm)]
 struct Login<'r> {
@@ -15,7 +15,7 @@ struct Login<'r> {
 #[derive(Debug)]
 struct User(usize);
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for User {
     type Error = std::convert::Infallible;
 
@@ -30,7 +30,7 @@ impl<'r> FromRequest<'r> for User {
 
 #[macro_export]
 macro_rules! session_uri {
-    ($($t:tt)*) => (rocket::uri!("/session", $crate::session:: $($t)*))
+    ($($t:tt)*) => (rkt::uri!("/session", $crate::session:: $($t)*))
 }
 
 pub use session_uri as uri;
@@ -73,6 +73,6 @@ fn logout(jar: &CookieJar<'_>) -> Flash<Redirect> {
     Flash::success(Redirect::to(uri!(login_page)), "Successfully logged out.")
 }
 
-pub fn routes() -> Vec<rocket::Route> {
+pub fn routes() -> Vec<rkt::Route> {
     routes![index, no_auth_index, login, login_page, post_login, logout]
 }

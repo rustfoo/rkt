@@ -6,7 +6,7 @@
 mod cookies;
 
 #[doc(inline)]
-pub use rocket_http::*;
+pub use rkt_http::*;
 
 #[doc(inline)]
 pub use cookies::*;

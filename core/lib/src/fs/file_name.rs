@@ -34,8 +34,7 @@ impl FileName {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fs::FileName;
+    /// use rkt::fs::FileName;
     ///
     /// let name = FileName::new("some-file.txt");
     /// assert_eq!(name.as_str(), Some("some-file"));
@@ -74,8 +73,7 @@ impl FileName {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fs::FileName;
+    /// use rkt::fs::FileName;
     ///
     /// let name = FileName::new("some-file.txt");
     /// assert_eq!(name.as_str(), Some("some-file"));
@@ -175,8 +173,7 @@ impl FileName {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fs::FileName;
+    /// use rkt::fs::FileName;
     ///
     /// let name = FileName::new("some-file.txt");
     /// assert_eq!(name.as_str(), Some("some-file"));
@@ -215,8 +212,7 @@ impl FileName {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fs::FileName;
+    /// use rkt::fs::FileName;
     ///
     /// let name = FileName::new("some-file.txt");
     /// assert_eq!(name.dangerous_unsafe_unsanitized_raw(), "some-file.txt");

@@ -24,8 +24,8 @@ use crate::response::{self, Responder, Response};
 /// valid URI:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::response::Redirect;
+    /// #[macro_use] extern crate rkt;
+/// use rkt::response::Redirect;
 ///
 /// #[get("/hello/<name>/<age>")]
 /// fn hello(name: String, age: u8) -> String {
@@ -57,8 +57,8 @@ impl Redirect {
     /// # Examples
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::response::Redirect;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::response::Redirect;
     ///
     /// let redirect = Redirect::to(uri!("/foo/bar"));
     /// let redirect = Redirect::to(uri!("https://domain.com#foo"));
@@ -76,8 +76,8 @@ impl Redirect {
     /// # Examples
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::response::Redirect;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::response::Redirect;
     ///
     /// let redirect = Redirect::temporary(uri!("some/other/path"));
     /// let redirect = Redirect::temporary(uri!("https://rocket.rs?foo"));
@@ -97,8 +97,8 @@ impl Redirect {
     /// # Examples
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::response::Redirect;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::response::Redirect;
     ///
     /// let redirect = Redirect::permanent(uri!("/other_url"));
     /// let redirect = Redirect::permanent(format!("some-{}-thing", "crazy"));
@@ -117,8 +117,8 @@ impl Redirect {
     /// # Examples
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::response::Redirect;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::response::Redirect;
     ///
     /// let redirect = Redirect::found(uri!("/other_url"));
     /// let redirect = Redirect::found(format!("some-{}-thing", "crazy"));
@@ -135,8 +135,8 @@ impl Redirect {
     /// # Examples
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::response::Redirect;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::response::Redirect;
     ///
     /// let redirect = Redirect::moved(uri!("here"));
     /// let redirect = Redirect::moved(format!("some-{}-thing", "crazy"));

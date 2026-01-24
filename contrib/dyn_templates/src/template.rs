@@ -1,14 +1,14 @@
 use std::borrow::Cow;
 use std::path::PathBuf;
 
-use rocket::fairing::Fairing;
-use rocket::figment::{error::Error, value::Value};
-use rocket::http::{ContentType, Status};
-use rocket::request::Request;
-use rocket::response::{self, Responder};
-use rocket::serde::Serialize;
-use rocket::trace::Trace;
-use rocket::{Ignite, Orbit, Rocket, Sentinel};
+use rkt::fairing::Fairing;
+use rkt::figment::{error::Error, value::Value};
+use rkt::http::{ContentType, Status};
+use rkt::request::Request;
+use rkt::response::{self, Responder};
+use rkt::serde::Serialize;
+use rkt::trace::Trace;
+use rkt::{Ignite, Orbit, Rocket, Sentinel};
 
 use crate::context::{Context, ContextManager};
 use crate::fairing::TemplateFairing;
@@ -57,13 +57,12 @@ impl Template {
     /// `Rocket` instance with `Template::fairing()`:
     ///
     /// ```rust
-    /// extern crate rocket;
-    /// extern crate rocket_dyn_templates_community as rocket_dyn_templates;
+    /// extern crate rkt;
     ///
-    /// use rocket_dyn_templates::Template;
+    /// use rkt_dyn_templates::Template;
     ///
     /// fn main() {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         // ...
     ///         .attach(Template::fairing())
     ///         // ...
@@ -86,13 +85,12 @@ impl Template {
     /// # Example
     ///
     /// ```rust
-    /// extern crate rocket;
-    /// extern crate rocket_dyn_templates_community as rocket_dyn_templates;
+    /// extern crate rkt;
     ///
-    /// use rocket_dyn_templates::Template;
+    /// use rkt_dyn_templates::Template;
     ///
     /// fn main() {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         // ...
     ///         .attach(Template::custom(|engines| {
     ///             // engines.handlebars.register_helper ...
@@ -121,13 +119,12 @@ impl Template {
     /// # Example
     ///
     /// ```rust
-    /// extern crate rocket;
-    /// extern crate rocket_dyn_templates_community as rocket_dyn_templates;
+    /// extern crate rkt;
     ///
-    /// use rocket_dyn_templates::Template;
+    /// use rkt_dyn_templates::Template;
     ///
     /// fn main() {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         // ...
     ///         .attach(Template::try_custom(|engines| {
     ///             // engines.handlebars.register_helper ...
@@ -159,8 +156,7 @@ impl Template {
     /// Using the `context` macro:
     ///
     /// ```rust
-    /// # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
-    /// use rocket_dyn_templates::{Template, context};
+    /// use rkt_dyn_templates::{Template, context};
     ///
     /// let template = Template::render("index", context! {
     ///     foo: "Hello, world!",
@@ -170,9 +166,8 @@ impl Template {
     /// Using a `HashMap` as the context:
     ///
     /// ```rust
-    /// # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
     /// use std::collections::HashMap;
-    /// use rocket_dyn_templates::Template;
+    /// use rkt_dyn_templates::Template;
     ///
     /// // Create a `context` from a `HashMap`.
     /// let mut context = HashMap::new();
@@ -208,15 +203,14 @@ impl Template {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # extern crate rocket;
-    /// # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
+    /// # extern crate rkt;
     /// use std::collections::HashMap;
     ///
-    /// use rocket_dyn_templates::Template;
-    /// use rocket::local::blocking::Client;
+    /// use rkt_dyn_templates::Template;
+    /// use rkt::local::blocking::Client;
     ///
     /// fn main() {
-    ///     let rocket = rocket::build().attach(Template::fairing());
+    ///     let rocket = rkt::build().attach(Template::fairing());
     ///     let client = Client::untracked(rocket).expect("valid rocket");
     ///
     ///     // Create a `context`. Here, just an empty `HashMap`.
@@ -325,9 +319,8 @@ impl Sentinel for Template {
 /// The following code:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
-/// # use rocket_dyn_templates::{Template, context};
+/// # #[macro_use] extern crate rkt;
+/// # use rkt_dyn_templates::{Template, context};
 /// #[get("/<foo>")]
 /// fn render_index(foo: u64) -> Template {
 ///     Template::render("index", context! {
@@ -343,12 +336,11 @@ impl Sentinel for Template {
 /// `IndexContext` struct:
 ///
 /// ```rust
-/// # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
-/// # use rocket_dyn_templates::Template;
-/// # use rocket::serde::Serialize;
-/// # use rocket::get;
+/// # use rkt_dyn_templates::Template;
+/// # use rkt::serde::Serialize;
+/// # use rkt::get;
 /// #[derive(Serialize)]
-/// # #[serde(crate = "rocket::serde")]
+/// # #[serde(crate = "rkt::serde")]
 /// struct IndexContext<'a> {
 ///     foo: u64,
 ///     bar: &'a str,
@@ -368,8 +360,7 @@ impl Sentinel for Template {
 /// Nested objects can be created by nesting calls to `context!`:
 ///
 /// ```rust
-/// # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
-/// # use rocket_dyn_templates::context;
+/// # use rkt_dyn_templates::context;
 /// # fn main() {
 /// let ctx = context! {
 ///     planet: "Earth",

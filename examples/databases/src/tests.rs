@@ -1,10 +1,10 @@
-use rocket::fairing::AdHoc;
-use rocket::local::blocking::Client;
-use rocket::serde::{Serialize, Deserialize};
-use rocket::http::Status;
+use rkt::fairing::AdHoc;
+use rkt::local::blocking::Client;
+use rkt::serde::{Serialize, Deserialize};
+use rkt::http::Status;
 
 #[derive(Debug, Clone, PartialEq, Deserialize, Serialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Post {
     title: String,
     text: String,
@@ -16,7 +16,7 @@ fn test(base: &str, stage: AdHoc) {
 
     // NOTE: If we had more than one test running concurrently that dispatches
     // DB-accessing requests, we'd need transactions or to serialize all tests.
-    let client = Client::tracked(rocket::build().attach(stage)).unwrap();
+    let client = Client::tracked(rkt::build().attach(stage)).unwrap();
 
     // Clear everything from the database.
     assert_eq!(client.delete(base).dispatch().status(), Status::Ok);

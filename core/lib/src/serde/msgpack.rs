@@ -9,7 +9,6 @@
 //!
 //! ```toml
 //! [dependencies.rocket]
-//! package = "rocket_community"
 //! version = "0.6.0"
 //! features = ["msgpack"]
 //! ```
@@ -48,9 +47,9 @@ pub use rmp_serde::decode::Error;
 /// [`Compact<T>`] from your handler. `T` must implement [`serde::Serialize`].
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type User = usize;
-/// use rocket::serde::msgpack::MsgPack;
+/// use rkt::serde::msgpack::MsgPack;
 ///
 /// #[get("/users/<id>")]
 /// fn user(id: usize) -> MsgPack<User> {
@@ -75,9 +74,9 @@ pub use rmp_serde::decode::Error;
 /// like to parse from JSON. `T` must implement [`serde::Deserialize`].
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type User = usize;
-/// use rocket::serde::msgpack::MsgPack;
+/// use rkt::serde::msgpack::MsgPack;
 ///
 /// #[post("/users", format = "msgpack", data = "<user>")]
 /// fn new_user(user: MsgPack<User>) {
@@ -96,10 +95,10 @@ pub use rmp_serde::decode::Error;
 /// data as a `T`. Simple use `MsgPack<T>`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type Metadata = usize;
-/// use rocket::form::{Form, FromForm};
-/// use rocket::serde::msgpack::MsgPack;
+/// use rkt::form::{Form, FromForm};
+/// use rkt::serde::msgpack::MsgPack;
 ///
 /// #[derive(FromForm)]
 /// struct User<'r> {
@@ -137,9 +136,9 @@ pub struct MsgPack<T, const COMPACT: bool = false>(pub T);
 /// response is set to `application/msgpack` automatically.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type User = usize;
-/// use rocket::serde::msgpack;
+/// use rkt::serde::msgpack;
 ///
 /// #[get("/users/<id>")]
 /// fn user(id: usize) -> msgpack::Compact<User> {
@@ -161,9 +160,8 @@ impl<T, const COMPACT: bool> MsgPack<T, COMPACT> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// # use rocket::serde::msgpack::MsgPack;
+    /// # use rkt::serde::msgpack::MsgPack;
     /// let string = "Hello".to_string();
     /// let my_msgpack: MsgPack<_> = MsgPack(string);
     /// assert_eq!(my_msgpack.into_inner(), "Hello".to_string());
@@ -289,11 +287,10 @@ impl<T, const COMPACT: bool> DerefMut for MsgPack<T, COMPACT> {
 /// # Example
 ///
 /// ```
-/// # extern crate rocket_community as rocket;
-/// use rocket::serde::{Deserialize, msgpack};
+/// use rkt::serde::{Deserialize, msgpack};
 ///
 /// #[derive(Debug, PartialEq, Deserialize)]
-/// #[serde(crate = "rocket::serde")]
+/// #[serde(crate = "rkt::serde")]
 /// struct Data<'r> {
 ///     framework: &'r str,
 ///     stars: usize,
@@ -331,11 +328,10 @@ where
 /// # Example
 ///
 /// ```
-/// # extern crate rocket_community as rocket;
-/// use rocket::serde::{Deserialize, Serialize, msgpack};
+/// use rkt::serde::{Deserialize, Serialize, msgpack};
 ///
 /// #[derive(Deserialize, Serialize)]
-/// #[serde(crate = "rocket::serde")]
+/// #[serde(crate = "rkt::serde")]
 /// struct Data<'r> {
 ///     framework: &'r str,
 ///     stars: usize,
@@ -367,11 +363,10 @@ where
 /// # Example
 ///
 /// ```
-/// # extern crate rocket_community as rocket;
-/// use rocket::serde::{Deserialize, Serialize, msgpack};
+/// use rkt::serde::{Deserialize, Serialize, msgpack};
 ///
 /// #[derive(Deserialize, Serialize)]
-/// #[serde(crate = "rocket::serde")]
+/// #[serde(crate = "rkt::serde")]
 /// struct Data<'r> {
 ///     framework: &'r str,
 ///     stars: usize,

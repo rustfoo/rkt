@@ -1,6 +1,6 @@
 use super::*;
-use rocket::local::blocking::Client;
-use rocket::http::ContentType;
+use rkt::local::blocking::Client;
+use rkt::http::ContentType;
 
 fn test(uri: &str, content_type: ContentType, status: Status, body: String) {
     let client = Client::tracked(rocket()).unwrap();

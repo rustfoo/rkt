@@ -2,7 +2,7 @@
 use std::time::Duration;
 
 use r2d2::ManageConnection;
-use rocket::{Build, Rocket};
+use rkt::{Build, Rocket};
 
 #[allow(unused_imports)]
 use crate::{Config, Error};
@@ -41,10 +41,9 @@ use crate::{Config, Error};
 /// `Poolable` for `foo::Connection`:
 ///
 /// ```rust
-/// # extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
 /// # mod foo {
 /// #     use std::fmt;
-/// #     use rocket_sync_db_pools::r2d2;
+/// #     use rkt_sync_db_pools::r2d2;
 /// #     #[derive(Debug)] pub struct Error;
 /// #     impl std::error::Error for Error {  }
 /// #     impl fmt::Display for Error {
@@ -69,8 +68,8 @@ use crate::{Config, Error};
 /// #     }
 /// # }
 /// use std::time::Duration;
-/// use rocket::{Rocket, Build};
-/// use rocket_sync_db_pools::{r2d2, Error, Config, Poolable, PoolResult};
+/// use rkt::{Rocket, Build};
+/// use rkt_sync_db_pools::{r2d2, Error, Config, Poolable, PoolResult};
 ///
 /// impl Poolable for foo::Connection {
 ///     type Manager = foo::ConnectionManager;
@@ -90,7 +89,7 @@ use crate::{Config, Error};
 /// In this example, `ConnectionManager::new()` method returns a `foo::Error` on
 /// failure. The [`Error`] enum consolidates this type, the `r2d2::Error` type
 /// that can result from `r2d2::Pool::builder()`, and the
-/// [`figment::Error`](rocket::figment::Error) type from
+/// [`figment::Error`](rkt::figment::Error) type from
 /// `database::Config::from()`.
 ///
 /// In the event that a connection manager isn't fallible (as is the case with
@@ -215,7 +214,7 @@ impl Poolable for rusqlite::Connection {
     type Error = std::convert::Infallible;
 
     fn pool(db_name: &str, rocket: &Rocket<Build>) -> PoolResult<Self> {
-        use rocket::figment::providers::Serialized;
+        use rkt::figment::providers::Serialized;
 
         #[derive(Debug, serde::Deserialize, serde::Serialize)]
         #[serde(rename_all = "snake_case")]

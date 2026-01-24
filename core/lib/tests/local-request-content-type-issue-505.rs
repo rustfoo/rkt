@@ -1,14 +1,14 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::Status;
-use rocket::outcome::IntoOutcome;
-use rocket::request::{self, FromRequest};
-use rocket::{Data, Request};
+use rkt::http::Status;
+use rkt::outcome::IntoOutcome;
+use rkt::request::{self, FromRequest};
+use rkt::{Data, Request};
 
 struct HasContentType;
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for HasContentType {
     type Error = ();
 
@@ -19,9 +19,9 @@ impl<'r> FromRequest<'r> for HasContentType {
     }
 }
 
-use rocket::data::{self, FromData};
+use rkt::data::{self, FromData};
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromData<'r> for HasContentType {
     type Error = ();
 
@@ -50,12 +50,12 @@ fn data_no_ct() -> &'static str {
 mod local_request_content_type_tests {
     use super::*;
 
-    use rocket::http::ContentType;
-    use rocket::local::blocking::Client;
-    use rocket::{Build, Rocket};
+    use rkt::http::ContentType;
+    use rkt::local::blocking::Client;
+    use rkt::{Build, Rocket};
 
     fn rocket() -> Rocket<Build> {
-        rocket::build().mount("/", routes![rg_ct, data_has_ct, data_no_ct])
+        rkt::build().mount("/", routes![rg_ct, data_has_ct, data_no_ct])
     }
 
     #[test]

@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::Header;
+use rkt::http::Header;
 
 #[derive(Responder)]
 struct HeaderOnly((), Header<'static>);
@@ -16,7 +16,7 @@ fn use_default() {}
 
 mod conditionally_set_server_header {
     use super::*;
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     #[test]
     fn do_not_overwrite_server_header() {
@@ -32,12 +32,12 @@ mod conditionally_set_server_header {
 
         // Now with a special `Ident`.
 
-        let config = rocket::Config {
-            ident: rocket::config::Ident::try_new("My Special Server").unwrap(),
-            ..rocket::Config::debug_default()
+        let config = rkt::Config {
+            ident: rkt::config::Ident::try_new("My Special Server").unwrap(),
+            ..rkt::Config::debug_default()
         };
 
-        let rocket = rocket::custom(config).mount("/", routes![do_not_overwrite, use_default]);
+        let rocket = rkt::custom(config).mount("/", routes![do_not_overwrite, use_default]);
 
         let client = Client::debug(rocket).unwrap();
 

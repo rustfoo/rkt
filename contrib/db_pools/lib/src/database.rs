@@ -1,11 +1,11 @@
 use std::marker::PhantomData;
 use std::ops::{Deref, DerefMut};
 
-use rocket::fairing::{self, Fairing, Info, Kind};
-use rocket::figment::providers::Serialized;
-use rocket::http::Status;
-use rocket::request::{FromRequest, Outcome, Request};
-use rocket::{error, Build, Ignite, Orbit, Phase, Rocket, Sentinel};
+use rkt::fairing::{self, Fairing, Info, Kind};
+use rkt::figment::providers::Serialized;
+use rkt::http::Status;
+use rkt::request::{FromRequest, Outcome, Request};
+use rkt::{error, Build, Ignite, Orbit, Phase, Rocket, Sentinel};
 
 use crate::Pool;
 
@@ -15,10 +15,9 @@ use crate::Pool;
 /// should be derived:
 ///
 /// ```rust
-/// # extern crate rocket_db_pools_community as rocket_db_pools;
 /// # #[cfg(feature = "deadpool_redis")] mod _inner {
-/// # use rocket::launch;
-/// use rocket_db_pools::{deadpool_redis, Database};
+/// # use rkt::launch;
+/// use rkt_db_pools::{deadpool_redis, Database};
 ///
 /// #[derive(Database)]
 /// #[database("memdb")]
@@ -26,7 +25,7 @@ use crate::Pool;
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build().attach(Db::init())
+///     rkt::build().attach(Db::init())
 /// }
 /// # }
 /// ```
@@ -52,10 +51,9 @@ pub trait Database:
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_db_pools_community as rocket_db_pools;
     /// # #[cfg(feature = "deadpool_postgres")] mod _inner {
-    /// # use rocket::launch;
-    /// use rocket_db_pools::{deadpool_postgres, Database};
+    /// # use rkt::launch;
+    /// use rkt_db_pools::{deadpool_postgres, Database};
     ///
     /// #[derive(Database)]
     /// #[database("pg_db")]
@@ -63,7 +61,7 @@ pub trait Database:
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build().attach(Db::init())
+    ///     rkt::build().attach(Db::init())
     /// }
     /// # }
     /// ```
@@ -76,11 +74,11 @@ pub trait Database:
     /// `Option` to be `Some`. This is guaranteed to be the case if the fairing
     /// is attached and either:
     ///
-    ///   * Rocket is in the [`Orbit`](rocket::Orbit) phase. That is, the
+    ///   * Rocket is in the [`Orbit`](rkt::Orbit) phase. That is, the
     ///     application is running. This is always the case in request guards
     ///     and liftoff fairings,
-    ///   * _or_ Rocket is in the [`Build`](rocket::Build) or
-    ///     [`Ignite`](rocket::Ignite) phase and the `Initializer` fairing has
+    ///   * _or_ Rocket is in the [`Build`](rkt::Build) or
+    ///     [`Ignite`](rkt::Ignite) phase and the `Initializer` fairing has
     ///     already been run. This is the case in all fairing callbacks
     ///     corresponding to fairings attached _after_ the `Initializer`
     ///     fairing.
@@ -91,13 +89,12 @@ pub trait Database:
     /// migration fairing be registered _after_ the `init()` fairing.
     ///
     /// ```rust
-    /// # extern crate rocket_db_pools_community as rocket_db_pools;
     /// # #[cfg(feature = "sqlx_sqlite")] mod _inner {
-    /// # use rocket::launch;
-    /// use rocket::{Rocket, Build};
-    /// use rocket::fairing::{self, AdHoc};
+    /// # use rkt::launch;
+    /// use rkt::{Rocket, Build};
+    /// use rkt::fairing::{self, AdHoc};
     ///
-    /// use rocket_db_pools::{sqlx, Database};
+    /// use rkt_db_pools::{sqlx, Database};
     ///
     /// #[derive(Database)]
     /// #[database("sqlite_db")]
@@ -114,7 +111,7 @@ pub trait Database:
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .attach(Db::init())
     ///         .attach(AdHoc::try_on_ignite("DB Migrations", run_migrations))
     /// }
@@ -183,11 +180,10 @@ pub struct Initializer<D: Database>(Option<&'static str>, PhantomData<fn() -> D>
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_db_pools_community as rocket_db_pools;
 /// # #[cfg(feature = "sqlx_sqlite")] mod _inner {
-/// # use rocket::get;
-/// # type Pool = rocket_db_pools::sqlx::SqlitePool;
-/// use rocket_db_pools::{Database, Connection};
+/// # use rkt::get;
+/// # type Pool = rkt_db_pools::sqlx::SqlitePool;
+/// use rkt_db_pools::{Database, Connection};
 ///
 /// #[derive(Database)]
 /// #[database("db")]
@@ -237,11 +233,10 @@ impl<D: Database> Connection<D> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_db_pools_community as rocket_db_pools;
     /// # #[cfg(feature = "sqlx_sqlite")] mod _inner {
-    /// # use rocket::get;
-    /// # type Pool = rocket_db_pools::sqlx::SqlitePool;
-    /// use rocket_db_pools::{Database, Connection};
+    /// # use rkt::get;
+    /// # type Pool = rkt_db_pools::sqlx::SqlitePool;
+    /// use rkt_db_pools::{Database, Connection};
     ///
     /// #[derive(Database)]
     /// #[database("db")]
@@ -258,7 +253,7 @@ impl<D: Database> Connection<D> {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<D: Database> Fairing for Initializer<D> {
     fn info(&self) -> Info {
         Info {
@@ -270,8 +265,8 @@ impl<D: Database> Fairing for Initializer<D> {
     async fn on_ignite(&self, rocket: Rocket<Build>) -> fairing::Result {
         let workers: usize = rocket
             .figment()
-            .extract_inner(rocket::Config::WORKERS)
-            .unwrap_or_else(|_| rocket::Config::default().workers);
+            .extract_inner(rkt::Config::WORKERS)
+            .unwrap_or_else(|_| rkt::Config::default().workers);
 
         let figment = rocket
             .figment()
@@ -295,7 +290,7 @@ impl<D: Database> Fairing for Initializer<D> {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r, D: Database> FromRequest<'r> for Connection<D> {
     type Error = Option<<D::Pool as Pool>::Error>;
 

@@ -1,9 +1,9 @@
-use rocket::config::Config;
-use rocket::trace::{Level, TraceFormat};
+use rkt::config::Config;
+use rkt::trace::{Level, TraceFormat};
 
 async fn test_config(profile: &str) {
     let provider = Config::figment().select(profile);
-    let rocket = rocket::custom(provider).ignite().await.unwrap();
+    let rocket = rkt::custom(provider).ignite().await.unwrap();
     let config = rocket.config();
     match profile {
         "debug" => {

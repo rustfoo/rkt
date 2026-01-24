@@ -1,8 +1,8 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::ext::Normalize;
-use rocket::Route;
+use rkt::http::ext::Normalize;
+use rkt::Route;
 use std::path::{Path, PathBuf};
 
 #[get("/<path..>")]
@@ -15,7 +15,7 @@ fn files(route: &Route, path: PathBuf) -> String {
 
 mod route_guard_tests {
     use super::*;
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     fn assert_path(client: &Client, path: &str) {
         let res = client.get(path).dispatch();
@@ -24,7 +24,7 @@ mod route_guard_tests {
 
     #[test]
     fn check_mount_path() {
-        let rocket = rocket::build()
+        let rocket = rkt::build()
             .mount("/first", routes![files])
             .mount("/second", routes![files]);
 

@@ -24,7 +24,7 @@ macro_rules! bmap {
 #[macro_export]
 macro_rules! assert_form_parses {
     ($T:ty, $form:expr => $value:expr) => (
-        match rocket::form::Form::<$T>::parse($form) {
+        match rkt::form::Form::<$T>::parse($form) {
             Ok(v) => assert_eq!(v, $value, "{}", $form),
             Err(e) => {
                 eprintln!("form failed to parse\n> form: {:?}\n> error: {:?}", $form, e);
@@ -45,17 +45,17 @@ macro_rules! assert_form_parses {
 #[macro_export]
 macro_rules! assert_not_form_parses {
     ($T:ty, $($form:expr),* $(,)?) => ($(
-        rocket::form::Form::<$T>::parse($form).unwrap_err();
+        rkt::form::Form::<$T>::parse($form).unwrap_err();
     )*);
 }
 
 #[macro_export]
 macro_rules! assert_form_parses_ok {
     ($T:ty, $($form:expr),* $(,)?) => ($(
-        rocket::form::Form::<$T>::parse($form).expect("form to parse");
+        rkt::form::Form::<$T>::parse($form).expect("form to parse");
     )*);
 }
 
-pub fn client(routes: Vec<rocket::Route>) -> rocket::local::blocking::Client {
-    rocket::local::blocking::Client::debug_with(routes).unwrap()
+pub fn client(routes: Vec<rkt::Route>) -> rkt::local::blocking::Client {
+    rkt::local::blocking::Client::debug_with(routes).unwrap()
 }

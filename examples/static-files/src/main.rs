@@ -1,14 +1,14 @@
 #[cfg(test)] mod tests;
 
-use rocket::fs::{FileServer, relative};
+use rkt::fs::{FileServer, relative};
 
 // If we wanted or needed to serve files manually, we'd use `NamedFile`. Always
 // prefer to use `FileServer`!
 mod manual {
     use std::path::{PathBuf, Path};
-    use rocket::fs::NamedFile;
+    use rkt::fs::NamedFile;
 
-    #[rocket::get("/second/<path..>")]
+    #[rkt::get("/second/<path..>")]
     pub async fn second(path: PathBuf) -> Option<NamedFile> {
         let mut path = Path::new(super::relative!("static")).join(path);
         if path.is_dir() {
@@ -19,9 +19,9 @@ mod manual {
     }
 }
 
-#[rocket::launch]
+#[rkt::launch]
 fn rocket() -> _ {
-    rocket::build()
-        .mount("/", rocket::routes![manual::second])
+    rkt::build()
+        .mount("/", rkt::routes![manual::second])
         .mount("/", FileServer::new(relative!("static")))
 }

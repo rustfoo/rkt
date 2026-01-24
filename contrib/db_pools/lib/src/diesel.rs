@@ -8,28 +8,27 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rocket = { package = "rocket-community", version = "0.6.0" }
+//! rkt = { version = "0.6.0" }
 //! diesel = "2"
 //!
-//! [dependencies.rocket_db_pools]
-//! package = "rocket_db_pools-community"
+//! [dependencies.rkt_db_pools]
 //! version = "0.3.2"
 //! features = ["diesel_mysql"]
 //! ```
 //!
-//! Then, import `rocket_db_pools::diesel::prelude::*` as well as the
+//! Then, import `rkt_db_pools::diesel::prelude::*` as well as the
 //! appropriate pool type and, optionally, [`QueryResult`]. To use macros or
 //! `diesel` functions, use `diesel::` directly. That is, _do not_ import
-//! `rocket_db_pools::diesel`. Doing so will, by design, cause import errors.
+//! `rkt_db_pools::diesel`. Doing so will, by design, cause import errors.
 //!
 //! # Example
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket;
-//! # extern crate rocket_db_pools_community as rocket_db_pools;
+//! # #[macro_use] extern crate rkt;
+//! # extern crate rkt_db_pools;
 //! # #[cfg(feature = "diesel_mysql")] {
-//! use rocket_db_pools::{Database, Connection};
-//! use rocket_db_pools::diesel::{QueryResult, MysqlPool, prelude::*};
+//! use rkt_db_pools::{Database, Connection};
+//! use rkt_db_pools::diesel::{QueryResult, MysqlPool, prelude::*};
 //!
 //! #[derive(Database)]
 //! #[database("diesel_mysql")]
@@ -103,25 +102,24 @@ pub use diesel_async::sync_connection_wrapper::SyncConnectionWrapper;
 
 /// Alias of a `Result` with an error type of [`Debug`] for a `diesel::Error`.
 ///
-/// `QueryResult` is a [`Responder`](rocket::response::Responder) when `T` (the
+/// `QueryResult` is a [`Responder`](rkt::response::Responder) when `T` (the
 /// `Ok` value) is a `Responder`. By using this alias as a route handler's
 /// return type, the `?` operator can be applied to fallible `diesel` functions
 /// in the route handler while still providing a valid `Responder` return type.
 ///
 /// See the [module level docs](self#example) for a usage example.
 ///
-/// [`Debug`]: rocket::response::Debug
-pub type QueryResult<T, E = rocket::response::Debug<diesel::result::Error>> = Result<T, E>;
+/// [`Debug`]: rkt::response::Debug
+pub type QueryResult<T, E = rkt::response::Debug<diesel::result::Error>> = Result<T, E>;
 
 /// Type alias for an `async` pool of MySQL connections for `async` [diesel].
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # extern crate rocket_db_pools_community as rocket_db_pools;
+/// # extern crate rkt;
 /// # #[cfg(feature = "diesel_mysql")] {
-/// # use rocket::get;
-/// use rocket_db_pools::{Database, Connection};
-/// use rocket_db_pools::diesel::{MysqlPool, prelude::*};
+/// # use rkt::get;
+/// use rkt_db_pools::{Database, Connection};
+/// use rkt_db_pools::diesel::{MysqlPool, prelude::*};
 ///
 /// #[derive(Database)]
 /// #[database("my_mysql_db_name")]
@@ -139,12 +137,11 @@ pub type MysqlPool = Pool<AsyncMysqlConnection>;
 /// Type alias for an `async` pool of Postgres connections for `async` [diesel].
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # extern crate rocket_db_pools_community as rocket_db_pools;
+/// # extern crate rkt;
 /// # #[cfg(feature = "diesel_postgres")] {
-/// # use rocket::get;
-/// use rocket_db_pools::{Database, Connection};
-/// use rocket_db_pools::diesel::{PgPool, prelude::*};
+/// # use rkt::get;
+/// use rkt_db_pools::{Database, Connection};
+/// use rkt_db_pools::diesel::{PgPool, prelude::*};
 ///
 /// #[derive(Database)]
 /// #[database("my_pg_db_name")]
@@ -162,12 +159,11 @@ pub type PgPool = Pool<AsyncPgConnection>;
 /// Type alias for an `async` pool of Sqlite connections for `async` [diesel].
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # extern crate rocket_db_pools_community as rocket_db_pools;
+/// # extern crate rkt;
 /// # #[cfg(feature = "diesel_sqlite")] {
-/// # use rocket::get;
-/// use rocket_db_pools::{Database, Connection};
-/// use rocket_db_pools::diesel::{SqlitePool, prelude::*};
+/// # use rkt::get;
+/// use rkt_db_pools::{Database, Connection};
+/// use rkt_db_pools::diesel::{SqlitePool, prelude::*};
 ///
 /// #[derive(Database)]
 /// #[database("my_sqlite_db_name")]

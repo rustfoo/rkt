@@ -521,7 +521,7 @@ help: consider giving this closure parameter an explicit type
 error[E0308]: mismatched types
    --> tests/ui-fail-stable/from_form.rs:160:12
     |
-159 |     #[field(validate = ext(rocket::http::ContentType::HTML))]
+159 |     #[field(validate = ext(rkt::http::ContentType::HTML))]
     |                        --- arguments to this function are incorrect
 160 |     first: String,
     |            ^^^^^^ expected `&TempFile<'_>`, found `&String`

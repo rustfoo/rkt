@@ -35,11 +35,11 @@ use crate::request::{FromRequest, Outcome, Request};
 /// administrator, a `CertifiedAdmin` type can authorize as follow:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::mtls::{self, bigint::BigUint, Certificate};
-/// use rocket::request::{Request, FromRequest, Outcome};
-/// use rocket::outcome::try_outcome;
-/// use rocket::http::Status;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::mtls::{self, bigint::BigUint, Certificate};
+/// use rkt::request::{Request, FromRequest, Outcome};
+/// use rkt::outcome::try_outcome;
+/// use rkt::http::Status;
 ///
 /// // The serial number for the certificate issued to the admin.
 /// const ADMIN_SERIAL: &str = "65828378108300243895479600452308786010218223563";
@@ -47,7 +47,7 @@ use crate::request::{FromRequest, Outcome, Request};
 /// // A request guard that authenticates and authorizes an administrator.
 /// struct CertifiedAdmin<'r>(Certificate<'r>);
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromRequest<'r> for CertifiedAdmin<'r> {
 ///     type Error = mtls::Error;
 ///
@@ -78,9 +78,8 @@ use crate::request::{FromRequest, Outcome, Request};
 /// To retrieve certificate data in a route, use `Certificate` as a guard:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::get;
-/// use rocket::mtls::{self, Certificate};
+/// # use rkt::get;
+/// use rkt::mtls::{self, Certificate};
 ///
 /// #[get("/auth")]
 /// fn auth(cert: Certificate<'_>) {
@@ -168,9 +167,8 @@ impl<'a> Certificate<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::get;
-    /// use rocket::mtls::Certificate;
+    /// # use rkt::get;
+    /// use rkt::mtls::Certificate;
     ///
     /// #[get("/auth")]
     /// fn auth(cert: Certificate<'_>) {
@@ -186,9 +184,8 @@ impl<'a> Certificate<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::get;
-    /// use rocket::mtls::Certificate;
+    /// # use rkt::get;
+    /// use rkt::mtls::Certificate;
     ///
     /// #[get("/auth")]
     /// fn auth(cert: Certificate<'_>) {
@@ -205,9 +202,8 @@ impl<'a> Certificate<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::get;
-    /// use rocket::mtls::Certificate;
+    /// # use rkt::get;
+    /// use rkt::mtls::Certificate;
     ///
     /// #[get("/auth")]
     /// fn auth(cert: Certificate<'_>) {
@@ -226,9 +222,8 @@ impl<'a> Certificate<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::get;
-    /// use rocket::mtls::Certificate;
+    /// # use rkt::get;
+    /// use rkt::mtls::Certificate;
     ///
     /// #[get("/auth")]
     /// fn auth(cert: Certificate<'_>) {
@@ -246,9 +241,8 @@ impl<'a> Certificate<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::get;
-    /// use rocket::mtls::{oid, x509, Certificate};
+    /// # use rkt::get;
+    /// use rkt::mtls::{oid, x509, Certificate};
     ///
     /// #[get("/auth")]
     /// fn auth(cert: Certificate<'_>) {
@@ -280,9 +274,8 @@ impl<'a> Certificate<'a> {
     /// not.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::get;
-    /// use rocket::mtls::Certificate;
+    /// # use rkt::get;
+    /// use rkt::mtls::Certificate;
     ///
     /// const SERIAL: &str = "65828378108300243895479600452308786010218223563";
     ///
@@ -303,9 +296,8 @@ impl<'a> Certificate<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::get;
-    /// use rocket::mtls::Certificate;
+    /// # use rkt::get;
+    /// use rkt::mtls::Certificate;
     ///
     /// const SHA256_FINGERPRINT: &str =
     ///     "CE C2 4E 01 00 FF F7 78 CB A4 AA CB D2 49 DD 09 \

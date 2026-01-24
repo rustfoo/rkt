@@ -68,9 +68,8 @@ use tokio::task;
 /// **Data Guard**
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::post;
-/// use rocket::fs::TempFile;
+/// # use rkt::post;
+/// use rkt::fs::TempFile;
 ///
 /// #[post("/upload", data = "<file>")]
 /// async fn upload(mut file: TempFile<'_>) -> std::io::Result<()> {
@@ -82,9 +81,9 @@ use tokio::task;
 /// **Form Field**
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::fs::TempFile;
-/// use rocket::form::Form;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::fs::TempFile;
+/// use rkt::form::Form;
 ///
 /// #[derive(FromForm)]
 /// struct Upload<'f> {
@@ -147,8 +146,8 @@ impl<'v> TempFile<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::TempFile;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::fs::TempFile;
     ///
     /// #[post("/", data = "<file>")]
     /// async fn handle(mut file: TempFile<'_>) -> std::io::Result<()> {
@@ -160,7 +159,7 @@ impl<'v> TempFile<'v> {
     ///     Ok(())
     /// }
     /// # let file = TempFile::Buffered { content: "hi".as_bytes() };
-    /// # rocket::async_test(handle(file)).unwrap();
+    /// # rkt::async_test(handle(file)).unwrap();
     /// ```
     pub async fn persist_to<P>(&mut self, path: P) -> io::Result<()>
     where
@@ -218,8 +217,8 @@ impl<'v> TempFile<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::TempFile;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::TempFile;
     ///
     /// #[post("/", data = "<file>")]
     /// async fn handle(mut file: TempFile<'_>) -> std::io::Result<()> {
@@ -236,7 +235,7 @@ impl<'v> TempFile<'v> {
     ///     Ok(())
     /// }
     /// # let file = TempFile::Buffered { content: b"hi" };
-    /// # rocket::async_test(handle(file)).unwrap();
+    /// # rkt::async_test(handle(file)).unwrap();
     /// ```
     pub async fn copy_to<P>(&mut self, path: P) -> io::Result<()>
     where
@@ -292,8 +291,8 @@ impl<'v> TempFile<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::TempFile;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::TempFile;
     ///
     /// #[post("/", data = "<file>")]
     /// async fn handle(mut file: TempFile<'_>) -> std::io::Result<()> {
@@ -305,7 +304,7 @@ impl<'v> TempFile<'v> {
     ///     Ok(())
     /// }
     /// # let file = TempFile::Buffered { content: "hi".as_bytes() };
-    /// # rocket::async_test(handle(file)).unwrap();
+    /// # rkt::async_test(handle(file)).unwrap();
     /// ```
     pub async fn move_copy_to<P>(&mut self, path: P) -> io::Result<()>
     where
@@ -333,9 +332,9 @@ impl<'v> TempFile<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::TempFile;
-    /// use rocket::tokio::io;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::TempFile;
+    /// use rkt::tokio::io;
     ///
     /// #[post("/", data = "<file>")]
     /// async fn handle(file: TempFile<'_>) -> std::io::Result<()> {
@@ -344,7 +343,7 @@ impl<'v> TempFile<'v> {
     ///     Ok(())
     /// }
     /// # let file = TempFile::Buffered { content: "hi".as_bytes() };
-    /// # rocket::async_test(handle(file)).unwrap();
+    /// # rkt::async_test(handle(file)).unwrap();
     /// ```
     pub async fn open(&self) -> io::Result<impl AsyncBufRead + '_> {
         use tokio_util::either::Either;
@@ -370,8 +369,8 @@ impl<'v> TempFile<'v> {
     /// This method does not perform any system calls.
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::TempFile;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::TempFile;
     ///
     /// #[post("/", data = "<file>")]
     /// fn handler(file: TempFile<'_>) {
@@ -389,8 +388,8 @@ impl<'v> TempFile<'v> {
     /// This method does not perform any system calls.
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::TempFile;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::TempFile;
     ///
     /// #[post("/", data = "<file>")]
     /// fn handler(file: TempFile<'_>) {
@@ -412,8 +411,8 @@ impl<'v> TempFile<'v> {
     /// partially buffered in memory.
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::TempFile;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::TempFile;
     ///
     /// #[post("/", data = "<file>")]
     /// async fn handle(mut file: TempFile<'_>) -> std::io::Result<()> {
@@ -426,7 +425,7 @@ impl<'v> TempFile<'v> {
     ///     Ok(())
     /// }
     /// # let file = TempFile::Buffered { content: b"hi" };
-    /// # rocket::async_test(handle(file)).unwrap();
+    /// # rkt::async_test(handle(file)).unwrap();
     /// ```
     pub fn path(&self) -> Option<&Path> {
         match self {
@@ -458,8 +457,8 @@ impl<'v> TempFile<'v> {
     /// See [`FileName::as_str()`] for specifics on sanitization.
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::TempFile;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::TempFile;
     ///
     /// #[post("/", data = "<file>")]
     /// async fn handle(mut file: TempFile<'_>) -> std::io::Result<()> {
@@ -479,8 +478,8 @@ impl<'v> TempFile<'v> {
     /// Returns the raw name of the file as specified in the form field.
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::TempFile;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::TempFile;
     ///
     /// #[post("/", data = "<file>")]
     /// async fn handle(mut file: TempFile<'_>) {
@@ -501,8 +500,8 @@ impl<'v> TempFile<'v> {
     /// content-type. This method returns that value, if it was specified.
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::TempFile;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::TempFile;
     ///
     /// #[post("/", data = "<file>")]
     /// fn handle(file: TempFile<'_>) {

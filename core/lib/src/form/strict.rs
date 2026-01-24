@@ -26,8 +26,8 @@ use crate::http::uri::fmt::{FromUriParam, Query};
 /// such, `Form<Strict<T>>` is a data guard:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::form::{Form, Strict};
+/// #[macro_use] extern crate rkt;
+/// use rkt::form::{Form, Strict};
 ///
 /// #[derive(FromForm)]
 /// struct UserInput {
@@ -44,8 +44,8 @@ use crate::http::uri::fmt::{FromUriParam, Query};
 /// overall structure and remaining fields lenient:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::form::{Form, Strict};
+/// #[macro_use] extern crate rkt;
+/// use rkt::form::{Form, Strict};
 ///
 /// #[derive(FromForm)]
 /// struct UserInput {
@@ -66,8 +66,8 @@ impl<T> Strict<T> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::form::{Form, Strict};
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::form::{Form, Strict};
     ///
     /// #[derive(FromForm)]
     /// struct MyForm {

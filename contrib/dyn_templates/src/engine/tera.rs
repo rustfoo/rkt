@@ -1,7 +1,7 @@
 use std::error::Error;
 use std::path::Path;
 
-use rocket::serde::Serialize;
+use rkt::serde::Serialize;
 use tera::{Context, Tera};
 
 use crate::engine::Engine;

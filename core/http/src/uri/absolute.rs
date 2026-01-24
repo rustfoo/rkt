@@ -34,8 +34,8 @@ use crate::uri::{as_utf8_unchecked, fmt, Authority, Data, Error, Path, Query};
 /// As an example, the following URIs are all valid, normalized URIs:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # use rocket::http::uri::Absolute;
+/// # extern crate rkt;
+/// # use rkt::http::uri::Absolute;
 /// # let valid_uris = [
 /// "http://rocket.rs",
 /// "http://rocket.rs/",
@@ -55,8 +55,8 @@ use crate::uri::{as_utf8_unchecked, fmt, Authority, Data, Error, Path, Query};
 /// By contrast, the following are valid but non-normal URIs:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # use rocket::http::uri::Absolute;
+/// # extern crate rkt;
+/// # use rkt::http::uri::Absolute;
 /// # let invalid = [
 /// "ftp:/a//c//d",         // two empty segments
 /// "ftp:/?foo&",           // trailing empty query segment
@@ -75,7 +75,7 @@ use crate::uri::{as_utf8_unchecked, fmt, Authority, Data, Error, Path, Query};
 /// # #[cfg(feature = "serde")] mod serde_impl {
 /// # use serde as serde;
 /// use serde::{Serialize, Deserialize};
-/// use rocket::http::uri::Absolute;
+/// use rkt::http::uri::Absolute;
 ///
 /// #[derive(Deserialize, Serialize)]
 /// # #[serde(crate = "serde")]
@@ -106,8 +106,8 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Absolute;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Absolute;
     ///
     /// // Parse a valid authority URI.
     /// let uri = Absolute::parse("https://rocket.rs").expect("valid URI");
@@ -137,8 +137,8 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::uri::Absolute;
+    /// # extern crate rkt;
+    /// use rkt::http::uri::Absolute;
     ///
     /// let source = format!("https://rocket.rs/foo/{}/three", 2);
     /// let uri = Absolute::parse_owned(source).expect("valid URI");
@@ -167,7 +167,7 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("ftp://127.0.0.1");
     /// assert_eq!(uri.scheme(), "ftp");
     /// ```
@@ -181,7 +181,7 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("https://rocket.rs:80");
     /// assert_eq!(uri.scheme(), "https");
     /// let authority = uri.authority().unwrap();
@@ -201,7 +201,7 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("ftp://rocket.rs/foo/bar");
     /// assert_eq!(uri.path(), "/foo/bar");
     ///
@@ -221,7 +221,7 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("ftp://rocket.rs/foo?bar");
     /// assert_eq!(uri.query().unwrap(), "bar");
     ///
@@ -241,7 +241,7 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let mut uri = uri!("ftp://rocket.rs/foo?bar");
     /// assert_eq!(uri.query().unwrap(), "bar");
     ///
@@ -262,8 +262,8 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Absolute;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Absolute;
     ///
     /// assert!(uri!("http://rocket.rs").is_normalized());
     /// assert!(uri!("http://rocket.rs///foo////bar").is_normalized());
@@ -292,7 +292,7 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// use rocket::http::uri::Absolute;
+    /// use rkt::http::uri::Absolute;
     ///
     /// let mut uri = Absolute::parse("git://rocket.rs").unwrap();
     /// assert!(uri.is_normalized());
@@ -331,7 +331,7 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// use rocket::http::uri::Absolute;
+    /// use rkt::http::uri::Absolute;
     ///
     /// let mut uri = Absolute::parse("git://rocket.rs/").unwrap();
     /// assert!(uri.is_normalized());
@@ -354,7 +354,7 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let mut uri = uri!("https://rocket.rs:80");
     /// let authority = uri.authority().unwrap();
     /// assert_eq!(authority.host(), "rocket.rs");
@@ -376,7 +376,7 @@ impl<'a> Absolute<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("https://rocket.rs:80");
     /// let authority = uri.authority().unwrap();
     /// assert_eq!(authority.host(), "rocket.rs");

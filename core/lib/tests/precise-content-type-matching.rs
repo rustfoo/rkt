@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 #[post("/", format = "application/json")]
 fn specified() -> &'static str {
@@ -24,12 +24,12 @@ fn specified_html() -> &'static str {
 mod tests {
     use super::*;
 
-    use rocket::http::{ContentType, Status};
-    use rocket::local::blocking::Client;
-    use rocket::{Build, Rocket};
+    use rkt::http::{ContentType, Status};
+    use rkt::local::blocking::Client;
+    use rkt::{Build, Rocket};
 
     fn rocket() -> Rocket<Build> {
-        rocket::build()
+        rkt::build()
             .mount("/first", routes![specified, unspecified])
             .mount("/second", routes![specified_json, specified_html])
     }

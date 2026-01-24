@@ -1,13 +1,13 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[cfg(test)] mod tests;
 
-use rocket::{State, Config};
-use rocket::fairing::AdHoc;
-use rocket::serde::Deserialize;
+use rkt::{State, Config};
+use rkt::fairing::AdHoc;
+use rkt::serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 #[allow(dead_code)]
 struct AppConfig {
     key: String,
@@ -24,7 +24,7 @@ fn read_config(rocket_config: &Config, app_config: &State<AppConfig>) -> String 
 // and automatically by compiling with `--release`.
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![read_config])
         .attach(AdHoc::config::<AppConfig>())
 }

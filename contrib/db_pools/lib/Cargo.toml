@@ -1,11 +1,11 @@
 [package]
-name = "rocket_db_pools-community"
+name = "rkt_db_pools"
 version = "0.3.2"
 authors = ["Sergio Benitez <sb@sergio.bz>", "Jeb Rosen <jeb@jebrosen.com>"]
-description = "Rocket async database pooling support. (Community Fork)"
-repository = "https://github.com/rwf2/Rocket/tree/master/contrib/db_pools"
+description = "rkt async database pooling support."
+repository = "https://github.com/rustfoo/rkt/tree/main/contrib/db_pools"
 readme = "../README.md"
-keywords = ["rocket", "framework", "database", "pools"]
+keywords = ["rkt", "rocket", "framework", "database", "pools"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.82"
@@ -33,14 +33,12 @@ diesel_mysql = ["diesel-async/mysql", "diesel-async/deadpool", "deadpool", "dies
 diesel_sqlite = ["diesel-async/sqlite", "diesel-async/deadpool", "deadpool", "diesel"]
 # implicit features: mongodb
 
-[dependencies.rocket]
-package = "rocket-community"
+[dependencies.rkt]
 path = "../../../core/lib"
 version = "0.6.0"
 default-features = false
 
-[dependencies.rocket_db_pools_codegen]
-package = "rocket_db_pools_codegen-community"
+[dependencies.rkt_db_pools_codegen]
 path = "../codegen"
 version = "0.3.2"
 
@@ -90,8 +88,7 @@ version = "0.4"
 default-features = false
 optional = true
 
-[dev-dependencies.rocket]
-package = "rocket-community"
+[dev-dependencies.rkt]
 path = "../../../core/lib"
 default-features = false
 features = ["json"]

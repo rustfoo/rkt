@@ -1,4 +1,4 @@
-use rocket::{Build, Rocket};
+use rkt::{Build, Rocket};
 
 use testbench::{Error, Result};
 
@@ -30,22 +30,22 @@ pub trait RocketExt {
 
 impl RocketExt for Rocket<Build> {
     fn default() -> Self {
-        rocket::build().reconfigure_with_toml(DEFAULT_CONFIG)
+        rkt::build().reconfigure_with_toml(DEFAULT_CONFIG)
     }
 
     fn tls_default() -> Self {
-        rocket::build()
+        rkt::build()
             .reconfigure_with_toml(DEFAULT_CONFIG)
             .reconfigure_with_toml(TLS_CONFIG)
     }
 
     fn reconfigure_with_toml(self, toml: &str) -> Self {
-        use rocket::figment::{
+        use rkt::figment::{
             providers::{Format, Toml},
             Figment,
         };
 
-        let toml = toml.replace("{ROCKET}", rocket::fs::relative!("../"));
+        let toml = toml.replace("{ROCKET}", rkt::fs::relative!("../"));
         let config = Figment::from(self.figment()).merge(Toml::string(&toml).nested());
 
         self.reconfigure(config)
@@ -53,7 +53,7 @@ impl RocketExt for Rocket<Build> {
 }
 
 pub fn read(path: &str) -> Result<Vec<u8>> {
-    let path = path.replace("{ROCKET}", rocket::fs::relative!("../"));
+    let path = path.replace("{ROCKET}", rkt::fs::relative!("../"));
     Ok(std::fs::read(path)?)
 }
 

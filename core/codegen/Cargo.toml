@@ -1,13 +1,13 @@
 [package]
-name = "rocket_codegen-community"
+name = "rkt_codegen"
 version = "0.6.0"
 authors = ["Sergio Benitez <sb@sergio.bz>"]
-description = "Procedural macros for the Rocket web framework (Community Fork)."
-documentation = "https://docs.rs/rocket-community/latest/rocket_codegen_community/"
-homepage = "https://github.com/rocket-rs-community/Rocket"
-repository = "https://github.com/rocket-rs-community/Rocket"
+description = "Procedural macros for the rkt web framework."
+documentation = "https://docs.rs/rkt/latest/rkt/"
+homepage = "https://rkt.rs"
+repository = "https://github.com/rustfoo/rkt"
 readme = "../../README.md"
-keywords = ["rocket", "web", "framework", "code", "generation"]
+keywords = ["rkt", "rocket", "web", "framework", "code", "generation"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.82.0"
@@ -24,13 +24,13 @@ quote = "1.0"
 syn = { version = "2.0", features = ["full", "visit", "visit-mut", "extra-traits"] }
 proc-macro2 = "1.0.60"
 devise = "0.4"
-rocket_http = { package = "rocket_http-community", version = "0.6.0", path = "../http/" }
+rkt_http = { version = "0.6.0", path = "../http/" }
 unicode-xid = "0.2"
 version_check = "0.9"
 glob = "0.3"
 
 [dev-dependencies]
-rocket = {package = "rocket-community", path = "../lib", features = ["json", "msgpack"] }
+rkt = { path = "../lib", features = ["json", "msgpack"] }
 time = { version =  "0.3", features = ["macros"] }
 pretty_assertions = "1"
 version_check = "0.9"

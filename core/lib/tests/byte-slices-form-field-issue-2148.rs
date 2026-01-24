@@ -1,11 +1,11 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 use std::str::from_utf8;
 
-use rocket::form::Form;
-use rocket::http::{ContentType, Status};
-use rocket::local::blocking::Client;
+use rkt::form::Form;
+use rkt::http::{ContentType, Status};
+use rkt::local::blocking::Client;
 
 #[derive(FromForm)]
 struct DataForm<'r> {

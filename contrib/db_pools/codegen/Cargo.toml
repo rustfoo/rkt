@@ -1,11 +1,11 @@
 [package]
-name = "rocket_db_pools_codegen-community"
+name = "rkt_db_pools_codegen"
 version = "0.3.2"
 authors = ["Sergio Benitez <sb@sergio.bz>", "Jeb Rosen <jeb@jebrosen.com>"]
-description = "Procedural macros for rocket_db_pools. (Community Fork)"
-repository = "https://github.com/rwf2/Rocket/tree/master/contrib/db_pools"
+description = "Procedural macros for rkt_db_pools."
+repository = "https://github.com/rustfoo/rkt/tree/main/contrib/db_pools"
 readme = "../README.md"
-keywords = ["rocket", "framework", "database", "pools"]
+keywords = ["rkt", "rocket", "framework", "database", "pools"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.82"
@@ -21,7 +21,7 @@ devise = "0.4"
 quote = "1"
 
 [dev-dependencies]
-rocket = { package="rocket-community", path = "../../../core/lib", default-features = false }
-rocket_db_pools = { package = "rocket_db_pools-community", path = "../lib", features = ["deadpool_postgres"] }
+rkt = { path = "../../../core/lib", default-features = false }
+rkt_db_pools = { path = "../lib", features = ["deadpool_postgres"] }
 trybuild = "1.0"
 version_check = "0.9"

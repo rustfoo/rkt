@@ -13,8 +13,7 @@ use std::ops::BitOr;
 /// all callbacks:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::fairing::{Info, Kind};
+/// use rkt::fairing::{Info, Kind};
 ///
 /// # let _unused_info =
 /// Info {
@@ -81,8 +80,7 @@ impl Kind {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fairing::Kind;
+    /// use rkt::fairing::Kind;
     ///
     /// let ignite_and_req = Kind::Ignite | Kind::Request;
     /// assert!(ignite_and_req.is(Kind::Ignite | Kind::Request));
@@ -105,8 +103,7 @@ impl Kind {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fairing::Kind;
+    /// use rkt::fairing::Kind;
     ///
     /// let ignite_and_req = Kind::Ignite | Kind::Request;
     /// assert!(ignite_and_req.is_exactly(Kind::Ignite | Kind::Request));

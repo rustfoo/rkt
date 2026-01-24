@@ -1,8 +1,8 @@
 #![allow(unused_variables)]
 
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
-use rocket::request::FromParam;
+use rkt::request::FromParam;
 
 struct S;
 
@@ -23,9 +23,9 @@ fn not_uri_display_but_unused(id: i32, name: S) {  }
 #[post("/<id>/<name>")]
 fn optionals(id: Option<i32>, name: Result<String, &str>) {  }
 
-use rocket::form::{FromFormField, Errors, ValueField, DataField};
+use rkt::form::{FromFormField, Errors, ValueField, DataField};
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'v> FromFormField<'v> for S {
     fn default() -> Option<Self> { None }
 

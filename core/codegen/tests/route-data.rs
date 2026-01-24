@@ -1,11 +1,11 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
-use rocket::data::{self, FromData};
-use rocket::form::Form;
-use rocket::http::ContentType;
-use rocket::local::blocking::Client;
-use rocket::{Data, Request};
+use rkt::data::{self, FromData};
+use rkt::form::Form;
+use rkt::http::ContentType;
+use rkt::local::blocking::Client;
+use rkt::{Data, Request};
 
 // Test that the data parameters works as expected.
 
@@ -37,7 +37,7 @@ fn simple<'r>(simple: Simple<'r>) -> &'r str {
 
 #[test]
 fn test_data() {
-    let rocket = rocket::build().mount("/", routes![form, simple]);
+    let rocket = rkt::build().mount("/", routes![form, simple]);
     let client = Client::debug(rocket).unwrap();
 
     let response = client

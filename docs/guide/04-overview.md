@@ -66,7 +66,7 @@ handler, with the set of parameters to match against. A complete route
 declaration looks like this:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 #[get("/world")]              // <- route attribute
 fn world() -> &'static str {  // <- request handler
@@ -91,21 +91,21 @@ routing and error handling.
   anywhere in your application without importing them explicitly.
 
   You may instead prefer to import macros explicitly or refer to them with
-  absolute paths: `use rocket::get;` or `#[rocket::get]`.
+  absolute paths: `use rkt::get;` or `#[rkt::get]`.
 
 ## Mounting
 
 Before Rocket can dispatch requests to a route, the route needs to be _mounted_:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 # #[get("/world")]
 # fn world() -> &'static str {
 #     "hello, world!"
 # }
 
-rocket::build().mount("/hello", routes![world]);
+rkt::build().mount("/hello", routes![world]);
 ```
 
 The `mount` method takes as input:
@@ -122,14 +122,14 @@ The `mount` method, like all other builder methods on `Rocket`, can be chained
 any number of times, and routes can be reused by mount points:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 # #[get("/world")]
 # fn world() -> &'static str {
 #     "hello, world!"
 # }
 
-rocket::build()
+rkt::build()
     .mount("/hello", routes![world])
     .mount("/hi", routes![world]);
 ```
@@ -151,7 +151,7 @@ preferred approach is via the `#[launch]` route attribute, which generates a
 `#[launch]`, our complete _Hello, world!_ application looks like:
 
 ```rust
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[get("/world")]
 fn world() -> &'static str {
@@ -160,7 +160,7 @@ fn world() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/hello", routes![world])
+    rkt::build().mount("/hello", routes![world])
 }
 ```
 
@@ -200,21 +200,21 @@ as we expected.
   complete examples, spanning all of Rocket's features, in the [GitHub examples
   directory](@git/master/examples/).
 
-The second approach uses the `#[rocket::main]` route attribute.
-`#[rocket::main]` _also_ generates a `main` function that sets up an async
+The second approach uses the `#[rkt::main]` route attribute.
+`#[rkt::main]` _also_ generates a `main` function that sets up an async
 runtime but unlike `#[launch]`, allows _you_ to start the server:
 
 ```rust,no_run
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 #
 # #[get("/world")]
 # fn world() -> &'static str {
 #     "Hello, world!"
 # }
 
-#[rocket::main]
-async fn main() -> Result<(), rocket::Error> {
-    let _rocket = rocket::build()
+#[rkt::main]
+async fn main() -> Result<(), rkt::Error> {
+    let _rocket = rkt::build()
         .mount("/hello", routes![world])
         .launch()
         .await?;
@@ -223,7 +223,7 @@ async fn main() -> Result<(), rocket::Error> {
 }
 ```
 
-`#[rocket::main]` is useful when a handle to the `Future` returned by `launch()`
+`#[rkt::main]` is useful when a handle to the `Future` returned by `launch()`
 is desired, or when the return value of [`launch()`] is to be inspected. The
 [error handling example] for instance, inspects the return value.
 
@@ -265,7 +265,7 @@ You can find async-ready libraries on [crates.io](https://crates.io) with the
 ! note
 
   Rocket uses the tokio runtime. The runtime is started for you if you
-  use `#[launch]` or `#[rocket::main]`, but you can still `launch()` a Rocket
+  use `#[launch]` or `#[rkt::main]`, but you can still `launch()` a Rocket
   instance on a custom-built runtime by not using _either_ attribute.
 
 ### Async Routes
@@ -273,8 +273,8 @@ You can find async-ready libraries on [crates.io](https://crates.io) with the
 Rocket makes it easy to use `async/await` in routes.
 
 ```rust
-# #[macro_use] extern crate rocket;
-use rocket::tokio::time::{sleep, Duration};
+# #[macro_use] extern crate rkt;
+use rkt::tokio::time::{sleep, Duration};
 
 #[get("/delay/<seconds>")]
 async fn delay(seconds: u64) -> String {
@@ -302,14 +302,14 @@ necessary, you can convert a synchronous operation to an async one with
 [`tokio::task::spawn_blocking`]:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 use std::io;
 
-use rocket::tokio::task::spawn_blocking;
+use rkt::tokio::task::spawn_blocking;
 
 #[get("/blocking_task")]
 async fn blocking_task() -> io::Result<Vec<u8>> {
-    // In a real app, use rocket::fs::NamedFile or tokio::fs::File.
+    // In a real app, use rkt::fs::NamedFile or tokio::fs::File.
     let vec = spawn_blocking(|| std::fs::read("data.txt")).await
         .map_err(|e| io::Error::new(io::ErrorKind::Interrupted, e))??;
 

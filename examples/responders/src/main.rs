@@ -1,4 +1,4 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[cfg(test)] mod tests;
 
@@ -6,10 +6,10 @@
 
 use std::{io, env};
 
-use rocket::Config;
-use rocket::data::Capped;
-use rocket::fs::{NamedFile, TempFile};
-use rocket::tokio::fs;
+use rkt::Config;
+use rkt::data::Capped;
+use rkt::fs::{NamedFile, TempFile};
+use rkt::tokio::fs;
 
 // Upload your `big_file.dat` by POSTing it to /upload.
 // try `curl --data-binary @file.txt http://127.0.0.1:8000/stream/file`
@@ -34,12 +34,12 @@ async fn delete(config: &Config) -> Option<()> {
 
 /***************************** `Stream` Responder *****************************/
 
-use rocket::tokio::select;
-use rocket::tokio::time::{self, Duration};
-use rocket::futures::stream::{repeat, StreamExt};
+use rkt::tokio::select;
+use rkt::tokio::time::{self, Duration};
+use rkt::futures::stream::{repeat, StreamExt};
 
-use rocket::Shutdown;
-use rocket::response::stream::{TextStream, EventStream, Event};
+use rkt::Shutdown;
+use rkt::response::stream::{TextStream, EventStream, Event};
 
 #[get("/stream/hi")]
 fn many_his() -> TextStream![&'static str] {
@@ -100,7 +100,7 @@ fn progress_stream() -> EventStream![] {
 
 /***************************** `Redirect` Responder ***************************/
 
-use rocket::response::Redirect;
+use rkt::response::Redirect;
 
 #[get("/redir")]
 fn redir_root() -> Redirect {
@@ -122,12 +122,12 @@ fn maybe_redir(name: &str) -> Result<&'static str, Redirect> {
 
 /***************************** `content` Responders ***************************/
 
-use rocket::Request;
-use rocket::response::content;
+use rkt::Request;
+use rkt::response::content;
 
 // NOTE: This example explicitly uses the `RawJson` type from
 // `response::content` for demonstration purposes. In a real application,
-// _always_ prefer to use `rocket::serde::json::Json` instead!
+// _always_ prefer to use `rkt::serde::json::Json` instead!
 
 // In a `GET` request and all other non-payload supporting request types, the
 // preferred media type in the Accept header is matched against the `format` in
@@ -159,12 +159,12 @@ fn not_found(request: &Request<'_>) -> content::RawHtml<String> {
 
 /******************************* `Either` Responder ***************************/
 
-use rocket::either::Either;
-use rocket::response::content::{RawJson, RawMsgPack};
-use rocket::http::uncased::AsUncased;
+use rkt::either::Either;
+use rkt::response::content::{RawJson, RawMsgPack};
+use rkt::http::uncased::AsUncased;
 
 // NOTE: In a real application, we'd use `Json` and `MsgPack` from
-// `rocket::serde`, which perform automatic serialization of responses and
+// `rkt::serde`, which perform automatic serialization of responses and
 // automatically set the `Content-Type`.
 #[get("/content/<kind>")]
 fn json_or_msgpack(kind: &str) -> Either<RawJson<&'static str>, RawMsgPack<&'static [u8]>> {
@@ -179,7 +179,7 @@ fn json_or_msgpack(kind: &str) -> Either<RawJson<&'static str>, RawMsgPack<&'sta
 
 use std::borrow::Cow;
 
-use rocket::response::content::RawHtml;
+use rkt::response::content::RawHtml;
 
 #[derive(Responder)]
 enum StoredData {
@@ -212,7 +212,7 @@ async fn custom(kind: Option<Kind>) -> StoredData {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![many_his, one_hi_per_ms, file, upload, delete])
         .mount("/", routes![progress_stream, progress_page])
         .mount("/", routes![redir_root, redir_login, maybe_redir])

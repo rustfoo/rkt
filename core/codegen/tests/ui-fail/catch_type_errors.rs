@@ -1,6 +1,6 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
-use rocket::Request;
+use rkt::Request;
 
 #[catch(404)]
 fn f1(_request: &Request) -> usize {

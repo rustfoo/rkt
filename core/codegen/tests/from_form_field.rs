@@ -1,4 +1,4 @@
-use rocket::form::{Errors, FromForm, FromFormField, Options, ValueField};
+use rkt::form::{Errors, FromForm, FromFormField, Options, ValueField};
 
 fn parse<'v, T: FromForm<'v>>(value: &'v str) -> Result<T, Errors<'v>> {
     let mut context = T::init(Options::Lenient);
@@ -100,7 +100,7 @@ fn from_form_value_raw() {
 
 #[test]
 fn form_value_errors() {
-    use rocket::form::error::{Entity, ErrorKind};
+    use rkt::form::error::{Entity, ErrorKind};
 
     #[derive(Debug, FromFormField)]
     enum Foo {

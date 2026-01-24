@@ -53,7 +53,7 @@ impl FromMeta for Status {
 impl ToTokens for Status {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let code = self.0.code;
-        tokens.extend(quote!(rocket::http::Status { code: #code }));
+        tokens.extend(quote!(rkt::http::Status { code: #code }));
     }
 }
 
@@ -69,7 +69,7 @@ impl ToTokens for ContentType {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let http_media_type = self.0.media_type().clone();
         let media_type = MediaType(http_media_type);
-        tokens.extend(quote!(::rocket::http::ContentType(#media_type)));
+        tokens.extend(quote!(::rkt::http::ContentType(#media_type)));
     }
 }
 
@@ -94,7 +94,7 @@ impl ToTokens for MediaType {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let (top, sub) = (self.0.top().as_str(), self.0.sub().as_str());
         let (keys, values) = self.0.params().map(|(k, v)| (k.as_str(), v)).split2();
-        let http = quote!(::rocket::http);
+        let http = quote!(::rkt::http);
 
         tokens.extend(quote! {
             #http::MediaType::const_new(#top, #sub, &[#((#keys, #values)),*])
@@ -136,7 +136,7 @@ impl FromMeta for Method {
 impl ToTokens for Method {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let variant = syn::Ident::new(self.0.variant_str(), Span::call_site());
-        tokens.extend(quote!(::rocket::http::Method::#variant));
+        tokens.extend(quote!(::rkt::http::Method::#variant));
     }
 }
 

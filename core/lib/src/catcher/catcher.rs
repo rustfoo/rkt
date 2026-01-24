@@ -70,10 +70,10 @@ use crate::response::Response;
 /// typically generated via the [`catch`] attribute, as follows:
 ///
 /// ```rust,no_run
-/// #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 ///
-/// use rocket::Request;
-/// use rocket::http::Status;
+/// use rkt::Request;
+/// use rkt::http::Status;
 ///
 /// #[catch(500)]
 /// fn internal_error() -> &'static str {
@@ -92,7 +92,7 @@ use crate::response::Response;
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build().register("/", catchers![internal_error, not_found, default])
+///     rkt::build().register("/", catchers![internal_error, not_found, default])
 /// }
 /// ```
 ///
@@ -146,11 +146,11 @@ impl Catcher {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::request::Request;
-    /// use rocket::catcher::{Catcher, BoxFuture};
-    /// use rocket::response::Responder;
-    /// use rocket::http::Status;
+    /// # extern crate rkt;
+    /// use rkt::request::Request;
+    /// use rkt::catcher::{Catcher, BoxFuture};
+    /// use rkt::response::Responder;
+    /// use rkt::http::Status;
     ///
     /// fn handle_404<'r>(status: Status, req: &'r Request<'_>) -> BoxFuture<'r> {
     ///    let res = (status, format!("404: {}", req.uri()));
@@ -201,11 +201,11 @@ impl Catcher {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::request::Request;
-    /// use rocket::catcher::{Catcher, BoxFuture};
-    /// use rocket::response::Responder;
-    /// use rocket::http::Status;
+    /// # extern crate rkt;
+    /// use rkt::request::Request;
+    /// use rkt::catcher::{Catcher, BoxFuture};
+    /// use rkt::response::Responder;
+    /// use rkt::http::Status;
     ///
     /// fn handle_404<'r>(status: Status, req: &'r Request<'_>) -> BoxFuture<'r> {
     ///    let res = (status, format!("404: {}", req.uri()));
@@ -228,12 +228,12 @@ impl Catcher {
     /// Otherwise, `base` is prefixed to the existing `base`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::request::Request;
-    /// use rocket::catcher::{Catcher, BoxFuture};
-    /// use rocket::response::Responder;
-    /// use rocket::http::Status;
-    /// # use rocket::uri;
+    /// # extern crate rkt;
+    /// use rkt::request::Request;
+    /// use rkt::catcher::{Catcher, BoxFuture};
+    /// use rkt::response::Responder;
+    /// use rkt::http::Status;
+    /// # use rkt::uri;
     ///
     /// fn handle_404<'r>(status: Status, req: &'r Request<'_>) -> BoxFuture<'r> {
     ///    let res = (status, format!("404: {}", req.uri()));
@@ -283,11 +283,11 @@ impl Catcher {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::request::Request;
-    /// use rocket::catcher::{Catcher, BoxFuture};
-    /// use rocket::response::Responder;
-    /// use rocket::http::Status;
+    /// # extern crate rkt;
+    /// use rkt::request::Request;
+    /// use rkt::catcher::{Catcher, BoxFuture};
+    /// use rkt::response::Responder;
+    /// use rkt::http::Status;
     ///
     /// fn handle_404<'r>(status: Status, req: &'r Request<'_>) -> BoxFuture<'r> {
     ///    let res = (status, format!("404: {}", req.uri()));

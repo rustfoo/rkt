@@ -3,7 +3,7 @@ use std::path::Path;
 use std::sync::Arc;
 
 use minijinja::{AutoEscape, Environment, Error, ErrorKind};
-use rocket::serde::Serialize;
+use rkt::serde::Serialize;
 
 use crate::engine::Engine;
 

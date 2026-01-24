@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::path::Path;
 
-use rocket::serde::Serialize;
+use rkt::serde::Serialize;
 
 use crate::template::TemplateInfo;
 
@@ -35,18 +35,17 @@ pub(crate) trait Engine: Send + Sync + Sized + 'static {
 ///
 /// Calling methods on the exposed template engine types may require importing
 /// types from the respective templating engine library. These types should be
-/// imported from the reexported crate at the root of `rocket_dyn_templates` to
+/// imported from the reexported crate at the root of `rkt_dyn_templates` to
 /// avoid version mismatches. For instance, when registering a Tera filter, the
 /// [`tera::Value`] and [`tera::Result`] types are required. Import them from
-/// `rocket_dyn_templates::tera`. The example below illustrates this:
+/// `rkt_dyn_templates::tera`. The example below illustrates this:
 ///
 /// ```rust
 /// # #[cfg(feature = "tera")] {
-/// # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
 /// use std::collections::HashMap;
 ///
-/// use rocket_dyn_templates::{Template, Engines};
-/// use rocket_dyn_templates::tera::{self, Value};
+/// use rkt_dyn_templates::{Template, Engines};
+/// use rkt_dyn_templates::tera::{self, Value};
 ///
 /// fn my_filter(value: &Value, _: &HashMap<String, Value>) -> tera::Result<Value> {
 ///     # /*
@@ -55,7 +54,7 @@ pub(crate) trait Engine: Send + Sync + Sized + 'static {
 /// }
 ///
 /// fn main() {
-///     rocket::build()
+///     rkt::build()
 ///         // ...
 ///         .attach(Template::custom(|engines: &mut Engines| {
 ///             engines.tera.register_filter("my_filter", my_filter);
@@ -74,7 +73,7 @@ pub struct Engines {
     ///
     /// This field is only available when the `tera` feature is enabled. When
     /// calling methods on the `Tera` instance, ensure you use types imported
-    /// from `rocket_dyn_templates::tera` to avoid version mismatches.
+    /// from `rkt_dyn_templates::tera` to avoid version mismatches.
     #[cfg(feature = "tera")]
     pub tera: Tera,
 
@@ -82,7 +81,7 @@ pub struct Engines {
     ///
     /// This field is only available when the `handlebars` feature is enabled.
     /// When calling methods on the `Handlebars` instance, ensure you use types
-    /// imported from `rocket_dyn_templates::handlebars` to avoid version
+    /// imported from `rkt_dyn_templates::handlebars` to avoid version
     /// mismatches.
     #[cfg(feature = "handlebars")]
     pub handlebars: Handlebars<'static>,
@@ -91,7 +90,7 @@ pub struct Engines {
     ///
     /// This field is only available when the `minijinja` feature is enabled.
     /// When calling methods on the [`Environment`] instance, ensure you use
-    /// types imported from `rocket_dyn_templates::minijinja` to avoid version
+    /// types imported from `rkt_dyn_templates::minijinja` to avoid version
     /// mismatches.
     #[cfg(feature = "minijinja")]
     pub minijinja: Environment<'static>,

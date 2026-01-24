@@ -1,7 +1,7 @@
-//! WebSocket support for Rocket.
+//! WebSocket support for Rkt.
 //!
-//! This crate implements support for WebSockets via Rocket's [connection
-//! upgrade API](rocket::Response#upgrading) and
+//! This crate implements support for WebSockets via Rkt's [connection
+//! upgrade API](rkt::Response#upgrading) and
 //! [tungstenite](tokio_tungstenite).
 //!
 //! # Usage
@@ -10,7 +10,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! ws = { package = "rocket_ws", version = "0.1.3" }
+//! ws = { package = "rkt_ws", version = "0.1.3" }
 //! ```
 //!
 //! Then, use [`WebSocket`] as a request guard in any route and either call
@@ -18,13 +18,12 @@
 //! [`WebSocket::stream()`] in the handler. The examples below are equivalent:
 //!
 //! ```rust
-//! # extern crate rocket_ws_community as rocket_ws;
-//! # use rocket::get;
-//! # use rocket_ws as ws;
+//! # use rkt::get;
+//! # use rkt_ws as ws;
 //! #
 //! #[get("/echo?channel")]
 //! fn echo_channel(ws: ws::WebSocket) -> ws::Channel<'static> {
-//!     use rocket::futures::{SinkExt, StreamExt};
+//!     use rkt::futures::{SinkExt, StreamExt};
 //!
 //!     ws.channel(move |mut stream| Box::pin(async move {
 //!         while let Some(message) = stream.next().await {
@@ -53,9 +52,8 @@
 //! WebSocket connections are configurable via [`WebSocket::config()`]:
 //!
 //! ```rust
-//! # extern crate rocket_ws_community as rocket_ws;
-//! # use rocket::get;
-//! # use rocket_ws as ws;
+//! # use rkt::get;
+//! # use rkt_ws as ws;
 //! #
 //! #[get("/echo")]
 //! fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
@@ -72,7 +70,7 @@
 //! }
 //! ```
 
-#![doc(html_root_url = "https://api.rocket.rs/master/rocket_ws")]
+#![doc(html_root_url = "https://api.rocket.rs/master/rkt_ws")]
 #![doc(html_favicon_url = "https://rocket.rs/images/favicon.ico")]
 #![doc(html_logo_url = "https://rocket.rs/images/logo-boxed.png")]
 
@@ -93,9 +91,8 @@ pub use self::websocket::{Channel, WebSocket};
 /// bytes via `&[u8]` and `Vec<u8>`:
 ///
 /// ```rust
-/// # extern crate rocket_ws_community as rocket_ws;
-/// # use rocket::get;
-/// # use rocket_ws as ws;
+/// # use rkt::get;
+/// # use rkt_ws as ws;
 /// #
 /// #[get("/echo")]
 /// fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
@@ -111,9 +108,8 @@ pub use self::websocket::{Channel, WebSocket};
 /// Other kinds of messages can be constructed directly:
 ///
 /// ```rust
-/// # extern crate rocket_ws_community as rocket_ws;
-/// # use rocket::get;
-/// # use rocket_ws as ws;
+/// # use rkt::get;
+/// # use rkt_ws as ws;
 /// #
 /// #[get("/echo")]
 /// fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
@@ -135,10 +131,9 @@ pub use self::tungstenite::Message;
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_ws_community as rocket_ws;
-/// # use rocket::get;
-/// # use rocket_ws as ws;
-/// use rocket::data::ToByteUnit;
+/// # use rkt::get;
+/// # use rkt_ws as ws;
+/// use rkt::data::ToByteUnit;
 ///
 /// #[get("/echo")]
 /// fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
@@ -206,20 +201,19 @@ pub mod result {
 /// `Stream!['static]`.
 ///
 /// [`MessageStream`]: crate::stream::MessageStream
-/// [`Stream`]: rocket::futures::stream::Stream
+/// [`Stream`]: rkt::futures::stream::Stream
 /// [`Result`]: crate::result::Result
 /// [`Message`]: crate::Message
 ///
 /// # Expression Position
 ///
 /// When invoked as an expression, the macro behaves similarly to Rocket's
-/// [`stream!`](rocket::response::stream::stream) macro. Specifically, it
+/// [`stream!`](rkt::response::stream::stream) macro. Specifically, it
 /// supports `yield` and `for await` syntax. It is invoked as follows:
 ///
 /// ```rust
-/// # extern crate rocket_ws_community as rocket_ws;
-/// # use rocket::get;
-/// use rocket_ws as ws;
+/// # use rkt::get;
+/// use rkt_ws as ws;
 ///
 /// #[get("/")]
 /// fn echo(ws: ws::WebSocket) -> ws::Stream![] {
@@ -272,9 +266,8 @@ pub mod result {
 /// Borrow from the request. Send a single message and close:
 ///
 /// ```rust
-/// # extern crate rocket_ws_community as rocket_ws;
-/// # use rocket::get;
-/// use rocket_ws as ws;
+/// # use rkt::get;
+/// use rkt_ws as ws;
 ///
 /// #[get("/hello/<user>")]
 /// fn ws_hello(ws: ws::WebSocket, user: &str) -> ws::Stream!['_] {
@@ -287,9 +280,8 @@ pub mod result {
 /// Borrow from the request with explicit lifetime:
 ///
 /// ```rust
-/// # extern crate rocket_ws_community as rocket_ws;
-/// # use rocket::get;
-/// use rocket_ws as ws;
+/// # use rkt::get;
+/// use rkt_ws as ws;
 ///
 /// #[get("/hello/<user>")]
 /// fn ws_hello<'r>(ws: ws::WebSocket, user: &'r str) -> ws::Stream!['r] {
@@ -302,9 +294,8 @@ pub mod result {
 /// Emit several messages and short-circuit if the client sends a bad message:
 ///
 /// ```rust
-/// # extern crate rocket_ws_community as rocket_ws;
-/// # use rocket::get;
-/// use rocket_ws as ws;
+/// # use rkt::get;
+/// use rkt_ws as ws;
 ///
 /// #[get("/")]
 /// fn echo(ws: ws::WebSocket) -> ws::Stream![] {
@@ -324,13 +315,13 @@ pub mod result {
 macro_rules! Stream {
     () => ($crate::Stream!['static]);
     ($l:lifetime) => (
-        $crate::stream::MessageStream<$l, impl rocket::futures::Stream<
+        $crate::stream::MessageStream<$l, impl rkt::futures::Stream<
             Item = $crate::result::Result<$crate::Message>
         > + $l>
     );
     ($channel:ident => $($token:tt)*) => (
         let ws: $crate::WebSocket = $channel;
-        ws.stream(move |$channel| rocket::async_stream::try_stream! {
+        ws.stream(move |$channel| rkt::async_stream::try_stream! {
             $($token)*
         })
     );

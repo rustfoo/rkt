@@ -34,8 +34,7 @@ impl Key {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::Key;
+    /// use rkt::form::name::Key;
     ///
     /// let key = Key::new("a:b:c");
     /// assert_eq!(key.as_str(), "a:b:c");
@@ -51,8 +50,7 @@ impl Key {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::Key;
+    /// use rkt::form::name::Key;
     ///
     /// let key = Key::new("foo:bar::baz:a.b.c");
     /// let indices: Vec<_> = key.indices().collect();
@@ -67,8 +65,7 @@ impl Key {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::Key;
+    /// use rkt::form::name::Key;
     ///
     /// let key = Key::new("a:b:c");
     /// assert_eq!(key.as_str(), "a:b:c");

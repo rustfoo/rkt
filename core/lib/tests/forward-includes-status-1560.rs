@@ -1,12 +1,12 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::Status;
-use rocket::request::{self, FromRequest, Request};
+use rkt::http::Status;
+use rkt::request::{self, FromRequest, Request};
 
 struct Authenticated;
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for Authenticated {
     type Error = std::convert::Infallible;
 
@@ -21,7 +21,7 @@ impl<'r> FromRequest<'r> for Authenticated {
 
 struct TeapotForward;
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for TeapotForward {
     type Error = std::convert::Infallible;
 
@@ -58,9 +58,9 @@ fn catcher() -> &'static str {
 mod tests {
     use super::*;
 
-    use rocket::http::Header;
-    use rocket::local::blocking::Client;
-    use rocket::routes;
+    use rkt::http::Header;
+    use rkt::local::blocking::Client;
+    use rkt::routes;
 
     #[test]
     fn authorized_forwards() {
@@ -93,7 +93,7 @@ mod tests {
 
     #[test]
     fn unauthorized_custom_catcher() {
-        let rocket = rocket::build()
+        let rocket = rkt::build()
             .mount("/", routes![auth_needed])
             .register("/", catchers![catcher]);
 

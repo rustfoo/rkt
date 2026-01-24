@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
 #[get("/")]
 fn index() {}
@@ -36,10 +36,10 @@ mod module2 {
 
 #[test]
 fn test_uri_reachability() {
-    use rocket::http::Status;
-    use rocket::local::blocking::Client;
+    use rkt::http::Status;
+    use rkt::local::blocking::Client;
 
-    let rocket = rocket::build()
+    let rocket = rkt::build()
         .mount("/", routes![index])
         .mount("/module", routes![module::index])
         .mount("/module2", routes![module2::index])

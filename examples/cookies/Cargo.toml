@@ -6,9 +6,8 @@ edition = "2021"
 publish = false
 
 [dependencies]
-rocket = { package = "rocket-community", path = "../../core/lib", features = ["secrets"] }
+rkt = { path = "../../core/lib", features = ["secrets"] }
 
-[dependencies.rocket_dyn_templates]
-package = "rocket_dyn_templates-community"
+[dependencies.rkt_dyn_templates]
 path = "../../contrib/dyn_templates"
 features = ["handlebars"]

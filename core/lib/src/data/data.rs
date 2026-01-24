@@ -15,7 +15,7 @@ use crate::data::ByteUnit;
 /// follows:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type DataGuard = String;
 /// #[post("/submit", data = "<var>")]
 /// fn submit(var: DataGuard) { /* ... */ }
@@ -79,8 +79,7 @@ impl<'r> Data<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Data, ToByteUnit};
+    /// use rkt::data::{Data, ToByteUnit};
     ///
     /// # const SIZE_LIMIT: u64 = 2 << 20; // 2MiB
     /// fn handler(data: Data<'_>) {
@@ -118,14 +117,13 @@ impl<'r> Data<'r> {
     /// In a data guard:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::request::{self, Request, FromRequest};
-    /// use rocket::data::{Data, FromData, Outcome};
-    /// use rocket::http::Status;
+    /// use rkt::request::{self, Request, FromRequest};
+    /// use rkt::data::{Data, FromData, Outcome};
+    /// use rkt::http::Status;
     /// # struct MyType;
     /// # type MyError = String;
     ///
-    /// #[rocket::async_trait]
+    /// #[rkt::async_trait]
     /// impl<'r> FromData<'r> for MyType {
     ///     type Error = MyError;
     ///
@@ -143,12 +141,11 @@ impl<'r> Data<'r> {
     /// In a fairing:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::{Rocket, Request, Data, Response};
-    /// use rocket::fairing::{Fairing, Info, Kind};
+    /// use rkt::{Rocket, Request, Data, Response};
+    /// use rkt::fairing::{Fairing, Info, Kind};
     /// # struct MyType;
     ///
-    /// #[rocket::async_trait]
+    /// #[rkt::async_trait]
     /// impl Fairing for MyType {
     ///     fn info(&self) -> Info {
     ///         Info {
@@ -178,8 +175,7 @@ impl<'r> Data<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::Data;
+    /// use rkt::data::Data;
     ///
     /// async fn handler(mut data: Data<'_>) {
     ///     if data.peek_complete() {

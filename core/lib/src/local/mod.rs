@@ -34,7 +34,7 @@
 //! world!" application, with testing.
 //!
 //! ```rust
-//! #[macro_use] extern crate rocket_community as rocket;
+//! #[macro_use] extern crate rkt;
 //!
 //! #[get("/")]
 //! fn hello() -> &'static str {
@@ -43,7 +43,7 @@
 //!
 //! #[launch]
 //! fn rocket() -> _ {
-//!     rocket::build().mount("/", routes![hello])
+//!     rkt::build().mount("/", routes![hello])
 //! }
 //!
 //! #[cfg(test)]
@@ -51,7 +51,7 @@
 //!     // Using the preferred `blocking` API.
 //!     #[test]
 //!     fn test_hello_world_blocking() {
-//!         use rocket::local::blocking::Client;
+//!         use rkt::local::blocking::Client;
 //!
 //!         // Construct a client to use for dispatching requests.
 //!         let client = Client::tracked(super::rocket())
@@ -63,9 +63,9 @@
 //!     }
 //!
 //!     // Using the `asynchronous` API.
-//!     #[rocket::async_test]
+//!     #[rkt::async_test]
 //!     async fn test_hello_world_async() {
-//!         use rocket::local::asynchronous::Client;
+//!         use rkt::local::asynchronous::Client;
 //!
 //!         // Construct a client to use for dispatching requests.
 //!         let client = Client::tracked(super::rocket()).await

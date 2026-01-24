@@ -79,7 +79,7 @@ impl<'a> Path<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/foo%20bar%2dbaz");
     /// assert_eq!(uri.path(), "/foo%20bar%2dbaz");
     /// assert_eq!(uri.path().raw(), "/foo%20bar%2dbaz");
@@ -93,7 +93,7 @@ impl<'a> Path<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/foo%20bar%2dbaz");
     /// assert_eq!(uri.path(), "/foo%20bar%2dbaz");
     /// assert_eq!(uri.path().as_str(), "/foo%20bar%2dbaz");
@@ -147,8 +147,8 @@ impl<'a> Path<'a> {
     /// ### Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// let uri = Origin::parse("/").unwrap();
     /// let segments: Vec<_> = uri.path().raw_segments().collect();
@@ -190,8 +190,8 @@ impl<'a> Path<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// let uri = Origin::parse("/").unwrap();
     /// let path_segs: Vec<&str> = uri.path().segments().collect();
@@ -251,7 +251,7 @@ impl<'a> Query<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/foo?baz+bar");
     /// assert_eq!(uri.query().unwrap(), "baz+bar");
     /// assert_eq!(uri.query().unwrap().raw(), "baz+bar");
@@ -265,7 +265,7 @@ impl<'a> Query<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/foo/bar?baz+bar");
     /// assert_eq!(uri.query().unwrap(), "baz+bar");
     /// assert_eq!(uri.query().unwrap().as_str(), "baz+bar");
@@ -302,8 +302,8 @@ impl<'a> Query<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// let uri = Origin::parse("/").unwrap();
     /// assert!(uri.query().is_none());
@@ -354,8 +354,8 @@ impl<'a> Query<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// let uri = Origin::parse("/").unwrap();
     /// assert!(uri.query().is_none());

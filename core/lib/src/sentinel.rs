@@ -27,9 +27,8 @@ use crate::{Ignite, Rocket};
 /// As an example, consider the following simple application:
 ///
 /// ```rust
-/// extern crate rocket_community as rocket;
 ///
-/// # use rocket::*;
+/// # use rkt::*;
 /// # type Response = ();
 /// #[get("/<id>")]
 /// fn index(id: usize, state: &State<String>) -> Response {
@@ -38,11 +37,11 @@ use crate::{Ignite, Rocket};
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build().mount("/", routes![index])
+///     rkt::build().mount("/", routes![index])
 /// }
 ///
-/// # use rocket::{Config, error::ErrorKind};
-/// # rocket::async_test(async {
+/// # use rkt::{Config, error::ErrorKind};
+/// # rkt::async_test(async {
 /// #    let result = rocket().reconfigure(Config::debug_default()).ignite().await;
 /// #    assert!(matches!(result.unwrap_err().kind(), ErrorKind::SentinelAborts(..)));
 /// # })
@@ -62,9 +61,8 @@ use crate::{Ignite, Rocket};
 /// nominally, a value of type `String` must be managed:
 ///
 /// ```rust
-/// extern crate rocket_community as rocket;
 ///
-/// # use rocket::*;
+/// # use rkt::*;
 /// # type Response = ();
 /// # #[get("/<id>")]
 /// # fn index(id: usize, state: &State<String>) -> Response {
@@ -73,13 +71,13 @@ use crate::{Ignite, Rocket};
 /// #
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build()
+///     rkt::build()
 ///         .mount("/", routes![index])
 ///         .manage(String::from("my managed string"))
 /// }
 ///
-/// # use rocket::{Config, error::ErrorKind};
-/// # rocket::async_test(async {
+/// # use rkt::{Config, error::ErrorKind};
+/// # rkt::async_test(async {
 /// #    rocket().reconfigure(Config::debug_default()).ignite().await.unwrap();
 /// # })
 /// ```
@@ -90,9 +88,8 @@ use crate::{Ignite, Rocket};
 /// eligible to be sentinels. Consider the following route:
 ///
 /// ```rust
-/// extern crate rocket_community as rocket;
 ///
-/// # use rocket::*;
+/// # use rkt::*;
 /// # use either::Either;
 /// # type Inner<T> = Option<T>;
 /// # type Foo = ();
@@ -151,11 +148,10 @@ use crate::{Ignite, Rocket};
 /// Occasionally an existential `impl Trait` may find its way into return types:
 ///
 /// ```rust
-/// extern crate rocket_community as rocket;
 ///
-/// # use rocket::*;
+/// # use rkt::*;
 /// # use either::Either;
-/// use rocket::response::Responder;
+/// use rkt::response::Responder;
 /// # type AnotherSentinel = ();
 ///
 /// #[get("/")]
@@ -181,9 +177,8 @@ use crate::{Ignite, Rocket};
 /// When possible, prefer to name all types:
 ///
 /// ```rust
-/// extern crate rocket_community as rocket;
 ///
-/// # use rocket::*;
+/// # use rkt::*;
 /// # use either::Either;
 /// # type AbortingSentinel = ();
 /// # type AnotherSentinel = ();
@@ -202,9 +197,8 @@ use crate::{Ignite, Rocket};
 /// will not.
 ///
 /// ```rust
-/// extern crate rocket_community as rocket;
 ///
-/// # use rocket::get;
+/// # use rkt::get;
 /// # type Foo = ();
 /// # type Bar = ();
 /// type SomeAlias = Result<Foo, Bar>;
@@ -231,11 +225,10 @@ use crate::{Ignite, Rocket};
 /// Even approximations are impossible. For example, consider the following:
 ///
 /// ```rust
-/// extern crate rocket_community as rocket;
 ///
-/// # use rocket::*;
+/// # use rkt::*;
 /// macro_rules! MyType {
-///     (State<'_, u32>) => (&'_ rocket::Config)
+///     (State<'_, u32>) => (&'_ rkt::Config)
 /// }
 ///
 /// #[get("/")]
@@ -245,7 +238,7 @@ use crate::{Ignite, Rocket};
 /// ```
 ///
 /// While the `MyType![State<'_, u32>]` type _appears_ to contain a `State`
-/// sentinel, the macro actually expands to `&'_ rocket::Config`, which is _not_
+/// sentinel, the macro actually expands to `&'_ rkt::Config`, which is _not_
 /// the `State` sentinel.
 ///
 /// Because Rocket knows the exact syntax expected by type macros that it
@@ -267,9 +260,8 @@ use crate::{Ignite, Rocket};
 ///   * a catcher for status code `400` at base `/`
 ///
 /// ```rust
-/// extern crate rocket_community as rocket;
 ///
-/// use rocket::{Rocket, Ignite, Sentinel};
+/// use rkt::{Rocket, Ignite, Sentinel};
 /// # struct MyResponder;
 /// # struct T;
 ///
@@ -374,9 +366,8 @@ impl Sentry {
     /// # Example
     ///
     /// ```rust
-    /// extern crate rocket_community as rocket;
     ///
-    /// use rocket::Sentry;
+    /// use rkt::Sentry;
     ///
     /// fn handle_error(sentry: &Sentry) {
     ///     let type_id = sentry.type_id();
@@ -391,9 +382,8 @@ impl Sentry {
     /// # Example
     ///
     /// ```rust
-    /// extern crate rocket_community as rocket;
     ///
-    /// use rocket::Sentry;
+    /// use rkt::Sentry;
     ///
     /// fn handle_error(sentry: &Sentry) {
     ///     let type_name = sentry.type_name();

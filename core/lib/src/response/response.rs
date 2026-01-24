@@ -54,10 +54,9 @@ use crate::response::Body;
 ///   * **Body**: fixed-size string `"Brewing the best coffee!"`
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 /// use std::io::Cursor;
-/// use rocket::response::Response;
-/// use rocket::http::{Status, ContentType};
+/// use rkt::response::Response;
+/// use rkt::http::{Status, ContentType};
 ///
 /// let body = "Brewing the best coffee!";
 /// let response = Response::build()
@@ -80,8 +79,7 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::{Builder, Response};
+    /// use rkt::response::{Builder, Response};
     ///
     /// # #[allow(unused_variables)]
     /// let builder = Builder::new(Response::new());
@@ -96,9 +94,8 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::Status;
+    /// use rkt::Response;
+    /// use rkt::http::Status;
     ///
     /// let response = Response::build()
     ///     .status(Status::NotFound)
@@ -121,9 +118,8 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::ContentType;
+    /// use rkt::Response;
+    /// use rkt::http::ContentType;
     ///
     /// let response = Response::build()
     ///     .header(ContentType::JSON)
@@ -152,9 +148,8 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::{Header, Accept};
+    /// use rkt::Response;
+    /// use rkt::http::{Header, Accept};
     ///
     /// let response = Response::build()
     ///     .header_adjoin(Header::new("Accept", "application/json"))
@@ -180,8 +175,7 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
     /// let response = Response::build()
     ///     .raw_header("X-Custom", "first")
@@ -211,8 +205,7 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
     /// let response = Response::build()
     ///     .raw_header_adjoin("X-Custom", "first")
@@ -240,9 +233,8 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
     /// let body = "Hello, world!";
     /// let response = Response::build()
@@ -263,9 +255,8 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
     /// let response = Response::build()
     ///     .streamed_body(Cursor::new("Hello, world!"))
@@ -292,16 +283,15 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::pin::Pin;
     ///
-    /// use rocket::Response;
-    /// use rocket::data::{IoHandler, IoStream};
-    /// use rocket::tokio::io;
+    /// use rkt::Response;
+    /// use rkt::data::{IoHandler, IoStream};
+    /// use rkt::tokio::io;
     ///
     /// struct EchoHandler;
     ///
-    /// #[rocket::async_trait]
+    /// #[rkt::async_trait]
     /// impl IoHandler for EchoHandler {
     ///     async fn io(self: Box<Self>, io: IoStream) -> io::Result<()> {
     ///         let (mut reader, mut writer) = io::split(io);
@@ -332,9 +322,8 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
     /// let response = Response::build()
     ///     .streamed_body(Cursor::new("Hello, world!"))
@@ -356,9 +345,8 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::{Status, ContentType};
+    /// use rkt::Response;
+    /// use rkt::http::{Status, ContentType};
     ///
     /// let base = Response::build()
     ///     .status(Status::NotFound)
@@ -397,9 +385,8 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::{Status, ContentType};
+    /// use rkt::Response;
+    /// use rkt::http::{Status, ContentType};
     ///
     /// let other = Response::build()
     ///     .status(Status::NotFound)
@@ -435,11 +422,10 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
     ///
-    /// use rocket::Response;
-    /// use rocket::http::Status;
+    /// use rkt::Response;
+    /// use rkt::http::Status;
     ///
     /// let body = "Brewing the best coffee!";
     /// let response = Response::build()
@@ -458,8 +444,7 @@ impl<'r> Builder<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
     /// let response: Result<Response, ()> = Response::build()
     ///     // build the response
@@ -523,9 +508,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::Status;
+    /// use rkt::Response;
+    /// use rkt::http::Status;
     ///
     /// let mut response = Response::new();
     ///
@@ -543,8 +527,7 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
     /// # #[allow(unused_variables)]
     /// let builder = Response::build();
@@ -559,9 +542,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// # #![allow(unused_variables)]
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
     /// let other = Response::new();
     /// let builder = Response::build_from(other);
@@ -576,9 +558,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::Status;
+    /// use rkt::Response;
+    /// use rkt::http::Status;
     ///
     /// let mut response = Response::new();
     /// assert_eq!(response.status(), Status::Ok);
@@ -596,9 +577,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::Status;
+    /// use rkt::Response;
+    /// use rkt::http::Status;
     ///
     /// let mut response = Response::new();
     /// response.set_status(Status::ImATeapot);
@@ -615,9 +595,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::ContentType;
+    /// use rkt::Response;
+    /// use rkt::http::ContentType;
     ///
     /// let mut response = Response::new();
     /// response.set_header(ContentType::HTML);
@@ -636,9 +615,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::Cookie;
+    /// use rkt::Response;
+    /// use rkt::http::Cookie;
     ///
     /// let mut response = Response::new();
     /// response.set_header(Cookie::new("hello", "world!"));
@@ -656,9 +634,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::Header;
+    /// use rkt::Response;
+    /// use rkt::http::Header;
     ///
     /// let mut response = Response::new();
     /// response.adjoin_raw_header("X-Custom", "1");
@@ -686,9 +663,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::ContentType;
+    /// use rkt::Response;
+    /// use rkt::http::ContentType;
     ///
     /// let mut response = Response::new();
     ///
@@ -713,9 +689,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::Header;
+    /// use rkt::Response;
+    /// use rkt::http::Header;
     ///
     /// let mut response = Response::new();
     ///
@@ -746,9 +721,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::{Header, Accept};
+    /// use rkt::Response;
+    /// use rkt::http::{Header, Accept};
     ///
     /// let mut response = Response::new();
     /// response.adjoin_header(Accept::JSON);
@@ -771,9 +745,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::Header;
+    /// use rkt::Response;
+    /// use rkt::http::Header;
     ///
     /// let mut response = Response::new();
     /// response.adjoin_raw_header("X-Custom", "one");
@@ -798,8 +771,7 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
     /// let mut response = Response::new();
     ///
@@ -821,11 +793,10 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
-    /// # rocket::async_test(async {
+    /// # rkt::async_test(async {
     /// let mut response = Response::new();
     /// assert!(response.body().is_none());
     ///
@@ -871,16 +842,15 @@ impl<'r> Response<'r> {
     /// [`upgrade()`](Builder::upgrade()). Otherwise returns `None`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::pin::Pin;
     ///
-    /// use rocket::Response;
-    /// use rocket::data::{IoHandler, IoStream};
-    /// use rocket::tokio::io;
+    /// use rkt::Response;
+    /// use rkt::data::{IoHandler, IoStream};
+    /// use rkt::tokio::io;
     ///
     /// struct EchoHandler;
     ///
-    /// #[rocket::async_trait]
+    /// #[rkt::async_trait]
     /// impl IoHandler for EchoHandler {
     ///     async fn io(self: Box<Self>, io: IoStream) -> io::Result<()> {
     ///         let (mut reader, mut writer) = io::split(io);
@@ -889,7 +859,7 @@ impl<'r> Response<'r> {
     ///     }
     /// }
     ///
-    /// # rocket::async_test(async {
+    /// # rkt::async_test(async {
     /// let mut response = Response::new();
     /// assert!(response.upgrade("raw-echo").is_none());
     ///
@@ -907,11 +877,10 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
-    /// # rocket::async_test(async {
+    /// # rkt::async_test(async {
     /// let mut response = Response::new();
     /// assert!(response.body().is_none());
     ///
@@ -941,11 +910,10 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io;
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
-    /// # let o: io::Result<()> = rocket::async_test(async {
+    /// # let o: io::Result<()> = rkt::async_test(async {
     /// let string = "Hello, world!";
     ///
     /// let mut response = Response::new();
@@ -971,12 +939,11 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// # use std::io;
     /// use tokio::io::{repeat, AsyncReadExt};
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
-    /// # let o: io::Result<()> = rocket::async_test(async {
+    /// # let o: io::Result<()> = rkt::async_test(async {
     /// let mut response = Response::new();
     /// response.set_streamed_body(repeat(97).take(5));
     /// assert_eq!(response.body_mut().to_string().await?, "aaaaa");
@@ -1010,16 +977,15 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::pin::Pin;
     ///
-    /// use rocket::Response;
-    /// use rocket::data::{IoHandler, IoStream};
-    /// use rocket::tokio::io;
+    /// use rkt::Response;
+    /// use rkt::data::{IoHandler, IoStream};
+    /// use rkt::tokio::io;
     ///
     /// struct EchoHandler;
     ///
-    /// #[rocket::async_trait]
+    /// #[rkt::async_trait]
     /// impl IoHandler for EchoHandler {
     ///     async fn io(self: Box<Self>, io: IoStream) -> io::Result<()> {
     ///         let (mut reader, mut writer) = io::split(io);
@@ -1028,7 +994,7 @@ impl<'r> Response<'r> {
     ///     }
     /// }
     ///
-    /// # rocket::async_test(async {
+    /// # rkt::async_test(async {
     /// let mut response = Response::new();
     /// assert!(response.upgrade("raw-echo").is_none());
     ///
@@ -1059,11 +1025,10 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use tokio::io::{repeat, AsyncReadExt};
-    /// use rocket::Response;
+    /// use rkt::Response;
     ///
-    /// # let o: Option<()> = rocket::async_test(async {
+    /// # let o: Option<()> = rkt::async_test(async {
     /// let mut response = Response::new();
     /// response.set_streamed_body(repeat(97).take(5));
     /// response.set_max_chunk_size(3072);
@@ -1082,9 +1047,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::{Status, ContentType};
+    /// use rkt::Response;
+    /// use rkt::http::{Status, ContentType};
     ///
     /// let base = Response::build()
     ///     .status(Status::NotFound)
@@ -1128,9 +1092,8 @@ impl<'r> Response<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Response;
-    /// use rocket::http::{Status, ContentType};
+    /// use rkt::Response;
+    /// use rkt::http::{Status, ContentType};
     ///
     /// let other = Response::build()
     ///     .status(Status::NotFound)

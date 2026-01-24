@@ -28,22 +28,21 @@ crate::export! {
     /// Serve files from the crate-relative `static/` directory:
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::{FileServer, relative};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::fs::{FileServer, relative};
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build().mount("/", FileServer::new(relative!("static")))
+    ///     rkt::build().mount("/", FileServer::new(relative!("static")))
     /// }
     /// ```
     ///
     /// Path equivalences:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::path::Path;
     ///
-    /// use rocket::fs::relative;
+    /// use rkt::fs::relative;
     ///
     /// let manual = Path::new(env!("CARGO_MANIFEST_DIR")).join("static");
     /// let automatic_1 = Path::new(relative!("static"));

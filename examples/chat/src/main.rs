@@ -1,18 +1,18 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[cfg(test)] mod tests;
 
-use rocket::{State, Shutdown};
-use rocket::fs::{relative, FileServer};
-use rocket::form::Form;
-use rocket::response::stream::{EventStream, Event};
-use rocket::serde::{Serialize, Deserialize};
-use rocket::tokio::sync::broadcast::{channel, Sender, error::RecvError};
-use rocket::tokio::select;
+use rkt::{State, Shutdown};
+use rkt::fs::{relative, FileServer};
+use rkt::form::Form;
+use rkt::response::stream::{EventStream, Event};
+use rkt::serde::{Serialize, Deserialize};
+use rkt::tokio::sync::broadcast::{channel, Sender, error::RecvError};
+use rkt::tokio::select;
 
 #[derive(Debug, Clone, FromForm, Serialize, Deserialize)]
 #[cfg_attr(test, derive(PartialEq, UriDisplayQuery))]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Message {
     #[field(validate = len(..30))]
     pub room: String,
@@ -51,7 +51,7 @@ fn post(form: Form<Message>, queue: &State<Sender<Message>>) {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .manage(channel::<Message>(1024).0)
         .mount("/", routes![post, events])
         .mount("/", FileServer::new(relative!("static")))

@@ -40,9 +40,9 @@ use crate::RawStr;
 /// kept generic. That is, implementations can take the form:
 ///
 /// ```rust
-/// # extern crate rocket;
+/// # extern crate rkt;
 /// # use std::fmt;
-/// # use rocket::http::uri::fmt::{Part, UriDisplay, Formatter};
+/// # use rkt::http::uri::fmt::{Part, UriDisplay, Formatter};
 /// # struct SomeType;
 /// impl<P: Part> UriDisplay<P> for SomeType
 /// # { fn fmt(&self, f: &mut Formatter<P>) -> fmt::Result { Ok(()) } }
@@ -61,7 +61,7 @@ use crate::RawStr;
 /// the following route:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[get("/item/<id>?<track>")]
 /// fn get_item(id: i32, track: Option<String>) { /* .. */ }
 /// ```
@@ -69,7 +69,7 @@ use crate::RawStr;
 /// A URI for this route can be generated as follows:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type T = ();
 /// # #[get("/item/<id>?<track>")]
 /// # fn get_item(id: i32, track: Option<String>) { /* .. */ }
@@ -93,9 +93,9 @@ use crate::RawStr;
 /// similar (in spirit) to the following:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # use rocket::http::uri::Origin;
-/// # use rocket::http::uri::fmt::{UriDisplay, Path, Query};
+/// # extern crate rkt;
+/// # use rkt::http::uri::Origin;
+/// # use rkt::http::uri::fmt::{UriDisplay, Path, Query};
 /// #
 /// Origin::parse(&format!("/item/{}?track={}",
 ///     &100 as &dyn UriDisplay<Path>, &"inbound" as &dyn UriDisplay<Query>));
@@ -177,8 +177,8 @@ use crate::RawStr;
 /// cases, deriving `UriDisplay` will suffice:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// # use rocket::http::uri::fmt::{UriDisplay, Query, Path};
+/// # #[macro_use] extern crate rkt;
+/// # use rkt::http::uri::fmt::{UriDisplay, Query, Path};
 /// // Derives `UriDisplay<Query>`
 /// #[derive(UriDisplayQuery)]
 /// struct User {
@@ -235,8 +235,8 @@ use crate::RawStr;
 /// `UriDisplay` implementation is required.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// use rocket::request::FromParam;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::request::FromParam;
 ///
 /// struct Name<'r>(&'r str);
 ///
@@ -258,9 +258,9 @@ use crate::RawStr;
 /// }
 ///
 /// use std::fmt;
-/// use rocket::http::impl_from_uri_param_identity;
-/// use rocket::http::uri::fmt::{Formatter, FromUriParam, UriDisplay, Path};
-/// use rocket::response::Redirect;
+/// use rkt::http::impl_from_uri_param_identity;
+/// use rkt::http::uri::fmt::{Formatter, FromUriParam, UriDisplay, Path};
+/// use rkt::response::Redirect;
 ///
 /// impl UriDisplay<Path> for Name<'_> {
 ///     // Writes the raw string `name:`, which is URI-safe, and then delegates
@@ -532,7 +532,7 @@ crate::impl_from_uri_param_identity!(uuid::Uuid);
 /// trait for the corresponding `Part`.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// #[get("/item/<id>?<track>")]
 /// fn get_item(id: i32, track: Option<u8>) { /* .. */ }
 ///
@@ -551,8 +551,8 @@ crate::impl_from_uri_param_identity!(uuid::Uuid);
 /// this trait for your own ignorable types as well:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// use rocket::http::uri::fmt::{Ignorable, Query};
+/// # #[macro_use] extern crate rkt;
+/// use rkt::http::uri::fmt::{Ignorable, Query};
 ///
 /// # struct MyType;
 /// impl Ignorable<Query> for MyType { }

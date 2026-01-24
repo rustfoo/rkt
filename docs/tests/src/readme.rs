@@ -1,1 +1,1 @@
-rocket::internal_guide_tests!("../../README.md");
+rkt::internal_guide_tests!("../../README.md");

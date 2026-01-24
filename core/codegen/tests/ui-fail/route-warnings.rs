@@ -1,6 +1,6 @@
 // must-compile-successfully
 
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 // Check for unknown media types.
 
@@ -20,14 +20,14 @@ fn f3() {}
 // Check if a data argument is used with a usually non-payload bearing method.
 
 #[get("/", data = "<_foo>")]
-fn g0(_foo: rocket::Data<'_>) {}
+fn g0(_foo: rkt::Data<'_>) {}
 
 #[head("/", data = "<_foo>")]
-fn g1(_foo: rocket::Data<'_>) {}
+fn g1(_foo: rkt::Data<'_>) {}
 
 #[suppress(dubious_payload)]
 #[head("/", data = "<_foo>")]
-fn g2(_foo: rocket::Data<'_>) {}
+fn g2(_foo: rkt::Data<'_>) {}
 
 fn main() {
     compile_error!("checking for warnings!")

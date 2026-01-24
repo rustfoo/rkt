@@ -1,10 +1,10 @@
 use std::io;
 
-use rocket::data::{IoHandler, IoStream};
-use rocket::futures::{self, future::BoxFuture, stream::SplitStream, SinkExt, StreamExt};
-use rocket::http::Status;
-use rocket::request::{FromRequest, Outcome, Request};
-use rocket::response::{self, Responder, Response};
+use rkt::data::{IoHandler, IoStream};
+use rkt::futures::{self, future::BoxFuture, stream::SplitStream, SinkExt, StreamExt};
+use rkt::http::Status;
+use rkt::request::{FromRequest, Outcome, Request};
+use rkt::response::{self, Responder, Response};
 
 use crate::result::{Error, Result};
 use crate::stream::DuplexStream;
@@ -41,9 +41,8 @@ impl WebSocket {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_ws_community as rocket_ws;
-    /// # use rocket::get;
-    /// # use rocket_ws as ws;
+    /// # use rkt::get;
+    /// # use rkt_ws as ws;
     /// #
     /// #[get("/echo")]
     /// fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
@@ -86,10 +85,9 @@ impl WebSocket {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_ws_community as rocket_ws;
-    /// # use rocket::get;
-    /// # use rocket_ws as ws;
-    /// use rocket::futures::{SinkExt, StreamExt};
+    /// # use rkt::get;
+    /// # use rkt_ws as ws;
+    /// use rkt::futures::{SinkExt, StreamExt};
     ///
     /// #[get("/hello/<name>")]
     /// fn hello(ws: ws::WebSocket, name: &str) -> ws::Channel<'_> {
@@ -136,9 +134,8 @@ impl WebSocket {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_ws_community as rocket_ws;
-    /// # use rocket::get;
-    /// # use rocket_ws as ws;
+    /// # use rkt::get;
+    /// # use rkt_ws as ws;
     ///
     /// // Use `Stream!`, which internally calls `WebSocket::stream()`.
     /// #[get("/echo?stream")]
@@ -185,9 +182,8 @@ impl WebSocket {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_ws_community as rocket_ws;
-    /// # use rocket::get;
-    /// # use rocket_ws as ws;
+    /// # use rkt::get;
+    /// # use rkt_ws as ws;
     /// #
     /// #[get("/echo")]
     /// fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
@@ -222,13 +218,13 @@ pub struct MessageStream<'r, S> {
     handler: Box<dyn FnOnce(SplitStream<DuplexStream>) -> S + Send + 'r>,
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for WebSocket {
     type Error = std::convert::Infallible;
 
     async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
         use crate::tungstenite::handshake::derive_accept_key;
-        use rocket::http::uncased::eq;
+        use rkt::http::uncased::eq;
 
         let headers = req.headers();
         let is_upgrade = headers
@@ -276,7 +272,7 @@ where
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl IoHandler for Channel<'_> {
     async fn io(self: Box<Self>, io: IoStream) -> io::Result<()> {
         let stream = DuplexStream::new(io, self.ws.config).await;
@@ -285,7 +281,7 @@ impl IoHandler for Channel<'_> {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r, S> IoHandler for MessageStream<'r, S>
 where
     S: futures::Stream<Item = Result<Message>> + Send + 'r,
@@ -293,7 +289,7 @@ where
     async fn io(self: Box<Self>, io: IoStream) -> io::Result<()> {
         let (mut sink, source) = DuplexStream::new(io, self.ws.config).await.split();
         let stream = (self.handler)(source);
-        rocket::tokio::pin!(stream);
+        rkt::tokio::pin!(stream);
         while let Some(msg) = stream.next().await {
             let result = match msg {
                 Ok(msg) if msg.is_close() => return Ok(()),

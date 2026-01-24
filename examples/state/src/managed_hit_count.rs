@@ -1,8 +1,8 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use rocket::State;
-use rocket::response::content::RawHtml;
-use rocket::fairing::AdHoc;
+use rkt::State;
+use rkt::response::content::RawHtml;
+use rkt::fairing::AdHoc;
 
 struct HitCount(AtomicUsize);
 

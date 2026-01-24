@@ -33,8 +33,7 @@ use crate::http::uncased::Uncased;
 /// of `pet/dog/bingo`, `pet/dog` or `pet`:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::data::{Limits, ToByteUnit};
+/// use rkt::data::{Limits, ToByteUnit};
 ///
 /// let limits = Limits::default()
 ///     .limit("pet", 64.kibibytes())
@@ -74,8 +73,7 @@ use crate::http::uncased::Uncased;
 /// A `Limits` structure is created following the builder pattern:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::data::{Limits, ToByteUnit};
+/// use rkt::data::{Limits, ToByteUnit};
 ///
 /// // Set a limit of 64KiB for forms, 3MiB for PDFs, and 1MiB for JSON.
 /// let limits = Limits::default()
@@ -89,10 +87,10 @@ use crate::http::uncased::Uncased;
 /// configured limit can be retrieved via the `&Limits` request guard:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// use std::io;
 ///
-/// use rocket::data::{Data, Limits, ToByteUnit};
+/// use rkt::data::{Data, Limits, ToByteUnit};
 ///
 /// #[post("/echo", data = "<data>")]
 /// async fn echo(data: Data<'_>, limits: &Limits) -> io::Result<String> {
@@ -104,13 +102,12 @@ use crate::http::uncased::Uncased;
 /// ...or via the [`Request::limits()`] method:
 ///
 /// ```
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::request::Request;
-/// use rocket::data::{self, Data, FromData};
+/// use rkt::request::Request;
+/// use rkt::data::{self, Data, FromData};
 ///
 /// # struct MyType;
 /// # type MyError = ();
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromData<'r> for MyType {
 ///     type Error = MyError;
 ///
@@ -169,8 +166,7 @@ impl Limits {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Limits, ToByteUnit};
+    /// use rkt::data::{Limits, ToByteUnit};
     ///
     /// let limits = Limits::default();
     /// assert_eq!(limits.get("form"), Some(32.kibibytes()));
@@ -189,8 +185,7 @@ impl Limits {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Limits, ToByteUnit};
+    /// use rkt::data::{Limits, ToByteUnit};
     ///
     /// let limits = Limits::default();
     /// assert_eq!(limits.get("form"), Some(32.kibibytes()));
@@ -220,8 +215,7 @@ impl Limits {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Limits, ToByteUnit};
+    /// use rkt::data::{Limits, ToByteUnit};
     ///
     /// let limits = Limits::default()
     ///     .limit("json", 2.mebibytes())
@@ -270,8 +264,7 @@ impl Limits {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::data::{Limits, ToByteUnit};
+    /// use rkt::data::{Limits, ToByteUnit};
     ///
     /// let limits = Limits::default()
     ///     .limit("json", 2.mebibytes())

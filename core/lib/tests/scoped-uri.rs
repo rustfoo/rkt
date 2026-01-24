@@ -1,30 +1,30 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::local::blocking::Client;
-use rocket::{Build, Rocket};
+use rkt::local::blocking::Client;
+use rkt::{Build, Rocket};
 
 mod inner {
-    use rocket::uri;
+    use rkt::uri;
 
-    #[rocket::get("/")]
+    #[rkt::get("/")]
     pub fn hello() -> String {
         format!("Hello! Try {}.", uri!(super::hello_name("Rust 2018")))
     }
 }
 
-#[rocket::get("/<name>")]
+#[rkt::get("/<name>")]
 fn hello_name(name: String) -> String {
     format!(
         "Hello, {}! This is {}.",
         name,
-        rocket::uri!(hello_name(&name))
+        rkt::uri!(hello_name(&name))
     )
 }
 
 fn rocket() -> Rocket<Build> {
-    rocket::build()
-        .mount("/", rocket::routes![hello_name])
-        .mount("/", rocket::routes![inner::hello])
+    rkt::build()
+        .mount("/", rkt::routes![hello_name])
+        .mount("/", rkt::routes![inner::hello])
 }
 
 #[test]

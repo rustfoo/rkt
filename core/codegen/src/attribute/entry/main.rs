@@ -6,7 +6,7 @@ use devise::ext::SpanDiagnosticExt;
 use devise::{Result, Spanned};
 use proc_macro2::{Span, TokenStream};
 
-/// `#[rocket::async_main]`: calls the attributed fn inside `rocket::async_main`
+/// `#[rkt::async_main]`: calls the attributed fn inside `rkt::async_main`
 pub struct Main;
 
 impl EntryAttr for Main {
@@ -25,7 +25,7 @@ impl EntryAttr for Main {
 
         sig.asyncness = None;
         Ok(quote_spanned!(block.span() => #(#attrs)* #vis #sig {
-            ::rocket::async_main(async move #block)
+            ::rkt::async_main(async move #block)
         }))
     }
 }

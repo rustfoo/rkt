@@ -3,16 +3,16 @@ use crate::prelude::*;
 use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
-use rocket::tls::{ClientHello, Resolver, ServerConfig, TlsConfig};
+use rkt::tls::{ClientHello, Resolver, ServerConfig, TlsConfig};
 
 struct CountingResolver {
     config: Arc<ServerConfig>,
     counter: Arc<AtomicUsize>,
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl Resolver for CountingResolver {
-    async fn init(rocket: &Rocket<Build>) -> rocket::tls::Result<Self> {
+    async fn init(rocket: &Rocket<Build>) -> rkt::tls::Result<Self> {
         let config: TlsConfig = rocket.figment().extract_inner("tls")?;
         let config = Arc::new(config.server_config().await?);
         let counter = rocket.state::<Arc<AtomicUsize>>().unwrap().clone();

@@ -40,11 +40,10 @@ impl Route {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::Route;
-    /// use rocket::http::{Method, MediaType};
-    /// # use rocket::route::dummy_handler as handler;
+    /// use rkt::Route;
+    /// use rkt::http::{Method, MediaType};
+    /// # use rkt::route::dummy_handler as handler;
     ///
     /// // Two routes with the same method, rank, URI, and formats collide.
     /// let a = Route::new(Method::Get, "/", handler);
@@ -115,10 +114,9 @@ impl Catcher {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::Catcher;
-    /// # use rocket::catcher::dummy_handler as handler;
+    /// use rkt::Catcher;
+    /// # use rkt::catcher::dummy_handler as handler;
     ///
     /// // Two catchers with the same status code and base collide.
     /// let a = Catcher::new(404, handler).map_base(|_| format!("/foo")).unwrap();

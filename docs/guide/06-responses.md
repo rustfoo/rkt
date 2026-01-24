@@ -42,10 +42,10 @@ As a concrete example, the [`Accepted`] wrapping responder sets the status to
 `202 - Accepted`. It can be used as follows:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket::response::status;
+use rkt::response::status;
 
 #[post("/<id>")]
 fn new(id: usize) -> status::Accepted<String> {
@@ -62,9 +62,9 @@ response with a Content-Type of JSON and an arbitrary status code like `418 I'm
 a teapot` from an `&'static str`:
 
 ```rust
-# #[macro_use] extern crate rocket;
-use rocket::http::Status;
-use rocket::response::{content, status};
+# #[macro_use] extern crate rkt;
+use rkt::http::Status;
+use rkt::response::{content, status};
 
 #[get("/")]
 fn json() -> status::Custom<content::RawJson<&'static str>> {
@@ -81,8 +81,8 @@ fn json() -> status::Custom<content::RawJson<&'static str>> {
   may be simpler alternatives:
 
   ```rust
-  # #[macro_use] extern crate rocket;
-  use rocket::http::{Status, ContentType};
+  # #[macro_use] extern crate rkt;
+  use rkt::http::{Status, ContentType};
 
   #[get("/")]
   fn json() -> (Status, (ContentType, &'static str)) {
@@ -95,7 +95,7 @@ properties of an existing response. For more complex use-cases, instead consider
 deriving a [custom responder]:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 #[derive(Responder)]
 #[response(status = 418, content_type = "json")]
@@ -136,10 +136,10 @@ returning a [`Status`] directly. For instance, to forward to the catcher for
 **406: Not Acceptable**, you would write:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket::http::Status;
+use rkt::http::Status;
 
 #[get("/")]
 fn just_fail() -> Status {
@@ -170,10 +170,10 @@ responder, headers, or sets a custom status or content-type, `Responder` can be
 automatically derived:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket::http::{Header, ContentType};
+use rkt::http::{Header, ContentType};
 # type OtherResponder = ();
 # type MyType = u8;
 
@@ -206,10 +206,10 @@ of type [`ContentType`]. To set an HTTP status dynamically, leverage the
 
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket::http::{Header, Status};
+use rkt::http::{Header, Status};
 # type OtherResponder = ();
 
 #[derive(Responder)]
@@ -224,11 +224,11 @@ You can also use derive `Responder` for `enum`s, allowing dynamic selection of a
 responder:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket::http::{ContentType, Header, Status};
-use rocket::fs::NamedFile;
+use rkt::http::{ContentType, Header, Status};
+use rkt::fs::NamedFile;
 
 #[derive(Responder)]
 enum Error {
@@ -263,17 +263,17 @@ to `text/plain`. To get a taste for what such a `Responder` implementation looks
 like, here's the implementation for `String`:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 use std::io::Cursor;
 
-use rocket::request::Request;
-use rocket::response::{self, Response, Responder};
-use rocket::http::ContentType;
+use rkt::request::Request;
+use rkt::response::{self, Response, Responder};
+use rkt::http::ContentType;
 
 # struct String(std::string::String);
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> Responder<'r, 'static> for String {
     fn respond_to(self, _: &'r Request<'_>) -> response::Result<'static> {
         Response::build()
@@ -291,7 +291,7 @@ Because of these implementations, you can directly return an `&str` or `String`
 type from a handler:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 #[get("/string")]
 fn handler() -> &'static str {
@@ -312,11 +312,11 @@ known until process-time whether content exists. For example, because of
 found and a `404` when a file is not found in just 4, idiomatic lines:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 # use std::path::{Path, PathBuf};
-use rocket::fs::NamedFile;
+use rkt::fs::NamedFile;
 
 #[get("/<file..>")]
 async fn files(file: PathBuf) -> Option<NamedFile> {
@@ -337,12 +337,12 @@ provide more feedback to the user when a file isn't found. We might do this as
 follows:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 # use std::path::{Path, PathBuf};
-use rocket::fs::NamedFile;
-use rocket::response::status::NotFound;
+use rkt::fs::NamedFile;
+use rkt::response::status::NotFound;
 
 #[get("/<file..>")]
 async fn files(file: PathBuf) -> Result<NamedFile, NotFound<String>> {
@@ -373,7 +373,7 @@ are:
 [`Redirect`]: @api/master/rocket/response/struct.Redirect.html
 [`Flash`]: @api/master/rocket/response/struct.Flash.html
 [`MsgPack`]: @api/master/rocket/serde/msgpack/struct.MsgPack.html
-[`Template`]: @api/master/rocket_dyn_templates/struct.Template.html
+[`Template`]: @api/master/rkt_dyn_templates/struct.Template.html
 
 ### Async Streams
 
@@ -388,12 +388,12 @@ The simplest version creates a [`ReaderStream`] from a single `AsyncRead` type.
 For example, to stream from a TCP connection, we might write:
 
 ```rust
-# use rocket::*;
+# use rkt::*;
 use std::io;
 use std::net::SocketAddr;
 
-use rocket::tokio::net::TcpStream;
-use rocket::response::stream::ReaderStream;
+use rkt::tokio::net::TcpStream;
+use rkt::response::stream::ReaderStream;
 
 #[get("/stream")]
 async fn stream() -> io::Result<ReaderStream![TcpStream]> {
@@ -407,9 +407,9 @@ Streams can also be created using generator syntax. The following example
 returns an infinite [`TextStream`] that produces one `"hello"` every second:
 
 ```rust
-# use rocket::get;
-use rocket::tokio::time::{Duration, interval};
-use rocket::response::stream::TextStream;
+# use rkt::get;
+use rkt::tokio::time::{Duration, interval};
+use rkt::response::stream::TextStream;
 
 /// Produce an infinite series of `"hello"`s, one per second.
 #[get("/infinite-hellos")]
@@ -438,12 +438,12 @@ how to detect and handle graceful shutdown requests.
 ### WebSockets
 
 Enabled by Rocket's support for [HTTP connection upgrades], the official
-[`rocket_ws`] crate implements first-class support for WebSockets. Working with
-`rocket_ws` to implement an echo server looks like this:
+[`rkt_ws`] crate implements first-class support for WebSockets. Working with
+`rkt_ws` to implement an echo server looks like this:
 
 ```rust
-# use rocket::get;
-use rocket_ws::{WebSocket, Stream};
+# use rkt::get;
+use rkt_ws::{WebSocket, Stream};
 
 #[get("/echo")]
 fn echo_compose(ws: WebSocket) -> Stream!['static] {
@@ -451,12 +451,12 @@ fn echo_compose(ws: WebSocket) -> Stream!['static] {
 }
 ```
 
-As with `async` streams, `rocket_ws` also supports using generator syntax for
+As with `async` streams, `rkt_ws` also supports using generator syntax for
 WebSocket messages:
 
 ```rust
-# use rocket::get;
-use rocket_ws::{WebSocket, Stream};
+# use rkt::get;
+use rkt_ws::{WebSocket, Stream};
 
 #[get("/echo")]
 fn echo_stream(ws: WebSocket) -> Stream!['static] {
@@ -468,10 +468,10 @@ fn echo_stream(ws: WebSocket) -> Stream!['static] {
 }
 ```
 
-For complete usage details, see the [`rocket_ws`] documentation.
+For complete usage details, see the [`rkt_ws`] documentation.
 
 [HTTP connection upgrades]: @api/master/rocket/response/struct.Response.html#upgrading
-[`rocket_ws`]: @api/master/rocket_ws/
+[`rkt_ws`]: @api/master/rkt_ws/
 
 ### JSON
 
@@ -484,12 +484,12 @@ As an example, to respond with the JSON value of a `Task` structure, we might
 write:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket::serde::{Serialize, json::Json};
+use rkt::serde::{Serialize, json::Json};
 
 #[derive(Serialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Task { /* .. */ }
 
 #[get("/todo")]
@@ -514,15 +514,15 @@ The [serialization example] provides further illustration.
 ## Templates
 
 Rocket has first-class templating support that works largely through a
-[`Template`] responder in the `rocket_dyn_templates` contrib library. To render
+[`Template`] responder in the `rkt_dyn_templates` contrib library. To render
 a template named "index", for instance, you might return a value of type
 `Template` as follows:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket_dyn_templates::Template;
+use rkt_dyn_templates::Template;
 
 #[get("/")]
 fn index() -> Template {
@@ -542,11 +542,11 @@ You can also use [`context!`] to create ad-hoc templating contexts without
 defining a new type:
 
 ```rust
-# #[macro_use] extern crate rocket;
-# #[macro_use] extern crate rocket_dyn_templates;
+# #[macro_use] extern crate rkt;
+# #[macro_use] extern crate rkt_dyn_templates;
 # fn main() {}
 
-use rocket_dyn_templates::Template;
+use rkt_dyn_templates::Template;
 
 #[get("/")]
 fn index() -> Template {
@@ -563,13 +563,13 @@ fairings. To attach the template fairing, simply call
 `.attach(Template::fairing())` on an instance of `Rocket` as follows:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-use rocket_dyn_templates::Template;
+use rkt_dyn_templates::Template;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![/* .. */])
         .attach(Template::fairing())
 }
@@ -587,7 +587,7 @@ used.
   the name `"index"` in templates, i.e, `extends "index"` or `extends "base"`
   for `base.html.tera`.
 
-[`context!`]: @api/master/rocket_dyn_templates/macro.context.html
+[`context!`]: @api/master/rkt_dyn_templates/macro.context.html
 
 ### Live Reloading
 
@@ -624,7 +624,7 @@ methods such as [`Redirect::to()`].
 For example, given the following route:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 #[get("/<id>/<name>?<age>")]
@@ -634,7 +634,7 @@ fn person(id: Option<usize>, name: &str, age: Option<u8>) { /* .. */ }
 URIs to `person` can be created as follows:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 # #[get("/<id>/<name>?<age>")]
 # fn person(id: Option<usize>, name: &str, age: Option<u8>) { /* .. */ }
@@ -700,10 +700,10 @@ in the query part of a URI, derive using [`UriDisplayQuery`].
 As an example, consider the following form structure and route:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
-use rocket::form::Form;
+use rkt::form::Form;
 
 #[derive(FromForm, UriDisplayQuery)]
 struct UserDetails<'r> {
@@ -720,9 +720,9 @@ automatically generated, allowing for URIs to `add_user` to be generated using
 `uri!`:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
-# use rocket::form::Form;
+# use rkt::form::Form;
 
 # #[derive(FromForm, UriDisplayQuery)]
 # struct UserDetails<'r> {
@@ -764,7 +764,7 @@ supply such a type in the path part. This ensures that a valid URI is _always_
 generated.
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 #[get("/<id>/<name>?<age>")]
 fn person(id: Option<usize>, name: &str, age: Option<u8>) { /* .. */ }
@@ -787,7 +787,7 @@ Rocket, allows an `&str` to be used in a `uri!` invocation for route URI
 parameters declared as `String`:
 
 ```rust
-# use rocket::http::uri::fmt::{FromUriParam, Part};
+# use rkt::http::uri::fmt::{FromUriParam, Part};
 # struct S;
 # type String = S;
 impl<'a, P: Part> FromUriParam<P, &'a str> for String {
@@ -820,7 +820,7 @@ Conversions are transitive. That is, a conversion from `A -> B` and a conversion
 `&str` can be supplied when a value of type `Option<PathBuf>` is expected:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 use std::path::PathBuf;
 

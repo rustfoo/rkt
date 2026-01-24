@@ -1,8 +1,8 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
-use rocket::http::uri::fmt::{Path, Query, UriDisplay};
-use rocket::serde::{Deserialize, Serialize};
+use rkt::http::uri::fmt::{Path, Query, UriDisplay};
+use rkt::serde::{Deserialize, Serialize};
 
 macro_rules! assert_uri_display_query {
     ($v:expr, $expected:expr) => {
@@ -13,8 +13,8 @@ macro_rules! assert_uri_display_query {
 
 macro_rules! assert_query_form_roundtrip {
     ($T:ty, $v:expr) => {{
-        use rocket::form::{Form, Strict};
-        use rocket::http::RawStr;
+        use rkt::form::{Form, Strict};
+        use rkt::http::RawStr;
 
         let v = $v;
         let string = format!("{}", &v as &dyn UriDisplay<Query>);
@@ -26,8 +26,8 @@ macro_rules! assert_query_form_roundtrip {
 
 macro_rules! assert_query_value_roundtrip {
     ($T:ty, $v:expr) => {{
-        use rocket::form::{Form, Strict};
-        use rocket::http::RawStr;
+        use rkt::form::{Form, Strict};
+        use rkt::http::RawStr;
 
         let v = $v;
         let string = format!("={}", &v as &dyn UriDisplay<Query>);
@@ -303,10 +303,10 @@ fn uri_display_path() {
 
 #[test]
 fn uri_display_serde() {
-    use rocket::serde::json::Json;
+    use rkt::serde::json::Json;
 
     #[derive(Debug, PartialEq, Clone, FromForm, UriDisplayQuery, Deserialize, Serialize)]
-    #[serde(crate = "rocket::serde")]
+    #[serde(crate = "rkt::serde")]
     struct Bam {
         foo: String,
         bar: Option<usize>,
@@ -355,7 +355,7 @@ fn uri_display_serde() {
 
     // TODO: This requires `MsgPack` to parse from value form fields.
     //
-    // use rocket::serde::msgpack::MsgPack;
+    // use rkt::serde::msgpack::MsgPack;
     //
     // #[derive(Debug, PartialEq, FromForm, UriDisplayQuery)]
     // struct MsgPackFoo(MsgPack<Bam>);

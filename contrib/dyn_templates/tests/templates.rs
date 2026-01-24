@@ -1,15 +1,14 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
-extern crate rocket_dyn_templates_community as rocket_dyn_templates;
 
 use std::path::{Path, PathBuf};
 
-use rocket::figment::value::Value;
-use rocket::serde::{Deserialize, Serialize};
-use rocket::Rocket;
-use rocket::{config::Config, Build};
-use rocket_dyn_templates::{context, Metadata, Template};
+use rkt::figment::value::Value;
+use rkt::serde::{Deserialize, Serialize};
+use rkt::Rocket;
+use rkt::{config::Config, Build};
+use rkt_dyn_templates::{context, Metadata, Template};
 
 #[get("/<engine>/<name>")]
 fn template_check(md: Metadata<'_>, engine: &str, name: &str) -> Option<()> {
@@ -35,16 +34,16 @@ fn template_root() -> PathBuf {
 
 #[allow(dead_code)]
 fn rocket() -> Rocket<Build> {
-    rocket::custom(Config::figment().merge(("template_dir", template_root())))
+    rkt::custom(Config::figment().merge(("template_dir", template_root())))
         .attach(Template::fairing())
         .mount("/", routes![template_check, is_reloading])
 }
 
 #[test]
 fn test_callback_error() {
-    use rocket::{error::ErrorKind::FailedFairings, local::blocking::Client};
+    use rkt::{error::ErrorKind::FailedFairings, local::blocking::Client};
 
-    let rocket = rocket::build().attach(Template::try_custom(|_| {
+    let rocket = rkt::build().attach(Template::try_custom(|_| {
         Err("error reloading templates!".into())
     }));
 
@@ -57,7 +56,7 @@ fn test_callback_error() {
 
 #[test]
 fn test_sentinel() {
-    use rocket::{error::ErrorKind::SentinelAborts, local::blocking::Client};
+    use rkt::{error::ErrorKind::SentinelAborts, local::blocking::Client};
 
     let err = Client::debug_with(routes![is_reloading]).unwrap_err();
     assert!(matches!(err.kind(), SentinelAborts(vec) if vec.len() == 1));
@@ -81,7 +80,7 @@ fn test_sentinel() {
     let err = Client::debug_with(routes![return_opt_template]).unwrap_err();
     assert!(matches!(err.kind(), SentinelAborts(vec) if vec.len() == 1));
 
-    #[derive(rocket::Responder)]
+    #[derive(rkt::Responder)]
     struct MyThing<T>(T);
 
     #[get("/")]
@@ -92,11 +91,11 @@ fn test_sentinel() {
     let err = Client::debug_with(routes![return_custom_template]).unwrap_err();
     assert!(matches!(err.kind(), SentinelAborts(vec) if vec.len() == 1));
 
-    #[derive(rocket::Responder)]
+    #[derive(rkt::Responder)]
     struct MyOkayThing<T>(Option<T>);
 
-    impl<T> rocket::Sentinel for MyOkayThing<T> {
-        fn abort(_: &Rocket<rocket::Ignite>) -> bool {
+    impl<T> rkt::Sentinel for MyOkayThing<T> {
+        fn abort(_: &Rocket<rkt::Ignite>) -> bool {
             false
         }
     }
@@ -121,7 +120,7 @@ fn test_context_macro() {
 
     {
         #[derive(Deserialize, PartialEq, Debug)]
-        #[serde(crate = "rocket::serde")]
+        #[serde(crate = "rkt::serde")]
         struct Empty {}
 
         assert_same_object!(context! {}, Empty {});
@@ -129,7 +128,7 @@ fn test_context_macro() {
 
     {
         #[derive(Deserialize, PartialEq, Debug)]
-        #[serde(crate = "rocket::serde")]
+        #[serde(crate = "rkt::serde")]
         struct Object {
             a: u32,
             b: String,
@@ -149,20 +148,20 @@ fn test_context_macro() {
 
     {
         #[derive(Deserialize, PartialEq, Debug)]
-        #[serde(crate = "rocket::serde")]
+        #[serde(crate = "rkt::serde")]
         struct Outer {
             s: String,
             inner: Inner,
         }
 
         #[derive(Deserialize, PartialEq, Debug)]
-        #[serde(crate = "rocket::serde")]
+        #[serde(crate = "rkt::serde")]
         struct Inner {
             center: Center,
         }
 
         #[derive(Deserialize, PartialEq, Debug)]
-        #[serde(crate = "rocket::serde")]
+        #[serde(crate = "rkt::serde")]
         struct Center {
             value_a: bool,
             value_b: u8,
@@ -196,7 +195,7 @@ fn test_context_macro() {
 
     {
         #[derive(Deserialize, PartialEq, Debug)]
-        #[serde(crate = "rocket::serde")]
+        #[serde(crate = "rkt::serde")]
         struct Object {
             a: String,
         }
@@ -213,8 +212,8 @@ fn test_context_macro() {
 mod tera_tests {
     use super::*;
     use pretty_assertions::assert_eq;
-    use rocket::http::{ContentType, Status};
-    use rocket::request::FromRequest;
+    use rkt::http::{ContentType, Status};
+    use rkt::request::FromRequest;
     use std::collections::HashMap;
 
     const UNESCAPED_EXPECTED: &str = "\nh_start\ntitle: _test_\nh_end\n\n\n<script />\n\nfoot";
@@ -223,7 +222,7 @@ mod tera_tests {
 
     #[async_test]
     async fn test_tera_templates() {
-        use rocket::local::asynchronous::Client;
+        use rkt::local::asynchronous::Client;
 
         let client = Client::debug(rocket()).await.unwrap();
         let req = client.get("/");
@@ -254,7 +253,7 @@ mod tera_tests {
 
     #[async_test]
     async fn test_globby_paths() {
-        use rocket::local::asynchronous::Client;
+        use rkt::local::asynchronous::Client;
 
         let client = Client::debug(rocket()).await.unwrap();
         let req = client.get("/");
@@ -279,7 +278,7 @@ mod tera_tests {
 
     #[test]
     fn test_template_metadata_with_tera() {
-        use rocket::local::blocking::Client;
+        use rkt::local::blocking::Client;
 
         let client = Client::debug(rocket()).unwrap();
 
@@ -301,13 +300,13 @@ mod tera_tests {
 mod handlebars_tests {
     use super::*;
     use pretty_assertions::assert_eq;
-    use rocket::http::{ContentType, Status};
-    use rocket::request::FromRequest;
+    use rkt::http::{ContentType, Status};
+    use rkt::request::FromRequest;
     use std::collections::HashMap;
 
     #[async_test]
     async fn test_handlebars_templates() {
-        use rocket::local::asynchronous::Client;
+        use rkt::local::asynchronous::Client;
 
         const EXPECTED: &'static str = "Hello _test_!\n<main> &lt;script /&gt; hi </main>\nDone.\n";
 
@@ -343,7 +342,7 @@ mod handlebars_tests {
 
     #[test]
     fn test_template_metadata_with_handlebars() {
-        use rocket::local::blocking::Client;
+        use rkt::local::blocking::Client;
 
         let client = Client::debug(rocket()).unwrap();
 
@@ -364,7 +363,7 @@ mod handlebars_tests {
         use std::io::Write;
         use std::time::Duration;
 
-        use rocket::local::blocking::Client;
+        use rkt::local::blocking::Client;
 
         const RELOAD_TEMPLATE: &str = "hbs/reload";
         const INITIAL_TEXT: &str = "initial";
@@ -418,8 +417,8 @@ mod handlebars_tests {
 mod j2_tests {
     use super::*;
     use pretty_assertions::assert_eq;
-    use rocket::http::{ContentType, Status};
-    use rocket::request::FromRequest;
+    use rkt::http::{ContentType, Status};
+    use rkt::request::FromRequest;
     use std::collections::HashMap;
 
     const UNESCAPED_EXPECTED: &'static str =
@@ -429,7 +428,7 @@ mod j2_tests {
 
     #[async_test]
     async fn test_j2_templates() {
-        use rocket::local::asynchronous::Client;
+        use rkt::local::asynchronous::Client;
 
         let client = Client::debug(rocket()).await.unwrap();
         let req = client.get("/");
@@ -460,7 +459,7 @@ mod j2_tests {
 
     #[async_test]
     async fn test_globby_paths() {
-        use rocket::local::asynchronous::Client;
+        use rkt::local::asynchronous::Client;
 
         let client = Client::debug(rocket()).await.unwrap();
         let req = client.get("/");
@@ -473,7 +472,7 @@ mod j2_tests {
         const EXPECTED: &'static str =
             "\nh_start\ntitle: 123\nh_end\n\n\n1208925819614629174706176\n\nfoot";
 
-        use rocket::local::blocking::Client;
+        use rkt::local::blocking::Client;
 
         let client = Client::debug(rocket()).unwrap();
         let mut map = HashMap::new();
@@ -486,7 +485,7 @@ mod j2_tests {
 
     #[test]
     fn test_template_metadata_with_j2() {
-        use rocket::local::blocking::Client;
+        use rkt::local::blocking::Client;
 
         let client = Client::debug(rocket()).unwrap();
 

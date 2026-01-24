@@ -59,10 +59,10 @@ use crate::uri::{Absolute, Origin, Reference};
 /// implementation is purely demonstrative.
 ///
 /// ```rust
-/// # extern crate rocket;
+/// # extern crate rkt;
 /// use std::fmt;
 ///
-/// use rocket::http::uri::fmt::{Formatter, UriDisplay, Query};
+/// use rkt::http::uri::fmt::{Formatter, UriDisplay, Query};
 ///
 /// struct Outer {
 ///     value: Inner,
@@ -110,10 +110,10 @@ use crate::uri::{Absolute, Origin, Reference};
 /// that the written string is URI-safe.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// use std::fmt::{self, Write};
 ///
-/// use rocket::http::uri::fmt::{UriDisplay, Formatter, Part, Path, Query};
+/// use rkt::http::uri::fmt::{UriDisplay, Formatter, Part, Path, Query};
 ///
 /// pub struct Complex(u8, u8);
 ///
@@ -180,10 +180,10 @@ impl<'i, P: Part> Formatter<'i, P> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
+    /// # extern crate rkt;
     /// use std::fmt;
     ///
-    /// use rocket::http::uri::fmt::{Formatter, UriDisplay, Part, Path};
+    /// use rkt::http::uri::fmt::{Formatter, UriDisplay, Part, Path};
     ///
     /// struct Foo;
     ///
@@ -236,10 +236,10 @@ impl<'i, P: Part> Formatter<'i, P> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
+    /// # extern crate rkt;
     /// use std::fmt;
     ///
-    /// use rocket::http::uri::fmt::{Formatter, UriDisplay, Part, Path, Query};
+    /// use rkt::http::uri::fmt::{Formatter, UriDisplay, Part, Path, Query};
     ///
     /// struct Foo(usize);
     ///
@@ -272,10 +272,10 @@ impl<'i, P: Part> Formatter<'i, P> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// use std::fmt;
     ///
-    /// use rocket::http::uri::fmt::{Formatter, UriDisplay, Query, Path};
+    /// use rkt::http::uri::fmt::{Formatter, UriDisplay, Query, Path};
     ///
     /// struct Foo;
     ///
@@ -369,10 +369,10 @@ impl Formatter<'_, Query> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
+    /// # extern crate rkt;
     /// use std::fmt;
     ///
-    /// use rocket::http::uri::fmt::{Formatter, UriDisplay, Query};
+    /// use rkt::http::uri::fmt::{Formatter, UriDisplay, Query};
     ///
     /// struct Foo {
     ///     name: usize

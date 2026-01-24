@@ -1,11 +1,11 @@
 [package]
-name = "rocket_sync_db_pools-community"
+name = "rkt_sync_db_pools"
 version = "0.3.2"
 authors = ["Sergio Benitez <sb@sergio.bz>"]
-description = "Rocket async database pooling support for sync database drivers."
-repository = "https://github.com/rwf2/Rocket/tree/master/contrib/sync_db_pools"
+description = "rkt async database pooling support for sync database drivers."
+#repository = "https://github.com/rwf2/Rocket/tree/master/contrib/sync_db_pools"
 readme = "../README.md"
-keywords = ["rocket", "framework", "database", "pools"]
+keywords = ["rkt", "rocket", "framework", "database", "pools"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.82"
@@ -36,13 +36,11 @@ r2d2_sqlite = { version = "0.25.0", optional = true }
 
 memcache = { version = "0.17.2", optional = true }
 
-[dependencies.rocket_sync_db_pools_codegen]
-package = "rocket_sync_db_pools_codegen-community"
+[dependencies.rkt_sync_db_pools_codegen]
 version = "0.3.2"
 path = "../codegen"
 
-[dependencies.rocket]
-package = "rocket-community"
+[dependencies.rkt]
 version = "0.6.0"
 path = "../../../core/lib"
 default-features = false
@@ -50,8 +48,7 @@ default-features = false
 [build-dependencies]
 version_check = "0.9.1"
 
-[dev-dependencies.rocket]
-package = "rocket-community"
+[dev-dependencies.rkt]
 version = "0.6.0"
 path = "../../../core/lib"
 default-features = false

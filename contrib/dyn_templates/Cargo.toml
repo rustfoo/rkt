@@ -1,13 +1,13 @@
 [package]
-name = "rocket_dyn_templates-community"
+name = "rkt_dyn_templates"
 version = "0.3.2"
 authors = ["Sergio Benitez <sb@sergio.bz>"]
-description = "Dynamic templating engine integration for Rocket. (Community Fork)"
-documentation = "https://api.rocket.rs/master/rocket_dyn_templates/"
-homepage = "https://rocket.rs"
-repository = "https://github.com/rwf2/Rocket/tree/master/contrib/dyn_templates"
+description = "Dynamic templating engine integration for rkt."
+#documentation = "https://docs.rs/rustfoo/"
+homepage = "https://rkt.rs"
+repository = "https://github.com/rustfoo/rkt/tree/main/contrib/dyn_templates"
 readme = "README.md"
-keywords = ["rocket", "framework", "templates", "templating", "engine"]
+keywords = ["rkt", "rocket", "framework", "templates", "templating", "engine"]
 license = "MIT OR Apache-2.0"
 edition = "2021"
 rust-version = "1.82"
@@ -34,8 +34,7 @@ version = "2.0.1"
 optional = true
 features = ["loader", "speedups", "json", "urlencode"]
 
-[dependencies.rocket]
-package = "rocket-community"
+[dependencies.rkt]
 version = "0.6.0"
 path = "../../core/lib"
 default-features = false

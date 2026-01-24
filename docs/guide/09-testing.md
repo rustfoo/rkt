@@ -19,15 +19,15 @@ instance. Usage is straightforward:
   1. Construct a `Rocket` instance that represents the application.
 
      ```rust,no_run
-     let rocket = rocket::build();
+     let rocket = rkt::build();
      # let _ = rocket;
      ```
 
   2. Construct a `Client` using the `Rocket` instance.
 
      ```rust,no_run
-     # use rocket::local::blocking::Client;
-     # let rocket = rocket::build();
+     # use rkt::local::blocking::Client;
+     # let rocket = rkt::build();
      let client = Client::tracked(rocket).unwrap();
      # let _ = client;
      ```
@@ -35,8 +35,8 @@ instance. Usage is straightforward:
   3. Construct requests using the `Client` instance.
 
      ```rust,no_run
-     # use rocket::local::blocking::Client;
-     # let rocket = rocket::build();
+     # use rkt::local::blocking::Client;
+     # let rocket = rkt::build();
      # let client = Client::tracked(rocket).unwrap();
      let req = client.get("/");
      # let _ = req;
@@ -45,8 +45,8 @@ instance. Usage is straightforward:
   4. Dispatch the request to retrieve the response.
 
      ```rust,no_run
-     # use rocket::local::blocking::Client;
-     # let rocket = rocket::build();
+     # use rkt::local::blocking::Client;
+     # let rocket = rkt::build();
      # let client = Client::tracked(rocket).unwrap();
      # let req = client.get("/");
      let response = req.dispatch();
@@ -89,11 +89,11 @@ These methods are typically used in combination with the `assert_eq!` or
 `assert!` macros as follows:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 # use std::io::Cursor;
-# use rocket::Response;
-# use rocket::http::Header;
+# use rkt::Response;
+# use rkt::http::Header;
 #
 # #[derive(Responder)]
 # #[response(content_type = "text")]
@@ -110,10 +110,10 @@ These methods are typically used in combination with the `assert_eq!` or
 #     }
 # }
 
-# use rocket::local::blocking::Client;
-use rocket::http::{ContentType, Status};
+# use rkt::local::blocking::Client;
+use rkt::http::{ContentType, Status};
 
-# let rocket = rocket::build().mount("/", routes![hello]);
+# let rocket = rkt::build().mount("/", routes![hello]);
 # let client = Client::debug(rocket).expect("valid rocket instance");
 let mut response = client.get(uri!(hello)).dispatch();
 
@@ -129,7 +129,7 @@ To solidify an intuition for how Rocket applications are tested, we walk through
 how to test the "Hello, world!" application below:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 #[get("/")]
 fn hello() -> &'static str {
@@ -138,7 +138,7 @@ fn hello() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![hello])
+    rkt::build().mount("/", routes![hello])
 }
 ```
 
@@ -154,8 +154,8 @@ First, we'll create a `test` module with the proper imports:
 #[cfg(test)]
 mod test {
     use super::rocket;
-    use rocket::local::blocking::Client;
-    use rocket::http::Status;
+    use rkt::local::blocking::Client;
+    use rkt::http::Status;
 
     #[test]
     fn hello_world() {
@@ -178,11 +178,11 @@ To test our "Hello, world!" application, we create a `Client` for our
 testing: we _want_ our tests to panic when something goes wrong.
 
 ```rust
-# #[rocket::launch]
+# #[rkt::launch]
 # fn rocket() -> _ {
-#     rocket::build().reconfigure(rocket::Config::debug_default())
+#     rkt::build().reconfigure(rkt::Config::debug_default())
 # }
-# use rocket::local::blocking::Client;
+# use rkt::local::blocking::Client;
 
 let client = Client::tracked(rocket()).expect("valid rocket instance");
 ```
@@ -191,16 +191,16 @@ Then, we create a new `GET /` request and dispatch it, getting back our
 application's response:
 
 ```rust
-# use rocket::uri;
-# #[rocket::launch]
+# use rkt::uri;
+# #[rkt::launch]
 # fn rocket() -> _ {
-#     rocket::build().reconfigure(rocket::Config::debug_default())
+#     rkt::build().reconfigure(rkt::Config::debug_default())
 # }
 
-# #[rocket::get("/")]
+# #[rkt::get("/")]
 # fn hello() -> &'static str { "Hello, world!" }
 
-# use rocket::local::blocking::Client;
+# use rkt::local::blocking::Client;
 # let client = Client::tracked(rocket()).expect("valid rocket instance");
 let mut response = client.get(uri!(hello)).dispatch();
 ```
@@ -214,15 +214,15 @@ Here, we want to ensure two things:
 We do this by checking the `Response` object directly:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 
 # #[get("/")]
 # fn hello() -> &'static str { "Hello, world!" }
 
-# use rocket::local::blocking::Client;
-use rocket::http::{ContentType, Status};
+# use rkt::local::blocking::Client;
+use rkt::http::{ContentType, Status};
 #
-# let rocket = rocket::build().mount("/", routes![hello]);
+# let rocket = rkt::build().mount("/", routes![hello]);
 # let client = Client::debug(rocket).expect("valid rocket instance");
 # let mut response = client.get(uri!(hello)).dispatch();
 
@@ -233,8 +233,8 @@ assert_eq!(response.into_string(), Some("Hello, world!".into()));
 That's it! Altogether, this looks like:
 
 ```rust
-# #[macro_use] extern crate rocket;
-# use rocket::{Rocket, Build};
+# #[macro_use] extern crate rkt;
+# use rkt::{Rocket, Build};
 
 #[get("/")]
 fn hello() -> &'static str {
@@ -246,7 +246,7 @@ fn hello() -> &'static str {
 #[launch]
 # */
 fn rocket() -> Rocket<Build> {
-    rocket::build().mount("/", routes![hello])
+    rkt::build().mount("/", routes![hello])
 }
 
 # /*
@@ -254,8 +254,8 @@ fn rocket() -> Rocket<Build> {
 # */
 mod test {
     use super::rocket;
-    use rocket::local::blocking::Client;
-    use rocket::http::Status;
+    use rkt::local::blocking::Client;
+    use rkt::http::Status;
 
     # /*
     #[test]
@@ -286,11 +286,11 @@ execution of two or more requests is required for the server to make progress,
 you will need the more flexible `asynchronous` API; the `blocking` API is not
 capable of dispatching multiple requests simultaneously. While synthetic, the
 [`async_required` `testing` example] uses an `async` barrier to demonstrate such
-a case. For more information, see the [`rocket::local`] and
-[`rocket::local::asynchronous`] documentation.
+a case. For more information, see the [`rkt::local`] and
+[`rkt::local::asynchronous`] documentation.
 
-[`rocket::local`]: @api/master/rocket/local/index.html
-[`rocket::local::asynchronous`]: @api/master/rocket/local/asynchronous/index.html
+[`rkt::local`]: @api/master/rocket/local/index.html
+[`rkt::local::asynchronous`]: @api/master/rocket/local/asynchronous/index.html
 [`async_required` `testing` example]: @git/master/examples/testing/src/async_required.rs
 
 ## Codegen Debug
@@ -315,20 +315,20 @@ note: emitting Rocket code generation debug output
    |
    = note:
     impl world {
-        fn into_info(self) -> rocket::StaticRouteInfo {
+        fn into_info(self) -> rkt::StaticRouteInfo {
             fn monomorphized_function<'_b>(
-                __req: &'_b rocket::request::Request<'_>,
-                __data: rocket::data::Data,
-            ) -> ::rocket::route::BoxFuture<'_b> {
+                __req: &'_b rkt::request::Request<'_>,
+                __data: rkt::data::Data,
+            ) -> ::rkt::route::BoxFuture<'_b> {
                 ::std::boxed::Box::pin(async move {
                     let ___responder = world();
-                    ::rocket::handler::Outcome::from(__req, ___responder)
+                    ::rkt::handler::Outcome::from(__req, ___responder)
                 })
             }
 
-            ::rocket::StaticRouteInfo {
+            ::rkt::StaticRouteInfo {
                 name: "world",
-                method: ::rocket::http::Method::Get,
+                method: ::rkt::http::Method::Get,
                 path: "/world",
                 handler: monomorphized_function,
                 format: ::std::option::Option::None,

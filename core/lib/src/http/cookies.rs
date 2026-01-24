@@ -22,8 +22,8 @@ pub use cookie::{Cookie, Iter, SameSite};
 /// always returns the latest changes.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::http::{CookieJar, Cookie};
+/// #[macro_use] extern crate rkt;
+/// use rkt::http::{CookieJar, Cookie};
 ///
 /// #[get("/message")]
 /// fn message(jar: &CookieJar<'_>) {
@@ -44,7 +44,7 @@ pub use cookie::{Cookie, Iter, SameSite};
 ///     # assert!(jar.get_pending("message").is_none());
 /// }
 /// # fn main() {
-/// #     use rocket::local::blocking::Client;
+/// #     use rkt::local::blocking::Client;
 /// #     let client = Client::debug_with(routes![message]).unwrap();
 /// #     let response = client.get("/message")
 /// #         .cookie(("message", "hi"))
@@ -78,8 +78,8 @@ pub use cookie::{Cookie, Iter, SameSite};
 /// handler to retrieve the value of a "message" cookie.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::http::CookieJar;
+/// #[macro_use] extern crate rkt;
+/// use rkt::http::CookieJar;
 ///
 /// #[get("/message")]
 /// fn message<'a>(jar: &'a CookieJar<'_>) -> Option<&'a str> {
@@ -97,16 +97,15 @@ pub use cookie::{Cookie, Iter, SameSite};
 /// [private cookie]: #method.add_private
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 /// # #[cfg(feature = "secrets")] {
-/// use rocket::http::Status;
-/// use rocket::request::{self, Request, FromRequest};
-/// use rocket::outcome::IntoOutcome;
+/// use rkt::http::Status;
+/// use rkt::request::{self, Request, FromRequest};
+/// use rkt::outcome::IntoOutcome;
 ///
 /// // In practice, we'd probably fetch the user from the database.
 /// struct User(usize);
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromRequest<'r> for User {
 ///     type Error = std::convert::Infallible;
 ///
@@ -192,8 +191,8 @@ impl<'a> CookieJar<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::http::CookieJar;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::CookieJar;
     ///
     /// #[get("/")]
     /// fn handler(jar: &CookieJar<'_>) {
@@ -216,8 +215,8 @@ impl<'a> CookieJar<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::http::CookieJar;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::CookieJar;
     ///
     /// #[get("/")]
     /// fn handler(jar: &CookieJar<'_>) {
@@ -244,8 +243,8 @@ impl<'a> CookieJar<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::http::CookieJar;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::CookieJar;
     ///
     /// #[get("/")]
     /// fn handler(jar: &CookieJar<'_>) {
@@ -291,8 +290,8 @@ impl<'a> CookieJar<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::http::{Cookie, SameSite, CookieJar};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::{Cookie, SameSite, CookieJar};
     ///
     /// #[get("/")]
     /// fn handler(jar: &CookieJar<'_>) {
@@ -336,8 +335,8 @@ impl<'a> CookieJar<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::http::CookieJar;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::CookieJar;
     ///
     /// #[get("/")]
     /// fn handler(jar: &CookieJar<'_>) {
@@ -374,8 +373,8 @@ impl<'a> CookieJar<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::http::{Cookie, CookieJar};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::{Cookie, CookieJar};
     ///
     /// #[get("/")]
     /// fn handler(jar: &CookieJar<'_>) {
@@ -414,8 +413,8 @@ impl<'a> CookieJar<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::http::{CookieJar, Cookie};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::{CookieJar, Cookie};
     ///
     /// #[get("/")]
     /// fn handler(jar: &CookieJar<'_>) {
@@ -447,8 +446,8 @@ impl<'a> CookieJar<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::http::CookieJar;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::CookieJar;
     ///
     /// #[get("/")]
     /// fn handler(jar: &CookieJar<'_>) {

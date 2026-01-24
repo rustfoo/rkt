@@ -132,9 +132,8 @@ pub struct Config {
     /// non-breaking release. As such, constructing this structure should
     /// _always_ be done using a public constructor or update syntax:
     ///
-    /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Config;
+    /// ```rustS
+    /// use rkt::Config;
     ///
     /// let config = Config {
     ///     keep_alive: 10,
@@ -154,8 +153,7 @@ impl Default for Config {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Config;
+    /// use rkt::Config;
     ///
     /// let config = Config::default();
     /// ```
@@ -183,8 +181,7 @@ impl Config {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Config;
+    /// use rkt::Config;
     ///
     /// let config = Config::debug_default();
     /// ```
@@ -220,8 +217,7 @@ impl Config {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Config;
+    /// use rkt::Config;
     ///
     /// let config = Config::release_default();
     /// ```
@@ -234,7 +230,7 @@ impl Config {
         }
     }
 
-    /// Returns the default provider figment used by [`rocket::build()`].
+    /// Returns the default provider figment used by [`rkt::build()`].
     ///
     /// The default figment reads from the following sources, in ascending
     /// priority order:
@@ -247,13 +243,12 @@ impl Config {
     /// environment variable. If it is not set, it defaults to `debug` when
     /// compiled in debug mode and `release` when compiled in release mode.
     ///
-    /// [`rocket::build()`]: crate::build()
+    /// [`rkt::build()`]: crate::build()
     ///
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Config;
+    /// use rkt::Config;
     /// use serde::Deserialize;
     ///
     /// #[derive(Deserialize)]
@@ -278,9 +273,8 @@ impl Config {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Config;
-    /// use rocket::figment::providers::{Toml, Format, Env};
+    /// use rkt::Config;
+    /// use rkt::figment::providers::{Toml, Format, Env};
     ///
     /// // Use Rocket's default `Figment`, but allow values from `MyApp.toml`
     /// // and `MY_APP_` prefixed environment variables to supersede its values.
@@ -307,9 +301,8 @@ impl Config {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Config;
-    /// use rocket::figment::providers::{Toml, Format, Env};
+    /// use rkt::Config;
+    /// use rkt::figment::providers::{Toml, Format, Env};
     ///
     /// // Use Rocket's default `Figment`, but allow values from `MyApp.toml`
     /// // and `MY_APP_` prefixed environment variables to supersede its values.
@@ -427,9 +420,9 @@ impl Provider for Config {
     #[track_caller]
     fn metadata(&self) -> Metadata {
         if self == &Config::default() {
-            Metadata::named("rocket::Config::default()")
+            Metadata::named("rkt::Config::default()")
         } else {
-            Metadata::named("rocket::Config")
+            Metadata::named("rkt::Config")
         }
     }
 

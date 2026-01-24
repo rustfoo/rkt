@@ -1,7 +1,7 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::Header;
-use rocket::local::blocking::Client;
+use rkt::http::Header;
+use rkt::local::blocking::Client;
 
 #[test]
 fn test_local_request_clone_soundness() {

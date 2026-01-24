@@ -1,4 +1,4 @@
-use rocket::request::FromParam;
+use rkt::request::FromParam;
 
 #[allow(non_camel_case_types)]
 #[derive(Debug, FromParam, PartialEq)]

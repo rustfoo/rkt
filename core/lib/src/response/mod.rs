@@ -26,7 +26,7 @@ pub mod status;
 pub mod stream;
 
 #[doc(hidden)]
-pub use rocket_codegen::Responder;
+pub use rkt_codegen::Responder;
 
 pub use self::body::Body;
 pub use self::debug::Debug;

@@ -1,7 +1,7 @@
 use std::path::Path;
 
 use handlebars::Handlebars;
-use rocket::serde::Serialize;
+use rkt::serde::Serialize;
 
 use crate::engine::Engine;
 

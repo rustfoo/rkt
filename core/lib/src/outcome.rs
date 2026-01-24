@@ -25,8 +25,7 @@
 //! the user. For example, consider the following handler:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::post;
+//! # use rkt::post;
 //! # type S = String;
 //! #[post("/", data = "<my_val>")]
 //! fn hello(my_val: S) { /* ... */  }
@@ -49,8 +48,7 @@
 //! like:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::post;
+//! # use rkt::post;
 //! # type S = Option<String>;
 //! # type E = std::convert::Infallible;
 //! #[post("/", data = "<my_val>")]
@@ -73,8 +71,7 @@
 //! handler:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::post;
+//! # use rkt::post;
 //! # type S = String;
 //! #[post("/", data = "<my_val>")]
 //! fn hello(my_val: S) { /* ... */ }
@@ -120,9 +117,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.unwrap(), 10);
@@ -145,9 +141,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.expect("success value"), 10);
@@ -166,9 +161,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.is_success(), true);
@@ -189,9 +183,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.is_error(), false);
@@ -212,9 +205,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.is_forward(), false);
@@ -236,9 +228,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// returns `None`. `self` is consumed, and all other values are discarded.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.succeeded(), Some(10));
@@ -263,9 +254,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// returns `None`. `self` is consumed, and all other values are discarded.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.failed(), None);
@@ -290,9 +280,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// returns `None`. `self` is consumed, and all other values are discarded.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.forwarded(), None);
@@ -319,9 +308,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// other values are discarded.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.success_or(false), Ok(10));
@@ -349,9 +337,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// all other values are discarded.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.success_or_else(|| false), Ok(10));
@@ -373,9 +360,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// Converts from `Outcome<S, E, F>` to `Outcome<&S, &E, &F>`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.as_ref(), Success(&10));
@@ -395,9 +381,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// Converts from `Outcome<S, E, F>` to `Outcome<&mut S, &mut E, &mut F>`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let mut x: Outcome<i32, &str, usize> = Success(10);
     /// if let Success(val) = x.as_mut() {
@@ -420,9 +405,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// in `self` if `self` is an `Outcome::Success`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     ///
@@ -443,9 +427,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// in `self` if `self` is an `Outcome::Error`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Error("hi");
     ///
@@ -466,9 +449,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// in `self` if `self` is an `Outcome::Forward`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Forward(5);
     ///
@@ -492,9 +474,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, bool> = Success(10);
     ///
@@ -523,9 +504,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, bool> = Error("hi");
     ///
@@ -554,9 +534,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, Option<bool>> = Forward(Some(false));
     ///
@@ -582,9 +561,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// to `Result<T, E>` using `f`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.ok_map_forward(|x| Ok(x as i32 + 1)), Ok(10));
@@ -612,9 +590,8 @@ impl<S, E, F> Outcome<S, E, F> {
     /// to `Result<T, F>` using `f`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::outcome::Outcome;
-    /// # use rocket::outcome::Outcome::*;
+    /// # use rkt::outcome::Outcome;
+    /// # use rkt::outcome::Outcome::*;
     /// #
     /// let x: Outcome<i32, &str, usize> = Success(10);
     /// assert_eq!(x.ok_map_error(|s| Ok(123)), Ok(10));
@@ -657,8 +634,7 @@ crate::export! {
     /// The macro has the following "signature":
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::outcome::Outcome;
+    /// use rkt::outcome::Outcome;
     ///
     /// // Returns the inner `S` if `outcome` is `Outcome::Success`. Otherwise
     /// // returns from the caller with `Outcome<impl From<E>, impl From<F>>`.
@@ -678,12 +654,11 @@ crate::export! {
     /// ## Example
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
     /// use std::sync::atomic::{AtomicUsize, Ordering};
     ///
-    /// use rocket::State;
-    /// use rocket::request::{self, Request, FromRequest};
-    /// use rocket::outcome::{try_outcome, Outcome::*};
+    /// use rkt::State;
+    /// use rkt::request::{self, Request, FromRequest};
+    /// use rkt::outcome::{try_outcome, Outcome::*};
     ///
     /// #[derive(Default)]
     /// struct Atomics {
@@ -694,7 +669,7 @@ crate::export! {
     /// struct Guard1;
     /// struct Guard2;
     ///
-    /// #[rocket::async_trait]
+    /// #[rkt::async_trait]
     /// impl<'r> FromRequest<'r> for Guard1 {
     ///     type Error = ();
     ///
@@ -708,7 +683,7 @@ crate::export! {
     ///     }
     /// }
     ///
-    /// #[rocket::async_trait]
+    /// #[rkt::async_trait]
     /// impl<'r> FromRequest<'r> for Guard2 {
     ///     type Error = ();
     ///

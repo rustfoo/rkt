@@ -6,7 +6,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
-rocket = { package = "rocket-community", path = "../../core/lib" }
+rkt = { path = "../../core/lib" }
 diesel = { version = "2.0.0", features = ["sqlite", "r2d2"] }
 diesel_migrations = "2.0.0"
 
@@ -14,12 +14,10 @@ diesel_migrations = "2.0.0"
 parking_lot = "0.12"
 rand = "0.9"
 
-[dependencies.rocket_sync_db_pools]
-package = "rocket_sync_db_pools-community"
+[dependencies.rkt_sync_db_pools]
 path = "../../contrib/sync_db_pools/lib/"
 features = ["diesel_sqlite_pool"]
 
-[dependencies.rocket_dyn_templates]
-package = "rocket_dyn_templates-community"
+[dependencies.rkt_dyn_templates]
 path = "../../contrib/dyn_templates"
 features = ["tera"]

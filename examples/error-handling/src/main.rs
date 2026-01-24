@@ -1,10 +1,10 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[cfg(test)] mod tests;
 
-use rocket::{Rocket, Request, Build};
-use rocket::response::{content, status};
-use rocket::http::Status;
+use rkt::{Rocket, Request, Build};
+use rkt::response::{content, status};
+use rkt::http::Status;
 
 #[get("/hello/<name>/<age>")]
 fn hello(name: &str, age: i8) -> String {
@@ -45,10 +45,10 @@ fn default_catcher(status: Status, req: &Request<'_>) -> status::Custom<String> 
 
 #[allow(dead_code)]
 #[get("/unmanaged")]
-fn unmanaged(_u8: &rocket::State<u8>, _string: &rocket::State<String>) { }
+fn unmanaged(_u8: &rkt::State<u8>, _string: &rkt::State<String>) { }
 
 fn rocket() -> Rocket<Build> {
-    rocket::build()
+    rkt::build()
         // .mount("/", routes![hello, hello]) // uncomment this to get an error
         // .mount("/", routes![unmanaged]) // uncomment this to get a sentinel error
         .mount("/", routes![hello, forced_error])
@@ -57,7 +57,7 @@ fn rocket() -> Rocket<Build> {
         .register("/hello/Sergio", catchers![sergio_error])
 }
 
-#[rocket::main]
+#[rkt::main]
 async fn main() {
     if let Err(e) = rocket().launch().await {
         println!("Whoops! Rocket didn't launch!");

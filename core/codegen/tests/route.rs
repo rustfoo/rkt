@@ -4,15 +4,15 @@
 #![deny(non_snake_case)]
 
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
 use std::path::PathBuf;
 
-use rocket::data::{self, Data, FromData};
-use rocket::http::ext::Normalize;
-use rocket::http::{uri::fmt::Path, ContentType, RawStr, Status};
-use rocket::local::blocking::Client;
-use rocket::request::Request;
+use rkt::data::{self, Data, FromData};
+use rkt::http::ext::Normalize;
+use rkt::http::{uri::fmt::Path, ContentType, RawStr, Status};
+use rkt::local::blocking::Client;
+use rkt::request::Request;
 
 // Use all of the code generation available at once.
 
@@ -97,7 +97,7 @@ fn test_unused_params(_unused_param: String, _unused_query: String, _unused_data
 
 #[test]
 fn test_full_route() {
-    let rocket = rocket::build()
+    let rocket = rkt::build()
         .mount("/1", routes![post1])
         .mount("/2", routes![post2]);
 
@@ -182,12 +182,12 @@ mod scopes {
 
     use other::world;
 
-    fn _rocket() -> rocket::Rocket<rocket::Build> {
-        rocket::build().mount("/", rocket::routes![hello, world, other::world])
+    fn _rocket() -> rkt::Rocket<rkt::Build> {
+        rkt::build().mount("/", rkt::routes![hello, world, other::world])
     }
 }
 
-use rocket::form::Contextual;
+use rkt::form::Contextual;
 
 #[derive(Default, Debug, PartialEq, FromForm)]
 struct Filtered<'r> {
@@ -208,7 +208,7 @@ fn filtered_raw_query(bird: usize, color: &str, rest: Contextual<'_, Filtered<'_
 
 #[test]
 fn test_filtered_raw_query() {
-    let rocket = rocket::build().mount("/", routes![filtered_raw_query]);
+    let rocket = rkt::build().mount("/", routes![filtered_raw_query]);
     let client = Client::debug(rocket).unwrap();
 
     #[track_caller]
@@ -304,7 +304,7 @@ fn test_query_collection() {
         (response.status(), response.into_string().unwrap())
     }
 
-    fn run_tests(rocket: rocket::Rocket<rocket::Build>) {
+    fn run_tests(rocket: rkt::Rocket<rkt::Build>) {
         let client = Client::debug(rocket).unwrap();
 
         let colors = &["blue", "green"];
@@ -339,15 +339,15 @@ fn test_query_collection() {
         );
     }
 
-    let rocket = rocket::build().mount("/", routes![query_collection]);
+    let rocket = rkt::build().mount("/", routes![query_collection]);
     run_tests(rocket);
 
-    let rocket = rocket::build().mount("/", routes![query_collection_2]);
+    let rocket = rkt::build().mount("/", routes![query_collection_2]);
     run_tests(rocket);
 }
 
-use rocket::http::uri::Segments;
-use rocket::request::FromSegments;
+use rkt::http::uri::Segments;
+use rkt::request::FromSegments;
 
 struct PathString(String);
 
@@ -371,7 +371,7 @@ fn segments_empty(path: PathString) -> String {
 
 #[test]
 fn test_inclusive_segments() {
-    let rocket = rocket::build()
+    let rocket = rkt::build()
         .mount("/", routes![segments])
         .mount("/", routes![segments_empty]);
 

@@ -4,7 +4,7 @@ use crate::prelude::*;
 fn infinite() -> TextStream![&'static str] {
     TextStream! {
         loop {
-            yield rocket::futures::future::pending::<&str>().await;
+            yield rkt::futures::future::pending::<&str>().await;
         }
     }
 }

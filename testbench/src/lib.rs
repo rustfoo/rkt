@@ -6,7 +6,7 @@ pub use client::*;
 pub use server::*;
 
 use procspawn::SpawnError;
-use rocket::http::uri;
+use rkt::http::uri;
 use std::io;
 use thiserror::Error;
 

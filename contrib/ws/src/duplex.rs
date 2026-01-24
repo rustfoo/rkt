@@ -1,9 +1,9 @@
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use rocket::data::IoStream;
-use rocket::futures::stream::{FusedStream, Stream};
-use rocket::futures::{Sink, SinkExt, StreamExt};
+use rkt::data::IoStream;
+use rkt::futures::stream::{FusedStream, Stream};
+use rkt::futures::{Sink, SinkExt, StreamExt};
 
 use crate::frame::{CloseFrame, Message};
 use crate::result::{Error, Result};
@@ -15,10 +15,9 @@ use crate::result::{Error, Result};
 /// imported to provide additional functionality for streams and sinks:
 ///
 /// ```rust
-/// # extern crate rocket_ws_community as rocket_ws;
-/// # use rocket::get;
-/// # use rocket_ws as ws;
-/// use rocket::futures::{SinkExt, StreamExt};
+/// # use rkt::get;
+/// # use rkt_ws as ws;
+/// use rkt::futures::{SinkExt, StreamExt};
 ///
 /// #[get("/echo/manual")]
 /// fn echo_manual<'r>(ws: ws::WebSocket) -> ws::Channel<'r> {
@@ -32,8 +31,8 @@ use crate::result::{Error, Result};
 /// }
 /// ```
 ///
-/// [`StreamExt`]: rocket::futures::StreamExt
-/// [`SinkExt`]: rocket::futures::SinkExt
+/// [`StreamExt`]: rkt::futures::StreamExt
+/// [`SinkExt`]: rkt::futures::SinkExt
 pub struct DuplexStream(tokio_tungstenite::WebSocketStream<IoStream>);
 
 impl DuplexStream {

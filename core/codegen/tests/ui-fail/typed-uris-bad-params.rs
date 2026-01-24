@@ -1,8 +1,8 @@
 #![allow(unused_variables)]
 
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
-use rocket::http::CookieJar;
+use rkt::http::CookieJar;
 
 #[post("/<id>")]
 fn has_one(id: i32) {  }

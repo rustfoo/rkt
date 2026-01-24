@@ -36,8 +36,8 @@ impl Error<'_> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::uri::Origin;
+    /// # extern crate rkt;
+    /// use rkt::http::uri::Origin;
     ///
     /// let err = Origin::parse("/foo bar").unwrap_err();
     /// assert_eq!(err.index(), 4);

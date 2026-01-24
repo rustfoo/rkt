@@ -11,7 +11,6 @@ macro_rules! getter_method {
         /// # Example
         ///
         /// ```rust
-        /// # extern crate rocket_community as rocket;
         #[doc = $doc_prelude]
         ///
         /// # Client::_test(|_, _, response| {
@@ -43,7 +42,6 @@ macro_rules! pub_response_impl {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     #[doc = $doc_prelude]
     ///
     /// # Client::_test(|_, _, response| {
@@ -68,7 +66,6 @@ macro_rules! pub_response_impl {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     #[doc = $doc_prelude]
     ///
     /// # Client::_test(|_, _, response| {
@@ -95,7 +92,6 @@ macro_rules! pub_response_impl {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     #[doc = $doc_prelude]
     ///
     /// # Client::_test(|_, _, response| {
@@ -121,9 +117,8 @@ macro_rules! pub_response_impl {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     #[doc = $doc_prelude]
-    /// use rocket::serde::Deserialize;
+    /// use rkt::serde::Deserialize;
     ///
     /// #[derive(Deserialize)]
     /// struct Task {
@@ -158,9 +153,8 @@ macro_rules! pub_response_impl {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     #[doc = $doc_prelude]
-    /// use rocket::serde::Deserialize;
+    /// use rkt::serde::Deserialize;
     ///
     /// #[derive(Deserialize)]
     /// struct Task {

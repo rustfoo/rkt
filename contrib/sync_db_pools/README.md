@@ -1,9 +1,9 @@
 # `sync_db_pools` [![ci.svg]][ci] [![crates.io]][crate] [![docs.svg]][crate docs]
 
-[crates.io]: https://img.shields.io/crates/v/rocket_sync_db_pools-community.svg
-[crate]: https://crates.io/crates/rocket_sync_db_pools-community
+[crates.io]: https://img.shields.io/crates/v/rkt_sync_db_pools-community.svg
+[crate]: https://crates.io/crates/rkt_sync_db_pools-community
 [docs.svg]: https://img.shields.io/badge/web-master-red.svg?style=flat&label=docs&colorB=d33847
-[crate docs]: https://docs.rs/rocket_sync_db_pools-community/latest/rocket_sync_db_pools_community/
+[crate docs]: https://docs.rs/rkt_sync_db_pools-community/latest/rkt_sync_db_pools_community/
 [ci.svg]: https://github.com/rokcet-rs-community/Rocket/workflows/CI/badge.svg
 [ci]: https://github.com/rocket-rs-community/Rocket/actions
 
@@ -18,8 +18,7 @@ by [`r2d2`] and exposes connections through request guards.
 First, enable the feature corresponding to your database type:
 
 ```toml
-[dependencies.rocket_sync_db_pools]
-package = "rocket_sync_db_pools-community"
+[dependencies.rkt_sync_db_pools]
 version = "0.3.2"
 features = ["diesel_sqlite_pool"]
 ```
@@ -39,7 +38,7 @@ In your application's source code:
 ```rust
 #[macro_use] extern crate rocket;
 
-use rocket_sync_db_pools::{database, diesel};
+use rkt_sync_db_pools::{database, diesel};
 
 #[database("sqlite_logs")]
 struct LogsDbConn(diesel::SqliteConnection);
@@ -51,7 +50,7 @@ async fn get_logs(conn: LogsDbConn, id: usize) -> Result<Logs> {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().attach(LogsDbConn::fairing())
+    rkt::build().attach(LogsDbConn::fairing())
 }
 ```
 

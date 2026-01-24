@@ -14,11 +14,10 @@ use futures::stream::Stream;
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::response::stream::One;
-/// use rocket::futures::stream::StreamExt;
+/// use rkt::response::stream::One;
+/// use rkt::futures::stream::StreamExt;
 ///
-/// # rocket::async_test(async {
+/// # rkt::async_test(async {
 /// let mut stream = One::from("hello!");
 /// let values: Vec<_> = stream.collect().await;
 /// assert_eq!(values, ["hello!"]);
@@ -31,8 +30,7 @@ pub struct One<T: Unpin>(Option<T>);
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::response::stream::One;
+/// use rkt::response::stream::One;
 ///
 /// let mut stream = One::from("hello!");
 /// ```

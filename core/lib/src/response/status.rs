@@ -15,9 +15,8 @@
 //! `Custom`.
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::get;
-//! use rocket::http::Status;
+//! # use rkt::get;
+//! use rkt::http::Status;
 //!
 //! #[get("/")]
 //! fn index() -> (Status, &'static str) {
@@ -45,8 +44,7 @@ use crate::response::{self, Responder, Response};
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::response::status;
+/// use rkt::response::status;
 ///
 /// let response = status::Created::new("http://myservice.com/resource.json")
 ///     .tagged_body("{ 'resource': 'Hello, world!' }");
@@ -60,9 +58,8 @@ impl<R> Created<R> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::{get, routes, local::blocking::Client};
-    /// use rocket::response::status;
+    /// # use rkt::{get, routes, local::blocking::Client};
+    /// use rkt::response::status;
     ///
     /// #[get("/")]
     /// fn create() -> status::Created<&'static str> {
@@ -88,9 +85,8 @@ impl<R> Created<R> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::{get, routes, local::blocking::Client};
-    /// use rocket::response::status;
+    /// # use rkt::{get, routes, local::blocking::Client};
+    /// use rkt::response::status;
     ///
     /// #[get("/")]
     /// fn create() -> status::Created<&'static str> {
@@ -121,9 +117,8 @@ impl<R> Created<R> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::{get, routes, local::blocking::Client};
-    /// use rocket::response::status;
+    /// # use rkt::{get, routes, local::blocking::Client};
+    /// use rkt::response::status;
     ///
     /// #[get("/")]
     /// fn create() -> status::Created<&'static str> {
@@ -196,9 +191,8 @@ impl<'r, 'o: 'r, R: Responder<'r, 'o>> Responder<'r, 'o> for Created<R> {
 /// A 204 No Content response:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::get;
-/// use rocket::response::status;
+/// # use rkt::get;
+/// use rkt::response::status;
 ///
 /// #[get("/")]
 /// fn foo() -> status::NoContent {
@@ -222,10 +216,9 @@ impl<'r> Responder<'r, 'static> for NoContent {
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::get;
-/// use rocket::response::status;
-/// use rocket::http::Status;
+/// # use rkt::get;
+/// use rkt::response::status;
+/// use rkt::http::Status;
 ///
 /// #[get("/")]
 /// fn handler() -> status::Custom<&'static str> {
@@ -272,9 +265,8 @@ macro_rules! status_response {
         /// response without a body:
         ///
         /// ```rust
-        /// # extern crate rocket_community as rocket;
-        /// # use rocket::get;
-        /// use rocket::response::status;
+        /// # use rkt::get;
+        /// use rkt::response::status;
         ///
         /// #[get("/")]
         #[doc = concat!("fn handler() -> status::", stringify!($T), "<()> {")]
@@ -287,9 +279,8 @@ macro_rules! status_response {
         /// response _with_ a body:
         ///
         /// ```rust
-        /// # extern crate rocket_community as rocket;
-        /// # use rocket::get;
-        /// use rocket::response::status;
+        /// # use rkt::get;
+        /// use rkt::response::status;
         ///
         /// #[get("/")]
         #[doc = concat!("fn handler() -> status::", stringify!($T), "<&'static str> {")]

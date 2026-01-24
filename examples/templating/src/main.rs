@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
 mod hbs;
 mod minijinja;
@@ -8,8 +8,8 @@ mod tera;
 #[cfg(test)]
 mod tests;
 
-use rocket::response::content::RawHtml;
-use rocket_dyn_templates::Template;
+use rkt::response::content::RawHtml;
+use rkt_dyn_templates::Template;
 
 #[get("/")]
 fn index() -> RawHtml<&'static str> {
@@ -22,7 +22,7 @@ fn index() -> RawHtml<&'static str> {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![index])
         .mount("/tera", routes![tera::index, tera::hello, tera::about])
         .mount("/hbs", routes![hbs::index, hbs::hello, hbs::about])

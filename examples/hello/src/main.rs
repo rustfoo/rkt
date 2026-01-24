@@ -1,4 +1,4 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[cfg(test)] mod tests;
 
@@ -74,7 +74,7 @@ fn hello(lang: Option<Lang>, opt: Options<'_>) -> String {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![hello])
         .mount("/hello", routes![world, mir])
         .mount("/wave", routes![wave])

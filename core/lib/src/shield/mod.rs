@@ -49,13 +49,13 @@
 //! configured instance of [`Shield`]:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket_community as rocket;
-//! use rocket::shield::Shield;
+//! #[macro_use] extern crate rkt;
+//! use rkt::shield::Shield;
 //!
 //! #[launch]
 //! fn rocket() -> _ {
 //!     // Remove all `Shield` headers.
-//!     rocket::build().attach(Shield::new())
+//!     rkt::build().attach(Shield::new())
 //! }
 //! ```
 //!
@@ -67,11 +67,11 @@
 //! `Shield`:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket_community as rocket;
+//! #[macro_use] extern crate rkt;
 //! use time::Duration;
 //!
-//! use rocket::http::uri::Uri;
-//! use rocket::shield::{Shield, Referrer, Prefetch, ExpectCt, NoSniff};
+//! use rkt::http::uri::Uri;
+//! use rkt::shield::{Shield, Referrer, Prefetch, ExpectCt, NoSniff};
 //!
 //! let report_uri = uri!("https://report.rocket.rs");
 //! let shield = Shield::default()

@@ -1,8 +1,8 @@
-use rocket::http::Accept;
-use rocket::http::{ContentType, Cookie, Status};
-use rocket::local::asynchronous::Client;
-use rocket::response::Responder;
-use rocket::serde::json::Json;
+use rkt::http::Accept;
+use rkt::http::{ContentType, Cookie, Status};
+use rkt::local::asynchronous::Client;
+use rkt::response::Responder;
+use rkt::serde::json::Json;
 
 #[derive(Responder)]
 pub enum Foo<'r> {
@@ -12,16 +12,16 @@ pub enum Foo<'r> {
     #[response(status = 404, content_type = "html")]
     Third {
         responder: &'r str,
-        ct: rocket::http::ContentType,
+        ct: rkt::http::ContentType,
     },
     #[response(status = 105)]
     Fourth {
         string: &'r str,
-        ct: rocket::http::ContentType,
+        ct: rkt::http::ContentType,
     },
 }
 
-#[rocket::async_test]
+#[rkt::async_test]
 async fn responder_foo() {
     let client = Client::debug_with(vec![]).await.expect("valid rocket");
     let local_req = client.get("/");
@@ -76,7 +76,7 @@ pub struct Bar<'r> {
     _yet_another: String,
 }
 
-#[rocket::async_test]
+#[rkt::async_test]
 async fn responder_bar() {
     let client = Client::debug_with(vec![]).await.expect("valid rocket");
     let local_req = client.get("/");
@@ -103,7 +103,7 @@ pub struct Baz {
     responder: &'static str,
 }
 
-#[rocket::async_test]
+#[rkt::async_test]
 async fn responder_baz() {
     let client = Client::debug_with(vec![]).await.expect("valid rocket");
     let local_req = client.get("/");
@@ -134,7 +134,7 @@ enum MyResult<'a, T, E, H1, H2> {
     Other(&'a str),
 }
 
-#[rocket::async_test]
+#[rkt::async_test]
 async fn generic_responder() {
     let client = Client::debug_with(vec![]).await.expect("valid rocket");
     let local_req = client.get("/");

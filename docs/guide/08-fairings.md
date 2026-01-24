@@ -53,12 +53,12 @@ example, the following snippet attached two fairings, `req_fairing` and
 `res_fairing`, to a new Rocket instance:
 
 ```rust
-# use rocket::launch;
+# use rkt::launch;
 #[launch]
 fn rocket() -> _ {
-    # let req_fairing = rocket::fairing::AdHoc::on_request("example", |_, _| Box::pin(async {}));
-    # let res_fairing = rocket::fairing::AdHoc::on_response("example", |_, _| Box::pin(async {}));
-    rocket::build()
+    # let req_fairing = rkt::fairing::AdHoc::on_request("example", |_, _| Box::pin(async {}));
+    # let res_fairing = rkt::fairing::AdHoc::on_response("example", |_, _| Box::pin(async {}));
+    rkt::build()
         .attach(req_fairing)
         .attach(res_fairing)
 }
@@ -165,16 +165,16 @@ counts.
 use std::io::Cursor;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use rocket::{Request, Data, Response};
-use rocket::fairing::{Fairing, Info, Kind};
-use rocket::http::{Method, ContentType, Status};
+use rkt::{Request, Data, Response};
+use rkt::fairing::{Fairing, Info, Kind};
+use rkt::http::{Method, ContentType, Status};
 
 struct Counter {
     get: AtomicUsize,
     post: AtomicUsize,
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl Fairing for Counter {
     // This is a request and response fairing named "GET/POST Counter".
     fn info(&self) -> Info {
@@ -230,10 +230,10 @@ message indicating that the application has launched. The second named "Put
 Rewriter", a request fairing, rewrites the method of all requests to be `PUT`.
 
 ```rust
-use rocket::fairing::AdHoc;
-use rocket::http::Method;
+use rkt::fairing::AdHoc;
+use rkt::http::Method;
 
-rocket::build()
+rkt::build()
     .attach(AdHoc::on_liftoff("Liftoff Printer", |_| Box::pin(async move {
         println!("...annnddd we have liftoff!");
     })))

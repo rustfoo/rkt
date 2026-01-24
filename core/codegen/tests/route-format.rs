@@ -1,8 +1,8 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
-use rocket::http::{Accept, ContentType, MediaType, Status};
-use rocket::local::blocking::Client;
+use rkt::http::{Accept, ContentType, MediaType, Status};
+use rkt::local::blocking::Client;
 
 // Test that known formats work as expected, including not colliding.
 
@@ -50,7 +50,7 @@ fn other() -> &'static str {
 
 #[test]
 fn test_formats() {
-    let rocket = rocket::build().mount(
+    let rocket = rkt::build().mount(
         "/",
         routes![
             json,
@@ -119,7 +119,7 @@ fn put_bar_baz() -> &'static str {
 
 #[test]
 fn test_custom_formats() {
-    let rocket = rocket::build().mount("/", routes![get_foo, post_foo, get_bar_baz, put_bar_baz]);
+    let rocket = rkt::build().mount("/", routes![get_foo, post_foo, get_bar_baz, put_bar_baz]);
 
     let client = Client::debug(rocket).unwrap();
 

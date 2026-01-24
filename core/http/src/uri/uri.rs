@@ -61,8 +61,8 @@ impl<'a> Uri<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::{Uri, Origin};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::{Uri, Origin};
     ///
     /// // Parse a valid origin URI (note: in practice, use `Origin::parse()`).
     /// let uri = Uri::parse::<Origin>("/a/b/c?query").expect("valid URI");
@@ -108,8 +108,8 @@ impl<'a> Uri<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::{Uri, Origin, Reference};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::{Uri, Origin, Reference};
     ///
     /// // An absolute path is an origin _unless_ it contains a fragment.
     /// let uri = Uri::parse_any("/a/b/c?query").expect("valid URI");
@@ -138,8 +138,8 @@ impl<'a> Uri<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::{Uri, Absolute, Origin};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::{Uri, Absolute, Origin};
     ///
     /// let uri = Uri::parse::<Origin>("/a/b/c?query").expect("valid URI");
     /// assert!(uri.origin().is_some());
@@ -166,8 +166,8 @@ impl<'a> Uri<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::{Uri, Absolute, Authority};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::{Uri, Absolute, Authority};
     ///
     /// let uri = Uri::parse::<Authority>("user:pass@domain.com").expect("valid URI");
     /// assert!(uri.authority().is_some());
@@ -194,8 +194,8 @@ impl<'a> Uri<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::{Uri, Absolute, Origin};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::{Uri, Absolute, Origin};
     ///
     /// let uri = Uri::parse::<Absolute>("http://rocket.rs").expect("valid URI");
     /// assert!(uri.absolute().is_some());
@@ -222,8 +222,8 @@ impl<'a> Uri<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::{Uri, Absolute, Reference};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::{Uri, Absolute, Reference};
     ///
     /// let uri = Uri::parse::<Reference>("foo/bar").expect("valid URI");
     /// assert!(uri.reference().is_some());

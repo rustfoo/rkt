@@ -1,9 +1,9 @@
 #![cfg(feature = "secrets")]
 
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::config::{Config, SecretKey};
-use rocket::figment::Figment;
+use rkt::config::{Config, SecretKey};
+use rkt::figment::Figment;
 
 #[test]
 fn secret_key_in_config_not_zero() {

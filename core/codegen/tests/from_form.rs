@@ -3,11 +3,11 @@ use std::net::{IpAddr, SocketAddr};
 
 use pretty_assertions::assert_eq;
 
-use rocket::form::error::{Entity, ErrorKind};
-use rocket::form::{self, Errors, Form, FromForm, FromFormField, Strict};
-use rocket::http::uri::fmt::{Query, UriDisplay};
-use rocket::serde::json::Json;
-use rocket::UriDisplayQuery;
+use rkt::form::error::{Entity, ErrorKind};
+use rkt::form::{self, Errors, Form, FromForm, FromFormField, Strict};
+use rkt::http::uri::fmt::{Query, UriDisplay};
+use rkt::serde::json::Json;
+use rkt::UriDisplayQuery;
 
 fn strict<'f, T: FromForm<'f>>(string: &'f str) -> Result<T, Errors<'f>> {
     Form::<Strict<T>>::parse(string).map(|s| s.into_inner())
@@ -813,9 +813,9 @@ fn test_nested_multi() {
 
 #[test]
 fn test_multipart() {
-    use rocket::fs::TempFile;
-    use rocket::http::ContentType;
-    use rocket::local::blocking::Client;
+    use rkt::fs::TempFile;
+    use rkt::http::ContentType;
+    use rkt::local::blocking::Client;
 
     #[derive(FromForm)]
     struct MyForm<'r> {
@@ -823,13 +823,13 @@ fn test_multipart() {
         file: TempFile<'r>,
     }
 
-    #[rocket::post("/", data = "<form>")]
+    #[rkt::post("/", data = "<form>")]
     fn form(form: Form<MyForm<'_>>) {
         assert_eq!(form.names, &["abcd", "123"]);
         assert_eq!(form.file.name(), Some("foo"));
     }
 
-    let client = Client::debug_with(rocket::routes![form]).unwrap();
+    let client = Client::debug_with(rkt::routes![form]).unwrap();
     let ct = "multipart/form-data; boundary=X-BOUNDARY"
         .parse::<ContentType>()
         .unwrap();

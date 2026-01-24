@@ -9,9 +9,8 @@ use crate::form::name::*;
 /// version via [`IntoOwned`](crate::http::ext::IntoOwned).
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::name::NameBuf;
-/// use rocket::http::ext::IntoOwned;
+/// use rkt::form::name::NameBuf;
+/// use rkt::http::ext::IntoOwned;
 ///
 /// let alloc = String::from("a.b.c");
 /// let name = NameBuf::from(alloc.as_str());
@@ -36,8 +35,7 @@ impl<'v> NameBuf<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::NameBuf;
+    /// use rkt::form::name::NameBuf;
     ///
     /// let name = NameBuf::from("apple.b[foo:bar]zoo.[barb].bat");
     /// let keys: Vec<_> = name.keys().map(|k| k.as_str()).collect();
@@ -54,8 +52,7 @@ impl<'v> NameBuf<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::NameBuf;
+    /// use rkt::form::name::NameBuf;
     ///
     /// let name = NameBuf::from("apple.b[foo:bar]zoo.[barb].bat");
     /// assert!(!name.is_empty());
