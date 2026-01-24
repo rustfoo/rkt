@@ -41,7 +41,7 @@ macro_rules! event {
     }};
 
     (@$level:expr, $n:expr, $($args:tt)*) => {{
-        $crate::tracing::event!(name: $n, target: concat!("rocket::", $n), $level, $($args)*);
+        $crate::tracing::event!(name: $n, target: concat!("rkt::", $n), $level, $($args)*);
     }};
 }
 

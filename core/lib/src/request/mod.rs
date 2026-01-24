@@ -13,7 +13,7 @@ pub use self::from_request::{FromRequest, Outcome};
 pub use self::request::Request;
 
 #[doc(hidden)]
-pub use rocket_codegen::FromParam;
+pub use rkt_codegen::FromParam;
 
 #[doc(inline)]
 pub use crate::response::flash::FlashMessage;
@@ -37,9 +37,8 @@ crate::export! {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::request::{local_cache, local_cache_once};
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::request::{local_cache, local_cache_once};
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let request = c.get("/");
     ///
     /// // The first store into local cache for a given type wins.
@@ -88,9 +87,8 @@ crate::export! {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::request::local_cache_once;
-    /// # let c = rocket::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// use rkt::request::local_cache_once;
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
     /// # let request = c.get("/");
     ///
     /// // The first store into local cache for a given type wins.

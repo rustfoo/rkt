@@ -6,7 +6,7 @@ use crate::engine::Engines;
 use crate::template::TemplateInfo;
 
 use normpath::PathExt;
-use rocket::http::ContentType;
+use rkt::http::ContentType;
 
 pub(crate) type Callback =
     Box<dyn Fn(&mut Engines) -> Result<(), Box<dyn Error>> + Send + Sync + 'static>;

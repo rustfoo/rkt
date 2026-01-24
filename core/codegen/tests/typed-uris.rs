@@ -1,22 +1,22 @@
 #![allow(dead_code, unused_variables)]
 
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
 use std::path::PathBuf;
 
-use rocket::form::{
+use rkt::form::{
     error::{ErrorKind, Errors},
     Form,
 };
-use rocket::http::uri::fmt::{FromUriParam, Query};
-use rocket::http::CookieJar;
+use rkt::http::uri::fmt::{FromUriParam, Query};
+use rkt::http::CookieJar;
 
 macro_rules! assert_uri_eq {
     ($($uri:expr => $expected:expr,)+) => {
         $(
             let actual = $uri;
-            let expected = rocket::http::uri::Uri::parse_any($expected).expect("valid URI");
+            let expected = rkt::http::uri::Uri::parse_any($expected).expect("valid URI");
             if actual != expected {
                 panic!("\nURI mismatch: got {}, expected {}\nGot) {:?}\nExpected) {:?}\n",
                     actual, expected, actual, expected);
@@ -618,7 +618,7 @@ fn test_simple_ignored() {
 
 #[test]
 fn test_maps() {
-    use rocket::figment::util::map;
+    use rkt::figment::util::map;
     use std::collections::{BTreeMap, HashMap};
 
     #[get("/?<bar>")]
@@ -654,10 +654,10 @@ fn test_maps() {
 
 #[test]
 fn test_json() {
-    use rocket::serde::{json::Json, Deserialize, Serialize};
+    use rkt::serde::{json::Json, Deserialize, Serialize};
 
     #[derive(Serialize, Deserialize, Copy, Clone)]
-    #[serde(crate = "rocket::serde")]
+    #[serde(crate = "rkt::serde")]
     struct Inner<T> {
         myfoo: Option<T>,
     }
@@ -749,7 +749,7 @@ fn test_vec_in_query() {
 
 #[test]
 fn test_either() {
-    use rocket::either::{Either, Left, Right};
+    use rkt::either::{Either, Left, Right};
 
     #[get("/<_myfoo>")]
     fn f(_myfoo: Either<usize, &str>) {}

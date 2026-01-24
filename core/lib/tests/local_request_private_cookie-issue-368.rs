@@ -1,23 +1,23 @@
 #![cfg(feature = "secrets")]
 
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::CookieJar;
+use rkt::http::CookieJar;
 
-#[rocket::get("/")]
+#[rkt::get("/")]
 fn return_private_cookie(cookies: &CookieJar<'_>) -> Option<String> {
     cookies.get_private("cookie_name").map(|cookie| cookie.value().into())
 }
 
 mod tests {
     use super::*;
-    use rocket::http::Status;
-    use rocket::local::blocking::Client;
-    use rocket::routes;
+    use rkt::http::Status;
+    use rkt::local::blocking::Client;
+    use rkt::routes;
 
     #[test]
     fn private_cookie_is_returned() {
-        let rocket = rocket::build().mount("/", routes![return_private_cookie]);
+        let rocket = rkt::build().mount("/", routes![return_private_cookie]);
 
         let client = Client::debug(rocket).unwrap();
         let req = client
@@ -31,7 +31,7 @@ mod tests {
 
     #[test]
     fn regular_cookie_is_not_returned() {
-        let rocket = rocket::build().mount("/", routes![return_private_cookie]);
+        let rocket = rkt::build().mount("/", routes![return_private_cookie]);
 
         let client = Client::debug(rocket).unwrap();
         let req = client.get("/").cookie(("cookie_name", "cookie_value"));

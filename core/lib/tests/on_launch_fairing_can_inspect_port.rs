@@ -1,16 +1,16 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 use std::net::{Ipv4Addr, SocketAddr};
 
-use rocket::config::Config;
-use rocket::fairing::AdHoc;
-use rocket::futures::channel::oneshot;
-use rocket::listener::tcp::TcpListener;
+use rkt::config::Config;
+use rkt::fairing::AdHoc;
+use rkt::futures::channel::oneshot;
+use rkt::listener::tcp::TcpListener;
 
-#[rocket::async_test]
+#[rkt::async_test]
 async fn on_ignite_fairing_can_inspect_port() {
     let (tx, rx) = oneshot::channel();
-    let rocket = rocket::custom(Config::debug_default()).attach(AdHoc::on_liftoff(
+    let rocket = rkt::custom(Config::debug_default()).attach(AdHoc::on_liftoff(
         "Send Port -> Channel",
         move |rocket| {
             Box::pin(async move {
@@ -21,6 +21,6 @@ async fn on_ignite_fairing_can_inspect_port() {
     ));
 
     let addr = SocketAddr::from((Ipv4Addr::LOCALHOST, 0));
-    rocket::tokio::spawn(rocket.try_launch_on(TcpListener::bind(addr)));
+    rkt::tokio::spawn(rocket.try_launch_on(TcpListener::bind(addr)));
     assert_ne!(rx.await.unwrap(), 0);
 }

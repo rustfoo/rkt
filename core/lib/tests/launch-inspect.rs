@@ -1,10 +1,10 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::fairing::AdHoc;
+use rkt::fairing::AdHoc;
 
-#[rocket::async_test]
-async fn test_inspectable_launch_state() -> Result<(), rocket::Error> {
-    let rocket = rocket::custom(rocket::Config::debug_default())
+#[rkt::async_test]
+async fn test_inspectable_launch_state() -> Result<(), rkt::Error> {
+    let rocket = rkt::custom(rkt::Config::debug_default())
         .attach(AdHoc::on_ignite("Add State", |rocket| async {
             rocket.manage("Hi!")
         }))
@@ -16,9 +16,9 @@ async fn test_inspectable_launch_state() -> Result<(), rocket::Error> {
     Ok(())
 }
 
-#[rocket::async_test]
-async fn test_inspectable_launch_state_in_liftoff() -> Result<(), rocket::Error> {
-    let rocket = rocket::custom(rocket::Config::debug_default())
+#[rkt::async_test]
+async fn test_inspectable_launch_state_in_liftoff() -> Result<(), rkt::Error> {
+    let rocket = rkt::custom(rkt::Config::debug_default())
         .attach(AdHoc::on_ignite("Add State", |rocket| async {
             rocket.manage("Hi!")
         }))
@@ -41,9 +41,9 @@ async fn test_inspectable_launch_state_in_liftoff() -> Result<(), rocket::Error>
     Ok(())
 }
 
-#[rocket::async_test]
-async fn test_launch_state_is_well_ordered() -> Result<(), rocket::Error> {
-    let rocket = rocket::custom(rocket::Config::debug_default())
+#[rkt::async_test]
+async fn test_launch_state_is_well_ordered() -> Result<(), rkt::Error> {
+    let rocket = rkt::custom(rkt::Config::debug_default())
         .attach(AdHoc::on_ignite("Inspect State Pre", |rocket| async {
             let state = rocket.state::<&'static str>();
             assert_eq!(state, None);
@@ -66,9 +66,9 @@ async fn test_launch_state_is_well_ordered() -> Result<(), rocket::Error> {
 }
 
 #[should_panic]
-#[rocket::async_test]
+#[rkt::async_test]
 async fn negative_test_launch_state() {
-    let _ = rocket::custom(rocket::Config::debug_default())
+    let _ = rkt::custom(rkt::Config::debug_default())
         .attach(AdHoc::on_ignite("Add State", |rocket| async {
             rocket.manage("Hi!")
         }))

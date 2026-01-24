@@ -1,9 +1,9 @@
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use rocket::State;
-use rocket::outcome::{Outcome, try_outcome};
-use rocket::request::{self, FromRequest, Request};
-use rocket::fairing::AdHoc;
+use rkt::State;
+use rkt::outcome::{Outcome, try_outcome};
+use rkt::request::{self, FromRequest, Request};
+use rkt::fairing::AdHoc;
 
 #[derive(Default, Debug)]
 pub struct Atomics {
@@ -16,7 +16,7 @@ struct Guard2;
 struct Guard3;
 struct Guard4;
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for Guard1 {
     type Error = ();
 
@@ -31,7 +31,7 @@ impl<'r> FromRequest<'r> for Guard1 {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for Guard2 {
     type Error = ();
 
@@ -41,7 +41,7 @@ impl<'r> FromRequest<'r> for Guard2 {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for Guard3 {
     type Error = ();
 
@@ -56,7 +56,7 @@ impl<'r> FromRequest<'r> for Guard3 {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for Guard4 {
     type Error = ();
 

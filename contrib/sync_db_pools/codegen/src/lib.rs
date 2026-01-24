@@ -1,4 +1,4 @@
-//! Code generation for rocket-sync-db-pools.
+//! Code generation for rkt-sync-db-pools.
 
 #![recursion_limit = "256"]
 #![warn(rust_2018_idioms)]
@@ -48,7 +48,7 @@ use proc_macro::TokenStream;
 ///     underlying database connection (`&mut Db`). Returns the value returned
 ///     by the function or closure.
 ///
-/// [`FromRequest`]: rocket::request::FromRequest
+/// [`FromRequest`]: rkt::request::FromRequest
 #[proc_macro_attribute]
 pub fn database(attr: TokenStream, input: TokenStream) -> TokenStream {
     crate::database::database_attr(attr, input)

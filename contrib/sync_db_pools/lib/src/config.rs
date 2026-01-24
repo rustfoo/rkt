@@ -1,5 +1,5 @@
-use rocket::figment::{self, providers::Serialized, Figment};
-use rocket::{Build, Rocket};
+use rkt::figment::{self, providers::Serialized, Figment};
+use rkt::{Build, Rocket};
 
 use serde::{Deserialize, Serialize};
 
@@ -17,8 +17,7 @@ use serde::{Deserialize, Serialize};
 /// ...`Config::from("my_database", rocket)` would return the following struct:
 ///
 /// ```rust
-/// # extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
-/// # use rocket_sync_db_pools::Config;
+/// # use rkt_sync_db_pools::Config;
 /// Config {
 ///     url: "postgres://root:root@localhost/my_database".into(),
 ///     pool_size: 10,
@@ -51,9 +50,8 @@ impl Config {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
     /// # #[cfg(feature = "diesel_sqlite_pool")] {
-    /// # use rocket::figment::{Figment, providers::{Format, Toml}};
+    /// # use rkt::figment::{Figment, providers::{Format, Toml}};
     /// // Assume that these are the contents of `Rocket.toml`:
     /// # let toml = Toml::string(r#"
     /// [default.databases]
@@ -61,8 +59,8 @@ impl Config {
     /// my_other_db = { url = "mysql://root:root@localhost/database" }
     /// # "#).nested();
     ///
-    /// use rocket::{Rocket, Build};
-    /// use rocket_sync_db_pools::Config;
+    /// use rkt::{Rocket, Build};
+    /// use rkt_sync_db_pools::Config;
     ///
     /// fn pool(rocket: &Rocket<Build>) {
     ///     let config = Config::from("my_db", rocket).unwrap();
@@ -72,15 +70,15 @@ impl Config {
     ///     let config = Config::from("my_other_db", rocket).unwrap();
     ///     assert_eq!(config.url, "mysql://root:root@localhost/database");
     ///
-    ///     let workers = rocket.figment().extract_inner::<u32>(rocket::Config::WORKERS);
+    ///     let workers = rocket.figment().extract_inner::<u32>(rkt::Config::WORKERS);
     ///     assert_eq!(config.pool_size, (workers.unwrap() * 4));
     ///
     ///     let config = Config::from("unknown_db", rocket);
     ///     assert!(config.is_err())
     /// }
     /// #
-    /// # let config = Figment::from(rocket::Config::default()).merge(toml);
-    /// # let rocket = rocket::custom(config);
+    /// # let config = Figment::from(rkt::Config::default()).merge(toml);
+    /// # let rocket = rkt::custom(config);
     /// # pool(&rocket);
     /// # }
     /// ```
@@ -95,9 +93,8 @@ impl Config {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
-    /// use rocket::{Rocket, Build};
-    /// use rocket_sync_db_pools::Config;
+    /// use rkt::{Rocket, Build};
+    /// use rkt_sync_db_pools::Config;
     ///
     /// fn pool(rocket: &Rocket<Build>) {
     ///     let my_db_figment = Config::figment("my_db", rocket);
@@ -108,7 +105,7 @@ impl Config {
         let db_key = format!("databases.{}", db_name);
         let default_pool_size = rocket
             .figment()
-            .extract_inner::<u32>(rocket::Config::WORKERS)
+            .extract_inner::<u32>(rkt::Config::WORKERS)
             .map(|workers| workers * 4)
             .ok();
 

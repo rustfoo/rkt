@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 #[get("/")]
 fn index() -> String {
@@ -8,8 +8,8 @@ fn index() -> String {
 
 #[test]
 fn content_length_header() {
-    let rocket = rocket::build().mount("/", routes![index]);
-    let client = rocket::local::blocking::Client::debug(rocket).unwrap();
+    let rocket = rkt::build().mount("/", routes![index]);
+    let client = rkt::local::blocking::Client::debug(rocket).unwrap();
     let response = client.get("/").dispatch();
     assert!(response.headers().get_one("Content-Length").is_some());
 }

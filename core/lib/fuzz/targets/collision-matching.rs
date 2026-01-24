@@ -2,10 +2,10 @@
 
 use arbitrary::{Arbitrary, Unstructured, Result, Error};
 
-use rocket::http::QMediaType;
-use rocket::local::blocking::{LocalRequest, Client};
-use rocket::http::{Method, Accept, ContentType, MediaType, uri::Origin};
-use rocket::route::{Route, RouteUri, dummy_handler};
+use rkt::http::QMediaType;
+use rkt::local::blocking::{LocalRequest, Client};
+use rkt::http::{Method, Accept, ContentType, MediaType, uri::Origin};
+use rkt::route::{Route, RouteUri, dummy_handler};
 
 #[derive(Arbitrary)]
 struct ArbitraryRequestData<'a> {
@@ -180,11 +180,11 @@ type TestData<'a> = (
 );
 
 fn fuzz((route_a, route_b, req): TestData<'_>) {
-    let rocket = rocket::custom(rocket::Config {
+    let rocket = rkt::custom(rkt::Config {
         workers: 2,
         log_level: None,
-        cli_colors: rocket::config::CliColors::Never,
-        ..rocket::Config::debug_default()
+        cli_colors: rkt::config::CliColors::Never,
+        ..rkt::Config::debug_default()
     });
 
     let client = Client::untracked(rocket).expect("debug rocket is okay");

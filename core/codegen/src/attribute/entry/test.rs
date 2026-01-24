@@ -3,7 +3,7 @@ use super::EntryAttr;
 use devise::{Result, Spanned};
 use proc_macro2::TokenStream;
 
-/// `#[rocket::async_test]`: calls the attributed fn inside `rocket::async_test`
+/// `#[rkt::async_test]`: calls the attributed fn inside `rkt::async_test`
 pub struct Test;
 
 impl EntryAttr for Test {
@@ -14,7 +14,7 @@ impl EntryAttr for Test {
         sig.asyncness = None;
         Ok(
             quote_spanned!(block.span() => #(#attrs)* #[test] #vis #sig {
-                ::rocket::async_test(async move #block)
+                ::rkt::async_test(async move #block)
             }),
         )
     }

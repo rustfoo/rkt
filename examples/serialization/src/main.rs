@@ -1,4 +1,4 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[cfg(test)] mod tests;
 
@@ -8,7 +8,7 @@ mod uuid;
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .attach(json::stage())
         .attach(msgpack::stage())
         .attach(uuid::stage())

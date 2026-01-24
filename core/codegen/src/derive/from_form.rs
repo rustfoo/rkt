@@ -165,7 +165,7 @@ pub fn derive_from_form(input: proc_macro::TokenStream) -> TokenStream {
         .outer_mapper(quote!(#[allow(clippy::all, clippy::pedantic, clippy::nursery)]))
         .outer_mapper(quote!(#[allow(renamed_and_removed_lints)]))
         .outer_mapper(quote!(#[allow(private_in_public)]))
-        .outer_mapper(quote!(#[rocket::async_trait]))
+        .outer_mapper(quote!(#[rkt::async_trait]))
         .inner_mapper(MapperBuild::new()
             .try_input_map(|mapper, input| {
                 let (ctxt_ty, gen) = context_type(input)?;

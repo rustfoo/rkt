@@ -28,7 +28,7 @@ use crate::uri::{as_utf8_unchecked, error::Error};
 /// # #[cfg(feature = "serde")] mod serde_impl {
 /// # use serde as serde;
 /// use serde::{Serialize, Deserialize};
-/// use rocket::http::uri::Authority;
+/// use rkt::http::uri::Authority;
 ///
 /// #[derive(Deserialize, Serialize)]
 /// # #[serde(crate = "serde")]
@@ -98,8 +98,8 @@ impl<'a> Authority<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Authority;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Authority;
     ///
     /// // Parse a valid authority URI.
     /// let uri = Authority::parse("user:pass@host").expect("valid URI");
@@ -130,8 +130,8 @@ impl<'a> Authority<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::uri::Authority;
+    /// # extern crate rkt;
+    /// use rkt::http::uri::Authority;
     ///
     /// let source = format!("rocket.rs:8000");
     /// let uri = Authority::parse_owned(source).expect("valid URI");
@@ -157,7 +157,7 @@ impl<'a> Authority<'a> {
     ///
     /// # Example
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("username:password@host");
     /// assert_eq!(uri.user_info(), Some("username:password"));
     /// ```
@@ -172,7 +172,7 @@ impl<'a> Authority<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("domain.com:123");
     /// assert_eq!(uri.host(), "domain.com");
     ///
@@ -192,7 +192,7 @@ impl<'a> Authority<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// // With a port.
     /// let uri = uri!("username:password@host:123");
     /// assert_eq!(uri.port(), Some(123));
@@ -214,7 +214,7 @@ impl<'a> Authority<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let mut uri = uri!("username:password@host:123");
     /// assert_eq!(uri.port(), Some(123));
     ///

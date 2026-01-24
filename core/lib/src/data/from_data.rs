@@ -20,7 +20,7 @@ pub type Outcome<'r, T, E = <T as FromData<'r>>::Error> =
 /// Data guards are the target of the `data` route attribute parameter:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// # type DataGuard = String;
 /// #[post("/submit", data = "<var>")]
 /// fn submit(var: DataGuard) { /* ... */ }
@@ -175,16 +175,15 @@ pub type Outcome<'r, T, E = <T as FromData<'r>>::Error> =
 /// ## Async Trait
 ///
 /// [`FromData`] is an _async_ trait. Implementations of `FromData` must be
-/// decorated with an attribute of `#[rocket::async_trait]`:
+/// decorated with an attribute of `#[rkt::async_trait]`:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::request::Request;
-/// use rocket::data::{self, Data, FromData};
+/// use rkt::request::Request;
+/// use rkt::data::{self, Data, FromData};
 /// # struct MyType;
 /// # type MyError = String;
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromData<'r> for MyType {
 ///     type Error = MyError;
 ///
@@ -212,9 +211,8 @@ pub type Outcome<'r, T, E = <T as FromData<'r>>::Error> =
 /// you can retrieve it directly from a client's request body:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::post;
-/// # type Person<'r> = &'r rocket::http::RawStr;
+/// # use rkt::post;
+/// # type Person<'r> = &'r rkt::http::RawStr;
 /// #[post("/person", data = "<person>")]
 /// fn person(person: Person<'_>) -> &'static str {
 ///     "Saved the new person to the database!"
@@ -224,15 +222,15 @@ pub type Outcome<'r, T, E = <T as FromData<'r>>::Error> =
 /// A `FromData` implementation for such a type might look like:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// #
 /// # #[derive(Debug)]
 /// # struct Person<'r> { name: &'r str, age: u16 }
 /// #
-/// use rocket::request::{self, Request};
-/// use rocket::data::{self, Data, FromData, ToByteUnit};
-/// use rocket::http::{Status, ContentType};
-/// use rocket::outcome::Outcome;
+/// use rkt::request::{self, Request};
+/// use rkt::data::{self, Data, FromData, ToByteUnit};
+/// use rkt::http::{Status, ContentType};
+/// use rkt::outcome::Outcome;
 ///
 /// #[derive(Debug)]
 /// enum Error {
@@ -242,7 +240,7 @@ pub type Outcome<'r, T, E = <T as FromData<'r>>::Error> =
 ///     Io(std::io::Error),
 /// }
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromData<'r> for Person<'r> {
 ///     type Error = Error;
 ///

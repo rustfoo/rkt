@@ -1,8 +1,8 @@
 use std::fs::{self, File};
 
-use rocket::http::{CookieJar, Cookie};
-use rocket::local::blocking::Client;
-use rocket::fs::relative;
+use rkt::http::{CookieJar, Cookie};
+use rkt::local::blocking::Client;
+use rkt::fs::relative;
 
 #[get("/cookie")]
 fn cookie(jar: &CookieJar<'_>) {
@@ -66,7 +66,7 @@ fn insecure_cookies() {
 }
 
 fn validate_profiles(profiles: &[&str]) {
-    use rocket::config::{Config, TlsConfig, SecretKey};
+    use rkt::config::{Config, TlsConfig, SecretKey};
 
     for profile in profiles {
         let config = Config {

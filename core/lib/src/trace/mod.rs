@@ -18,7 +18,7 @@ pub use traceable::{Trace, TraceAll};
 pub use tracing::{level_filters::LevelFilter, Level};
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, serde::Deserialize, serde::Serialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 #[non_exhaustive]
 pub enum TraceFormat {
     #[serde(rename = "pretty")]

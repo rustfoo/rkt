@@ -1,10 +1,10 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::Status;
-use rocket::local::blocking::{Client, LocalResponse};
-use rocket::shield::*;
-use rocket::Config;
+use rkt::http::Status;
+use rkt::local::blocking::{Client, LocalResponse};
+use rkt::shield::*;
+use rkt::Config;
 
 use time::Duration;
 
@@ -30,7 +30,7 @@ macro_rules! assert_no_header {
 
 macro_rules! dispatch {
     ($shield:expr, $closure:expr) => {{
-        let rocket = rocket::build().mount("/", routes![hello]).attach($shield);
+        let rocket = rkt::build().mount("/", routes![hello]).attach($shield);
         let client = Client::debug(rocket).unwrap();
         let response = client.get("/").dispatch();
         assert_eq!(response.status(), Status::Ok);
@@ -40,13 +40,13 @@ macro_rules! dispatch {
 
 #[test]
 fn default_shield() {
-    let client = Client::debug(rocket::build()).unwrap();
+    let client = Client::debug(rkt::build()).unwrap();
     let response = client.get("/").dispatch();
     assert_header!(response, "Permissions-Policy", "interest-cohort=()");
     assert_header!(response, "X-Frame-Options", "SAMEORIGIN");
     assert_header!(response, "X-Content-Type-Options", "nosniff");
 
-    let client = Client::debug(rocket::custom(Config::debug_default())).unwrap();
+    let client = Client::debug(rkt::custom(Config::debug_default())).unwrap();
     let response = client.get("/").dispatch();
     assert_header!(response, "Permissions-Policy", "interest-cohort=()");
     assert_header!(response, "X-Frame-Options", "SAMEORIGIN");
@@ -55,14 +55,14 @@ fn default_shield() {
 
 #[test]
 fn shield_singleton() {
-    let rocket = rocket::build().attach(Shield::new());
+    let rocket = rkt::build().attach(Shield::new());
     let client = Client::debug(rocket).unwrap();
     let response = client.get("/").dispatch();
     assert_no_header!(response, "Permissions-Policy");
     assert_no_header!(response, "X-Frame-Options");
     assert_no_header!(response, "X-Content-Type-Options");
 
-    let rocket = rocket::custom(Config::debug_default()).attach(Shield::new());
+    let rocket = rkt::custom(Config::debug_default()).attach(Shield::new());
     let client = Client::debug(rocket).unwrap();
     let response = client.get("/").dispatch();
     assert_no_header!(response, "Permissions-Policy");

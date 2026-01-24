@@ -2,7 +2,7 @@
 
 use crate::prelude::*;
 
-use rocket::http::Method;
+use rkt::http::Method;
 
 #[route("/", method = PROPFIND)]
 fn route() -> &'static str {

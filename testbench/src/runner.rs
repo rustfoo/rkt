@@ -1,6 +1,6 @@
 use std::time::Duration;
 
-use rocket::yansi::Paint;
+use rkt::yansi::Paint;
 
 #[derive(Copy, Clone)]
 pub struct Test {

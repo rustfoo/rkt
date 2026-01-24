@@ -1,9 +1,9 @@
-use rocket::local::blocking::Client;
-use rocket::http::{Status, ContentType, Accept};
-use rocket::serde::{Serialize, Deserialize, uuid::Uuid};
+use rkt::local::blocking::Client;
+use rkt::http::{Status, ContentType, Accept};
+use rkt::serde::{Serialize, Deserialize, uuid::Uuid};
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Message {
     id: Option<usize>,
     message: String

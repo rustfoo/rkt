@@ -24,7 +24,7 @@ pub type BoxFuture<'r, T = Outcome<'r>> = futures::future::BoxFuture<'r, T>;
 /// ## Async Trait
 ///
 /// This is an _async_ trait. Implementations must be decorated
-/// [`#[rocket::async_trait]`](crate::async_trait).
+/// [`#[rkt::async_trait]`](crate::async_trait).
 ///
 /// # Example
 ///
@@ -43,16 +43,15 @@ pub type BoxFuture<'r, T = Outcome<'r>> = futures::future::BoxFuture<'r, T>;
 /// Such a handler might be written and used as follows:
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
 /// # #[derive(Copy, Clone)] enum Kind { Simple, Intermediate, Complex, }
-/// use rocket::{Request, Data};
-/// use rocket::route::{Handler, Route, Outcome};
-/// use rocket::http::Method;
+/// use rkt::{Request, Data};
+/// use rkt::route::{Handler, Route, Outcome};
+/// use rkt::http::Method;
 ///
 /// #[derive(Clone)]
 /// struct CustomHandler(Kind);
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl Handler for CustomHandler {
 ///     async fn handle<'r>(&self, req: &'r Request<'_>, data: Data<'r>) -> Outcome<'r> {
 ///         match self.0 {
@@ -69,9 +68,9 @@ pub type BoxFuture<'r, T = Outcome<'r>> = futures::future::BoxFuture<'r, T>;
 ///     }
 /// }
 ///
-/// #[rocket::launch]
+/// #[rkt::launch]
 /// fn rocket() -> _ {
-///     rocket::build().mount("/", CustomHandler(Kind::Simple))
+///     rkt::build().mount("/", CustomHandler(Kind::Simple))
 /// }
 /// ```
 ///
@@ -92,7 +91,7 @@ pub type BoxFuture<'r, T = Outcome<'r>> = futures::future::BoxFuture<'r, T>;
 /// managed state and a static route, as follows:
 ///
 /// ```rust,no_run
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// #
 /// # #[derive(Copy, Clone)]
 /// # enum Kind {
@@ -101,7 +100,7 @@ pub type BoxFuture<'r, T = Outcome<'r>> = futures::future::BoxFuture<'r, T>;
 /// #     Complex,
 /// # }
 /// #
-/// use rocket::State;
+/// use rkt::State;
 ///
 /// #[get("/")]
 /// fn custom_handler(state: &State<Kind>) -> &'static str {
@@ -114,7 +113,7 @@ pub type BoxFuture<'r, T = Outcome<'r>> = futures::future::BoxFuture<'r, T>;
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build()
+///     rkt::build()
 ///         .mount("/", routes![custom_handler])
 ///         .manage(Kind::Simple)
 /// }
@@ -180,8 +179,7 @@ impl<'r, 'o: 'r> Outcome<'o> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::{Request, Data, route};
+    /// use rkt::{Request, Data, route};
     ///
     /// fn str_responder<'r>(req: &'r Request, _: Data<'r>) -> route::Outcome<'r> {
     ///     route::Outcome::from(req, "Hello, world!")
@@ -204,8 +202,7 @@ impl<'r, 'o: 'r> Outcome<'o> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::{Request, Data, route};
+    /// use rkt::{Request, Data, route};
     ///
     /// fn str_responder<'r>(req: &'r Request, _: Data<'r>) -> route::Outcome<'r> {
     ///     route::Outcome::from(req, "Hello, world!")
@@ -232,9 +229,8 @@ impl<'r, 'o: 'r> Outcome<'o> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::{Request, Data, route};
-    /// use rocket::http::Status;
+    /// use rkt::{Request, Data, route};
+    /// use rkt::http::Status;
     ///
     /// fn bad_req_route<'r>(_: &'r Request, _: Data<'r>) -> route::Outcome<'r> {
     ///     route::Outcome::error(Status::BadRequest)
@@ -253,9 +249,8 @@ impl<'r, 'o: 'r> Outcome<'o> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::{Request, Data, route};
-    /// use rocket::http::Status;
+    /// use rkt::{Request, Data, route};
+    /// use rkt::http::Status;
     ///
     /// fn always_forward<'r>(_: &'r Request, data: Data<'r>) -> route::Outcome<'r> {
     ///     route::Outcome::forward(data, Status::InternalServerError)

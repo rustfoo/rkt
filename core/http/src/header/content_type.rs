@@ -20,8 +20,8 @@ use crate::uncased::UncasedStr;
 /// `HTML` constant:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// use rocket::http::ContentType;
+/// # extern crate rkt;
+/// use rkt::http::ContentType;
 ///
 /// # #[allow(unused_variables)]
 /// let html = ContentType::HTML;
@@ -33,9 +33,9 @@ use crate::uncased::UncasedStr;
 /// context where an `Into<Header>` is expected:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// use rocket::http::ContentType;
-/// use rocket::response::Response;
+/// # extern crate rkt;
+/// use rkt::http::ContentType;
+/// use rkt::response::Response;
 ///
 /// let response = Response::build().header(ContentType::HTML).finalize();
 /// ```
@@ -79,8 +79,8 @@ macro_rules! from_extension {
         /// Recognized content types:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::ContentType;
+        /// # extern crate rkt;
+        /// use rkt::http::ContentType;
         ///
         /// let xml = ContentType::from_extension("xml");
         /// assert_eq!(xml, Some(ContentType::XML));
@@ -92,8 +92,8 @@ macro_rules! from_extension {
         /// An unrecognized content type:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::ContentType;
+        /// # extern crate rkt;
+        /// use rkt::http::ContentType;
         ///
         /// let foo = ContentType::from_extension("foo");
         /// assert!(foo.is_none());
@@ -120,8 +120,8 @@ macro_rules! extension {
         /// Known extension:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::ContentType;
+        /// # extern crate rkt;
+        /// use rkt::http::ContentType;
         ///
         /// assert_eq!(ContentType::JSON.extension().unwrap(), "json");
         /// assert_eq!(ContentType::JPEG.extension().unwrap(), "jpeg");
@@ -132,8 +132,8 @@ macro_rules! extension {
         /// An unknown extension:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::ContentType;
+        /// # extern crate rkt;
+        /// use rkt::http::ContentType;
         ///
         /// let foo = ContentType::new("foo", "bar");
         /// assert!(foo.extension().is_none());
@@ -163,8 +163,8 @@ macro_rules! parse_flexible {
         /// Using a shorthand:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::ContentType;
+        /// # extern crate rkt;
+        /// use rkt::http::ContentType;
         ///
         /// let html = ContentType::parse_flexible("html");
         /// assert_eq!(html, Some(ContentType::HTML));
@@ -176,8 +176,8 @@ macro_rules! parse_flexible {
         /// Using the full content-type:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::ContentType;
+        /// # extern crate rkt;
+        /// use rkt::http::ContentType;
         ///
         /// let html = ContentType::parse_flexible("text/html; charset=utf-8");
         /// assert_eq!(html, Some(ContentType::HTML));
@@ -192,8 +192,8 @@ macro_rules! parse_flexible {
         /// An unrecognized content-type:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::ContentType;
+        /// # extern crate rkt;
+        /// use rkt::http::ContentType;
         ///
         /// let foo = ContentType::parse_flexible("foo");
         /// assert_eq!(foo, None);
@@ -218,8 +218,8 @@ impl ContentType {
     /// Create a custom `application/x-person` content type:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::ContentType;
+    /// # extern crate rkt;
+    /// use rkt::http::ContentType;
     ///
     /// let custom = ContentType::new("application", "x-person");
     /// assert_eq!(custom.top(), "application");
@@ -245,8 +245,8 @@ impl ContentType {
     /// Create a custom `application/x-id; id=1` media type:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::ContentType;
+    /// # extern crate rkt;
+    /// use rkt::http::ContentType;
     ///
     /// let id = ContentType::new("application", "x-id").with_params([("id", "1")]);
     /// assert_eq!(id.to_string(), "application/x-id; id=1".to_string());
@@ -255,8 +255,8 @@ impl ContentType {
     /// Create a custom `text/person; name=bob; weight=175` media type:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::ContentType;
+    /// # extern crate rkt;
+    /// use rkt::http::ContentType;
     ///
     /// let mt = ContentType::new("text", "person")
     ///     .with_params([("name", "bob"), ("ref", "2382")]);
@@ -277,8 +277,8 @@ impl ContentType {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::{ContentType, MediaType};
+    /// # extern crate rkt;
+    /// use rkt::http::{ContentType, MediaType};
     ///
     /// let http = ContentType::HTML;
     /// let media_type = http.media_type();
@@ -320,9 +320,9 @@ impl FromStr for ContentType {
     /// Parsing an `application/json`:
     ///
     /// ```rust
-    /// # extern crate rocket;
+    /// # extern crate rkt;
     /// use std::str::FromStr;
-    /// use rocket::http::ContentType;
+    /// use rkt::http::ContentType;
     ///
     /// let json = ContentType::from_str("application/json").unwrap();
     /// assert!(json.is_known());
@@ -332,9 +332,9 @@ impl FromStr for ContentType {
     /// Parsing a content type extension:
     ///
     /// ```rust
-    /// # extern crate rocket;
+    /// # extern crate rkt;
     /// use std::str::FromStr;
-    /// use rocket::http::ContentType;
+    /// use rkt::http::ContentType;
     ///
     /// let custom = ContentType::from_str("application/x-custom").unwrap();
     /// assert!(!custom.is_known());
@@ -345,9 +345,9 @@ impl FromStr for ContentType {
     /// Parsing an invalid Content-Type value:
     ///
     /// ```rust
-    /// # extern crate rocket;
+    /// # extern crate rkt;
     /// use std::str::FromStr;
-    /// use rocket::http::ContentType;
+    /// use rkt::http::ContentType;
     ///
     /// let custom = ContentType::from_str("application//x-custom");
     /// assert!(custom.is_err());
@@ -370,8 +370,8 @@ impl fmt::Display for ContentType {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::ContentType;
+    /// # extern crate rkt;
+    /// use rkt::http::ContentType;
     ///
     /// let ct = format!("{}", ContentType::JSON);
     /// assert_eq!(ct, "application/json");

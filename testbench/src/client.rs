@@ -1,7 +1,7 @@
 use std::{str::FromStr, time::Duration};
 
 use reqwest::blocking::{ClientBuilder, RequestBuilder};
-use rocket::http::{
+use rkt::http::{
     ext::IntoOwned,
     uri::{Absolute, Uri},
     Method,

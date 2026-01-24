@@ -1,4 +1,4 @@
-use rocket::serde::{Deserialize, Serialize};
+use rkt::serde::{Deserialize, Serialize};
 
 /// Base configuration for all database drivers.
 ///
@@ -29,12 +29,11 @@ use rocket::serde::{Deserialize, Serialize};
 /// with a global `databases.name` configuration:
 ///
 /// ```rust
-/// # extern crate rocket_db_pools_community as rocket_db_pools;
-/// # use rocket::launch;
+/// # use rkt::launch;
 /// #[launch]
 /// fn rocket() -> _ {
-///     let figment = rocket::Config::figment()
-///         .merge(("databases.name", rocket_db_pools::Config {
+///     let figment = rkt::Config::figment()
+///         .merge(("databases.name", rkt_db_pools::Config {
 ///             url: "db:specific@config&url".into(),
 ///             min_connections: None,
 ///             max_connections: 1024,
@@ -43,16 +42,16 @@ use rocket::serde::{Deserialize, Serialize};
 ///             extensions: None,
 ///         }));
 ///
-///     rocket::custom(figment)
+///     rkt::custom(figment)
 /// }
 /// ```
 ///
-/// For general information on configuration in Rocket, see [`rocket::config`].
+/// For general information on configuration in Rocket, see [`rkt::config`].
 /// For higher-level details on configuring a database, see the [crate-level
 /// docs](crate#configuration).
 // NOTE: Defaults provided by the figment created in the `Initializer` fairing.
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 pub struct Config {
     /// Database-specific connection and configuration URL.
     ///
@@ -100,7 +99,7 @@ impl Default for Config {
         Self {
             url: Default::default(),
             min_connections: Default::default(),
-            max_connections: rocket::Config::default().workers * 4,
+            max_connections: rkt::Config::default().workers * 4,
             connect_timeout: 5,
             idle_timeout: Default::default(),
             extensions: Default::default(),

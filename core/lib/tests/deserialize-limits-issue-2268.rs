@@ -1,8 +1,8 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::config::Config;
-use rocket::data::Limits;
-use rocket::figment::{providers::Serialized, Figment};
+use rkt::config::Config;
+use rkt::data::Limits;
+use rkt::figment::{providers::Serialized, Figment};
 use ubyte::ToByteUnit;
 
 #[test]

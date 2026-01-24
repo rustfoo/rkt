@@ -1,8 +1,8 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::Status;
-use rocket::response::content::RawJson;
+use rkt::http::Status;
+use rkt::response::content::RawJson;
 
 #[get("/empty")]
 fn empty() -> Status {
@@ -22,9 +22,9 @@ fn other() -> RawJson<&'static str> {
 mod head_handling_tests {
     use super::*;
 
-    use rocket::http::ContentType;
-    use rocket::local::blocking::Client;
-    use rocket::Route;
+    use rkt::http::ContentType;
+    use rkt::local::blocking::Client;
+    use rkt::Route;
 
     fn routes() -> Vec<Route> {
         routes![index, empty, other]

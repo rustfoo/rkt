@@ -43,8 +43,8 @@ use crate::uri::fmt::{self, Part};
 /// invocation for route URI parameters declared as `String`:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// # use rocket::http::uri::fmt::{FromUriParam, Part};
+/// # extern crate rkt;
+/// # use rkt::http::uri::fmt::{FromUriParam, Part};
 /// # struct S;
 /// # type String = S;
 /// impl<'a, P: Part> FromUriParam<P, &'a str> for String {
@@ -122,10 +122,10 @@ use crate::uri::fmt::{self, Part};
 /// URI.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// use std::fmt;
 ///
-/// use rocket::http::uri::fmt::{Formatter, UriDisplay, FromUriParam, Query};
+/// use rkt::http::uri::fmt::{Formatter, UriDisplay, FromUriParam, Query};
 ///
 /// #[derive(FromForm)]
 /// struct User<'a> {
@@ -152,9 +152,9 @@ use crate::uri::fmt::{self, Part};
 /// With these implementations, the following typechecks:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
+/// # #[macro_use] extern crate rkt;
 /// # use std::fmt;
-/// # use rocket::http::uri::fmt::{Formatter, UriDisplay, FromUriParam, Query};
+/// # use rkt::http::uri::fmt::{Formatter, UriDisplay, FromUriParam, Query};
 /// #
 /// # #[derive(FromForm)]
 /// # struct User<'a> { name: &'a str, nickname: String, }

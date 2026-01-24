@@ -64,11 +64,10 @@ use crate::{sentinel, shield::Shield, Catcher, Config, Route};
 /// [`#[launch]`](crate::launch) attribute:
 ///
 ///   ```rust,no_run
-///   # extern crate rocket_community as rocket;
-///   # use rocket::launch;
+///   # use rkt::launch;
 ///   #[launch]
 ///   fn rocket() -> _ {
-///       rocket::build()
+///       rkt::build()
 ///   }
 ///   ```
 ///
@@ -84,10 +83,9 @@ use crate::{sentinel, shield::Shield, Catcher, Config, Route};
 ///   it:
 ///
 ///   ```rust,no_run
-///   # extern crate rocket_community as rocket;
-///   #[rocket::main]
-///   async fn main() -> Result<(), rocket::Error> {
-///       let _rocket = rocket::build()
+///   #[rkt::main]
+///   async fn main() -> Result<(), rkt::Error> {
+///       let _rocket = rkt::build()
 ///           .ignite().await?
 ///           .launch().await?;
 ///
@@ -99,16 +97,15 @@ use crate::{sentinel, shield::Shield, Catcher, Config, Route};
 ///   `Rocket` from any phase into orbit:
 ///
 ///   ```rust,no_run
-///   # extern crate rocket_community as rocket;
-///   #[rocket::main]
-///   async fn main() -> Result<(), rocket::Error> {
-///       let _rocket = rocket::build().launch().await?;
+///   #[rkt::main]
+///   async fn main() -> Result<(), rkt::Error> {
+///       let _rocket = rkt::build().launch().await?;
 ///       Ok(())
 ///   }
 ///   ```
 ///
 ///   For extreme and rare cases in which [`#[main]`](crate::main) imposes
-///   obstinate restrictions, use [`rocket::execute()`](crate::execute()) to
+///   obstinate restrictions, use [`rkt::execute()`](crate::execute()) to
 ///   execute Rocket's `launch()` future.
 ///
 /// * **Automatic Launching**
@@ -122,13 +119,12 @@ use crate::{sentinel, shield::Shield, Catcher, Config, Route};
 ///   `async` runtime and launches the function's returned instance:
 ///
 ///   ```rust,no_run
-///   # extern crate rocket_community as rocket;
-///   # use rocket::launch;
-///   use rocket::{Rocket, Build};
+///   # use rkt::launch;
+///   use rkt::{Rocket, Build};
 ///
 ///   #[launch]
 ///   fn rocket() -> Rocket<Build> {
-///       rocket::build()
+///       rkt::build()
 ///   }
 ///   ```
 ///
@@ -136,11 +132,10 @@ use crate::{sentinel, shield::Shield, Catcher, Config, Route};
 ///   attribute will infer a return type written as `_` as `Rocket<Build>`:
 ///
 ///   ```rust,no_run
-///   # extern crate rocket_community as rocket;
-///   # use rocket::launch;
+///   # use rkt::launch;
 ///   #[launch]
 ///   fn rocket() -> _ {
-///       rocket::build()
+///       rkt::build()
 ///   }
 ///   ```
 pub struct Rocket<P: Phase>(pub(crate) P::State);
@@ -150,16 +145,15 @@ impl Rocket<Build> {
     /// provider, [`Config::figment()`].
     ///
     /// This method is typically called through the
-    /// [`rocket::build()`](crate::build) alias.
+    /// [`rkt::build()`](crate::build) alias.
     ///
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::launch;
+    /// # use rkt::launch;
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build()
+    ///     rkt::build()
     /// }
     /// ```
     #[must_use]
@@ -172,22 +166,21 @@ impl Rocket<Build> {
     /// provider.
     ///
     /// This method is typically called through the
-    /// [`rocket::custom()`](crate::custom()) alias.
+    /// [`rkt::custom()`](crate::custom()) alias.
     ///
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::launch;
-    /// use rocket::figment::{Figment, providers::{Toml, Env, Format}};
+    /// # use rkt::launch;
+    /// use rkt::figment::{Figment, providers::{Toml, Env, Format}};
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     let figment = Figment::from(rocket::Config::default())
+    ///     let figment = Figment::from(rkt::Config::default())
     ///         .merge(Toml::file("MyApp.toml").nested())
     ///         .merge(Env::prefixed("MY_APP_").global());
     ///
-    ///     rocket::custom(figment)
+    ///     rkt::custom(figment)
     /// }
     /// ```
     #[must_use]
@@ -206,11 +199,10 @@ impl Rocket<Build> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::config::{Config, Ident};
+    /// use rkt::config::{Config, Ident};
     /// # use std::net::Ipv4Addr;
     /// # use std::path::{Path, PathBuf};
-    /// # type Result = std::result::Result<(), rocket::Error>;
+    /// # type Result = std::result::Result<(), rkt::Error>;
     ///
     /// let config = Config {
     ///     ident: Ident::try_new("MyServer").expect("valid ident"),
@@ -218,8 +210,8 @@ impl Rocket<Build> {
     ///     ..Config::debug_default()
     /// };
     ///
-    /// # let _: Result = rocket::async_test(async move {
-    /// let rocket = rocket::custom(&config).ignite().await?;
+    /// # let _: Result = rkt::async_test(async move {
+    /// let rocket = rkt::custom(&config).ignite().await?;
     /// assert_eq!(rocket.config().ident.as_str(), Some("MyServer"));
     /// assert_eq!(rocket.config().temp_dir.relative(), Path::new("/tmp/config-example"));
     ///
@@ -227,7 +219,7 @@ impl Rocket<Build> {
     /// let figment = rocket.figment().clone()
     ///     .merge((Config::IDENT, "Example"));
     ///
-    /// let rocket = rocket::custom(&config)
+    /// let rocket = rkt::custom(&config)
     ///     .reconfigure(figment)
     ///     .ignite().await?;
     ///
@@ -331,7 +323,7 @@ impl Rocket<Build> {
     /// will be dispatched to the `hi` route.
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
+    /// #[macro_use] extern crate rkt;
     /// #
     /// #[get("/world")]
     /// fn hi() -> &'static str {
@@ -340,7 +332,7 @@ impl Rocket<Build> {
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .mount("/", routes![hi])
     ///         .mount("/hello", routes![hi])
     /// }
@@ -351,9 +343,9 @@ impl Rocket<Build> {
     /// `hi` route.
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::{Request, Route, Data, route};
-    /// use rocket::http::Method;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::{Request, Route, Data, route};
+    /// use rkt::http::Method;
     ///
     /// fn hi<'r>(req: &'r Request, _: Data<'r>) -> route::BoxFuture<'r> {
     ///     route::Outcome::from(req, "Hello!").pin()
@@ -362,7 +354,7 @@ impl Rocket<Build> {
     /// #[launch]
     /// fn rocket() -> _ {
     ///     let hi_route = Route::new(Method::Get, "/world", hi);
-    ///     rocket::build().mount("/hello", vec![hi_route])
+    ///     rkt::build().mount("/hello", vec![hi_route])
     /// }
     /// ```
     #[must_use]
@@ -392,8 +384,8 @@ impl Rocket<Build> {
     /// # Examples
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::Request;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::Request;
     ///
     /// #[catch(500)]
     /// fn internal_error() -> &'static str {
@@ -407,7 +399,7 @@ impl Rocket<Build> {
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build().register("/", catchers![internal_error, not_found])
+    ///     rkt::build().register("/", catchers![internal_error, not_found])
     /// }
     /// ```
     #[must_use]
@@ -443,8 +435,8 @@ impl Rocket<Build> {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::State;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::State;
     ///
     /// struct MyInt(isize);
     /// struct MyString(String);
@@ -461,7 +453,7 @@ impl Rocket<Build> {
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .manage(MyInt(10))
     ///         .manage(MyString("Hello, managed state!".to_string()))
     ///         .mount("/", routes![int, string])
@@ -493,13 +485,13 @@ impl Rocket<Build> {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::Rocket;
-    /// use rocket::fairing::AdHoc;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::Rocket;
+    /// use rkt::fairing::AdHoc;
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .attach(AdHoc::on_liftoff("Liftoff Message", |_| Box::pin(async {
     ///             println!("We have liftoff!");
     ///         })))
@@ -534,13 +526,12 @@ impl Rocket<Build> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fairing::AdHoc;
+    /// use rkt::fairing::AdHoc;
     ///
-    /// #[rocket::main]
-    /// async fn main() -> Result<(), rocket::Error> {
-    ///     let rocket = rocket::build()
-    ///         # .reconfigure(rocket::Config::debug_default())
+    /// #[rkt::main]
+    /// async fn main() -> Result<(), rkt::Error> {
+    ///     let rocket = rkt::build()
+    ///         # .reconfigure(rkt::Config::debug_default())
     ///         .attach(AdHoc::on_ignite("Manage State", |rocket| async move {
     ///             rocket.manage(String::from("managed string"))
     ///         }));
@@ -635,10 +626,9 @@ impl Rocket<Ignite> {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # extern crate rocket_community as rocket;
-    /// #[rocket::main]
-    /// async fn main() -> Result<(), rocket::Error> {
-    ///     let rocket = rocket::build().ignite().await?;
+    /// #[rkt::main]
+    /// async fn main() -> Result<(), rkt::Error> {
+    ///     let rocket = rkt::build().ignite().await?;
     ///     let config = rocket.config();
     ///     Ok(())
     /// }
@@ -659,13 +649,12 @@ impl Rocket<Ignite> {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # extern crate rocket_community as rocket;
     /// # use std::time::Duration;
-    /// use rocket::tokio::{self, time};
+    /// use rkt::tokio::{self, time};
     ///
-    /// #[rocket::main]
-    /// async fn main() -> Result<(), rocket::Error> {
-    ///     let rocket = rocket::build().ignite().await?;
+    /// #[rkt::main]
+    /// async fn main() -> Result<(), rkt::Error> {
+    ///     let rocket = rkt::build().ignite().await?;
     ///
     ///     let shutdown = rocket.shutdown();
     ///     tokio::spawn(async move {
@@ -791,7 +780,7 @@ impl Rocket<Orbit> {
         if !crate::running_within_rocket_async_rt().await {
             warn!(
                 "Rocket is executing inside of a custom runtime.\n\
-                Rocket's runtime is enabled via `#[rocket::main]` or `#[launch]`\n\
+                Rocket's runtime is enabled via `#[rkt::main]` or `#[launch]`\n\
                 Forced shutdown is disabled. Runtime settings may be suboptimal."
             );
         }
@@ -806,12 +795,12 @@ impl Rocket<Orbit> {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fairing::AdHoc;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fairing::AdHoc;
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .attach(AdHoc::on_liftoff("Config", |rocket| Box::pin(async move {
     ///             println!("Rocket launch config: {:?}", rocket.config());
     ///         })))
@@ -836,13 +825,13 @@ impl Rocket<Orbit> {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::tokio::{self, time};
-    /// use rocket::fairing::AdHoc;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::tokio::{self, time};
+    /// use rkt::fairing::AdHoc;
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .attach(AdHoc::on_liftoff("Shutdown", |rocket| Box::pin(async move {
     ///             let shutdown = rocket.shutdown();
     ///             tokio::spawn(async move {
@@ -864,17 +853,16 @@ impl<P: Phase> Rocket<P> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::*;
-    /// use rocket::Rocket;
-    /// use rocket::fairing::AdHoc;
+    /// # use rkt::*;
+    /// use rkt::Rocket;
+    /// use rkt::fairing::AdHoc;
     ///
     /// #[get("/hello")]
     /// fn hello() -> &'static str {
     ///     "Hello, world!"
     /// }
     ///
-    /// let rocket = rocket::build()
+    /// let rocket = rkt::build()
     ///     .mount("/", routes![hello])
     ///     .mount("/hi", routes![hello]);
     ///
@@ -896,16 +884,15 @@ impl<P: Phase> Rocket<P> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::*;
-    /// use rocket::Rocket;
-    /// use rocket::fairing::AdHoc;
+    /// # use rkt::*;
+    /// use rkt::Rocket;
+    /// use rkt::fairing::AdHoc;
     ///
     /// #[catch(404)] fn not_found() -> &'static str { "Nothing here, sorry!" }
     /// #[catch(500)] fn just_500() -> &'static str { "Whoops!?" }
     /// #[catch(default)] fn some_default() -> &'static str { "Everything else." }
     ///
-    /// let rocket = rocket::build()
+    /// let rocket = rkt::build()
     ///     .register("/foo", catchers![not_found])
     ///     .register("/", catchers![just_500, some_default]);
     ///
@@ -928,11 +915,10 @@ impl<P: Phase> Rocket<P> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// #[derive(PartialEq, Debug)]
     /// struct MyState(&'static str);
     ///
-    /// let rocket = rocket::build().manage(MyState("hello!"));
+    /// let rocket = rkt::build().manage(MyState("hello!"));
     /// assert_eq!(rocket.state::<MyState>().unwrap(), &MyState("hello!"));
     /// ```
     pub fn state<T: Send + Sync + 'static>(&self) -> Option<&T> {
@@ -952,18 +938,17 @@ impl<P: Phase> Rocket<P> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::{Rocket, Request, Data, Response, Build, Orbit};
-    /// # use rocket::fairing::{self, Fairing, Info, Kind};
+    /// # use rkt::{Rocket, Request, Data, Response, Build, Orbit};
+    /// # use rkt::fairing::{self, Fairing, Info, Kind};
     /// #
-    /// # #[rocket::async_trait]
+    /// # #[rkt::async_trait]
     /// # impl Fairing for MyFairing {
     /// #     fn info(&self) -> Info {
     /// #       Info { name: "", kind: Kind::Ignite  }
     /// #     }
     /// # }
     /// #
-    /// # #[rocket::async_trait]
+    /// # #[rkt::async_trait]
     /// # impl Fairing for MySingletonFairing {
     /// #     fn info(&self) -> Info {
     /// #       Info { name: "", kind: Kind::Ignite | Kind::Singleton }
@@ -976,7 +961,7 @@ impl<P: Phase> Rocket<P> {
     /// struct MySingletonFairing(&'static str);
     ///
     /// // fairing is not attached, returns `None`
-    /// let rocket = rocket::build();
+    /// let rocket = rkt::build();
     /// assert!(rocket.fairing::<MyFairing>().is_none());
     /// assert!(rocket.fairing::<MySingletonFairing>().is_none());
     ///
@@ -1010,18 +995,17 @@ impl<P: Phase> Rocket<P> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::{Rocket, Request, Data, Response, Build, Orbit};
-    /// # use rocket::fairing::{self, Fairing, Info, Kind};
+    /// # use rkt::{Rocket, Request, Data, Response, Build, Orbit};
+    /// # use rkt::fairing::{self, Fairing, Info, Kind};
     /// #
-    /// # #[rocket::async_trait]
+    /// # #[rkt::async_trait]
     /// # impl Fairing for MyFairing {
     /// #     fn info(&self) -> Info {
     /// #         Info { name: "", kind: Kind::Ignite  }
     /// #     }
     /// # }
     /// #
-    /// # #[rocket::async_trait]
+    /// # #[rkt::async_trait]
     /// # impl Fairing for MySingletonFairing {
     /// #     fn info(&self) -> Info {
     /// #         Info { name: "", kind: Kind::Ignite | Kind::Singleton }
@@ -1033,7 +1017,7 @@ impl<P: Phase> Rocket<P> {
     /// // A singleton fairing.
     /// struct MySingletonFairing(&'static str);
     ///
-    /// let rocket = rocket::build();
+    /// let rocket = rkt::build();
     /// assert_eq!(rocket.fairings::<MyFairing>().count(), 0);
     /// assert_eq!(rocket.fairings::<MySingletonFairing>().count(), 0);
     ///
@@ -1066,11 +1050,10 @@ impl<P: Phase> Rocket<P> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::{Rocket, Request, Data, Response, Build, Orbit};
-    /// # use rocket::fairing::{self, Fairing, Info, Kind};
+    /// # use rkt::{Rocket, Request, Data, Response, Build, Orbit};
+    /// # use rkt::fairing::{self, Fairing, Info, Kind};
     /// #
-    /// # #[rocket::async_trait]
+    /// # #[rkt::async_trait]
     /// # impl Fairing for MyFairing {
     /// #     fn info(&self) -> Info {
     /// #       Info { name: "", kind: Kind::Ignite  }
@@ -1080,7 +1063,7 @@ impl<P: Phase> Rocket<P> {
     /// struct MyFairing(&'static str);
     ///
     /// // fairing is not attached, returns `None`
-    /// let mut rocket = rocket::build();
+    /// let mut rocket = rkt::build();
     /// assert!(rocket.fairing_mut::<MyFairing>().is_none());
     ///
     /// // attach fairing, now returns `Some`
@@ -1110,11 +1093,10 @@ impl<P: Phase> Rocket<P> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::{Rocket, Request, Data, Response, Build, Orbit};
-    /// # use rocket::fairing::{self, Fairing, Info, Kind};
+    /// # use rkt::{Rocket, Request, Data, Response, Build, Orbit};
+    /// # use rkt::fairing::{self, Fairing, Info, Kind};
     /// #
-    /// # #[rocket::async_trait]
+    /// # #[rkt::async_trait]
     /// # impl Fairing for MyFairing {
     /// #     fn info(&self) -> Info {
     /// #         Info { name: "", kind: Kind::Ignite  }
@@ -1123,7 +1105,7 @@ impl<P: Phase> Rocket<P> {
     /// // A regular, non-singleton fairing.
     /// struct MyFairing(&'static str);
     ///
-    /// let mut rocket = rocket::build()
+    /// let mut rocket = rkt::build()
     ///     .attach(MyFairing("some state"))
     ///     .attach(MyFairing("other state"))
     ///     .attach(MyFairing("yet more state"));
@@ -1164,8 +1146,7 @@ impl<P: Phase> Rocket<P> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// let rocket = rocket::build();
+    /// let rocket = rkt::build();
     /// let figment = rocket.figment();
     /// ```
     pub fn figment(&self) -> &Figment {
@@ -1224,10 +1205,9 @@ impl<P: Phase> Rocket<P> {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # extern crate rocket_community as rocket;
-    /// #[rocket::main]
+    /// #[rkt::main]
     /// async fn main() {
-    ///     let result = rocket::build().launch().await;
+    ///     let result = rkt::build().launch().await;
     ///
     ///     // this is reachable only after `Shutdown::notify()` or `Ctrl+C`.
     ///     println!("Rocket: deorbit.");

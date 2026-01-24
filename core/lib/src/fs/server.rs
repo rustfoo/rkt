@@ -18,12 +18,12 @@ use crate::{response, Data, Request, Response};
 /// [`FileServer::new()`], then `mount` the handler.
 ///
 /// ```rust,no_run
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::fs::FileServer;
+/// #[macro_use] extern crate rkt;
+/// use rkt::fs::FileServer;
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build()
+///     rkt::build()
 ///         .mount("/", FileServer::new("/www/static"))
 /// }
 /// ```
@@ -49,12 +49,12 @@ use crate::{response, Data, Request, Response};
 /// `/public` path:
 ///
 /// ```rust,no_run
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::fs::FileServer;
+/// #[macro_use] extern crate rkt;
+/// use rkt::fs::FileServer;
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build().mount("/public", FileServer::new("/static"))
+///     rkt::build().mount("/public", FileServer::new("/static"))
 /// }
 /// ```
 ///
@@ -71,12 +71,12 @@ use crate::{response, Data, Request, Response};
 /// at `/`, you might write:
 ///
 /// ```rust,no_run
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::fs::{FileServer, relative};
+/// #[macro_use] extern crate rkt;
+/// use rkt::fs::{FileServer, relative};
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build().mount("/", FileServer::new(relative!("static")))
+///     rkt::build().mount("/", FileServer::new(relative!("static")))
 /// }
 /// ```
 ///
@@ -111,12 +111,12 @@ impl FileServer {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::FileServer;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::FileServer;
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .mount("/", FileServer::new("/www/static"))
     /// }
     /// ```
@@ -141,8 +141,8 @@ impl FileServer {
     /// `index.txt` as the index file if `index.html` doesn't exist.
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::{FileServer, rewrite::DirIndex};
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::{FileServer, rewrite::DirIndex};
     ///
     /// #[launch]
     /// fn rocket() -> _ {
@@ -150,7 +150,7 @@ impl FileServer {
     ///         .rewrite(DirIndex::if_exists("index.html"))
     ///         .rewrite(DirIndex::unconditional("index.txt"));
     ///
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .mount("/", server)
     /// }
     /// ```
@@ -174,13 +174,13 @@ impl FileServer {
     ///
     /// Prefer to use [`FileServer::new()`] or [`FileServer::without_index()`]
     /// whenever possible and otherwise use one or more of the rewrites in
-    /// [`rocket::fs::rewrite`] or your own custom rewrites.
+    /// [`rkt::fs::rewrite`] or your own custom rewrites.
     ///
     /// # Example
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::{FileServer, rewrite};
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::{FileServer, rewrite};
     ///
     /// #[launch]
     /// fn rocket() -> _ {
@@ -189,7 +189,7 @@ impl FileServer {
     ///     let server = FileServer::identity()
     ///         .rewrite(rewrite::File::checked("/www/foo.html"));
     ///
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .mount("/", server)
     /// }
     /// ```
@@ -205,8 +205,7 @@ impl FileServer {
     /// # Example
     ///
     /// ```rust,no_run
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::fs::FileServer;
+    /// # use rkt::fs::FileServer;
     /// # fn make_server() -> FileServer {
     /// FileServer::identity()
     ///    .rank(5)
@@ -223,9 +222,9 @@ impl FileServer {
     /// Redirect filtered requests (`None`) to `/`.
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::{FileServer, rewrite::Rewrite};
-    /// use rocket::{request::Request, response::Redirect};
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::{FileServer, rewrite::Rewrite};
+    /// use rkt::{request::Request, response::Redirect};
     ///
     /// fn redir_missing<'r>(p: Option<Rewrite<'r>>, _req: &Request<'_>) -> Option<Rewrite<'r>> {
     ///     Some(p.unwrap_or_else(|| Redirect::temporary(uri!("/")).into()))
@@ -233,7 +232,7 @@ impl FileServer {
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .mount("/", FileServer::new("static").rewrite(redir_missing))
     /// }
     /// ```
@@ -254,15 +253,15 @@ impl FileServer {
     /// than "hidden".
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::FileServer;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::FileServer;
     ///
     /// #[launch]
     /// fn rocket() -> _ {
     ///     let server = FileServer::new("static")
     ///         .filter(|f, _| f.path.file_name() != Some("hidden".as_ref()));
     ///
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .mount("/", server)
     /// }
     /// ```
@@ -296,15 +295,15 @@ impl FileServer {
     /// Append `index.txt` to every path.
     ///
     /// ```rust,no_run
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::fs::FileServer;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::fs::FileServer;
     ///
     /// #[launch]
     /// fn rocket() -> _ {
     ///     let server = FileServer::new("static")
     ///         .map(|f, _| f.map_path(|p| p.join("index.txt")).into());
     ///
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .mount("/", server)
     /// }
     /// ```

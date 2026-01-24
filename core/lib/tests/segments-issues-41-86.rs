@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::uri::{fmt::Path, Segments};
+use rkt::http::uri::{fmt::Path, Segments};
 
 #[get("/test/<path..>")]
 fn test(path: Segments<'_, Path>) -> String {
@@ -30,11 +30,11 @@ fn dual(user: String, path: Segments<'_, Path>) -> String {
 
 mod tests {
     use super::*;
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     #[test]
     fn segments_works() {
-        let rocket = rocket::build()
+        let rocket = rkt::build()
             .mount("/", routes![test, two, one_two, none, dual])
             .mount("/point", routes![test, two, one_two, dual]);
         let client = Client::debug(rocket).unwrap();

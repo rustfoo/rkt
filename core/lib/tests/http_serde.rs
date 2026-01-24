@@ -1,12 +1,12 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 use figment::{providers::Serialized, Figment};
 use pretty_assertions::assert_eq;
 use serde::{Deserialize, Serialize};
 
-use rocket::http::uri::{Absolute, Asterisk, Authority, Origin, Reference};
-use rocket::http::{Method, Status};
-use rocket::{uri, Config};
+use rkt::http::uri::{Absolute, Asterisk, Authority, Origin, Reference};
+use rkt::http::{Method, Status};
+use rkt::{uri, Config};
 
 #[derive(PartialEq, Debug, Serialize, Deserialize)]
 struct UriContainer<'a> {

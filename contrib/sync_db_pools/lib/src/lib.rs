@@ -26,11 +26,10 @@
 //! ## Example
 //!
 //! Before using this library, the feature corresponding to your database type
-//! in `rocket_sync_db_pools` must be enabled:
+//! in `rkt_sync_db_pools` must be enabled:
 //!
 //! ```toml
-//! [dependencies.rocket_sync_db_pools]
-//! package = "rocket_sync_db_pools-community"
+//! [dependencies.rkt_sync_db_pools]
 //! version = "0.3.2"
 //! features = ["diesel_sqlite_pool"]
 //! ```
@@ -50,18 +49,17 @@
 //! In your application's source code, one-time:
 //!
 //! ```rust
-//! # extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
-//! # #[macro_use] extern crate rocket;
+//! # #[macro_use] extern crate rkt;
 //! # #[cfg(feature = "diesel_sqlite_pool")]
 //! # mod test {
-//! use rocket_sync_db_pools::{database, diesel};
+//! use rkt_sync_db_pools::{database, diesel};
 //!
 //! #[database("sqlite_logs")]
 //! struct LogsDbConn(diesel::SqliteConnection);
 //!
 //! #[launch]
 //! fn rocket() -> _ {
-//!     rocket::build().attach(LogsDbConn::fairing())
+//!     rkt::build().attach(LogsDbConn::fairing())
 //! }
 //! # } fn main() {}
 //! ```
@@ -69,12 +67,12 @@
 //! Whenever a connection to the database is needed:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket;
-//! # #[macro_use] extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
+//! # #[macro_use] extern crate rkt;
+//! # #[macro_use] extern crate rkt_sync_db_pools;
 //! #
 //! # #[cfg(feature = "diesel_sqlite_pool")]
 //! # mod test {
-//! # use rocket_sync_db_pools::diesel;
+//! # use rkt_sync_db_pools::diesel;
 //! #
 //! # #[database("sqlite_logs")]
 //! # struct LogsDbConn(diesel::SqliteConnection);
@@ -138,14 +136,13 @@
 //!
 //! ### Procedurally
 //!
-//! Databases can also be configured procedurally via `rocket::custom()`.
+//! Databases can also be configured procedurally via `rkt::custom()`.
 //! The example below does just this:
 //!
 //! ```rust
-//! # extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
 //! # #[cfg(feature = "diesel_sqlite_pool")] {
-//! # use rocket::launch;
-//! use rocket::figment::{value::{Map, Value}, util::map};
+//! # use rkt::launch;
+//! use rkt::figment::{value::{Map, Value}, util::map};
 //!
 //! #[launch]
 //! fn rocket() -> _ {
@@ -155,10 +152,10 @@
 //!         "timeout" => 5.into(),
 //!     };
 //!
-//!     let figment = rocket::Config::figment()
+//!     let figment = rkt::Config::figment()
 //!         .merge(("databases", map!["my_db" => db]));
 //!
-//!     rocket::custom(figment)
+//!     rkt::custom(figment)
 //! }
 //! # rocket();
 //! # }
@@ -194,7 +191,7 @@
 //! generates. Specifically, it generates:
 //!
 //!   * A [`FromRequest`] implementation for the decorated type.
-//!   * A [`Sentinel`](rocket::Sentinel) implementation for the decorated type.
+//!   * A [`Sentinel`](rkt::Sentinel) implementation for the decorated type.
 //!   * A [`fairing()`](example::ExampleDb::fairing()) method to initialize the
 //!     database.
 //!   * A [`run()`](example::ExampleDb::run()) method to execute blocking
@@ -206,10 +203,10 @@
 //! internal type of the structure must implement [`Poolable`].
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
+//! # #[macro_use] extern crate rkt_sync_db_pools;
 //! # #[cfg(feature = "diesel_sqlite_pool")]
 //! # mod test {
-//! use rocket_sync_db_pools::diesel;
+//! use rkt_sync_db_pools::diesel;
 //!
 //! #[database("my_db")]
 //! struct MyDatabase(diesel::SqliteConnection);
@@ -220,10 +217,10 @@
 //! type:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
+//! # #[macro_use] extern crate rkt_sync_db_pools;
 //! # #[cfg(feature = "postgres_pool")]
 //! # mod test {
-//! use rocket_sync_db_pools::postgres;
+//! use rkt_sync_db_pools::postgres;
 //!
 //! #[database("my_pg_db")]
 //! struct MyPgDatabase(postgres::Client);
@@ -235,12 +232,12 @@
 //! together, a use of the `#[database]` attribute looks as follows:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket;
-//! # #[macro_use] extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
+//! # #[macro_use] extern crate rkt;
+//! # #[macro_use] extern crate rkt_sync_db_pools;
 //! #
 //! # #[cfg(feature = "diesel_sqlite_pool")] {
-//! # use rocket::figment::{value::{Map, Value}, util::map};
-//! use rocket_sync_db_pools::diesel;
+//! # use rkt::figment::{value::{Map, Value}, util::map};
+//! use rkt_sync_db_pools::diesel;
 //!
 //! #[database("my_db")]
 //! struct MyDatabase(diesel::SqliteConnection);
@@ -250,8 +247,8 @@
 //! #   let db: Map<_, Value> = map![
 //! #        "url" => "db.sqlite".into(), "pool_size" => 10.into()
 //! #   ];
-//! #   let figment = rocket::Config::figment().merge(("databases", map!["my_db" => db]));
-//!     rocket::custom(figment).attach(MyDatabase::fairing())
+//! #   let figment = rkt::Config::figment().merge(("databases", map!["my_db" => db]));
+//!     rkt::custom(figment).attach(MyDatabase::fairing())
 //! }
 //! # }
 //! ```
@@ -262,12 +259,12 @@
 //! connection wrapper for the database:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket;
-//! # #[macro_use] extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
+//! # #[macro_use] extern crate rkt;
+//! # #[macro_use] extern crate rkt_sync_db_pools;
 //! #
 //! # #[cfg(feature = "diesel_sqlite_pool")]
 //! # mod test {
-//! # use rocket_sync_db_pools::diesel;
+//! # use rkt_sync_db_pools::diesel;
 //! #[database("my_db")]
 //! struct MyDatabase(diesel::SqliteConnection);
 //!
@@ -281,12 +278,12 @@
 //! A connection can be retrieved and used with the `run()` method:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket;
-//! # #[macro_use] extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
+//! # #[macro_use] extern crate rkt;
+//! # #[macro_use] extern crate rkt_sync_db_pools;
 //! #
 //! # #[cfg(feature = "diesel_sqlite_pool")]
 //! # mod test {
-//! # use rocket_sync_db_pools::diesel;
+//! # use rkt_sync_db_pools::diesel;
 //! # type Data = ();
 //! #[database("my_db")]
 //! struct MyDatabase(diesel::SqliteConnection);
@@ -348,18 +345,18 @@
 //! implementing the [`Poolable`] trait. See the documentation for [`Poolable`]
 //! for more details on how to implement it.
 //!
-//! [`FromRequest`]: rocket::request::FromRequest
-//! [request guards]: rocket::request::FromRequest
+//! [`FromRequest`]: rkt::request::FromRequest
+//! [request guards]: rkt::request::FromRequest
 //! [`Poolable`]: crate::Poolable
 
-#![doc(html_root_url = "https://api.rocket.rs/master/rocket_sync_db_pools")]
+#![doc(html_root_url = "https://api.rocket.rs/master/rkt_sync_db_pools")]
 #![doc(html_favicon_url = "https://rocket.rs/images/favicon.ico")]
 #![doc(html_logo_url = "https://rocket.rs/images/logo-boxed.png")]
 #![cfg_attr(nightly, feature(doc_cfg))]
 
 #[doc(hidden)]
 #[macro_use]
-pub extern crate rocket;
+pub extern crate rkt;
 
 #[cfg(any(
     feature = "diesel_sqlite_pool",
@@ -393,7 +390,7 @@ pub use self::error::Error;
 pub use self::poolable::{PoolResult, Poolable};
 
 pub use self::connection::*;
-pub use rocket_sync_db_pools_codegen::*;
+pub use rkt_sync_db_pools_codegen::*;
 
 /// Example of code generated by the `#[database]` attribute.
 #[cfg(all(nightly, doc, feature = "diesel_sqlite_pool"))]
@@ -405,8 +402,8 @@ pub mod example {
     /// This implementation of `ExampleDb` was generated by:
     ///
     /// ```rust
-    /// # extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
-    /// use rocket_sync_db_pools::{database, diesel};
+    /// # extern crate rkt_sync_db_pools;
+    /// use rkt_sync_db_pools::{database, diesel};
     ///
     /// #[database("example")]
     /// pub struct ExampleDb(diesel::SqliteConnection);
@@ -423,22 +420,22 @@ pub mod example {
         /// # Example
         ///
         /// ```rust
-        /// # #[macro_use] extern crate rocket;
-        /// # #[macro_use] extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
+        /// # #[macro_use] extern crate rkt;
+        /// # #[macro_use] extern crate rkt_sync_db_pools;
         /// #
         /// # #[cfg(feature = "diesel_sqlite_pool")] {
-        /// use rocket_sync_db_pools::diesel;
+        /// use rkt_sync_db_pools::diesel;
         ///
         /// #[database("my_db")]
         /// struct MyConn(diesel::SqliteConnection);
         ///
         /// #[launch]
         /// fn rocket() -> _ {
-        ///     rocket::build().attach(MyConn::fairing())
+        ///     rkt::build().attach(MyConn::fairing())
         /// }
         /// # }
         /// ```
-        pub fn fairing() -> impl crate::rocket::fairing::Fairing {
+        pub fn fairing() -> impl crate::rkt::fairing::Fairing {
             <crate::ConnectionPool<Self, diesel::SqliteConnection>>::fairing(
                 "'example' Database Pool",
                 "example",
@@ -456,20 +453,20 @@ pub mod example {
         /// # Example
         ///
         /// ```rust
-        /// # #[macro_use] extern crate rocket;
-        /// # #[macro_use] extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
+        /// # #[macro_use] extern crate rkt;
+        /// # #[macro_use] extern crate rkt_sync_db_pools;
         /// #
         /// # #[cfg(feature = "diesel_sqlite_pool")] {
-        /// use rocket::tokio::{task, time};
-        /// use rocket::fairing::AdHoc;
-        /// use rocket_sync_db_pools::diesel;
+        /// use rkt::tokio::{task, time};
+        /// use rkt::fairing::AdHoc;
+        /// use rkt_sync_db_pools::diesel;
         ///
         /// #[database("my_db")]
         /// struct MyConn(diesel::SqliteConnection);
         ///
         /// #[launch]
         /// fn rocket() -> _ {
-        ///     rocket::build()
+        ///     rkt::build()
         ///         .attach(MyConn::fairing())
         ///         .attach(AdHoc::try_on_ignite("Background DB", |rocket| async {
         ///             let pool = match MyConn::pool(&rocket) {
@@ -494,8 +491,8 @@ pub mod example {
         /// }
         /// # }
         /// ```
-        pub fn pool<P: crate::rocket::Phase>(
-            __rocket: &crate::rocket::Rocket<P>,
+        pub fn pool<P: crate::rkt::Phase>(
+            __rocket: &crate::rkt::Rocket<P>,
         ) -> Option<&crate::ConnectionPool<Self, diesel::SqliteConnection>> {
             <crate::ConnectionPool<Self, diesel::SqliteConnection>>::pool(&__rocket)
         }
@@ -508,11 +505,11 @@ pub mod example {
         /// # Example
         ///
         /// ```rust
-        /// # #[macro_use] extern crate rocket;
-        /// # #[macro_use] extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
+        /// # #[macro_use] extern crate rkt;
+        /// # #[macro_use] extern crate rkt_sync_db_pools;
         /// #
         /// # #[cfg(feature = "diesel_sqlite_pool")] {
-        /// use rocket_sync_db_pools::diesel;
+        /// use rkt_sync_db_pools::diesel;
         ///
         /// #[database("my_db")]
         /// struct MyConn(diesel::SqliteConnection);
@@ -537,8 +534,8 @@ pub mod example {
         /// Retrieves a connection of type `Self` from the `rocket` instance.
         /// Returns `Some` as long as `Self::fairing()` has been attached and
         /// there is a connection available within at most `timeout` seconds.
-        pub async fn get_one<P: crate::rocket::Phase>(
-            __rocket: &crate::rocket::Rocket<P>,
+        pub async fn get_one<P: crate::rkt::Phase>(
+            __rocket: &crate::rkt::Rocket<P>,
         ) -> Option<Self> {
             <crate::ConnectionPool<Self, diesel::SqliteConnection>>::get_one(&__rocket)
                 .await
@@ -548,7 +545,7 @@ pub mod example {
 
     /// Retrieves a connection from the database pool or fails with a
     /// `Status::ServiceUnavailable` if doing so times out.
-    impl<'r> crate::rocket::request::FromRequest<'r> for ExampleDb {
+    impl<'r> crate::rkt::request::FromRequest<'r> for ExampleDb {
         type Error = ();
         #[allow(
             clippy::let_unit_value,
@@ -559,10 +556,10 @@ pub mod example {
             clippy::used_underscore_binding
         )]
         fn from_request<'life0, 'async_trait>(
-            __r: &'r crate::rocket::request::Request<'life0>,
+            __r: &'r crate::rkt::request::Request<'life0>,
         ) -> ::core::pin::Pin<
             Box<
-                dyn ::core::future::Future<Output = crate::rocket::request::Outcome<Self, ()>>
+                dyn ::core::future::Future<Output = crate::rkt::request::Outcome<Self, ()>>
                     + ::core::marker::Send
                     + 'async_trait,
             >,
@@ -574,12 +571,12 @@ pub mod example {
         {
             Box::pin(async move {
                 if let ::core::option::Option::Some(__ret) =
-                    ::core::option::Option::None::<crate::rocket::request::Outcome<Self, ()>>
+                    ::core::option::Option::None::<crate::rkt::request::Outcome<Self, ()>>
                 {
                     return __ret;
                 }
                 let __r = __r;
-                let __ret: crate::rocket::request::Outcome<Self, ()> = {
+                let __ret: crate::rkt::request::Outcome<Self, ()> = {
                     <crate::Connection<Self, diesel::SqliteConnection>>::from_request(__r)
                         .await
                         .map(Self)
@@ -589,8 +586,8 @@ pub mod example {
             })
         }
     }
-    impl crate::rocket::Sentinel for ExampleDb {
-        fn abort(__r: &crate::rocket::Rocket<crate::rocket::Ignite>) -> bool {
+    impl crate::rkt::Sentinel for ExampleDb {
+        fn abort(__r: &crate::rkt::Rocket<crate::rkt::Ignite>) -> bool {
             <crate::Connection<Self, diesel::SqliteConnection>>::abort(__r)
         }
     }

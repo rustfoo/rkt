@@ -31,11 +31,20 @@ help: the trait `FromSegments<'_>` is not implemented for `Q`
   |
 3 | struct Q;
   | ^^^^^^^^
-  = help: the following other types implement trait `FromSegments<'r>`:
-            `PathBuf` implements `FromSegments<'_>`
-            `Result<T, <T as FromSegments<'r>>::Error>` implements `FromSegments<'r>`
-            `Segments<'r, rocket::http::uri::fmt::Path>` implements `FromSegments<'r>`
-            `std::option::Option<T>` implements `FromSegments<'r>`
+help: the following other types implement trait `FromSegments<'r>`
+ --> $WORKSPACE/core/lib/src/request/from_param.rs
+  |
+  | impl<'r> FromSegments<'r> for Segments<'r, Path> {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `Segments<'r, rkt::http::uri::fmt::Path>` implements `FromSegments<'r>`
+...
+  | impl FromSegments<'_> for PathBuf {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `PathBuf` implements `FromSegments<'_>`
+...
+  | impl<'r, T: FromSegments<'r>> FromSegments<'r> for Result<T, T::Error> {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `Result<T, <T as FromSegments<'r>>::Error>` implements `FromSegments<'r>`
+...
+  | impl<'r, T: FromSegments<'r>> FromSegments<'r> for Option<T> {
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `std::option::Option<T>` implements `FromSegments<'r>`
 
 error[E0277]: the trait bound `Q: FromFormField<'_>` is not satisfied
   --> tests/ui-fail-stable/route-type-errors.rs:12:13
@@ -124,7 +133,7 @@ help: the trait `FromRequest<'_>` is not implemented for `Q`
              &'r Host<'r>
              &'r Limits
              &'r Route
-             &'r rocket::Config
+             &'r rkt::Config
            and $N others
 
 error[E0277]: the trait bound `Q: FromParam<'_>` is not satisfied
@@ -168,7 +177,7 @@ help: the trait `FromRequest<'_>` is not implemented for `Q`
              &'r Host<'r>
              &'r Limits
              &'r Route
-             &'r rocket::Config
+             &'r rkt::Config
            and $N others
 
 error[E0277]: the trait bound `Q: FromParam<'_>` is not satisfied

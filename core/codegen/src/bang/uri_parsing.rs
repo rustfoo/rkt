@@ -4,7 +4,7 @@ use devise::{ext::TypeExt, Spanned};
 use indexmap::IndexMap;
 use proc_macro2::{Span, TokenStream, TokenTree};
 use quote::{ToTokens, TokenStreamExt};
-use rocket_http::uri::{Error, Reference};
+use rkt_http::uri::{Error, Reference};
 use syn::parse::{self, Parse, ParseStream, Parser};
 use syn::punctuated::Punctuated;
 use syn::{Expr, Ident, LitStr, Path, Token, Type};

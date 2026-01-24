@@ -21,11 +21,11 @@
 //!
 //! ## Usage
 //!
-//! Depend on `rocket` in `Cargo.toml`:
+//! Depend on `rkt` in `Cargo.toml`:
 //!
 //! ```toml
 //! [dependencies]
-//! rocket = { package = "rocket_community", version = "0.6.0" }
+//! rkt = { package = version = "0.6.0" }
 //! ```
 //!
 //! (Note that this is a community fork of Rocket. The `package = "rocket_community"`
@@ -40,7 +40,7 @@
 //! [git dependencies]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories
 //!
 //! ```rust,no_run
-//! #[macro_use] extern crate rocket_community as rocket;
+//! # #[macro_use] extern crate rkt;
 //!
 //! #[get("/")]
 //! fn hello() -> &'static str {
@@ -49,7 +49,7 @@
 //!
 //! #[launch]
 //! fn rocket() -> _ {
-//!     rocket::build().mount("/", routes![hello])
+//!     rkt::build().mount("/", routes![hello])
 //! }
 //! ```
 //!
@@ -75,14 +75,14 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rocket = { package = "rocket_community", version = "0.6.0", features = ["secrets", "tls", "json"] }
+//! rkt = { version = "0.6.0", features = ["secrets", "tls", "json"] }
 //! ```
 //!
 //! Conversely, HTTP/2 can be disabled:
 //!
 //! ```toml
 //! [dependencies]
-//! rocket = { package = "rocket_community", version = "0.6.0", default-features = false }
+//! rkt = { version = "0.6.0", default-features = false }
 //! ```
 //!
 //! [subscriber]: crate::trace::subscriber
@@ -112,7 +112,7 @@
 //! [Figment]: https://docs.rs/figment
 
 // Allows using Rocket's codegen in Rocket itself.
-extern crate self as rocket;
+extern crate self as rkt;
 
 #[doc(hidden)]
 pub use async_stream;
@@ -161,14 +161,14 @@ mod erased;
 mod lifecycle;
 mod phase;
 #[path = "rocket.rs"]
-mod rkt;
+mod rocket;
 mod router;
 mod server;
 mod state;
 mod util;
 
 #[doc(inline)]
-pub use rocket_codegen::*;
+pub use rkt_codegen::*;
 
 #[doc(inline)]
 pub use crate::catcher::Catcher;
@@ -185,7 +185,7 @@ pub use crate::request::Request;
 #[doc(inline)]
 pub use crate::response::Response;
 #[doc(inline)]
-pub use crate::rkt::Rocket;
+pub use crate::rocket::Rocket;
 #[doc(inline)]
 pub use crate::route::Route;
 #[doc(inline)]
@@ -201,8 +201,7 @@ pub use crate::state::State;
 /// retrofitted with support for `async fn`s:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::*;
+/// # use rkt::*;
 /// #[async_trait]
 /// trait MyAsyncTrait {
 ///     async fn do_async_work();
@@ -317,16 +316,15 @@ pub fn async_main<R>(fut: impl std::future::Future<Output = R> + Send) -> R {
 /// Rocket is just a small part of a bigger application:
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// #[rocket::main]
+/// #[rkt::main]
 /// async fn main() {
 ///     # let should_start_server_in_foreground = false;
 ///     # let should_start_server_in_background = false;
-///     let rocket = rocket::build();
+///     let rocket = rkt::build();
 ///     if should_start_server_in_foreground {
-///         rocket::build().launch().await;
+///         rkt::build().launch().await;
 ///     } else if should_start_server_in_background {
-///         rocket::tokio::spawn(rocket.launch());
+///         rkt::tokio::spawn(rocket.launch());
 ///     } else {
 ///         // do something else
 ///     }
@@ -340,40 +338,37 @@ pub fn async_main<R>(fut: impl std::future::Future<Output = R> + Send) -> R {
 /// Build an instance of Rocket, launch it, and wait for shutdown:
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// use rocket::fairing::AdHoc;
+/// use rkt::fairing::AdHoc;
 ///
-/// let rocket = rocket::build()
+/// let rocket = rkt::build()
 ///     .attach(AdHoc::on_liftoff("Liftoff Printer", |_| Box::pin(async move {
 ///         println!("Stalling liftoff for a second...");
-///         rocket::tokio::time::sleep(std::time::Duration::from_secs(1)).await;
+///         rkt::tokio::time::sleep(std::time::Duration::from_secs(1)).await;
 ///         println!("And we're off!");
 ///     })));
 ///
-/// rocket::execute(rocket.launch());
+/// rkt::execute(rocket.launch());
 /// ```
 ///
 /// Launch a pre-built instance of Rocket and wait for it to shutdown:
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// use rocket::{Rocket, Ignite, Phase, Error};
+/// use rkt::{Rocket, Ignite, Phase, Error};
 ///
 /// fn launch<P: Phase>(rocket: Rocket<P>) -> Result<Rocket<Ignite>, Error> {
-///     rocket::execute(rocket.launch())
+///     rkt::execute(rocket.launch())
 /// }
 /// ```
 ///
 /// Do async work to build an instance of Rocket, launch, and wait for shutdown:
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// use rocket::fairing::AdHoc;
+/// use rkt::fairing::AdHoc;
 ///
 /// // This line can also be inside of the `async` block.
-/// let rocket = rocket::build();
+/// let rocket = rkt::build();
 ///
-/// rocket::execute(async move {
+/// rkt::execute(async move {
 ///     let rocket = rocket.ignite().await?;
 ///     let config = rocket.config();
 ///     rocket.launch().await

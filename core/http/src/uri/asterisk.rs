@@ -11,7 +11,7 @@ use crate::uri::Error;
 /// # #[cfg(feature = "serde")] mod serde_impl {
 /// # use serde as serde;
 /// use serde::{Serialize, Deserialize};
-/// use rocket::http::uri::Asterisk;
+/// use rkt::http::uri::Asterisk;
 ///
 /// #[derive(Deserialize, Serialize)]
 /// # #[serde(crate = "serde")]
@@ -30,8 +30,8 @@ impl Asterisk {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Asterisk;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Asterisk;
     ///
     /// assert!(Asterisk::parse("*").is_ok());
     /// assert!(Asterisk::parse("/foo/bar").is_err());
@@ -50,8 +50,8 @@ impl Asterisk {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Asterisk;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Asterisk;
     ///
     /// assert!(Asterisk::parse_owned("*".to_string()).is_ok());
     /// assert!(Asterisk::parse_owned("/foo/bar".to_string()).is_err());

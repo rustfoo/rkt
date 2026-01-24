@@ -1,9 +1,9 @@
-use rocket::{Rocket, Build, futures};
-use rocket::fairing::{self, AdHoc};
-use rocket::response::status::Created;
-use rocket::serde::{Serialize, Deserialize, json::Json};
+use rkt::{Rocket, Build, futures};
+use rkt::fairing::{self, AdHoc};
+use rkt::response::status::Created;
+use rkt::serde::{Serialize, Deserialize, json::Json};
 
-use rocket_db_pools::{Database, Connection};
+use rkt_db_pools::{Database, Connection};
 
 use futures::{stream::TryStreamExt, future::TryFutureExt};
 
@@ -11,10 +11,10 @@ use futures::{stream::TryStreamExt, future::TryFutureExt};
 #[database("sqlx")]
 struct Db(sqlx::SqlitePool);
 
-type Result<T, E = rocket::response::Debug<sqlx::Error>> = std::result::Result<T, E>;
+type Result<T, E = rkt::response::Debug<sqlx::Error>> = std::result::Result<T, E>;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Post {
     #[serde(skip_deserializing, skip_serializing_if = "Option::is_none")]
     id: Option<i64>,

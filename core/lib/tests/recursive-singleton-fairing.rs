@@ -1,12 +1,12 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::error::ErrorKind;
-use rocket::fairing::{self, Fairing, Info, Kind};
-use rocket::{Build, Config, Rocket};
+use rkt::error::ErrorKind;
+use rkt::fairing::{self, Fairing, Info, Kind};
+use rkt::{Build, Config, Rocket};
 
 struct Singleton(Kind, Kind, bool);
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl Fairing for Singleton {
     fn info(&self) -> Info {
         Info {
@@ -25,9 +25,9 @@ impl Fairing for Singleton {
 }
 
 // Have => two `Singleton`s. This is okay; we keep the latter.
-#[rocket::async_test]
+#[rkt::async_test]
 async fn recursive_singleton_ok() {
-    let result = rocket::custom(Config::debug_default())
+    let result = rkt::custom(Config::debug_default())
         .attach(Singleton(
             Kind::Ignite | Kind::Singleton,
             Kind::Singleton,
@@ -43,7 +43,7 @@ async fn recursive_singleton_ok() {
 
     assert!(result.is_ok(), "{:?}", result);
 
-    let result = rocket::custom(Config::debug_default())
+    let result = rkt::custom(Config::debug_default())
         .attach(Singleton(
             Kind::Ignite | Kind::Singleton,
             Kind::Singleton,
@@ -72,10 +72,10 @@ async fn recursive_singleton_ok() {
 
 // Have a `Singleton` add itself `on_ignite()`. Since it already ran, the one it
 // adds can't be unique, so ensure we error in this case.
-#[rocket::async_test]
+#[rkt::async_test]
 async fn recursive_singleton_bad() {
     #[track_caller]
-    fn assert_err(error: rocket::Error) {
+    fn assert_err(error: rkt::Error) {
         if let ErrorKind::FailedFairings(v) = error.kind() {
             assert_eq!(v.len(), 1);
             assert_eq!(v[0].name, "Singleton");
@@ -84,7 +84,7 @@ async fn recursive_singleton_bad() {
         }
     }
 
-    let result = rocket::custom(Config::debug_default())
+    let result = rkt::custom(Config::debug_default())
         .attach(Singleton(
             Kind::Ignite | Kind::Singleton,
             Kind::Ignite | Kind::Singleton,
@@ -95,7 +95,7 @@ async fn recursive_singleton_bad() {
 
     assert_err(result.unwrap_err());
 
-    let result = rocket::custom(Config::debug_default())
+    let result = rkt::custom(Config::debug_default())
         .attach(Singleton(
             Kind::Ignite | Kind::Singleton,
             Kind::Singleton,
@@ -106,7 +106,7 @@ async fn recursive_singleton_bad() {
 
     assert_err(result.unwrap_err());
 
-    let result = rocket::custom(Config::debug_default())
+    let result = rkt::custom(Config::debug_default())
         .attach(Singleton(Kind::Ignite, Kind::Singleton, true))
         .ignite()
         .await;

@@ -1,5 +1,5 @@
 use super::rocket;
-use rocket::local::blocking::Client;
+use rkt::local::blocking::Client;
 
 #[test]
 fn rewrite_get_put() {

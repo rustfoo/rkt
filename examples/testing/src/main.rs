@@ -1,4 +1,4 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 mod async_required;
 
@@ -15,11 +15,11 @@ fn rocket() -> _ {
 #[cfg(test)]
 mod test {
     use super::rocket;
-    use rocket::http::Status;
+    use rkt::http::Status;
 
     #[test]
     fn test_hello() {
-        use rocket::local::blocking::Client;
+        use rkt::local::blocking::Client;
 
         let client = Client::tracked(rocket()).unwrap();
         let response = client.get("/").dispatch();

@@ -2,10 +2,10 @@ use crate::prelude::*;
 
 use std::net::{Ipv4Addr, SocketAddr};
 
-use rocket::listener::Endpoint;
-use rocket::tls::TlsListener;
-use rocket::tokio::net::TcpListener;
-use rocket::{get, routes, Rocket};
+use rkt::listener::Endpoint;
+use rkt::tls::TlsListener;
+use rkt::tokio::net::TcpListener;
+use rkt::{get, routes, Rocket};
 
 use reqwest::tls::TlsInfo;
 
@@ -32,7 +32,7 @@ fn test_tls_works() -> Result<()> {
     assert!(stdout.contains("GET /"));
 
     let server = Server::spawn((), |(token, _)| {
-        let rocket = rocket::build()
+        let rocket = rkt::build()
             .reconfigure_with_toml(TLS_CONFIG)
             .mount("/", routes![hello_world]);
 

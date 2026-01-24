@@ -1,7 +1,7 @@
-use rocket::{Rocket, Build};
-use rocket::fairing::AdHoc;
-use rocket::response::{Debug, status::Created};
-use rocket::serde::{Serialize, Deserialize, json::Json};
+use rkt::{Rocket, Build};
+use rkt::fairing::AdHoc;
+use rkt::response::{Debug, status::Created};
+use rkt::serde::{Serialize, Deserialize, json::Json};
 
 use diesel::prelude::*;
 
@@ -11,7 +11,7 @@ struct Db(diesel::SqliteConnection);
 type Result<T, E = Debug<diesel::result::Error>> = std::result::Result<T, E>;
 
 #[derive(Debug, Clone, Deserialize, Serialize, Queryable, Insertable)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 #[diesel(table_name = posts)]
 struct Post {
     #[serde(skip_deserializing)]

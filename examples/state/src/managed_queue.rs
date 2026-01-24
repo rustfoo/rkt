@@ -1,6 +1,6 @@
-use rocket::State;
-use rocket::fairing::AdHoc;
-use rocket::http::Status;
+use rkt::State;
+use rkt::fairing::AdHoc;
+use rkt::http::Status;
 
 struct Tx(flume::Sender<String>);
 struct Rx(flume::Receiver<String>);

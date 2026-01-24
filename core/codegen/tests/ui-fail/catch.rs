@@ -1,6 +1,6 @@
 #[macro_use] extern crate rocket;
 
-use rocket::Request;
+use rkt::Request;
 
 #[catch(404)]
 struct Catcher(String);

@@ -36,11 +36,10 @@ use crate::{Error, Ignite, Orbit, Phase, Rocket};
 /// dispatches a local `POST /` request with a body of `Hello, world!`.
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// use rocket::local::asynchronous::Client;
+/// use rkt::local::asynchronous::Client;
 ///
-/// # rocket::async_test(async {
-/// let rocket = rocket::build();
+/// # rkt::async_test(async {
+/// let rocket = rkt::build();
 /// let client = Client::tracked(rocket).await.expect("valid rocket");
 /// let response = client.post("/")
 ///     .body("Hello, world!")
@@ -126,7 +125,7 @@ impl Client {
     }
 
     // Generates the public API methods, which call the private methods above.
-    pub_client_impl!("use rocket::local::asynchronous::Client;" @async await);
+    pub_client_impl!("use rkt::local::asynchronous::Client;" @async await);
 }
 
 impl std::fmt::Debug for Client {

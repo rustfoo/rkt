@@ -1,15 +1,15 @@
 [package]
-name = "rocket-community"
+name = "rkt"
 version = "0.6.0"
 authors = ["Sergio Benitez <sb@sergio.bz>"]
 description = """
 Web framework with a focus on usability, security, extensibility, and speed. (Community Fork)
 """
-documentation = "https://docs.rs/rocket-community/latest/rocket_community/"
-homepage = "https://github.com/rocket-rs-community/Rocket"
-repository = "https://github.com/rocket-rs-community/Rocket"
+documentation = "https://docs.rs/rustfoo/latest/rkt/"
+homepage = "https://rkt.rs"
+repository = "https://github.com/rustfoo/rkt"
 readme = "../../README.md"
-keywords = ["rocket", "web", "framework", "server"]
+keywords = ["rkt", "rocket", "web", "framework", "server"]
 license = "MIT OR Apache-2.0"
 build = "build.rs"
 categories = ["web-programming::http-server"]
@@ -29,7 +29,7 @@ http3-preview = ["s2n-quic", "s2n-quic-h3", "tls"]
 secrets = ["cookie/private", "cookie/key-expansion"]
 json = ["serde_json"]
 msgpack = ["rmp-serde"]
-uuid = ["uuid_", "rocket_http/uuid"]
+uuid = ["uuid_", "rkt_http/uuid"]
 tls = ["rustls", "tokio-rustls", "rustls-pki-types"]
 mtls = ["tls", "x509-parser"]
 tokio-macros = ["tokio/macros"]
@@ -86,13 +86,11 @@ optional = true
 default-features = false
 features = ["fmt", "tracing-log", "parking_lot"]
 
-[dependencies.rocket_codegen]
-package = "rocket_codegen-community"
+[dependencies.rkt_codegen]
 version = "0.6.0"
 path = "../codegen"
 
-[dependencies.rocket_http]
-package = "rocket_http-community"
+[dependencies.rkt_http]
 version = "0.6.0"
 path = "../http"
 features = ["serde"]

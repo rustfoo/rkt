@@ -1,8 +1,8 @@
 use std::fmt;
-use super::{rocket, FormInput, FormOption};
+use super::{rkt, FormInput, FormOption};
 
-use rocket::local::blocking::Client;
-use rocket::http::ContentType;
+use rkt::local::blocking::Client;
+use rkt::http::ContentType;
 
 impl fmt::Display for FormOption {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {

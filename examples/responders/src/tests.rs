@@ -1,5 +1,5 @@
-use rocket::local::blocking::Client;
-use rocket::http::Status;
+use rkt::local::blocking::Client;
+use rkt::http::Status;
 
 /****************************** `File` Responder ******************************/
 
@@ -43,9 +43,9 @@ fn test_many_his() {
 
 #[async_test]
 async fn test_one_hi_per_second() {
-    use rocket::local::asynchronous::Client;
-    use rocket::tokio::time::{self, Instant, Duration};
-    use rocket::tokio::{self, select};
+    use rkt::local::asynchronous::Client;
+    use rkt::tokio::time::{self, Instant, Duration};
+    use rkt::tokio::{self, select};
 
     // Listen for 1 second at 1 `hi` per 250ms, see if we get ~4 `hi`'s, then
     // send a shutdown() signal, meaning we should get a `goodbye`.
@@ -111,7 +111,7 @@ fn test_login() {
 
 /***************************** `content` Responders ***************************/
 
-use rocket::http::{Accept, ContentType};
+use rkt::http::{Accept, ContentType};
 
 #[test]
 fn test_xml() {

@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
-use rocket::local::blocking::Client;
+use rkt::local::blocking::Client;
 
 #[get("/easy/<id>")]
 fn easy(id: i32) -> String {
@@ -33,7 +33,7 @@ foo!("/hello/<name>", name);
 
 #[test]
 fn test_reexpansion() {
-    let rocket = rocket::build().mount("/", routes![easy, hard, hi]);
+    let rocket = rkt::build().mount("/", routes![easy, hard, hi]);
     let client = Client::debug(rocket).unwrap();
 
     let response = client.get("/easy/327").dispatch();
@@ -49,7 +49,7 @@ fn test_reexpansion() {
 macro_rules! index {
     ($type:ty) => {
         #[get("/")]
-        fn index(thing: &rocket::State<$type>) -> String {
+        fn index(thing: &rkt::State<$type>) -> String {
             format!("Thing: {}", thing)
         }
     };
@@ -59,7 +59,7 @@ index!(i32);
 
 #[test]
 fn test_index() {
-    let rocket = rocket::build().mount("/", routes![index]).manage(100i32);
+    let rocket = rkt::build().mount("/", routes![index]).manage(100i32);
     let client = Client::debug(rocket).unwrap();
 
     let response = client.get("/").dispatch();

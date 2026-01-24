@@ -1,20 +1,20 @@
-#[macro_use] extern crate rocket;
-#[macro_use] extern crate rocket_sync_db_pools;
+#[macro_use] extern crate rkt;
+#[macro_use] extern crate rkt_sync_db_pools;
 #[macro_use] extern crate diesel;
 
 #[cfg(test)]
 mod tests;
 mod task;
 
-use rocket::{Rocket, Build};
-use rocket::fairing::AdHoc;
-use rocket::request::FlashMessage;
-use rocket::response::{Flash, Redirect};
-use rocket::serde::Serialize;
-use rocket::form::Form;
-use rocket::fs::{FileServer, relative};
+use rkt::{Rocket, Build};
+use rkt::fairing::AdHoc;
+use rkt::request::FlashMessage;
+use rkt::response::{Flash, Redirect};
+use rkt::serde::Serialize;
+use rkt::form::Form;
+use rkt::fs::{FileServer, relative};
 
-use rocket_dyn_templates::Template;
+use rkt_dyn_templates::Template;
 
 use crate::task::{Task, Todo};
 
@@ -22,7 +22,7 @@ use crate::task::{Task, Todo};
 pub struct DbConn(diesel::SqliteConnection);
 
 #[derive(Debug, Serialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Context {
     flash: Option<(String, String)>,
     tasks: Vec<Task>
@@ -106,7 +106,7 @@ async fn run_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .attach(DbConn::fairing())
         .attach(Template::fairing())
         .attach(AdHoc::on_ignite("Run Migrations", run_migrations))

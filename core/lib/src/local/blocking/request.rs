@@ -1,6 +1,6 @@
 use std::fmt;
 
-use rocket_http::HttpVersion;
+use rkt_http::HttpVersion;
 
 use crate::http::uri::Origin;
 use crate::{http::Method, local::asynchronous, Request};
@@ -17,11 +17,10 @@ use super::{Client, LocalResponse};
 /// dispatch a `POST` request to `/` with a JSON body:
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// use rocket::local::blocking::{Client, LocalRequest};
-/// use rocket::http::{ContentType, Cookie};
+/// use rkt::local::blocking::{Client, LocalRequest};
+/// use rkt::http::{ContentType, Cookie};
 ///
-/// let client = Client::tracked(rocket::build()).expect("valid rocket");
+/// let client = Client::tracked(rkt::build()).expect("valid rocket");
 /// let req = client.post("/")
 ///     .header(ContentType::JSON)
 ///     .remote("127.0.0.1:8000")
@@ -74,8 +73,8 @@ impl<'c> LocalRequest<'c> {
     }
 
     pub_request_impl!(
-        "# use rocket::local::blocking::Client;\n\
-        use rocket::local::blocking::LocalRequest;"
+        "# use rkt::local::blocking::Client;\n\
+        use rkt::local::blocking::LocalRequest;"
     );
 }
 

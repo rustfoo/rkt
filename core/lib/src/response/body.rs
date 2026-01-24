@@ -158,8 +158,7 @@ impl<'r> Body<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::Response;
+    /// use rkt::response::Response;
     ///
     /// let r = Response::build().finalize();
     /// assert!(r.body().is_none());
@@ -175,9 +174,8 @@ impl<'r> Body<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
-    /// use rocket::response::Response;
+    /// use rkt::response::Response;
     ///
     /// let body = "Brewing the best coffee!";
     /// let r = Response::build()
@@ -201,11 +199,10 @@ impl<'r> Body<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
-    /// use rocket::response::Response;
+    /// use rkt::response::Response;
     ///
-    /// # rocket::async_test(async {
+    /// # rkt::async_test(async {
     /// let body = "Brewing the best coffee!";
     /// let r = Response::build()
     ///     .sized_body(body.len(), Cursor::new(body))
@@ -242,9 +239,8 @@ impl<'r> Body<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
-    /// use rocket::response::{Response, Body};
+    /// use rkt::response::{Response, Body};
     ///
     /// let body = "Brewing the best coffee!";
     /// let r = Response::build()
@@ -283,11 +279,10 @@ impl<'r> Body<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
-    /// use rocket::response::Response;
+    /// use rkt::response::Response;
     ///
-    /// # rocket::async_test(async {
+    /// # rkt::async_test(async {
     /// let body = "Hello, Rocketeers!";
     /// let mut r = Response::build()
     ///     .sized_body(None, Cursor::new(body))
@@ -322,9 +317,8 @@ impl<'r> Body<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
-    /// use rocket::response::Response;
+    /// use rkt::response::Response;
     ///
     /// let mut r = Response::build()
     ///     .sized_body(None, Cursor::new("Hi"))
@@ -350,11 +344,10 @@ impl<'r> Body<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io;
-    /// use rocket::response::Response;
+    /// use rkt::response::Response;
     ///
-    /// # let ok: io::Result<()> = rocket::async_test(async {
+    /// # let ok: io::Result<()> = rkt::async_test(async {
     /// let mut r = Response::build()
     ///     .streamed_body(io::Cursor::new(&[1, 2, 3, 11, 13, 17]))
     ///     .finalize();
@@ -391,11 +384,10 @@ impl<'r> Body<'r> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io;
-    /// use rocket::response::Response;
+    /// use rkt::response::Response;
     ///
-    /// # let ok: io::Result<()> = rocket::async_test(async {
+    /// # let ok: io::Result<()> = rkt::async_test(async {
     /// let mut r = Response::build()
     ///     .streamed_body(io::Cursor::new("Hello, Rocketeers!"))
     ///     .finalize();

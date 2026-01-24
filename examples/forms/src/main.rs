@@ -1,11 +1,11 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
-use rocket::time::Date;
-use rocket::http::{Status, ContentType};
-use rocket::form::{Form, Contextual, FromForm, FromFormField, Context};
-use rocket::fs::{FileServer, TempFile, relative};
+use rkt::time::Date;
+use rkt::http::{Status, ContentType};
+use rkt::form::{Form, Contextual, FromForm, FromFormField, Context};
+use rkt::fs::{FileServer, TempFile, relative};
 
-use rocket_dyn_templates::Template;
+use rkt_dyn_templates::Template;
 
 #[derive(Debug, FromForm)]
 struct Password<'v> {
@@ -90,7 +90,7 @@ fn submit<'r>(form: Form<Contextual<'r, Submit<'r>>>) -> (Status, Template) {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![index, submit])
         .attach(Template::fairing())
         .mount("/", FileServer::new(relative!("/static")))

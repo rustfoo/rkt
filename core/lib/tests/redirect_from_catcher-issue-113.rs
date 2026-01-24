@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::response::Redirect;
+use rkt::response::Redirect;
 
 #[catch(404)]
 fn not_found() -> Redirect {
@@ -10,12 +10,12 @@ fn not_found() -> Redirect {
 
 mod tests {
     use super::*;
-    use rocket::http::Status;
-    use rocket::local::blocking::Client;
+    use rkt::http::Status;
+    use rkt::local::blocking::Client;
 
     #[test]
     fn error_catcher_redirect() {
-        let client = Client::debug(rocket::build().register("/", catchers![not_found])).unwrap();
+        let client = Client::debug(rkt::build().register("/", catchers![not_found])).unwrap();
         let response = client.get("/unknown").dispatch();
 
         let location: Vec<_> = response.headers().get("location").collect();

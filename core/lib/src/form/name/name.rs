@@ -35,8 +35,7 @@ impl Name {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::Name;
+    /// use rkt::form::name::Name;
     ///
     /// let name = Name::new("a.b.c");
     /// assert_eq!(name.as_str(), "a.b.c");
@@ -52,8 +51,7 @@ impl Name {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::Name;
+    /// use rkt::form::name::Name;
     ///
     /// let name = Name::new("apple.b[foo:bar]zoo.[barb].bat");
     /// let keys: Vec<_> = name.keys().map(|k| k.as_str()).collect();
@@ -85,8 +83,7 @@ impl Name {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::Name;
+    /// use rkt::form::name::Name;
     ///
     /// let name = Name::new("apple.b[foo:bar]");
     /// let prefixes: Vec<_> = name.prefixes().map(|p| p.as_str()).collect();
@@ -121,8 +118,7 @@ impl Name {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::Name;
+    /// use rkt::form::name::Name;
     ///
     /// let name = Name::new("a.b.c");
     /// assert_eq!(name.as_str(), "a.b.c");

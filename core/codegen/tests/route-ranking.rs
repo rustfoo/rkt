@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
-use rocket::local::blocking::Client;
+use rkt::local::blocking::Client;
 
 // Test that manual/auto ranking works as expected.
 
@@ -27,7 +27,7 @@ fn get3(_number: u64) -> &'static str {
 
 #[test]
 fn test_ranking() {
-    let rocket = rocket::build().mount("/", routes![get0, get1, get2, get3]);
+    let rocket = rkt::build().mount("/", routes![get0, get1, get2, get3]);
     let client = Client::debug(rocket).unwrap();
 
     let response = client.get("/0").dispatch();
@@ -50,9 +50,9 @@ fn get0b(_n: u8) {}
 
 #[test]
 fn test_rank_collision() {
-    use rocket::error::ErrorKind;
+    use rkt::error::ErrorKind;
 
-    let rocket = rocket::build().mount("/", routes![get0, get0b]);
+    let rocket = rkt::build().mount("/", routes![get0, get0b]);
     let client_result = Client::debug(rocket);
     match client_result.as_ref().map_err(|e| e.kind()) {
         Err(ErrorKind::Collisions { .. }) => { /* o.k. */ }

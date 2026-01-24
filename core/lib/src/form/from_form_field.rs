@@ -20,8 +20,7 @@ use crate::http::uncased::AsUncased;
 /// fields:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::form::FromForm;
+/// # use rkt::form::FromForm;
 /// #[derive(FromForm)]
 /// struct Person<'r> {
 ///     name: &'r str,
@@ -57,8 +56,7 @@ use crate::http::uncased::AsUncased;
 /// name of the variant or the value in `field()`.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::form::FromFormField;
+/// # use rkt::form::FromFormField;
 /// /// Fields with value `"simple"` parse as `Kind::Simple`. Fields with value
 /// /// `"fancy"` parse as `Kind::SoFancy`.
 /// #[derive(FromFormField)]
@@ -83,14 +81,13 @@ use crate::http::uncased::AsUncased;
 /// as an intermediary, and parsing from both should be preferred when sensible.
 ///
 /// `FromFormField` is an async trait, so implementations must be decorated with
-/// an attribute of `#[rocket::async_trait]`:
+/// an attribute of `#[rkt::async_trait]`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
 /// # struct MyType;
-/// use rocket::form::{self, FromFormField, DataField, ValueField};
+/// use rkt::form::{self, FromFormField, DataField, ValueField};
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromFormField<'r> for MyType {
 ///     fn from_value(field: ValueField<'r>) -> form::Result<'r, Self> {
 ///         todo!("parse from a value or use default impl")
@@ -109,10 +106,9 @@ use crate::http::uncased::AsUncased;
 /// to be any slice of bytes.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::post;
-/// use rocket::data::ToByteUnit;
-/// use rocket::form::{self, FromFormField, DataField, ValueField};
+/// # use rkt::post;
+/// use rkt::data::ToByteUnit;
+/// use rkt::form::{self, FromFormField, DataField, ValueField};
 ///
 /// use memchr::memchr;
 ///
@@ -121,7 +117,7 @@ use crate::http::uncased::AsUncased;
 ///     data: &'r [u8]
 /// }
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromFormField<'r> for Person<'r> {
 ///     fn from_value(field: ValueField<'r>) -> form::Result<'r, Self> {
 ///         match field.value.find(':') {
@@ -147,7 +143,7 @@ use crate::http::uncased::AsUncased;
 ///
 ///         // Store the bytes in request-local cache and split at ':'.
 ///         let bytes = bytes.into_inner();
-///         let bytes = rocket::request::local_cache!(field.request, bytes);
+///         let bytes = rkt::request::local_cache!(field.request, bytes);
 ///         let (raw_name, data) = match memchr(b':', bytes) {
 ///             Some(i) => (&bytes[..i], &bytes[(i + 1)..]),
 ///             None => Err(form::Error::validation("does not contain ':'"))?
@@ -159,7 +155,7 @@ use crate::http::uncased::AsUncased;
 ///     }
 /// }
 ///
-/// use rocket::form::{Form, FromForm};
+/// use rkt::form::{Form, FromForm};
 ///
 /// // The type can be used directly, if only one field is expected...
 /// #[post("/person", data = "<person>")]

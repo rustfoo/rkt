@@ -2,12 +2,11 @@
 //!
 //! # Quickstart
 //!
-//! 1. Add `rocket_db_pools` as a dependency with one or more [database driver
+//! 1. Add `rkt_db_pools` as a dependency with one or more [database driver
 //!    features](#supported-drivers) enabled:
 //!
 //!    ```toml
-//!    [dependencies.rocket_db_pools]
-//!    package = "rocket_db_pools-community"
+//!    [dependencies.rkt_db_pools]
 //!    version = "0.3.2"
 //!    features = ["sqlx_sqlite"]
 //!    ```
@@ -27,10 +26,9 @@
 //!    database pool:
 //!
 //!    ```rust
-//!    # extern crate rocket_db_pools_community as rocket_db_pools;
 //!    # #[cfg(feature = "sqlx_sqlite")] mod _inner {
-//!    # use rocket::launch;
-//!    use rocket_db_pools::{sqlx, Database};
+//!    # use rkt::launch;
+//!    use rkt_db_pools::{sqlx, Database};
 //!
 //!    #[derive(Database)]
 //!    #[database("sqlite_logs")]
@@ -38,7 +36,7 @@
 //!
 //!    #[launch]
 //!    fn rocket() -> _ {
-//!        rocket::build().attach(Logs::init())
+//!        rkt::build().attach(Logs::init())
 //!    }
 //!    # }
 //!    ```
@@ -48,10 +46,9 @@
 //!    [`Connection` deref](#supported-drivers) column.
 //!
 //!    ```rust
-//!    # extern crate rocket_db_pools_community as rocket_db_pools;
 //!    # #[cfg(feature = "sqlx_sqlite")] mod _inner {
-//!    # use rocket::{get, response::Responder};
-//!    # use rocket_db_pools::{sqlx, Database};
+//!    # use rkt::{get, response::Responder};
+//!    # use rkt_db_pools::{sqlx, Database};
 //!    # #[derive(Database)]
 //!    # #[database("sqlite_logs")]
 //!    # struct Logs(sqlx::SqlitePool);
@@ -59,8 +56,8 @@
 //!    # #[derive(Responder)]
 //!    # struct Log(String);
 //!    #
-//!    use rocket_db_pools::Connection;
-//!    use rocket_db_pools::sqlx::Row;
+//!    use rkt_db_pools::Connection;
+//!    use rkt_db_pools::sqlx::Row;
 //!
 //!    #[get("/<id>")]
 //!    async fn read(mut db: Connection<Logs>, id: i64) -> Option<Log> {
@@ -77,10 +74,9 @@
 //!    doing so does _not_ guarantee that a connection is available:
 //!
 //!    ```rust
-//!    # extern crate rocket_db_pools_community as rocket_db_pools;
 //!    # #[cfg(feature = "sqlx_sqlite")] mod _inner {
-//!    # use rocket::{get, response::Responder};
-//!    # use rocket_db_pools::{sqlx, Database};
+//!    # use rkt::{get, response::Responder};
+//!    # use rkt_db_pools::{sqlx, Database};
 //!    # #[derive(Database)]
 //!    # #[database("sqlite_logs")]
 //!    # struct Logs(sqlx::SqlitePool);
@@ -88,7 +84,7 @@
 //!    # #[derive(Responder)]
 //!    # struct Log(String);
 //!    #
-//!    use rocket_db_pools::sqlx::Row;
+//!    use rkt_db_pools::sqlx::Row;
 //!
 //!    #[get("/<id>")]
 //!    async fn read(db: &Logs, id: i64) -> Option<Log> {
@@ -159,7 +155,7 @@
 //! ## Enabling Additional Driver Features
 //!
 //! Only the minimal features for each driver crate are enabled by
-//! `rocket_db_pools`. To use additional driver functionality exposed via its
+//! `rkt_db_pools`. To use additional driver functionality exposed via its
 //! crate's features, you'll need to depend on the crate directly with those
 //! features enabled in `Cargo.toml`:
 //!
@@ -169,8 +165,8 @@
 //! default-features = false
 //! features = ["macros", "migrate"]
 //!
-//! [dependencies.rocket_db_pools]
-//! package = "rocket_db_pools-community"
+//! [dependencies.rkt_db_pools]
+//! package = "rkt_db_pools-community"
 //! version = "0.3.2"
 //! features = ["sqlx_sqlite"]
 //! ```
@@ -179,7 +175,7 @@
 //!
 //! Configuration for a database named `db_name` is deserialized from a
 //! `databases.db_name` configuration parameter into a [`Config`] structure via
-//! Rocket's [configuration facilities](rocket::config). By default,
+//! Rocket's [configuration facilities](rkt::config). By default,
 //! configuration can be provided in `Rocket.toml`:
 //!
 //! ```toml
@@ -237,16 +233,16 @@
 //! Any database driver can implement support for this library by implementing
 //! the [`Pool`] trait.
 
-#![doc(html_root_url = "https://api.rocket.rs/master/rocket_db_pools")]
+#![doc(html_root_url = "https://api.rocket.rs/master/rkt_db_pools")]
 #![doc(html_favicon_url = "https://rocket.rs/images/favicon.ico")]
 #![doc(html_logo_url = "https://rocket.rs/images/logo-boxed.png")]
 #![deny(missing_docs)]
 
-pub use rocket;
+pub use rkt;
 
 /// Re-export of the `figment` crate.
 #[doc(inline)]
-pub use rocket::figment;
+pub use rkt::figment;
 
 #[cfg(any(
     feature = "diesel_postgres",
@@ -273,4 +269,4 @@ pub use self::database::{Connection, Database, Initializer};
 pub use self::error::Error;
 pub use self::pool::Pool;
 
-pub use rocket_db_pools_codegen::*;
+pub use rkt_db_pools_codegen::*;

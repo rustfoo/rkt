@@ -64,7 +64,7 @@ Modify `src/main.rs` so that it contains the code for the Rocket `Hello, world!`
 program, reproduced below:
 
 ```rust
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 #[get("/")]
 fn index() -> &'static str {
@@ -73,7 +73,7 @@ fn index() -> &'static str {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build().mount("/", routes![index])
+    rkt::build().mount("/", routes![index])
 }
 ```
 

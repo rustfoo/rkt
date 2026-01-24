@@ -25,10 +25,9 @@ use crate::shutdown::{ShutdownConfig, TripWire};
 /// called. This can be used to detect shutdown in any part of the application:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 ///
-/// # use rocket::*;
-/// use rocket::Shutdown;
+/// # use rkt::*;
+/// use rkt::Shutdown;
 ///
 /// #[get("/wait/for/shutdown")]
 /// async fn wait_for_shutdown(shutdown: Shutdown) -> &'static str {
@@ -44,9 +43,8 @@ use crate::shutdown::{ShutdownConfig, TripWire};
 /// [`Rocket::launch()`](crate::Rocket::launch()):
 ///
 /// ```rust,no_run
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// #
-/// use rocket::Shutdown;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::Shutdown;
 ///
 /// #[get("/shutdown")]
 /// fn shutdown(shutdown: Shutdown) -> &'static str {
@@ -54,9 +52,9 @@ use crate::shutdown::{ShutdownConfig, TripWire};
 ///     "Shutting down..."
 /// }
 ///
-/// #[rocket::main]
+/// #[rkt::main]
 /// async fn main() {
-///     let result = rocket::build()
+///     let result = rkt::build()
 ///         .mount("/", routes![shutdown])
 ///         .launch()
 ///         .await;
@@ -93,10 +91,9 @@ impl Shutdown {
     /// configured via [`ShutdownConfig`]'s `grace` field.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// # use rocket::*;
-    /// use rocket::Shutdown;
+    /// # use rkt::*;
+    /// use rkt::Shutdown;
     ///
     /// #[get("/shutdown")]
     /// fn shutdown(shutdown: Shutdown) -> &'static str {
@@ -114,10 +111,9 @@ impl Shutdown {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// # use rocket::*;
-    /// use rocket::Shutdown;
+    /// # use rkt::*;
+    /// use rkt::Shutdown;
     ///
     /// #[get("/shutdown")]
     /// fn shutdown(shutdown: Shutdown) {

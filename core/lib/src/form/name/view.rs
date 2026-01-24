@@ -15,8 +15,7 @@ use crate::form::name::*;
 /// This is best illustrated via an example:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::name::NameView;
+/// use rkt::form::name::NameView;
 ///
 /// // The view begins at the first key. Illustrated: `(a).b[c:d]` where
 /// // parenthesis enclose the current key.
@@ -57,8 +56,7 @@ use crate::form::name::*;
 /// Again, illustrated via examples:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::name::NameView;
+/// use rkt::form::name::NameView;
 ///
 /// let mut view = NameView::new("a.b[c:d]");
 /// assert_eq!(view, "a");
@@ -90,8 +88,7 @@ impl<'v> NameView<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::NameView;
+    /// use rkt::form::name::NameView;
     ///
     /// let mut view = NameView::new("a.b[c:d]");
     /// assert_eq!(view.key().unwrap(), "a");
@@ -113,8 +110,7 @@ impl<'v> NameView<'v> {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::NameView;
+    /// use rkt::form::name::NameView;
     ///
     /// let mut view = NameView::new("a.b[c:d][d.e]");
     /// assert_eq!(view.key().unwrap(), "a");
@@ -132,8 +128,7 @@ impl<'v> NameView<'v> {
     /// Malformed strings can have interesting results:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::NameView;
+    /// use rkt::form::name::NameView;
     ///
     /// let mut view = NameView::new("a[c.d");
     /// assert_eq!(view.key_lossy(), "a");
@@ -203,8 +198,7 @@ impl<'v> NameView<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::NameView;
+    /// use rkt::form::name::NameView;
     ///
     /// let mut view = NameView::new("a[b]");
     /// assert_eq!(view.key().unwrap(), "a");
@@ -238,8 +232,7 @@ impl<'v> NameView<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::NameView;
+    /// use rkt::form::name::NameView;
     ///
     /// let mut view = NameView::new("a[b]");
     /// assert_eq!(view.key_lossy(), "a");
@@ -269,8 +262,7 @@ impl<'v> NameView<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::NameView;
+    /// use rkt::form::name::NameView;
     ///
     /// let mut view = NameView::new("a[b]");
     /// assert_eq!(view.as_name(), "a");
@@ -289,8 +281,7 @@ impl<'v> NameView<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::NameView;
+    /// use rkt::form::name::NameView;
     ///
     /// let mut view = NameView::new("a[b]");
     /// assert_eq!(view.parent(), None);
@@ -316,8 +307,7 @@ impl<'v> NameView<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::name::NameView;
+    /// use rkt::form::name::NameView;
     ///
     /// let mut view = NameView::new("a[b]");
     /// assert_eq!(view.source(), "a[b]");

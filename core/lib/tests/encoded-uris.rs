@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 #[get("/hello süper $?a&?&<value>")]
 fn index(value: &str) -> &str {
@@ -7,7 +7,7 @@ fn index(value: &str) -> &str {
 }
 
 mod encoded_uris {
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     #[test]
     fn can_route_to_encoded_uri() {

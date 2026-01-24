@@ -1,4 +1,4 @@
-use rocket::serde::Serialize;
+use rkt::serde::Serialize;
 use diesel::{self, prelude::*};
 
 mod schema {
@@ -16,7 +16,7 @@ use self::schema::tasks;
 use crate::DbConn;
 
 #[derive(Serialize, Queryable, Insertable, Debug, Clone)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 #[diesel(table_name = tasks)]
 pub struct Task {
     #[serde(skip_deserializing)]

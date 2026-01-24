@@ -1,7 +1,7 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
-use rocket::fs::{self, FileServer};
-use rocket::futures::{SinkExt, StreamExt};
+use rkt::fs::{self, FileServer};
+use rkt::futures::{SinkExt, StreamExt};
 
 #[get("/echo?stream", rank = 1)]
 fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
@@ -37,7 +37,7 @@ fn echo_raw(ws: ws::WebSocket) -> ws::Stream!['static] {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![echo_channel, echo_stream, echo_raw])
         .mount("/", FileServer::new(fs::relative!("static")))
 }

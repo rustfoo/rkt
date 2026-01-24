@@ -28,8 +28,8 @@ use crate::http::uri::fmt::{FromUriParam, Query};
 /// otherwise strict parses lenient, for example, in `Option<Lenient<T>>`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::form::Lenient;
+/// #[macro_use] extern crate rkt;
+/// use rkt::form::Lenient;
 ///
 /// #[derive(FromForm)]
 /// struct UserInput {
@@ -51,8 +51,8 @@ impl<T> Lenient<T> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::form::{Form, Lenient};
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::form::{Form, Lenient};
     ///
     /// #[derive(FromForm)]
     /// struct MyForm {

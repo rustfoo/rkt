@@ -3,7 +3,7 @@
 
 use crate::prelude::*;
 
-use rocket::http::Status;
+use rkt::http::Status;
 
 #[get("/<code>")]
 fn status(code: u16) -> (Status, &'static [u8]) {

@@ -28,11 +28,10 @@ use crate::response::{self, Responder, Response};
 /// $k"` for `$k` from `0` to `10` exclusive:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::*;
-/// use rocket::response::stream::TextStream;
-/// use rocket::futures::stream::{repeat, StreamExt};
-/// use rocket::tokio::time::{self, Duration};
+/// # use rkt::*;
+/// use rkt::response::stream::TextStream;
+/// use rkt::futures::stream::{repeat, StreamExt};
+/// use rkt::tokio::time::{self, Duration};
 ///
 /// #[get("/text")]
 /// fn text() -> TextStream![&'static str] {

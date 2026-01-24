@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
-use rocket::local::blocking::Client;
+use rkt::local::blocking::Client;
 
 // Test that raw idents can be used for route parameter names
 
@@ -16,13 +16,13 @@ fn swap(r#raw: String, bare: String) -> String {
 }
 
 #[catch(400)]
-fn catch(r#raw: &rocket::Request<'_>) -> String {
+fn catch(r#raw: &rkt::Request<'_>) -> String {
     format!("{}", raw.method())
 }
 
 #[test]
 fn test_raw_ident() {
-    let rocket = rocket::build()
+    let rocket = rkt::build()
         .mount("/", routes![get, swap])
         .register("/", catchers![catch]);
 

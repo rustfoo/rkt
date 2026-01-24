@@ -1,6 +1,6 @@
-use rocket::{Rocket, State, Build};
-use rocket::fairing::AdHoc;
-use rocket::tokio::sync::Barrier;
+use rkt::{Rocket, State, Build};
+use rkt::fairing::AdHoc;
+use rkt::tokio::sync::Barrier;
 
 #[get("/barrier")]
 async fn rendezvous(barrier: &State<Barrier>) -> &'static str {
@@ -10,7 +10,7 @@ async fn rendezvous(barrier: &State<Barrier>) -> &'static str {
 }
 
 pub fn rocket() -> Rocket<Build> {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![rendezvous])
         .attach(AdHoc::on_ignite("Add Channel", |rocket| async {
             rocket.manage(Barrier::new(2))
@@ -20,16 +20,16 @@ pub fn rocket() -> Rocket<Build> {
 #[cfg(test)]
 mod test {
     use super::rocket;
-    use rocket::http::Status;
+    use rkt::http::Status;
 
-    #[rocket::async_test]
+    #[rkt::async_test]
     async fn test_rendezvous() {
-        use rocket::local::asynchronous::Client;
+        use rkt::local::asynchronous::Client;
 
         let client = Client::tracked(rocket()).await.unwrap();
         let req = client.get("/barrier");
 
-        let (r1, r2) = rocket::tokio::join!(req.clone().dispatch(), req.dispatch());
+        let (r1, r2) = rkt::tokio::join!(req.clone().dispatch(), req.dispatch());
         assert_eq!(r1.status(), r2.status());
         assert_eq!(r1.status(), Status::Ok);
 

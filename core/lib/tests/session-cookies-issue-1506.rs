@@ -1,21 +1,21 @@
 #![cfg(feature = "secrets")]
 
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::{Cookie, CookieJar};
+use rkt::http::{Cookie, CookieJar};
 
-#[rocket::get("/")]
+#[rkt::get("/")]
 fn index(jar: &CookieJar<'_>) {
     jar.add_private(Cookie::build(("key", "value")).expires(None));
 }
 
 mod test_session_cookies {
     use super::*;
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     #[test]
     fn session_cookie_is_session() {
-        let rocket = rocket::build().mount("/", rocket::routes![index]);
+        let rocket = rkt::build().mount("/", rkt::routes![index]);
         let client = Client::debug(rocket).unwrap();
 
         let response = client.get("/").dispatch();

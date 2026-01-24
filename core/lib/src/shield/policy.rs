@@ -26,9 +26,8 @@ pub trait Policy: Default + Send + Sync + 'static {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::http::Header;
-    /// use rocket::shield::Policy;
+    /// # use rkt::http::Header;
+    /// use rkt::shield::Policy;
     ///
     /// #[derive(Default)]
     /// struct MyPolicy;
@@ -46,9 +45,8 @@ pub trait Policy: Default + Send + Sync + 'static {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::http::Header;
-    /// use rocket::shield::Policy;
+    /// use rkt::http::Header;
+    /// use rkt::shield::Policy;
     ///
     /// #[derive(Default)]
     /// struct MyPolicy;
@@ -453,8 +451,8 @@ impl From<&Prefetch> for Header<'static> {
 /// builder method.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::shield::{Shield, Permission, Feature, Allow};
+/// #[macro_use] extern crate rkt;
+/// use rkt::shield::{Shield, Permission, Feature, Allow};
 ///
 /// // In addition to defaults, block access to geolocation and USB features.
 /// // Enable camera and microphone features only for the serving origin. Enable
@@ -466,7 +464,7 @@ impl From<&Prefetch> for Header<'static> {
 ///     .allow(Feature::Microphone, Allow::This)
 ///     .allow(Feature::Payment, [Allow::This, Allow::Origin(uri!("https://rocket.rs"))]);
 ///
-/// rocket::build().attach(Shield::default().enable(permission));
+/// rkt::build().attach(Shield::default().enable(permission));
 /// ```
 ///
 /// # Default
@@ -506,8 +504,8 @@ impl Permission {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::shield::{Permission, Feature, Allow};
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::shield::{Permission, Feature, Allow};
     ///
     /// let rocket = Allow::Origin(uri!("https://rocket.rs"));
     ///
@@ -527,9 +525,8 @@ impl Permission {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::shield::{Permission, Feature};
+    /// use rkt::shield::{Permission, Feature};
     ///
     /// let perm = Permission::blocked(Feature::Usb);
     /// let perm = Permission::blocked(Feature::Payment);
@@ -557,8 +554,8 @@ impl Permission {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::shield::{Permission, Feature, Allow};
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::shield::{Permission, Feature, Allow};
     ///
     /// let rocket = Allow::Origin(uri!("https://rocket.rs"));
     /// let perm = Permission::allowed(Feature::Usb, Allow::This)
@@ -592,9 +589,8 @@ impl Permission {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::shield::{Permission, Feature};
+    /// use rkt::shield::{Permission, Feature};
     ///
     /// let perm = Permission::default()
     ///     .block(Feature::Usb)
@@ -610,9 +606,8 @@ impl Permission {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::shield::{Permission, Feature, Allow};
+    /// use rkt::shield::{Permission, Feature, Allow};
     ///
     /// let perm = Permission::default();
     /// assert!(perm.get(Feature::Usb).is_none());
@@ -632,8 +627,8 @@ impl Permission {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;;
-    /// use rocket::shield::{Permission, Feature, Allow};
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::shield::{Permission, Feature, Allow};
     ///
     /// let foo = uri!("https://foo.com:1234");
     /// let perm = Permission::blocked(Feature::Camera)
@@ -840,9 +835,8 @@ impl Feature {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::shield::Feature;
+    /// use rkt::shield::Feature;
     ///
     /// assert_eq!(Feature::Camera.as_str(), "camera");
     /// assert_eq!(Feature::SyncScript.as_str(), "sync-script");

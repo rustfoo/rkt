@@ -25,11 +25,10 @@ use crate::{Build, Data, Orbit, Request, Response, Rocket};
 /// request fairing, rewrites the method of all requests to be `PUT`.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::fairing::AdHoc;
-/// use rocket::http::Method;
+/// use rkt::fairing::AdHoc;
+/// use rkt::http::Method;
 ///
-/// rocket::build()
+/// rkt::build()
 ///     .attach(AdHoc::on_liftoff("Liftoff Printer", |_| Box::pin(async move {
 ///         println!("...annnddd we have liftoff!");
 ///     })))
@@ -97,8 +96,7 @@ impl AdHoc {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fairing::AdHoc;
+    /// use rkt::fairing::AdHoc;
     ///
     /// // The no-op ignite fairing.
     /// let fairing = AdHoc::on_ignite("Boom!", |rocket| async move {
@@ -122,8 +120,7 @@ impl AdHoc {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fairing::AdHoc;
+    /// use rkt::fairing::AdHoc;
     ///
     /// // The no-op try ignite fairing.
     /// let fairing = AdHoc::try_on_ignite("No-Op", |rocket| async { Ok(rocket) });
@@ -145,8 +142,7 @@ impl AdHoc {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fairing::AdHoc;
+    /// use rkt::fairing::AdHoc;
     ///
     /// // A fairing that prints a message just before launching.
     /// let fairing = AdHoc::on_liftoff("Boom!", |_| Box::pin(async move {
@@ -170,8 +166,7 @@ impl AdHoc {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fairing::AdHoc;
+    /// use rkt::fairing::AdHoc;
     ///
     /// // The no-op request fairing.
     /// let fairing = AdHoc::on_request("Dummy", |req, data| {
@@ -201,8 +196,7 @@ impl AdHoc {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fairing::AdHoc;
+    /// use rkt::fairing::AdHoc;
     ///
     /// // The no-op response fairing.
     /// let fairing = AdHoc::on_response("Dummy", |req, resp| {
@@ -230,8 +224,7 @@ impl AdHoc {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fairing::AdHoc;
+    /// use rkt::fairing::AdHoc;
     ///
     /// // A fairing that prints a message just before launching.
     /// let fairing = AdHoc::on_shutdown("Bye!", |_| Box::pin(async move {
@@ -255,10 +248,9 @@ impl AdHoc {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::launch;
+    /// # use rkt::launch;
     /// use serde::Deserialize;
-    /// use rocket::fairing::AdHoc;
+    /// use rkt::fairing::AdHoc;
     ///
     /// #[derive(Deserialize)]
     /// struct Config {
@@ -269,7 +261,7 @@ impl AdHoc {
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build().attach(AdHoc::config::<Config>())
+    ///     rkt::build().attach(AdHoc::config::<Config>())
     /// }
     /// ```
     pub fn config<'de, T>() -> AdHoc
@@ -310,9 +302,9 @@ impl AdHoc {
     /// With the fairing attached, request URIs have a trailing slash stripped:
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::local::blocking::Client;
-    /// use rocket::fairing::AdHoc;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::local::blocking::Client;
+    /// use rkt::fairing::AdHoc;
     ///
     /// #[get("/<param>")]
     /// fn foo(param: &str) -> &str {
@@ -321,7 +313,7 @@ impl AdHoc {
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build()
+    ///     rkt::build()
     ///         .mount("/", routes![foo])
     ///         .attach(AdHoc::uri_normalizer())
     /// }
@@ -334,9 +326,9 @@ impl AdHoc {
     /// Without it, request URIs are unchanged and routed normally:
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::local::blocking::Client;
-    /// use rocket::fairing::AdHoc;
+    /// #[macro_use] extern crate rkt;
+    /// use rkt::local::blocking::Client;
+    /// use rkt::fairing::AdHoc;
     ///
     /// #[get("/<param>")]
     /// fn foo(param: &str) -> &str {
@@ -345,7 +337,7 @@ impl AdHoc {
     ///
     /// #[launch]
     /// fn rocket() -> _ {
-    ///     rocket::build().mount("/", routes![foo])
+    ///     rkt::build().mount("/", routes![foo])
     /// }
     ///
     /// # let client = Client::debug(rocket()).unwrap();

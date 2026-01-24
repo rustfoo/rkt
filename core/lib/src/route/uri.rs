@@ -18,15 +18,14 @@ use crate::route::Segment;
 ///     explicitly specified as the first argument.
 ///
 ///     ```rust
-///     # extern crate rocket_community as rocket;
-///     use rocket::Route;
-///     use rocket::http::Method;
-///     # use rocket::route::dummy_handler as handler;
+///     use rkt::Route;
+///     use rkt::http::Method;
+///     # use rkt::route::dummy_handler as handler;
 ///
 ///     let route = Route::new(Method::Get, "/foo/<bar>", handler);
 ///     assert_eq!(route.uri.base(), "/");
 ///
-///     let rocket = rocket::build().mount("/base", vec![route]);
+///     let rocket = rkt::build().mount("/base", vec![route]);
 ///     let routes: Vec<_> = rocket.routes().collect();
 ///     assert_eq!(routes[0].uri.base(), "/base");
 ///     ```
@@ -39,15 +38,14 @@ use crate::route::Segment;
 ///     for routing.
 ///
 ///     ```rust
-///     # extern crate rocket_community as rocket;
-///     use rocket::Route;
-///     use rocket::http::Method;
-///     # use rocket::route::dummy_handler as handler;
+///     use rkt::Route;
+///     use rkt::http::Method;
+///     # use rkt::route::dummy_handler as handler;
 ///
 ///     let route = Route::new(Method::Get, "/foo/<bar>", handler);
 ///     assert_eq!(route.uri, "/foo/<bar>");
 ///
-///     let rocket = rocket::build().mount("/base", vec![route]);
+///     let rocket = rkt::build().mount("/base", vec![route]);
 ///     let routes: Vec<_> = rocket.routes().collect();
 ///     assert_eq!(routes[0].uri, "/base/foo/<bar>");
 ///     ```
@@ -155,10 +153,9 @@ impl<'a> RouteUri<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Route;
-    /// use rocket::http::Method;
-    /// # use rocket::route::dummy_handler as handler;
+    /// use rkt::Route;
+    /// use rkt::http::Method;
+    /// # use rkt::route::dummy_handler as handler;
     ///
     /// let route = Route::new(Method::Get, "/foo/bar?a=1", handler);
     ///
@@ -177,11 +174,10 @@ impl<'a> RouteUri<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Route;
-    /// use rocket::http::Method;
-    /// # use rocket::route::dummy_handler as handler;
-    /// # use rocket::uri;
+    /// use rkt::Route;
+    /// use rkt::http::Method;
+    /// # use rkt::route::dummy_handler as handler;
+    /// # use rkt::uri;
     ///
     /// let route = Route::new(Method::Get, "/foo/bar?a=1", handler);
     /// assert_eq!(route.uri.base(), "/");
@@ -202,11 +198,10 @@ impl<'a> RouteUri<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Route;
-    /// use rocket::http::Method;
-    /// # use rocket::route::dummy_handler as handler;
-    /// # use rocket::uri;
+    /// use rkt::Route;
+    /// use rkt::http::Method;
+    /// # use rkt::route::dummy_handler as handler;
+    /// # use rkt::uri;
     ///
     /// let route = Route::new(Method::Get, "/foo/bar?a=1", handler);
     /// let route = route.rebase(uri!("/boo"));

@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::{Build, Rocket, Route};
+use rkt::{Build, Rocket, Route};
 
 pub fn prepend(prefix: &str, route: Route) -> Route {
     route
@@ -22,20 +22,20 @@ mod a {
         id.to_string()
     }
 
-    pub fn routes() -> Vec<rocket::Route> {
+    pub fn routes() -> Vec<rkt::Route> {
         super::extend_routes("/a", routes![b])
     }
 }
 
 fn rocket() -> Rocket<Build> {
-    rocket::build()
+    rkt::build()
         .mount("/", a::routes())
         .mount("/foo", a::routes())
 }
 
 mod mapped_base_tests {
-    use rocket::http::Status;
-    use rocket::local::blocking::Client;
+    use rkt::http::Status;
+    use rkt::local::blocking::Client;
 
     #[test]
     fn only_prefix() {

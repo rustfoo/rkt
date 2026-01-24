@@ -1,8 +1,8 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::request::FlashMessage;
-use rocket::response::Flash;
+use rkt::request::FlashMessage;
+use rkt::response::Flash;
 
 const FLASH_MESSAGE: &str = "Hey! I'm a flash message. :)";
 
@@ -22,8 +22,8 @@ fn used(flash: Option<FlashMessage<'_>>) -> Option<String> {
 }
 
 mod flash_lazy_remove_tests {
-    use rocket::http::Status;
-    use rocket::local::blocking::Client;
+    use rkt::http::Status;
+    use rkt::local::blocking::Client;
 
     #[test]
     fn test() {

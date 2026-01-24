@@ -69,8 +69,8 @@ impl RawStrBuf {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStrBuf;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStrBuf;
     ///
     /// let raw = RawStrBuf::from(format!("hello {}", "world"));
     /// let string = raw.into_string();
@@ -86,8 +86,8 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("Hello, world!");
     ///
@@ -105,9 +105,9 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
+    /// # extern crate rkt;
     /// use std::borrow::Cow;
-    /// use rocket::http::RawStr;
+    /// use rkt::http::RawStr;
     ///
     /// let cow_str = Cow::from("hello!");
     /// let cow_raw = RawStr::from_cow_str(cow_str);
@@ -127,9 +127,9 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
+    /// # extern crate rkt;
     /// use std::borrow::Cow;
-    /// use rocket::http::RawStr;
+    /// use rkt::http::RawStr;
     ///
     /// let cow_raw = Cow::from(RawStr::new("hello!"));
     /// let cow_str = RawStr::into_cow_str(cow_raw);
@@ -158,8 +158,8 @@ impl RawStr {
     /// With a valid string:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("Hello%21");
     /// let decoded = raw_str.percent_decode();
@@ -169,8 +169,8 @@ impl RawStr {
     /// With an invalid string:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let bad_raw_str = RawStr::new("%FF");
     /// assert!(bad_raw_str.percent_decode().is_err());
@@ -194,8 +194,8 @@ impl RawStr {
     /// With a valid string:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("Hello%21");
     /// let decoded = raw_str.percent_decode_lossy();
@@ -205,8 +205,8 @@ impl RawStr {
     /// With an invalid string:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let bad_raw_str = RawStr::new("a=%FF");
     /// assert_eq!(bad_raw_str.percent_decode_lossy(), "a=�");
@@ -257,8 +257,8 @@ impl RawStr {
     /// With a valid string:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("Hello/goodbye");
     /// let encoded = raw_str.percent_encode();
@@ -274,8 +274,8 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// // Note: Rocket should never hand you a bad `&RawStr`.
     /// let bytes = &[93, 12, 0, 13, 1];
@@ -298,8 +298,8 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("Hello%2C+world%21");
     /// let decoded = raw_str.url_decode();
@@ -325,8 +325,8 @@ impl RawStr {
     /// With a valid string:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str: &RawStr = "Hello%2C+world%21".into();
     /// let decoded = raw_str.url_decode_lossy();
@@ -336,8 +336,8 @@ impl RawStr {
     /// With an invalid string:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let bad_raw_str = RawStr::new("a+b=%FF");
     /// assert_eq!(bad_raw_str.url_decode_lossy(), "a b=�");
@@ -365,8 +365,8 @@ impl RawStr {
     /// Strings with HTML sequences are escaped:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str: &RawStr = "<b>Hi!</b>".into();
     /// let escaped = raw_str.html_escape();
@@ -380,8 +380,8 @@ impl RawStr {
     /// Strings without HTML sequences remain untouched:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str: &RawStr = "Hello!".into();
     /// let escaped = raw_str.html_escape();
@@ -467,8 +467,8 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("Hello, world!");
     /// assert_eq!(raw_str.len(), 13);
@@ -483,8 +483,8 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("Hello, world!");
     /// assert!(!raw_str.is_empty());
@@ -505,8 +505,8 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("Hello, world!");
     /// assert_eq!(raw_str.as_str(), "Hello, world!");
@@ -521,8 +521,8 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("hi");
     /// assert_eq!(raw_str.as_bytes(), &[0x68, 0x69]);
@@ -548,8 +548,8 @@ impl RawStr {
     /// Basic usage:
     ///
     /// ```
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("hi");
     /// let ptr = raw_str.as_ptr();
@@ -566,8 +566,8 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let raw_str = RawStr::new("Content-Type");
     /// assert!(raw_str.as_uncased_str() == "content-TYPE");
@@ -592,8 +592,8 @@ impl RawStr {
     /// Basic usage:
     ///
     /// ```
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let bananas = RawStr::new("bananas");
     ///
@@ -620,8 +620,8 @@ impl RawStr {
     /// Basic usage:
     ///
     /// ```
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let bananas = RawStr::new("bananas");
     ///
@@ -647,8 +647,8 @@ impl RawStr {
     /// Basic usage:
     ///
     /// ```
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let bananas = RawStr::new("bananas");
     ///
@@ -676,8 +676,8 @@ impl RawStr {
     /// # Example
     ///
     /// ```
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let s = RawStr::new("Löwe 老虎 Léopard Gepardi");
     ///
@@ -705,8 +705,8 @@ impl RawStr {
     /// Simple patterns:
     ///
     /// ```
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let v: Vec<_> = RawStr::new("Mary had a little lamb")
     ///     .split(' ')
@@ -741,8 +741,8 @@ impl RawStr {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let haystack = RawStr::new("a good boy!");
     ///
@@ -805,8 +805,8 @@ impl RawStr {
     /// # Examples
     ///
     /// ```
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// assert_eq!(RawStr::new("foo:bar").strip_prefix("foo:").unwrap(), "bar");
     /// assert_eq!(RawStr::new("foofoo").strip_prefix("foo").unwrap(), "foo");
@@ -831,8 +831,8 @@ impl RawStr {
     /// # Examples
     ///
     /// ```
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// assert_eq!(RawStr::new("bar:foo").strip_suffix(":foo").unwrap(), "bar");
     /// assert_eq!(RawStr::new("foofoo").strip_suffix("foo").unwrap(), "foo");
@@ -857,8 +857,8 @@ impl RawStr {
     /// Basic usage:
     ///
     /// ```
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let s = RawStr::new("\n Hello\tworld\t\n");
     ///
@@ -887,8 +887,8 @@ impl RawStr {
     /// Basic usage
     ///
     /// ```
-    /// # extern crate rocket;
-    /// use rocket::http::RawStr;
+    /// # extern crate rkt;
+    /// use rkt::http::RawStr;
     ///
     /// let four: u32 = RawStr::new("4").parse().unwrap();
     ///

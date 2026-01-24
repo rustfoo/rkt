@@ -1,15 +1,15 @@
 use std::marker::PhantomData;
 use std::sync::Arc;
 
-use rocket::fairing::{AdHoc, Fairing};
-use rocket::http::Status;
-use rocket::outcome::IntoOutcome;
-use rocket::request::{FromRequest, Outcome, Request};
-use rocket::trace::Trace;
-use rocket::{Ignite, Phase, Rocket, Sentinel};
+use rkt::fairing::{AdHoc, Fairing};
+use rkt::http::Status;
+use rkt::outcome::IntoOutcome;
+use rkt::request::{FromRequest, Outcome, Request};
+use rkt::trace::Trace;
+use rkt::{Ignite, Phase, Rocket, Sentinel};
 
-use rocket::tokio::sync::{Mutex, OwnedSemaphorePermit, Semaphore};
-use rocket::tokio::time::timeout;
+use rkt::tokio::sync::{Mutex, OwnedSemaphorePermit, Semaphore};
+use rkt::tokio::time::timeout;
 
 use crate::{Config, Error, Poolable};
 
@@ -237,7 +237,7 @@ impl<K, C: Poolable> Drop for ConnectionPool<K, C> {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r, K: 'static, C: Poolable> FromRequest<'r> for Connection<K, C> {
     type Error = ();
 

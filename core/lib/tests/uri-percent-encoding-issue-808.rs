@@ -1,8 +1,8 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::response::Redirect;
-use rocket::{Build, Rocket};
+use rkt::response::Redirect;
+use rkt::{Build, Rocket};
 
 const NAME: &str = "John[]|\\%@^";
 
@@ -22,13 +22,13 @@ fn uri_redirect() -> Redirect {
 }
 
 fn rocket() -> Rocket<Build> {
-    rocket::build().mount("/", routes![hello, uri_redirect, raw_redirect])
+    rkt::build().mount("/", routes![hello, uri_redirect, raw_redirect])
 }
 
 mod tests {
     use super::*;
-    use rocket::http::Status;
-    use rocket::local::blocking::Client;
+    use rkt::http::Status;
+    use rkt::local::blocking::Client;
 
     #[test]
     fn uri_percent_encoding_redirect() {

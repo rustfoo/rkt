@@ -1,9 +1,9 @@
 #![cfg(feature = "json")]
 
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::serde::json::Json;
+use rkt::serde::json::Json;
 
 #[get("/int")]
 fn int() -> Json<i32> {
@@ -16,7 +16,7 @@ fn nil() -> Json<()> {
 
 #[async_test]
 async fn async_json_works() {
-    use rocket::local::asynchronous::Client;
+    use rkt::local::asynchronous::Client;
 
     let client = Client::debug_with(routes![int, nil]).await.unwrap();
 

@@ -37,9 +37,8 @@ use crate::http::Header;
 /// needs to provided to customize or remove the value.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::figment::{Figment, providers::{Format, Toml}};
-/// use rocket::config::{Config, Ident};
+/// # use rkt::figment::{Figment, providers::{Format, Toml}};
+/// use rkt::config::{Config, Ident};
 ///
 /// // If these are the contents of `Rocket.toml`...
 /// # let toml = Toml::string(r#"
@@ -65,15 +64,14 @@ use crate::http::Header;
 /// The following example illustrates manual configuration:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::config::{Config, Ident};
+/// use rkt::config::{Config, Ident};
 ///
-/// let figment = rocket::Config::figment().merge(("ident", false));
-/// let config = rocket::Config::from(figment);
+/// let figment = rkt::Config::figment().merge(("ident", false));
+/// let config = rkt::Config::from(figment);
 /// assert_eq!(config.ident, Ident::none());
 ///
-/// let figment = rocket::Config::figment().merge(("ident", "Fancy/1.0"));
-/// let config = rocket::Config::from(figment);
+/// let figment = rkt::Config::figment().merge(("ident", "Fancy/1.0"));
+/// let config = rkt::Config::from(figment);
 /// assert_eq!(config.ident, Ident::try_new("Fancy/1.0").unwrap());
 /// ```
 #[derive(Debug, Clone, PartialEq, Serialize)]
@@ -108,8 +106,7 @@ impl Ident {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::config::Ident;
+    /// use rkt::config::Ident;
     ///
     /// let ident = Ident::try_new("Rocket").unwrap();
     /// assert_eq!(ident.as_str(), Some("Rocket"));
@@ -145,8 +142,7 @@ impl Ident {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::config::Ident;
+    /// use rkt::config::Ident;
     ///
     /// let ident = Ident::none();
     /// assert_eq!(ident.as_str(), None);
@@ -160,8 +156,7 @@ impl Ident {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::config::Ident;
+    /// use rkt::config::Ident;
     ///
     /// let ident = Ident::try_new("Rocket").unwrap();
     /// assert_eq!(ident.as_str(), Some("Rocket"));

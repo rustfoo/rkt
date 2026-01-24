@@ -1,6 +1,6 @@
 #![no_main]
 
-use rocket::http::uri::*;
+use rkt::http::uri::*;
 use libfuzzer_sys::fuzz_target;
 
 fn fuzz(data: &str) {

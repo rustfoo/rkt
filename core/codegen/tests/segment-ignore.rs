@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
 #[get("/<_>", rank = 1)]
 fn ig_1() -> &'static str {
@@ -38,13 +38,13 @@ fn wrapped(a: String, b: String) -> String {
 
 #[test]
 fn test_ignored_segments() {
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     fn get_string(client: &Client, url: &str) -> String {
         client.get(url).dispatch().into_string().unwrap()
     }
 
-    let rocket = rocket::build().mount(
+    let rocket = rkt::build().mount(
         "/",
         routes![
             ig_1,

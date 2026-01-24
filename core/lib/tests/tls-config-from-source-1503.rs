@@ -1,6 +1,6 @@
 #![cfg(feature = "tls")]
 
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 macro_rules! relative {
     ($path:expr) => {
@@ -10,8 +10,8 @@ macro_rules! relative {
 
 #[test]
 fn tls_config_from_source() {
-    use rocket::figment::{providers::Serialized, Figment};
-    use rocket::tls::TlsConfig;
+    use rkt::figment::{providers::Serialized, Figment};
+    use rkt::tls::TlsConfig;
 
     let cert_path = relative!("examples/tls/private/cert.pem");
     let key_path = relative!("examples/tls/private/key.pem");

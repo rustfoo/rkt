@@ -1,14 +1,14 @@
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 extern crate self as tracing;
 
 #[cfg(test)]
 mod tests;
 mod redirector;
 
-use rocket::tracing::*;
-use rocket::mtls::Certificate;
-use rocket::listener::Endpoint;
+use rkt::tracing::*;
+use rkt::mtls::Certificate;
+use rkt::listener::Endpoint;
 
 #[get("/")]
 fn mutual(cert: Certificate<'_>) -> String {
@@ -27,7 +27,7 @@ fn hello(endpoint: Option<&Endpoint>) -> String {
 fn rocket() -> _ {
     // See `Rocket.toml` and `Cargo.toml` for TLS configuration.
     // Run `./private/gen_certs.sh` to generate a CA and key pairs.
-    rocket::build()
+    rkt::build()
         .mount("/", routes![hello, mutual])
         .attach(redirector::Redirector::on(3000))
 }

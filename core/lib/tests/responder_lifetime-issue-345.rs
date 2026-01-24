@@ -1,10 +1,10 @@
 #![allow(dead_code)] // This test is only here so that we can ensure it compiles.
 
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::response::{Responder, Result};
-use rocket::{Request, State};
+use rkt::response::{Responder, Result};
+use rkt::{Request, State};
 
 struct SomeState;
 

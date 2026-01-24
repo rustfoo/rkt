@@ -1,12 +1,12 @@
 #![cfg(feature = "msgpack")]
 
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 use std::borrow::Cow;
 
-use rocket::local::blocking::Client;
-use rocket::serde::msgpack::{self, Compact, MsgPack};
-use rocket::{Build, Rocket};
+use rkt::local::blocking::Client;
+use rkt::serde::msgpack::{self, Compact, MsgPack};
+use rkt::{Build, Rocket};
 
 #[derive(serde::Serialize, serde::Deserialize, PartialEq, Eq)]
 struct Person<'r> {
@@ -22,18 +22,18 @@ enum Gender {
     NonBinary,
 }
 
-#[rocket::post("/named", data = "<person>")]
+#[rkt::post("/named", data = "<person>")]
 fn named(person: MsgPack<Person<'_>>) -> MsgPack<Person<'_>> {
     person
 }
 
-#[rocket::post("/compact", data = "<person>")]
+#[rkt::post("/compact", data = "<person>")]
 fn compact(person: MsgPack<Person<'_>>) -> Compact<Person<'_>> {
     MsgPack(person.into_inner())
 }
 
 fn rocket() -> Rocket<Build> {
-    rocket::build().mount("/", rocket::routes![named, compact])
+    rkt::build().mount("/", rkt::routes![named, compact])
 }
 
 // The object we're going to roundtrip through the API.

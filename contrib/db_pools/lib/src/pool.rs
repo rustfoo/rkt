@@ -1,4 +1,4 @@
-use rocket::figment::Figment;
+use rkt::figment::Figment;
 
 #[allow(unused_imports)]
 use {
@@ -22,15 +22,14 @@ use {
 /// with an attribute of `#[async_trait]`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// # extern crate rocket_db_pools_community as rocket_db_pools;
-/// use rocket::figment::Figment;
-/// use rocket_db_pools::Pool;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::figment::Figment;
+/// use rkt_db_pools::Pool;
 ///
 /// # struct MyPool;
 /// # type Connection = ();
 /// # type Error = std::convert::Infallible;
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl Pool for MyPool {
 ///     type Connection = Connection;
 ///
@@ -68,9 +67,8 @@ use {
 /// Concretely, this looks like:
 ///
 /// ```rust
-/// # extern crate rocket_db_pools_community as rocket_db_pools;
-/// use rocket::figment::Figment;
-/// use rocket_db_pools::{Pool, Config, Error};
+/// use rkt::figment::Figment;
+/// use rkt_db_pools::{Pool, Config, Error};
 /// #
 /// # type InitError = std::convert::Infallible;
 /// # type GetError = std::convert::Infallible;
@@ -89,7 +87,7 @@ use {
 /// #   async fn shutdown(&self) { }
 /// # }
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl Pool for MyPool {
 ///     type Connection = Connection;
 ///
@@ -118,7 +116,7 @@ use {
 ///     }
 /// }
 /// ```
-#[rocket::async_trait]
+#[rkt::async_trait]
 pub trait Pool: Sized + Send + 'static {
     /// The connection type managed by this pool, returned by [`Self::get()`].
     type Connection;
@@ -126,11 +124,11 @@ pub trait Pool: Sized + Send + 'static {
     /// The error type returned by [`Self::init()`] and [`Self::get()`].
     type Error: std::error::Error;
 
-    /// Constructs a pool from a [Value](rocket::figment::value::Value).
+    /// Constructs a pool from a [Value](rkt::figment::value::Value).
     ///
     /// It is up to each implementor of `Pool` to define its accepted
     /// configuration value(s) via the `Config` associated type.  Most
-    /// integrations provided in `rocket_db_pools` use [`Config`], which
+    /// integrations provided in `rkt_db_pools` use [`Config`], which
     /// accepts a (required) `url` and an (optional) `pool_size`.
     ///
     /// ## Errors
@@ -214,7 +212,7 @@ mod deadpool_postgres {
         }
     }
 
-    #[rocket::async_trait]
+    #[rkt::async_trait]
     impl<M: DeadManager, C: From<Object<M>>> crate::Pool for Pool<M, C>
     where
         M::Type: Send,
@@ -252,7 +250,7 @@ mod deadpool_postgres {
 #[cfg(feature = "sqlx")]
 mod sqlx {
     use super::{Config, Duration, Error, Figment};
-    use rocket::tracing::level_filters::LevelFilter;
+    use rkt::tracing::level_filters::LevelFilter;
     use sqlx::ConnectOptions;
 
     type Options<D> = <<D as sqlx::Database>::Connection as sqlx::Connection>::Options;
@@ -273,7 +271,7 @@ mod sqlx {
         }
     }
 
-    #[rocket::async_trait]
+    #[rkt::async_trait]
     impl<D: sqlx::Database> crate::Pool for sqlx::Pool<D> {
         type Error = Error<sqlx::Error>;
 
@@ -285,7 +283,7 @@ mod sqlx {
             specialize(&mut opts, &config);
 
             opts = opts.disable_statement_logging();
-            if let Ok(value) = figment.find_value(rocket::Config::LOG_LEVEL) {
+            if let Ok(value) = figment.find_value(rkt::Config::LOG_LEVEL) {
                 if let Some(level) = value.as_str().and_then(|v| v.parse().ok()) {
                     let log_level = match level {
                         LevelFilter::OFF => log::LevelFilter::Off,
@@ -325,7 +323,7 @@ mod mongodb {
     use super::{Config, Duration, Error, Figment};
     use mongodb::{options::ClientOptions, Client};
 
-    #[rocket::async_trait]
+    #[rkt::async_trait]
     impl crate::Pool for Client {
         type Error = Error<mongodb::error::Error, std::convert::Infallible>;
 

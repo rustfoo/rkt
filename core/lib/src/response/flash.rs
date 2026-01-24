@@ -47,9 +47,9 @@ const FLASH_COOKIE_DELIM: char = ':';
 /// request and response sides.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::response::{Flash, Redirect};
-/// use rocket::request::FlashMessage;
+/// #[macro_use] extern crate rkt;
+/// use rkt::response::{Flash, Redirect};
+/// use rkt::request::FlashMessage;
 ///
 /// #[post("/login/<name>")]
 /// fn login(name: &str) -> Result<&'static str, Flash<Redirect>> {
@@ -106,8 +106,7 @@ impl<R> Flash<R> {
     /// redirects to "/".
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::{Redirect, Flash};
+    /// use rkt::response::{Redirect, Flash};
     ///
     /// # #[allow(unused_variables)]
     /// let message = Flash::new(Redirect::to("/"), "suggestion", "Try this out!");
@@ -130,8 +129,7 @@ impl<R> Flash<R> {
     /// to "/".
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::{Redirect, Flash};
+    /// use rkt::response::{Redirect, Flash};
     ///
     /// # #[allow(unused_variables)]
     /// let message = Flash::success(Redirect::to("/"), "It worked!");
@@ -149,8 +147,7 @@ impl<R> Flash<R> {
     /// to "/".
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::{Redirect, Flash};
+    /// use rkt::response::{Redirect, Flash};
     ///
     /// # #[allow(unused_variables)]
     /// let message = Flash::warning(Redirect::to("/"), "Watch out!");
@@ -168,8 +165,7 @@ impl<R> Flash<R> {
     /// to "/".
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::response::{Redirect, Flash};
+    /// use rkt::response::{Redirect, Flash};
     ///
     /// # #[allow(unused_variables)]
     /// let message = Flash::error(Redirect::to("/"), "Whoops!");

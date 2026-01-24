@@ -25,8 +25,8 @@ impl<'a> Name<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::mtls::Certificate;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::mtls::Certificate;
     ///
     /// #[get("/auth")]
     /// fn auth(cert: Certificate<'_>) {
@@ -50,8 +50,8 @@ impl<'a> Name<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::mtls::Certificate;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::mtls::Certificate;
     ///
     /// #[get("/auth")]
     /// fn auth(cert: Certificate<'_>) {
@@ -73,8 +73,8 @@ impl<'a> Name<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::mtls::Certificate;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::mtls::Certificate;
     ///
     /// #[get("/auth")]
     /// fn auth(cert: Certificate<'_>) {
@@ -98,8 +98,8 @@ impl<'a> Name<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::mtls::Certificate;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::mtls::Certificate;
     ///
     /// #[get("/auth")]
     /// fn auth(cert: Certificate<'_>) {
@@ -123,8 +123,8 @@ impl<'a> Name<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::mtls::Certificate;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::mtls::Certificate;
     ///
     /// #[get("/auth")]
     /// fn auth(cert: Certificate<'_>) {

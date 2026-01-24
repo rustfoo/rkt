@@ -1,12 +1,12 @@
 #[cfg(test)]
 mod tests;
 
-use rocket::{Request, Route, Catcher, route, catcher};
-use rocket::data::{Data, ToByteUnit};
-use rocket::http::{Status, Method::{Get, Post}};
-use rocket::response::{Responder, status::Custom};
-use rocket::outcome::{try_outcome, IntoOutcome};
-use rocket::tokio::fs::File;
+use rkt::{Request, Route, Catcher, route, catcher};
+use rkt::data::{Data, ToByteUnit};
+use rkt::http::{Status, Method::{Get, Post}};
+use rkt::response::{Responder, status::Custom};
+use rkt::outcome::{try_outcome, IntoOutcome};
+use rkt::tokio::fs::File;
 
 fn forward<'r>(_req: &'r Request, data: Data<'r>) -> route::BoxFuture<'r> {
     Box::pin(async move { route::Outcome::forward(data, Status::NotFound) })
@@ -78,7 +78,7 @@ impl CustomHandler {
     }
 }
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl route::Handler for CustomHandler {
     async fn handle<'r>(&self, req: &'r Request<'_>, data: Data<'r>) -> route::Outcome<'r> {
         let self_data = self.data;
@@ -90,7 +90,7 @@ impl route::Handler for CustomHandler {
     }
 }
 
-#[rocket::launch]
+#[rkt::launch]
 fn rocket() -> _ {
     let always_forward = Route::ranked(1, Get, "/", forward);
     let hello = Route::ranked(2, Get, "/", hi);
@@ -102,7 +102,7 @@ fn rocket() -> _ {
 
     let not_found_catcher = Catcher::new(404, not_found_handler);
 
-    rocket::build()
+    rkt::build()
         .mount("/", vec![always_forward, hello, echo])
         .mount("/upload", vec![get_upload, post_upload])
         .mount("/hello", vec![name.clone()])

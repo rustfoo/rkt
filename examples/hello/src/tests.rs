@@ -1,5 +1,5 @@
-use rocket::local::blocking::Client;
-use rocket::http::{RawStr, Status};
+use rkt::local::blocking::Client;
+use rkt::http::{RawStr, Status};
 
 #[test]
 fn hello() {

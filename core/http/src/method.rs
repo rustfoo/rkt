@@ -74,11 +74,11 @@ macro_rules! define_methods {
         ///
         /// ```rust
         /// # #[cfg(feature = "serde")] mod serde_impl {
-        /// use rocket::http::Method;
-        /// use rocket::serde::{Serialize, Deserialize};
+        /// use rkt::http::Method;
+        /// use rkt::serde::{Serialize, Deserialize};
         ///
         /// #[derive(Deserialize, Serialize)]
-        /// #[serde(crate = "rocket::serde")]
+        /// #[serde(crate = "rkt::serde")]
         /// struct Foo {
         ///     method: Method,
         /// }
@@ -144,7 +144,7 @@ macro_rules! define_methods {
             /// # Example
             ///
             /// ```rust
-            /// use rocket::http::Method;
+            /// use rkt::http::Method;
             ///
             /// assert!(Method::Get.is_safe());
             /// assert!(Method::Head.is_safe());
@@ -174,7 +174,7 @@ macro_rules! define_methods {
             /// # Example
             ///
             /// ```rust
-            /// use rocket::http::Method;
+            /// use rkt::http::Method;
             ///
             /// assert!(Method::Get.is_idempotent());
             /// assert!(Method::Head.is_idempotent());
@@ -202,7 +202,7 @@ macro_rules! define_methods {
             /// # Example
             ///
             /// ```rust
-            /// use rocket::http::Method;
+            /// use rkt::http::Method;
             ///
             /// assert_eq!(Method::Post.allows_request_body(), Some(true));
             /// assert_eq!(Method::Put.allows_request_body(), Some(true));
@@ -227,7 +227,7 @@ macro_rules! define_methods {
             /// # Example
             ///
             /// ```rust
-            /// use rocket::http::Method;
+            /// use rkt::http::Method;
             ///
             /// assert_eq!(Method::Get.as_str(), "GET");
             /// assert_eq!(Method::Put.as_str(), "PUT");
@@ -244,7 +244,7 @@ macro_rules! define_methods {
             /// # Example
             ///
             /// ```rust
-            /// use rocket::http::Method;
+            /// use rkt::http::Method;
             ///
             /// assert_eq!(Method::Get.as_ref(), &Method::Get);
             /// ```

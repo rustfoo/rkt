@@ -1,7 +1,7 @@
-use rocket::Request;
-use rocket::response::Redirect;
+use rkt::Request;
+use rkt::response::Redirect;
 
-use rocket_dyn_templates::{Template, tera::Tera, context};
+use rkt_dyn_templates::{Template, tera::Tera, context};
 
 #[get("/")]
 pub fn index() -> Redirect {

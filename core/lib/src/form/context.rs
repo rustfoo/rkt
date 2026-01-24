@@ -21,10 +21,9 @@ use crate::http::Status;
 /// form's [`Context`]:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::post;
+/// # use rkt::post;
 /// # type T = String;
-/// use rocket::form::{Form, Contextual};
+/// use rkt::form::{Form, Contextual};
 ///
 /// #[post("/submit", data = "<form>")]
 /// fn submit(form: Form<Contextual<'_, T>>) {
@@ -96,10 +95,9 @@ impl<'v> Context<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::post;
+    /// # use rkt::post;
     /// # type T = String;
-    /// use rocket::form::{Form, Contextual};
+    /// use rkt::form::{Form, Contextual};
     ///
     /// #[post("/submit", data = "<form>")]
     /// fn submit(form: Form<Contextual<'_, T>>) {
@@ -122,10 +120,9 @@ impl<'v> Context<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::post;
+    /// # use rkt::post;
     /// # type T = String;
-    /// use rocket::form::{Form, Contextual};
+    /// use rkt::form::{Form, Contextual};
     ///
     /// #[post("/submit", data = "<form>")]
     /// fn submit(form: Form<Contextual<'_, T>>) {
@@ -146,10 +143,9 @@ impl<'v> Context<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::post;
+    /// # use rkt::post;
     /// # type T = String;
-    /// use rocket::form::{Form, Contextual};
+    /// use rkt::form::{Form, Contextual};
     ///
     /// #[post("/submit", data = "<form>")]
     /// fn submit(form: Form<Contextual<'_, T>>) {
@@ -174,10 +170,9 @@ impl<'v> Context<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::post;
+    /// # use rkt::post;
     /// # type T = String;
-    /// use rocket::form::{Form, Contextual};
+    /// use rkt::form::{Form, Contextual};
     ///
     /// #[post("/submit", data = "<form>")]
     /// fn submit(form: Form<Contextual<'_, T>>) {
@@ -195,8 +190,7 @@ impl<'v> Context<'v> {
     /// roughly equivalent to:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::form::{Context, name::Name};
+    /// # use rkt::form::{Context, name::Name};
     /// # let context = Context::default();
     /// # let name = Name::new("foo");
     /// context.errors().filter(|e| e.is_for(name))
@@ -215,10 +209,9 @@ impl<'v> Context<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::post;
+    /// # use rkt::post;
     /// # type T = String;
-    /// use rocket::form::{Form, Contextual};
+    /// use rkt::form::{Form, Contextual};
     ///
     /// #[post("/submit", data = "<form>")]
     /// fn submit(form: Form<Contextual<'_, T>>) {
@@ -245,8 +238,7 @@ impl<'v> Context<'v> {
     /// This method is roughly equivalent to:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::form::{Context, name::Name};
+    /// # use rkt::form::{Context, name::Name};
     /// # let context = Context::default();
     /// # let name = Name::new("foo");
     /// context.errors().filter(|e| e.is_for_exactly(name))
@@ -266,10 +258,9 @@ impl<'v> Context<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::post;
+    /// # use rkt::post;
     /// # type T = String;
-    /// use rocket::form::{Form, Contextual};
+    /// use rkt::form::{Form, Contextual};
     ///
     /// #[post("/submit", data = "<form>")]
     /// fn submit(form: Form<Contextual<'_, T>>) {
@@ -298,11 +289,10 @@ impl<'v> Context<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::post;
+    /// # use rkt::post;
     /// # type T = String;
-    /// use rocket::http::Status;
-    /// use rocket::form::{Form, Contextual};
+    /// use rkt::http::Status;
+    /// use rkt::form::{Form, Contextual};
     ///
     /// #[post("/submit", data = "<form>")]
     /// fn submit(form: Form<Contextual<'_, T>>) -> (Status, &'static str) {
@@ -318,11 +308,10 @@ impl<'v> Context<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::post;
+    /// # use rkt::post;
     /// # type T = String;
-    /// use rocket::http::Status;
-    /// use rocket::form::{Form, Contextual, Error};
+    /// use rkt::http::Status;
+    /// use rkt::form::{Form, Contextual, Error};
     ///
     /// #[post("/submit", data = "<form>")]
     /// fn submit(mut form: Form<Contextual<'_, T>>) {
@@ -351,11 +340,10 @@ impl<'v> Context<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::post;
+    /// # use rkt::post;
     /// # type T = String;
-    /// use rocket::http::Status;
-    /// use rocket::form::{Form, Contextual, Error};
+    /// use rkt::http::Status;
+    /// use rkt::form::{Form, Contextual, Error};
     ///
     /// #[post("/submit", data = "<form>")]
     /// fn submit(mut form: Form<Contextual<'_, T>>) {

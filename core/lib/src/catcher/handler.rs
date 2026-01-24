@@ -20,7 +20,7 @@ pub type BoxFuture<'r, T = Result<'r>> = futures::future::BoxFuture<'r, T>;
 /// ## Async Trait
 ///
 /// This is an _async_ trait. Implementations must be decorated
-/// [`#[rocket::async_trait]`](crate::async_trait).
+/// [`#[rkt::async_trait]`](crate::async_trait).
 ///
 /// # Example
 ///
@@ -29,10 +29,9 @@ pub type BoxFuture<'r, T = Result<'r>> = futures::future::BoxFuture<'r, T>;
 /// and used as follows:
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// use rocket::{Request, Catcher, catcher};
-/// use rocket::response::{Response, Responder};
-/// use rocket::http::Status;
+/// use rkt::{Request, Catcher, catcher};
+/// use rkt::response::{Response, Responder};
+/// use rkt::http::Status;
 ///
 /// #[derive(Copy, Clone)]
 /// enum Kind {
@@ -44,7 +43,7 @@ pub type BoxFuture<'r, T = Result<'r>> = futures::future::BoxFuture<'r, T>;
 /// #[derive(Clone)]
 /// struct CustomHandler(Kind);
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl catcher::Handler for CustomHandler {
 ///     async fn handle<'r>(&self, status: Status, req: &'r Request<'_>) -> catcher::Result<'r> {
 ///         let inner = match self.0 {
@@ -69,9 +68,9 @@ pub type BoxFuture<'r, T = Result<'r>> = futures::future::BoxFuture<'r, T>;
 ///     }
 /// }
 ///
-/// #[rocket::launch]
+/// #[rkt::launch]
 /// fn rocket() -> _ {
-///     rocket::build()
+///     rkt::build()
 ///         // to handle only `404`
 ///         .register("/", CustomHandler::catch(Status::NotFound, Kind::Simple))
 ///         // or to register as the default

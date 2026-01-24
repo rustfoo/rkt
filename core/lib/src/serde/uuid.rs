@@ -7,7 +7,6 @@
 //!
 //! ```toml
 //! [dependencies.rocket]
-//! package = "rocket_community"
 //! version = "0.6.0"
 //! features = ["uuid"]
 //! ```
@@ -20,8 +19,8 @@
 //! as a target of a dynamic parameter:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket_community as rocket;
-//! use rocket::serde::uuid::Uuid;
+//! # #[macro_use] extern crate rkt;
+//! use rkt::serde::uuid::Uuid;
 //!
 //! #[get("/users/<id>")]
 //! fn user(id: Uuid) -> String {
@@ -32,8 +31,8 @@
 //! You can also use the `Uuid` as a form value, including in query strings:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket_community as rocket;
-//! use rocket::serde::uuid::Uuid;
+//! # #[macro_use] extern crate rkt;
+//! use rkt::serde::uuid::Uuid;
 //!
 //! #[get("/user?<id>")]
 //! fn user(id: Uuid) -> String {
@@ -45,9 +44,9 @@
 //! URIs including `Uuid`s can be generated in a type-safe manner:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket_community as rocket;
-//! use rocket::serde::uuid::Uuid;
-//! use rocket::response::Redirect;
+//! # #[macro_use] extern crate rkt;
+//! use rkt::serde::uuid::Uuid;
+//! use rkt::response::Redirect;
 //!
 //! #[get("/user/<id>")]
 //! fn user(id: Uuid) -> String {
@@ -68,7 +67,7 @@
 //! The [`uuid`](https://docs.rs/uuid/1) crate exposes extra `v{n}` features
 //! for generating UUIDs which are not enabled by Rocket. To enable these
 //! features, depend on `uuid` directly. The extra functionality can be accessed
-//! via both `rocket::serde::uuid::Uuid` or the direct `uuid::Uuid`; the types
+//! via both `rkt::serde::uuid::Uuid` or the direct `uuid::Uuid`; the types
 //! are one and the same.
 //!
 //! ```toml

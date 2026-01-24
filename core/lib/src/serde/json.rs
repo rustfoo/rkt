@@ -8,8 +8,7 @@
 //! in `Cargo.toml` as follows:
 //!
 //! ```toml
-//! [dependencies.rocket]
-//! package = "rocket_community"
+//! [dependencies.rkt]
 //! version = "0.6.0"
 //! features = ["json"]
 //! ```
@@ -49,9 +48,9 @@ pub use serde_json;
 /// set to `application/json` automatically.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type User = usize;
-/// use rocket::serde::json::Json;
+/// use rkt::serde::json::Json;
 ///
 /// #[get("/users/<id>")]
 /// fn user(id: usize) -> Json<User> {
@@ -72,9 +71,9 @@ pub use serde_json;
 /// JSON. `T` must implement [`serde::Deserialize`].
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type User = usize;
-/// use rocket::serde::json::Json;
+/// use rkt::serde::json::Json;
 ///
 /// #[post("/user", format = "json", data = "<user>")]
 /// fn new_user(user: Json<User>) {
@@ -93,10 +92,10 @@ pub use serde_json;
 /// data as a `T`. Simple use `Json<T>`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # type Metadata = usize;
-/// use rocket::form::{Form, FromForm};
-/// use rocket::serde::json::Json;
+/// use rkt::form::{Form, FromForm};
+/// use rkt::serde::json::Json;
 ///
 /// #[derive(FromForm)]
 /// struct User<'r> {
@@ -163,8 +162,7 @@ impl<T> Json<T> {
     ///
     /// # Example
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::serde::json::Json;
+    /// # use rkt::serde::json::Json;
     /// let string = "Hello".to_string();
     /// let my_json = Json(string);
     /// assert_eq!(my_json.into_inner(), "Hello".to_string());
@@ -312,8 +310,8 @@ crate::export! {
     /// created with this macro can be returned from a handler as follows:
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket_community as rocket;
-    /// use rocket::serde::json::{json, Value};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::serde::json::{json, Value};
     ///
     /// #[get("/json")]
     /// fn get_json() -> Value {
@@ -333,8 +331,7 @@ crate::export! {
     /// Create a simple JSON object with two keys: `"username"` and `"id"`:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::serde::json::json;
+    /// use rkt::serde::json::json;
     ///
     /// let value = json!({
     ///     "username": "mjordan",
@@ -345,8 +342,7 @@ crate::export! {
     /// Create a more complex object with a nested object and array:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::serde::json::json;
+    /// # use rkt::serde::json::json;
     /// let value = json!({
     ///     "code": 200,
     ///     "success": true,
@@ -363,8 +359,7 @@ crate::export! {
     /// implement `Into<String>`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::serde::json::json;
+    /// # use rkt::serde::json::json;
     /// let code = 200;
     /// let features = vec!["serde", "json"];
     ///
@@ -380,8 +375,7 @@ crate::export! {
     /// Trailing commas are allowed inside both arrays and objects.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::serde::json::json;
+    /// # use rkt::serde::json::json;
     /// let value = json!([
     ///     "notice",
     ///     "the",
@@ -409,8 +403,8 @@ crate::export! {
 /// handling. This looks something like:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// use rocket::serde::json::{json, Value};
+/// # #[macro_use] extern crate rkt;
+/// use rkt::serde::json::{json, Value};
 ///
 /// #[get("/json")]
 /// fn get_json() -> Value {
@@ -430,11 +424,10 @@ pub use serde_json::Value;
 /// # Example
 ///
 /// ```
-/// # extern crate rocket_community as rocket;
-/// use rocket::serde::{Deserialize, json};
+/// use rkt::serde::{Deserialize, json};
 ///
 /// #[derive(Debug, PartialEq, Deserialize)]
-/// #[serde(crate = "rocket::serde")]
+/// #[serde(crate = "rkt::serde")]
 /// struct Data<'r> {
 ///     framework: &'r str,
 ///     stars: usize,
@@ -475,11 +468,10 @@ where
 /// # Example
 ///
 /// ```
-/// # extern crate rocket_community as rocket;
-/// use rocket::serde::{Deserialize, json};
+/// use rkt::serde::{Deserialize, json};
 ///
 /// #[derive(Debug, PartialEq, Deserialize)]
-/// #[serde(crate = "rocket::serde")]
+/// #[serde(crate = "rkt::serde")]
 /// struct Data<'r> {
 ///     framework: &'r str,
 ///     stars: usize,
@@ -520,11 +512,10 @@ where
 /// # Example
 ///
 /// ```
-/// # extern crate rocket_community as rocket;
-/// use rocket::serde::{Deserialize, Serialize, json};
+/// use rkt::serde::{Deserialize, Serialize, json};
 ///
 /// #[derive(Debug, PartialEq, Deserialize, Serialize)]
-/// #[serde(crate = "rocket::serde")]
+/// #[serde(crate = "rkt::serde")]
 /// struct Data<'r> {
 ///     framework: &'r str,
 ///     stars: usize,
@@ -559,11 +550,10 @@ where
 /// # Example
 ///
 /// ```
-/// # extern crate rocket_community as rocket;
-/// use rocket::serde::{Deserialize, Serialize, json};
+/// use rkt::serde::{Deserialize, Serialize, json};
 ///
 /// #[derive(Debug, PartialEq, Deserialize, Serialize)]
-/// #[serde(crate = "rocket::serde")]
+/// #[serde(crate = "rkt::serde")]
 /// struct Data<'r> {
 ///     framework: &'r str,
 ///     stars: usize,
@@ -598,11 +588,10 @@ where
 /// # Example
 ///
 /// ```
-/// # extern crate rocket_community as rocket;
-/// use rocket::serde::{Deserialize, json};
+/// use rkt::serde::{Deserialize, json};
 ///
 /// #[derive(Debug, PartialEq, Deserialize)]
-/// #[serde(crate = "rocket::serde")]
+/// #[serde(crate = "rkt::serde")]
 /// struct Data {
 ///     framework: String ,
 ///     stars: usize,
@@ -639,11 +628,10 @@ where
 /// # Example
 ///
 /// ```
-/// # extern crate rocket_community as rocket;
-/// use rocket::serde::{Deserialize, Serialize, json};
+/// use rkt::serde::{Deserialize, Serialize, json};
 ///
 /// #[derive(Deserialize, Serialize)]
-/// #[serde(crate = "rocket::serde")]
+/// #[serde(crate = "rkt::serde")]
 /// struct Data {
 ///     framework: String ,
 ///     stars: usize,

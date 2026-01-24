@@ -28,9 +28,8 @@ use crate::http::uncased::AsUncased;
 /// Form guards are used as the inner type of the [`Form`] data guard:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::post;
-/// use rocket::form::Form;
+/// # use rkt::post;
+/// use rkt::form::Form;
 ///
 /// # type FormGuard = String;
 /// #[post("/submit", data = "<var>")]
@@ -47,8 +46,7 @@ use crate::http::uncased::AsUncased;
 /// [shifted]: NameView::shift()
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::FromForm;
+/// use rkt::form::FromForm;
 ///
 /// #[derive(FromForm)]
 /// struct TodoTask<'r> {
@@ -82,8 +80,7 @@ use crate::http::uncased::AsUncased;
 /// [`Lenient`] form guard:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::{self, FromForm, Strict, Lenient};
+/// use rkt::form::{self, FromForm, Strict, Lenient};
 ///
 /// #[derive(FromForm)]
 /// struct TodoTask<'r> {
@@ -220,12 +217,11 @@ use crate::http::uncased::AsUncased;
 ///   1. **Initialization.** The type sets up a context for later `push`es.
 ///
 ///      ```rust
-///      # extern crate rocket_community as rocket;
-///      # use rocket::form::prelude::*;
+///      # use rkt::form::prelude::*;
 ///      # struct Foo;
-///      use rocket::form::Options;
+///      use rkt::form::Options;
 ///
-///      # #[rocket::async_trait]
+///      # #[rkt::async_trait]
 ///      # impl<'r> FromForm<'r> for Foo {
 ///          # type Context = std::convert::Infallible;
 ///      fn init(opts: Options) -> Self::Context {
@@ -245,12 +241,11 @@ use crate::http::uncased::AsUncased;
 ///      is updated as needed.
 ///
 ///      ```rust
-///      # extern crate rocket_community as rocket;
-///      # use rocket::form::prelude::*;
+///      # use rkt::form::prelude::*;
 ///      # struct Foo;
-///      use rocket::form::{ValueField, DataField};
+///      use rkt::form::{ValueField, DataField};
 ///
-///      # #[rocket::async_trait]
+///      # #[rkt::async_trait]
 ///      # impl<'r> FromForm<'r> for Foo {
 ///          # type Context = std::convert::Infallible;
 ///          # fn init(opts: Options) -> Self::Context { todo!() }
@@ -270,12 +265,11 @@ use crate::http::uncased::AsUncased;
 ///      to return a parsed structure or generate [`Errors`].
 ///
 ///      ```rust
-///      # extern crate rocket_community as rocket;
-///      # use rocket::form::prelude::*;
+///      # use rkt::form::prelude::*;
 ///      # struct Foo;
-///      use rocket::form::Result;
+///      use rkt::form::Result;
 ///
-///      # #[rocket::async_trait]
+///      # #[rkt::async_trait]
 ///      # impl<'r> FromForm<'r> for Foo {
 ///          # type Context = std::convert::Infallible;
 ///          # fn init(opts: Options) -> Self::Context { todo!() }
@@ -325,8 +319,7 @@ use crate::http::uncased::AsUncased;
 ///      is initially set to `None`.
 ///
 ///      ```rust
-///      # extern crate rocket_community as rocket;
-///      use rocket::form::{self, FromFormField};
+///      use rkt::form::{self, FromFormField};
 ///
 ///      struct Context<'r, T: FromFormField<'r>> {
 ///          opts: form::Options,
@@ -345,8 +338,7 @@ use crate::http::uncased::AsUncased;
 ///      been parsed and nothing is done.
 ///
 ///      ```rust
-///      # extern crate rocket_community as rocket;
-///      # use rocket::form::{self, ValueField, FromFormField};
+///      # use rkt::form::{self, ValueField, FromFormField};
 ///      # struct Context<'r, T: FromFormField<'r>> {
 ///      #     opts: form::Options,
 ///      #     result: Option<form::Result<'r, T>>,
@@ -365,8 +357,7 @@ use crate::http::uncased::AsUncased;
 ///      is returned. If `ctxt.result` is `Some(v)`, the result `v` is returned.
 ///
 ///      ```rust
-///      # extern crate rocket_community as rocket;
-///      # use rocket::form::{self, FromFormField, error::{Errors, ErrorKind}};
+///      # use rkt::form::{self, FromFormField, error::{Errors, ErrorKind}};
 ///      # struct Context<'r, T: FromFormField<'r>> {
 ///      #     opts: form::Options,
 ///      #     result: Option<form::Result<'r, T>>,
@@ -399,15 +390,14 @@ use crate::http::uncased::AsUncased;
 ///
 /// An implementation of `FromForm` consists of implementing the three stages
 /// outlined above. `FromForm` is an async trait, so implementations must be
-/// decorated with an attribute of `#[rocket::async_trait]`:
+/// decorated with an attribute of `#[rkt::async_trait]`:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
 /// # struct MyType;
 /// # struct MyContext;
-/// use rocket::form::{self, FromForm, DataField, ValueField};
+/// use rkt::form::{self, FromForm, DataField, ValueField};
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromForm<'r> for MyType {
 ///     type Context = MyContext;
 ///
@@ -452,9 +442,8 @@ use crate::http::uncased::AsUncased;
 ///   * `pair.0=2012-10-12&pair.1=100` as `Pair(time::Date, usize)`
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
 /// use either::Either;
-/// use rocket::form::{self, FromForm, ValueField, DataField, Error, Errors};
+/// use rkt::form::{self, FromForm, ValueField, DataField, Error, Errors};
 ///
 /// /// A form guard parseable from fields `.0` and `.1`.
 /// struct Pair<A, B>(A, B);
@@ -467,7 +456,7 @@ use crate::http::uncased::AsUncased;
 ///     errors: Errors<'v>,
 /// }
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'v, A: FromForm<'v>, B: FromForm<'v>> FromForm<'v> for Pair<A, B> {
 ///     type Context = PairContext<'v, A, B>;
 ///
@@ -975,7 +964,7 @@ macro_rules! impl_via_proxy {
             use super::*;
 
             mod proxy {
-                #[derive(rocket::FromForm)]
+                #[derive(rkt::FromForm)]
                 pub struct $T<$($G),*> {
                     $(pub $f : $F),*
                 }

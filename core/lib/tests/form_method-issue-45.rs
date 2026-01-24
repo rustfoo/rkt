@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::form::Form;
+use rkt::form::Form;
 
 #[derive(FromForm)]
 struct FormData {
@@ -28,8 +28,8 @@ fn vc(form_data: Form<FormData>) -> &'static str {
 
 mod tests {
     use super::*;
-    use rocket::http::{ContentType, Method, Status};
-    use rocket::local::blocking::Client;
+    use rkt::http::{ContentType, Method, Status};
+    use rkt::local::blocking::Client;
 
     #[test]
     fn method_eval() {

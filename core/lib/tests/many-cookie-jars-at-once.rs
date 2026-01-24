@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::http::CookieJar;
+use rkt::http::CookieJar;
 
 #[post("/")]
 fn multi_add(jar_a: &CookieJar<'_>, jar_b: &CookieJar<'_>) {
@@ -23,11 +23,11 @@ fn multi_get(jar_a: &CookieJar<'_>, jar_b: &CookieJar<'_>, jar_c: &CookieJar<'_>
 #[cfg(test)]
 mod many_cookie_jars_tests {
     use super::*;
-    use rocket::local::blocking::Client;
-    use rocket::{Build, Rocket};
+    use rkt::local::blocking::Client;
+    use rkt::{Build, Rocket};
 
     fn rocket() -> Rocket<Build> {
-        rocket::build().mount("/", routes![multi_add, multi_get])
+        rkt::build().mount("/", routes![multi_add, multi_get])
     }
 
     #[test]

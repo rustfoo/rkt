@@ -1,9 +1,9 @@
 #![recursion_limit = "256"]
 #![warn(rust_2018_idioms)]
 
-//! # `rocket_db_pool` - Code Generation
+//! # `rkt_db_pools` - Code Generation
 //!
-//! Implements the code generation portion of the `rocket_db_pool` crate. This
+//! Implements the code generation portion of the `rkt_db_pools` crate. This
 //! is an implementation detail. This create should never be depended on
 //! directly.
 
@@ -15,8 +15,8 @@ mod database;
 /// Automatic derive for the [`Database`] trait.
 ///
 /// ```rust
-/// use rocket_db_pools::Database;
-/// # type PoolType = rocket_db_pools::deadpool_postgres::Pool;
+/// use rkt_db_pools::Database;
+/// # type PoolType = rkt_db_pools::deadpool_postgres::Pool;
 ///
 /// #[derive(Database)]
 /// #[database("database_name")]
@@ -52,10 +52,10 @@ mod database;
 /// references `&Db` or `&mut Db`. To force a dereference to the underlying
 /// type, use `&db.0` or `&**db` or their `&mut` variants.
 ///
-/// [`Database`]: ../rocket_db_pools/trait.Database.html
-/// [`Database::NAME`]: ../rocket_db_pools/trait.Database.html#associatedconstant.NAME
-/// [`Database::Pool`]: ../rocket_db_pools/trait.Database.html#associatedtype.Pool
-/// [`Pool`]: ../rocket_db_pools/trait.Pool.html
+/// [`Database`]: ../rkt_db_pools/trait.Database.html
+/// [`Database::NAME`]: ../rkt_db_pools/trait.Database.html#associatedconstant.NAME
+/// [`Database::Pool`]: ../rkt_db_pools/trait.Database.html#associatedtype.Pool
+/// [`Pool`]: ../rkt_db_pools/trait.Pool.html
 #[proc_macro_derive(Database, attributes(database))]
 pub fn derive_database(input: proc_macro::TokenStream) -> proc_macro::TokenStream {
     crate::database::derive_database(input)

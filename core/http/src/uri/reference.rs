@@ -29,8 +29,8 @@ use crate::RawStr;
 /// references. As such, conversion between the types is lossless:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// use rocket::http::uri::Reference;
+/// # #[macro_use] extern crate rkt;
+/// use rkt::http::uri::Reference;
 ///
 /// let absolute = uri!("http://rocket.rs");
 /// let reference: Reference = absolute.into();
@@ -54,7 +54,7 @@ use crate::RawStr;
 /// # #[cfg(feature = "serde")] mod serde_impl {
 /// # use serde as serde;
 /// use serde::{Serialize, Deserialize};
-/// use rocket::http::uri::Reference;
+/// use rkt::http::uri::Reference;
 ///
 /// #[derive(Deserialize, Serialize)]
 /// # #[serde(crate = "serde")]
@@ -151,8 +151,8 @@ impl<'a> Reference<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Reference;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Reference;
     ///
     /// // Parse a valid URI reference.
     /// let uri = Reference::parse("/a/b/c?query").expect("valid URI");
@@ -182,8 +182,8 @@ impl<'a> Reference<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::uri::Reference;
+    /// # extern crate rkt;
+    /// use rkt::http::uri::Reference;
     ///
     /// let source = format!("/foo?{}#3", 2);
     /// let uri = Reference::parse_owned(source).unwrap();
@@ -211,7 +211,7 @@ impl<'a> Reference<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("http://rocket.rs?foo#bar");
     /// assert_eq!(uri.scheme(), Some("http"));
     ///
@@ -233,7 +233,7 @@ impl<'a> Reference<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("http://rocket.rs:4444?foo#bar");
     /// let auth = uri!("rocket.rs:4444");
     /// assert_eq!(uri.authority().unwrap(), &auth);
@@ -251,7 +251,7 @@ impl<'a> Reference<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("http://rocket.rs/guide?foo#bar");
     /// assert_eq!(uri.path(), "/guide");
     /// ```
@@ -268,7 +268,7 @@ impl<'a> Reference<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("http://rocket.rs/guide");
     /// assert!(uri.query().is_none());
     ///
@@ -294,7 +294,7 @@ impl<'a> Reference<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("http://rocket.rs/guide?foo#bar");
     /// assert_eq!(uri.fragment().unwrap(), "bar");
     ///
@@ -318,8 +318,8 @@ impl<'a> Reference<'a> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// use rocket::http::uri::Reference;
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::uri::Reference;
     ///
     /// assert!(Reference::parse("foo/bar").unwrap().is_normalized());
     /// assert!(Reference::parse("foo/bar#").unwrap().is_normalized());
@@ -355,7 +355,7 @@ impl<'a> Reference<'a> {
     /// # Example
     ///
     /// ```rust
-    /// use rocket::http::uri::Reference;
+    /// use rkt::http::uri::Reference;
     ///
     /// let mut uri = Reference::parse("git://rocket.rs/").unwrap();
     /// assert!(uri.is_normalized());
@@ -391,7 +391,7 @@ impl<'a> Reference<'a> {
     /// # Example
     ///
     /// ```rust
-    /// use rocket::http::uri::Reference;
+    /// use rkt::http::uri::Reference;
     ///
     /// let mut uri = Reference::parse("git://rocket.rs/").unwrap();
     /// assert!(uri.is_normalized());

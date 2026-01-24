@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::form::Form;
+use rkt::form::Form;
 
 #[post("/", data = "<form_data>")]
 fn bug(form_data: Form<String>) -> String {
@@ -10,9 +10,9 @@ fn bug(form_data: Form<String>) -> String {
 
 mod tests {
     use super::*;
-    use rocket::http::ContentType;
-    use rocket::http::Status;
-    use rocket::local::blocking::Client;
+    use rkt::http::ContentType;
+    use rkt::http::Status;
+    use rkt::local::blocking::Client;
 
     fn check_decoding(raw: &str, decoded: &str) {
         let client = Client::debug_with(routes![bug]).unwrap();

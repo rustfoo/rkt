@@ -14,8 +14,8 @@ use crate::RawStr;
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket;
-/// use rocket::http::uri::Origin;
+/// # extern crate rkt;
+/// use rkt::http::uri::Origin;
 ///
 /// let uri = Origin::parse("/a%20z/////b/c////////d").unwrap();
 /// let segments = uri.path().segments();
@@ -55,7 +55,7 @@ impl<P: Part> Segments<'_, P> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/foo/bar?baz&cat&car");
     ///
     /// let mut segments = uri.path().segments();
@@ -81,7 +81,7 @@ impl<P: Part> Segments<'_, P> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/foo/bar?baz&cat&car");
     ///
     /// let mut segments = uri.path().segments();
@@ -101,7 +101,7 @@ impl<P: Part> Segments<'_, P> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/foo/bar/baz/cat");
     ///
     /// let mut segments = uri.path().segments();
@@ -125,7 +125,7 @@ impl<'a> Segments<'a, Path> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/foo/bar/baaaz/cat");
     ///
     /// let segments = uri.path().segments();
@@ -147,7 +147,7 @@ impl<'a> Segments<'a, Path> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let a = uri!("/");
     /// let b = uri!("/");
     /// assert!(a.path().segments().prefix_of(b.path().segments()));
@@ -208,7 +208,7 @@ impl<'a> Segments<'a, Path> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// use std::path::Path;
     ///
     /// let uri = uri!("/a/b/c/d/.pass");
@@ -261,7 +261,7 @@ impl<'a> Segments<'a, Query> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
+    /// # #[macro_use] extern crate rkt;
     /// let uri = uri!("/?foo=1&bar=hi+there&baaaz&cat=dog&=oh");
     ///
     /// let segments = uri.query().unwrap().segments();

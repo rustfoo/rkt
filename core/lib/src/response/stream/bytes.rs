@@ -27,11 +27,10 @@ use crate::response::{self, Responder, Response};
 /// form `vec![i, i + 1, i + 2]` for `i` from `0` to `10` exclusive:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::*;
-/// use rocket::response::stream::ByteStream;
-/// use rocket::futures::stream::{repeat, StreamExt};
-/// use rocket::tokio::time::{self, Duration};
+/// # use rkt::*;
+/// use rkt::response::stream::ByteStream;
+/// use rkt::futures::stream::{repeat, StreamExt};
+/// use rkt::tokio::time::{self, Duration};
 ///
 /// #[get("/bytes")]
 /// fn bytes() -> ByteStream![&'static [u8]] {

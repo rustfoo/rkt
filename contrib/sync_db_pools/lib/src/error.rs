@@ -1,4 +1,4 @@
-use rocket::figment;
+use rkt::figment;
 
 /// A wrapper around `r2d2::Error`s or a custom database error type.
 ///

@@ -1,5 +1,5 @@
-#[macro_use] extern crate rocket;
-#[macro_use] extern crate rocket_sync_db_pools;
+#[macro_use] extern crate rkt;
+#[macro_use] extern crate rkt_sync_db_pools;
 
 #[cfg(test)] mod tests;
 
@@ -8,7 +8,7 @@ mod diesel_sqlite;
 mod diesel_mysql;
 mod rusqlite;
 
-use rocket::response::Redirect;
+use rkt::response::Redirect;
 
 #[get("/")]
 fn index() -> Redirect {
@@ -17,7 +17,7 @@ fn index() -> Redirect {
 
 #[launch]
 fn rocket() -> _ {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![index])
         .attach(sqlx::stage())
         .attach(rusqlite::stage())

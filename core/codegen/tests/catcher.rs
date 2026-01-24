@@ -4,11 +4,11 @@
 #![deny(non_snake_case)]
 
 #[macro_use]
-extern crate rocket;
+extern crate rkt;
 
-use rocket::http::Status;
-use rocket::local::blocking::Client;
-use rocket::{Build, Request, Rocket};
+use rkt::http::Status;
+use rkt::local::blocking::Client;
+use rkt::{Build, Request, Rocket};
 
 #[catch(404)]
 fn not_found_0() -> &'static str {
@@ -30,7 +30,7 @@ fn all(_: Status, r: &Request<'_>) -> String {
 #[test]
 fn test_simple_catchers() {
     fn rocket() -> Rocket<Build> {
-        rocket::build()
+        rkt::build()
             .register("/0", catchers![not_found_0])
             .register("/1", catchers![not_found_1])
             .register("/2", catchers![not_found_2])
@@ -73,7 +73,7 @@ fn forward_500(status: Status, _: &Request<'_>) -> String {
 #[test]
 fn test_status_param() {
     fn rocket() -> Rocket<Build> {
-        rocket::build().mount("/", routes![forward]).register(
+        rkt::build().mount("/", routes![forward]).register(
             "/",
             catchers![forward_400, forward_404, forward_444, forward_500],
         )

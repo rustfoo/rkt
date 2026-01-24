@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::form::Form;
+use rkt::form::Form;
 
 #[post("/", data = "<form>")]
 fn index(form: Form<String>) -> String {
@@ -9,15 +9,15 @@ fn index(form: Form<String>) -> String {
 }
 
 mod limits_tests {
-    use rocket::data::Limits;
-    use rocket::http::{ContentType, Status};
-    use rocket::local::blocking::Client;
-    use rocket::{Build, Rocket};
+    use rkt::data::Limits;
+    use rkt::http::{ContentType, Status};
+    use rkt::local::blocking::Client;
+    use rkt::{Build, Rocket};
 
     fn rocket_with_forms_limit(limit: u64) -> Rocket<Build> {
-        let mut config = rocket::Config::debug_default();
+        let mut config = rkt::Config::debug_default();
         config.limits = Limits::default().limit("form", limit.into());
-        rocket::custom(config).mount("/", routes![super::index])
+        rkt::custom(config).mount("/", routes![super::index])
     }
 
     #[test]

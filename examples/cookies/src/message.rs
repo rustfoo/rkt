@@ -1,11 +1,11 @@
-use rocket::form::Form;
-use rocket::response::Redirect;
-use rocket::http::CookieJar;
-use rocket_dyn_templates::{Template, context};
+use rkt::form::Form;
+use rkt::response::Redirect;
+use rkt::http::CookieJar;
+use rkt_dyn_templates::{Template, context};
 
 #[macro_export]
 macro_rules! message_uri {
-    ($($t:tt)*) => (rocket::uri!("/message", $crate::message:: $($t)*))
+    ($($t:tt)*) => (rkt::uri!("/message", $crate::message:: $($t)*))
 }
 
 pub use message_uri as uri;
@@ -29,6 +29,6 @@ fn index(cookies: &CookieJar<'_>) -> Template {
     Template::render("message", context! { present, message })
 }
 
-pub fn routes() -> Vec<rocket::Route> {
+pub fn routes() -> Vec<rkt::Route> {
     routes![index, submit, delete]
 }

@@ -1,11 +1,11 @@
 
-extern crate rocket_sync_db_pools_community as rocket_sync_db_pools;
+extern crate rkt_sync_db_pools;
 
 #[cfg(all(feature = "diesel_sqlite_pool", feature = "diesel_postgres_pool"))]
 mod databases_tests {
     #![allow(dead_code)]
 
-    use rocket_sync_db_pools::database;
+    use rkt_sync_db_pools::database;
 
     #[database("example")]
     struct ExampleDb(diesel::SqliteConnection);
@@ -18,7 +18,7 @@ mod databases_tests {
 mod memcache_pool_tests {
     #![allow(dead_code)]
 
-    use rocket_sync_db_pools::database;
+    use rkt_sync_db_pools::database;
 
     #[database("test_db")]
     struct MemcacheDb(memcache::Client);
@@ -27,7 +27,7 @@ mod memcache_pool_tests {
 #[cfg(test)]
 #[cfg(feature = "sqlite_pool")]
 mod rusqlite_integration_test {
-    use rocket_sync_db_pools::{database, rusqlite};
+    use rkt_sync_db_pools::{database, rusqlite};
 
     use rusqlite::types::ToSql;
 
@@ -38,16 +38,16 @@ mod rusqlite_integration_test {
     #[database("test_db_2")]
     struct SqliteDb2(pub rusqlite::Connection);
 
-    #[rocket::async_test]
+    #[rkt::async_test]
     async fn test_db() {
-        use rocket::figment::{util::map, Figment};
+        use rkt::figment::{util::map, Figment};
 
         let options = map!["url" => ":memory:"];
-        let config = Figment::from(rocket::Config::debug_default())
+        let config = Figment::from(rkt::Config::debug_default())
             .merge(("databases", map!["test_db" => &options]))
             .merge(("databases", map!["test_db_2" => &options]));
 
-        let rocket = rocket::custom(config)
+        let rocket = rkt::custom(config)
             .attach(SqliteDb::fairing())
             .attach(SqliteDb2::fairing())
             .ignite()
@@ -75,8 +75,8 @@ mod rusqlite_integration_test {
 #[cfg(test)]
 mod sentinel_and_runtime_test {
     use r2d2::{ManageConnection, Pool};
-    use rocket::{Build, Rocket};
-    use rocket_sync_db_pools::{database, PoolResult, Poolable};
+    use rkt::{Build, Rocket};
+    use rkt_sync_db_pools::{database, PoolResult, Poolable};
     use tokio::runtime::Runtime;
 
     #[allow(dead_code)]
@@ -113,20 +113,20 @@ mod sentinel_and_runtime_test {
     #[database("test_db")]
     struct TestDb(TestConnection);
 
-    #[rocket::async_test]
+    #[rkt::async_test]
     async fn test_drop_runtime() {
-        use rocket::figment::{util::map, Figment};
+        use rkt::figment::{util::map, Figment};
 
-        let config = Figment::from(rocket::Config::debug_default())
+        let config = Figment::from(rkt::Config::debug_default())
             .merge(("databases", map!["test_db" => map!["url" => ""]]));
 
-        let rocket = rocket::custom(config).attach(TestDb::fairing());
+        let rocket = rkt::custom(config).attach(TestDb::fairing());
         drop(rocket);
     }
 
     #[test]
     fn test_sentinel() {
-        use rocket::{error::ErrorKind::SentinelAborts, local::blocking::Client, *};
+        use rkt::{error::ErrorKind::SentinelAborts, local::blocking::Client, *};
 
         #[get("/")]
         fn use_db(_db: TestDb) {}

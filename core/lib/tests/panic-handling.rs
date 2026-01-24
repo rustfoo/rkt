@@ -1,10 +1,10 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::data::Data;
-use rocket::http::{Method, Status};
-use rocket::local::blocking::Client;
-use rocket::{catcher, route, Build, Catcher, Request, Rocket, Route};
+use rkt::data::Data;
+use rkt::http::{Method, Status};
+use rkt::local::blocking::Client;
+use rkt::{catcher, route, Build, Catcher, Request, Rocket, Route};
 
 #[get("/panic")]
 fn panic_route() -> &'static str {
@@ -26,7 +26,7 @@ fn pre_future_route<'r>(_: &'r Request<'_>, _: Data<'r>) -> route::BoxFuture<'r>
 }
 
 fn rocket() -> Rocket<Build> {
-    rocket::build()
+    rkt::build()
         .mount("/", routes![panic_route])
         .mount("/", vec![Route::new(Method::Get, "/pre", pre_future_route)])
 }

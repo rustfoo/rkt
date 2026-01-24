@@ -16,11 +16,10 @@ use crate::response::{self, Responder};
 /// A simple static file server mimicking [`FileServer`]:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::get;
+/// # use rkt::get;
 /// use std::path::{PathBuf, Path};
 ///
-/// use rocket::fs::{NamedFile, relative};
+/// use rkt::fs::{NamedFile, relative};
 ///
 /// #[get("/file/<path..>")]
 /// pub async fn second(path: PathBuf) -> Option<NamedFile> {
@@ -52,9 +51,8 @@ impl NamedFile {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::get;
-    /// use rocket::fs::NamedFile;
+    /// # use rkt::get;
+    /// use rkt::fs::NamedFile;
     ///
     /// #[get("/")]
     /// async fn index() -> Option<NamedFile> {
@@ -80,8 +78,7 @@ impl NamedFile {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fs::NamedFile;
+    /// use rkt::fs::NamedFile;
     ///
     /// # async fn f() -> std::io::Result<()> {
     /// let named_file = NamedFile::open("index.html").await?;
@@ -99,8 +96,7 @@ impl NamedFile {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fs::NamedFile;
+    /// use rkt::fs::NamedFile;
     ///
     /// # async fn f() -> std::io::Result<()> {
     /// let mut named_file = NamedFile::open("index.html").await?;
@@ -118,8 +114,7 @@ impl NamedFile {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fs::NamedFile;
+    /// use rkt::fs::NamedFile;
     ///
     /// # async fn f() -> std::io::Result<()> {
     /// let named_file = NamedFile::open("index.html").await?;
@@ -137,8 +132,7 @@ impl NamedFile {
     /// # Examples
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::fs::NamedFile;
+    /// use rkt::fs::NamedFile;
     ///
     /// # async fn demo_path() -> std::io::Result<()> {
     /// let file = NamedFile::open("foo.txt").await?;

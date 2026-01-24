@@ -4,8 +4,7 @@
 //! `field(validate)` field attribute of the `FromForm` derive.
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! use rocket::form::FromForm;
+//! use rkt::form::FromForm;
 //!
 //! #[derive(FromForm)]
 //! struct MyForm<'r> {
@@ -27,8 +26,7 @@
 //! To set a custom error messages, it is useful to chain results:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! use rocket::form::{Errors, Error, FromForm};
+//! use rkt::form::{Errors, Error, FromForm};
 //!
 //! #[derive(FromForm)]
 //! struct MyForm<'r> {
@@ -57,10 +55,9 @@
 //! routine that tries to validate a credit card number:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
 //! extern crate time;
 //!
-//! use rocket::form::{self, FromForm, Error};
+//! use rkt::form::{self, FromForm, Error};
 //!
 //! #[derive(FromForm)]
 //! struct CreditCard {
@@ -86,7 +83,7 @@ use std::fmt::Debug;
 use std::ops::{Bound, RangeBounds};
 
 use crate::data::{ByteUnit, Capped};
-use rocket_http::ContentType;
+use rkt_http::ContentType;
 
 use crate::{
     form::{Error, Result},
@@ -107,8 +104,7 @@ crate::export! {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::FromForm;
+    /// use rkt::form::FromForm;
     ///
     /// #[derive(FromForm)]
     /// struct Person<'r> {
@@ -132,8 +128,7 @@ crate::export! {
     /// ## Variant 1
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::form;
+    /// # use rkt::form;
     /// # trait Expr {}
     /// fn msg<'a, T, P, E: Expr>(expr: E) -> impl Fn(P) -> form::Result<'a, T>
     /// # { |_| unimplemented!() }
@@ -147,8 +142,7 @@ crate::export! {
     /// ## Variant 2
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::form;
+    /// # use rkt::form;
     /// # trait Format {}
     /// # trait Args {}
     /// fn msg<'a, T, P, A: Args>(fmt: &str, args: A) -> impl Fn(P) -> form::Result<'a, T>
@@ -177,8 +171,7 @@ crate::export! {
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::{FromForm, FromFormField};
+/// use rkt::form::{FromForm, FromFormField};
 ///
 /// #[derive(FromFormField, PartialEq)]
 /// enum Kind {
@@ -220,8 +213,7 @@ where
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::{FromForm, FromFormField};
+/// use rkt::form::{FromForm, FromFormField};
 ///
 /// #[derive(PartialEq, Debug, Clone, Copy, FromFormField)]
 /// enum Pet { Cat, Dog }
@@ -259,8 +251,7 @@ where
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::{FromForm, FromFormField};
+/// use rkt::form::{FromForm, FromFormField};
 ///
 /// #[derive(FromFormField, PartialEq)]
 /// enum Kind {
@@ -436,11 +427,10 @@ impl<L, T: Len<L>> Len<L> for crate::serde::msgpack::MsgPack<T> {
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::http::ContentType;
-/// use rocket::form::{FromForm, FromFormField};
-/// use rocket::data::ToByteUnit;
-/// use rocket::fs::TempFile;
+/// use rkt::http::ContentType;
+/// use rkt::form::{FromForm, FromFormField};
+/// use rkt::data::ToByteUnit;
+/// use rkt::fs::TempFile;
 ///
 /// #[derive(FromForm)]
 /// struct Foo<'r> {
@@ -576,8 +566,7 @@ impl<I, T: Contains<I> + ?Sized> Contains<I> for &T {
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::{FromForm, FromFormField};
+/// use rkt::form::{FromForm, FromFormField};
 ///
 /// #[derive(PartialEq, FromFormField)]
 /// enum Pet { Cat, Dog }
@@ -623,8 +612,7 @@ where
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::{FromForm, FromFormField};
+/// use rkt::form::{FromForm, FromFormField};
 ///
 /// #[derive(PartialEq, Debug, Clone, Copy, FromFormField)]
 /// enum Pet { Cat, Dog }
@@ -667,8 +655,7 @@ where
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::{FromForm, FromFormField};
+/// use rkt::form::{FromForm, FromFormField};
 ///
 /// #[derive(PartialEq, FromFormField)]
 /// enum Pet { Cat, Dog }
@@ -710,8 +697,7 @@ where
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::{FromForm, FromFormField};
+/// use rkt::form::{FromForm, FromFormField};
 ///
 /// #[derive(PartialEq, Debug, Clone, Copy, FromFormField)]
 /// enum Pet { Cat, Dog }
@@ -751,8 +737,7 @@ where
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::FromForm;
+/// use rkt::form::FromForm;
 ///
 /// #[derive(FromForm)]
 /// struct Foo {
@@ -803,8 +788,7 @@ where
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::FromForm;
+/// use rkt::form::FromForm;
 ///
 /// #[derive(FromForm)]
 /// struct Foo<'r> {
@@ -851,11 +835,10 @@ where
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::FromForm;
-/// use rocket::data::ToByteUnit;
-/// use rocket::http::ContentType;
-/// use rocket::fs::TempFile;
+/// use rkt::form::FromForm;
+/// use rkt::data::ToByteUnit;
+/// use rkt::http::ContentType;
+/// use rkt::fs::TempFile;
 ///
 /// #[derive(FromForm)]
 /// struct Foo<'r> {
@@ -895,8 +878,7 @@ pub fn ext<'v>(file: &TempFile<'_>, r#type: ContentType) -> Result<'v, ()> {
 /// # Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::{FromForm, FromFormField};
+/// use rkt::form::{FromForm, FromFormField};
 ///
 /// #[derive(PartialEq, FromFormField)]
 /// enum Pet { Cat, Dog }
@@ -950,8 +932,7 @@ where
 /// Assuming `Token` has a `from_str` method:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// # use rocket::form::FromForm;
+/// # use rkt::form::FromForm;
 /// # impl FromStr for Token<'_> {
 /// #     type Err = &'static str;
 /// #     fn from_str(s: &str) -> Result<Self, Self::Err> { todo!() }

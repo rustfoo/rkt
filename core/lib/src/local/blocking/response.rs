@@ -13,11 +13,11 @@ use super::Client;
 /// body can be read directly:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// use std::io::{self, Read};
 ///
-/// use rocket::local::blocking::Client;
-/// use rocket::http::Status;
+/// use rkt::local::blocking::Client;
+/// use rkt::http::Status;
 ///
 /// #[get("/")]
 /// fn hello_world() -> &'static str {
@@ -26,8 +26,8 @@ use super::Client;
 ///
 /// #[launch]
 /// fn rocket() -> _ {
-///     rocket::build().mount("/", routes![hello_world])
-///     #    .reconfigure(rocket::Config::debug_default())
+///     rkt::build().mount("/", routes![hello_world])
+///     #    .reconfigure(rkt::Config::debug_default())
 /// }
 ///
 /// # fn read_body_manually() -> io::Result<()> {
@@ -89,8 +89,8 @@ impl LocalResponse<'_> {
 
     // Generates the public API methods, which call the private methods above.
     pub_response_impl!(
-        "# use rocket::local::blocking::Client;\n\
-        use rocket::local::blocking::LocalResponse;"
+        "# use rkt::local::blocking::Client;\n\
+        use rkt::local::blocking::LocalResponse;"
     );
 }
 

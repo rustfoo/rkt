@@ -13,15 +13,14 @@
 //! For convenience, Rocket re-exports `serde`'s `Serialize` and `Deserialize`
 //! traits and derive macros from this module. However, due to Rust's limited
 //! support for derive macro re-exports, using the re-exported derive macros
-//! requires annotating structures with `#[serde(crate = "rocket::serde")]`:
+//! requires annotating structures with `#[serde(crate = "rkt::serde")]`:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
 //!
-//! use rocket::serde::{Serialize, Deserialize};
+//! use rkt::serde::{Serialize, Deserialize};
 //!
 //! #[derive(Serialize, Deserialize)]
-//! #[serde(crate = "rocket::serde")]
+//! #[serde(crate = "rkt::serde")]
 //! struct MyStruct {
 //!     foo: String,
 //! }

@@ -26,8 +26,8 @@ use crate::uncased::UncasedStr;
 /// [`MediaType::JSON`] constant:
 ///
 /// ```rust
-/// # extern crate rocket;
-/// use rocket::http::MediaType;
+/// # extern crate rkt;
+/// use rkt::http::MediaType;
 ///
 /// let json = MediaType::JSON;
 /// assert_eq!(json.top(), "application");
@@ -135,8 +135,8 @@ macro_rules! from_extension {
         /// Recognized media types:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::MediaType;
+        /// # extern crate rkt;
+        /// use rkt::http::MediaType;
         ///
         /// let xml = MediaType::from_extension("xml");
         /// assert_eq!(xml, Some(MediaType::XML));
@@ -148,8 +148,8 @@ macro_rules! from_extension {
         /// An unrecognized media type:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::MediaType;
+        /// # extern crate rkt;
+        /// use rkt::http::MediaType;
         ///
         /// let foo = MediaType::from_extension("foo");
         /// assert!(foo.is_none());
@@ -177,8 +177,8 @@ macro_rules! extension {
         /// Known extension:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::MediaType;
+        /// # extern crate rkt;
+        /// use rkt::http::MediaType;
         ///
         /// assert_eq!(MediaType::JSON.extension().unwrap(), "json");
         /// assert_eq!(MediaType::JPEG.extension().unwrap(), "jpeg");
@@ -189,8 +189,8 @@ macro_rules! extension {
         /// An unknown extension:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::MediaType;
+        /// # extern crate rkt;
+        /// use rkt::http::MediaType;
         ///
         /// let foo = MediaType::new("foo", "bar");
         /// assert!(foo.extension().is_none());
@@ -220,8 +220,8 @@ macro_rules! parse_flexible {
         /// Using a shorthand:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::MediaType;
+        /// # extern crate rkt;
+        /// use rkt::http::MediaType;
         ///
         /// let html = MediaType::parse_flexible("html");
         /// assert_eq!(html, Some(MediaType::HTML));
@@ -233,8 +233,8 @@ macro_rules! parse_flexible {
         /// Using the full media type:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::MediaType;
+        /// # extern crate rkt;
+        /// use rkt::http::MediaType;
         ///
         /// let html = MediaType::parse_flexible("text/html; charset=utf-8");
         /// assert_eq!(html, Some(MediaType::HTML));
@@ -249,8 +249,8 @@ macro_rules! parse_flexible {
         /// An unrecognized media type:
         ///
         /// ```rust
-        /// # extern crate rocket;
-        /// use rocket::http::MediaType;
+        /// # extern crate rkt;
+        /// use rkt::http::MediaType;
         ///
         /// let foo = MediaType::parse_flexible("foo");
         /// assert_eq!(foo, None);
@@ -277,8 +277,8 @@ impl MediaType {
     /// Create a custom `application/x-person` media type:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::MediaType;
+    /// # extern crate rkt;
+    /// use rkt::http::MediaType;
     ///
     /// let custom = MediaType::new("application", "x-person");
     /// assert_eq!(custom.top(), "application");
@@ -305,8 +305,8 @@ impl MediaType {
     /// Create a custom `application/x-id; id=1` media type:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::MediaType;
+    /// # extern crate rkt;
+    /// use rkt::http::MediaType;
     ///
     /// let id = MediaType::new("application", "x-id").with_params([("id", "1")]);
     /// assert_eq!(id.to_string(), "application/x-id; id=1".to_string());
@@ -315,8 +315,8 @@ impl MediaType {
     /// Create a custom `text/person; name=bob; weight=175` media type:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::MediaType;
+    /// # extern crate rkt;
+    /// use rkt::http::MediaType;
     ///
     /// let mt = MediaType::new("text", "person")
     ///     .with_params([("name", "bob"), ("ref", "2382")]);
@@ -347,7 +347,7 @@ impl MediaType {
     /// Create a custom `application/x-person` media type:
     ///
     /// ```rust
-    /// use rocket::http::MediaType;
+    /// use rkt::http::MediaType;
     ///
     /// let custom = MediaType::const_new("application", "x-person", &[]);
     /// assert_eq!(custom.top(), "application");
@@ -400,8 +400,8 @@ impl MediaType {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::MediaType;
+    /// # extern crate rkt;
+    /// use rkt::http::MediaType;
     ///
     /// let plain = MediaType::Plain;
     /// assert_eq!(plain.top(), "text");
@@ -419,8 +419,8 @@ impl MediaType {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::MediaType;
+    /// # extern crate rkt;
+    /// use rkt::http::MediaType;
     ///
     /// let plain = MediaType::Plain;
     /// assert_eq!(plain.sub(), "plain");
@@ -444,8 +444,8 @@ impl MediaType {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::MediaType;
+    /// # extern crate rkt;
+    /// use rkt::http::MediaType;
     ///
     /// let mt = MediaType::Plain;
     /// assert_eq!(mt.specificity(), 2);
@@ -476,8 +476,8 @@ impl MediaType {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::MediaType;
+    /// # extern crate rkt;
+    /// use rkt::http::MediaType;
     ///
     /// let plain = MediaType::Plain;
     /// let plain2 = MediaType::new("text", "plain").with_params([("charset", "utf-8")]);
@@ -506,8 +506,8 @@ impl MediaType {
     /// The `MediaType::Plain` type has one parameter: `charset=utf-8`:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::MediaType;
+    /// # extern crate rkt;
+    /// use rkt::http::MediaType;
     ///
     /// let plain = MediaType::Plain;
     /// let (key, val) = plain.params().next().unwrap();
@@ -518,8 +518,8 @@ impl MediaType {
     /// The `MediaType::PNG` type has no parameters:
     ///
     /// ```rust
-    /// # extern crate rocket;
-    /// use rocket::http::MediaType;
+    /// # extern crate rkt;
+    /// use rkt::http::MediaType;
     ///
     /// let png = MediaType::PNG;
     /// assert_eq!(png.params().count(), 0);

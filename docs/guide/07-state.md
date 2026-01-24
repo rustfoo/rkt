@@ -47,7 +47,7 @@ struct HitCount {
     count: AtomicUsize
 }
 
-rocket::build().manage(HitCount { count: AtomicUsize::new(0) });
+rkt::build().manage(HitCount { count: AtomicUsize::new(0) });
 ```
 
 The `manage` method can be called any number of times as long as each call
@@ -60,7 +60,7 @@ a `HitCount` value and a `Config` value, we can write:
 # type Config = &'static str;
 # let user_input = "input";
 
-rocket::build()
+rkt::build()
     .manage(HitCount { count: AtomicUsize::new(0) })
     .manage(Config::from(user_input));
 ```
@@ -75,13 +75,13 @@ managed state. For example, we can retrieve and respond with the current
 `HitCount` in a `count` route as follows:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 # use std::sync::atomic::{AtomicUsize, Ordering};
 # struct HitCount { count: AtomicUsize }
 
-use rocket::State;
+use rkt::State;
 
 #[get("/count")]
 fn count(hit_count: &State<HitCount>) -> String {
@@ -93,12 +93,12 @@ fn count(hit_count: &State<HitCount>) -> String {
 You can retrieve more than one `&State` type in a single route as well:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 
 # struct HitCount;
 # struct Config;
-# use rocket::State;
+# use rkt::State;
 
 #[get("/state")]
 fn state(hit_count: &State<HitCount>, config: &State<Config>) { /* .. */ }
@@ -126,15 +126,15 @@ another request guard's implementation using either [`Request::guard()`] or
 retrieves `MyConfig` from managed state using both methods:
 
 ```rust
-use rocket::State;
-use rocket::request::{self, Request, FromRequest};
-use rocket::outcome::IntoOutcome;
-use rocket::http::Status;
+use rkt::State;
+use rkt::request::{self, Request, FromRequest};
+use rkt::outcome::IntoOutcome;
+use rkt::http::Status;
 
 # struct MyConfig { user_val: String };
 struct Item<'r>(&'r str);
 
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for Item<'r> {
     type Error = ();
 
@@ -173,11 +173,11 @@ As an example, consider the following request guard implementation for
 integer ID per request:
 
 ```rust
-# #[macro_use] extern crate rocket;
+# #[macro_use] extern crate rkt;
 # fn main() {}
 # use std::sync::atomic::{AtomicUsize, Ordering};
 
-use rocket::request::{self, Request, FromRequest};
+use rkt::request::{self, Request, FromRequest};
 
 /// A global atomic counter for generating IDs.
 static ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
@@ -186,7 +186,7 @@ static ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 struct RequestId(pub usize);
 
 /// Returns the current request's ID, assigning one only as necessary.
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for &'r RequestId {
     type Error = ();
 
@@ -222,21 +222,21 @@ request-local state to implement request timing.
 ## Databases
 
 Rocket includes built-in, ORM-agnostic support for databases via
-[`rocket_db_pools`]. The library simplifies accessing one or more databases via
+[`rkt_db_pools`]. The library simplifies accessing one or more databases via
 connection pools: data structures that maintain active database connections for
 use in the application. Database configuration occurs via Rocket's regular
 [configuration](../configuration/) mechanisms.
 
-Connecting your Rocket application to a database using `rocket_db_pools` happens
+Connecting your Rocket application to a database using `rkt_db_pools` happens
 in three simple steps:
 
 1. Choose your database(s) from the [supported database driver list]. Add
-   `rocket_db_pools` as a dependency in `Cargo.toml` with respective database
+   `rkt_db_pools` as a dependency in `Cargo.toml` with respective database
    driver feature(s) enabled:
 
    ```toml
-   [dependencies.rocket_db_pools]
-   package = "rocket_db_pools-community"
+   [dependencies.rkt_db_pools]
+   package = "rkt_db_pools-community"
    version = "0.3.2"
    features = ["sqlx_sqlite"]
    ```
@@ -258,10 +258,10 @@ in three simple steps:
    database connection:
 
    ```rust
-   #[macro_use] extern crate rocket;
+   #[macro_use] extern crate rkt;
 
-   use rocket_db_pools::{Database, Connection};
-   use rocket_db_pools::sqlx::{self, Row};
+   use rkt_db_pools::{Database, Connection};
+   use rkt_db_pools::sqlx::{self, Row};
 
    #[derive(Database)]
    #[database("sqlite_logs")]
@@ -277,24 +277,24 @@ in three simple steps:
 
    #[launch]
    fn rocket() -> _ {
-       rocket::build().attach(Logs::init()).mount("/", routes![read])
+       rkt::build().attach(Logs::init()).mount("/", routes![read])
    }
    ```
 
-For complete usage details, see [`rocket_db_pools`].
+For complete usage details, see [`rkt_db_pools`].
 
-[`rocket_db_pools`]: @api/master/rocket_db_pools/index.html
-[supported database driver list]: @api/master/rocket_db_pools/index.html#supported-drivers
-[database driver features]: @api/master/rocket_db_pools/index.html#supported-drivers
-[`Pool`]: @api/master/rocket_db_pools/index.html#supported-drivers
-[Configure]: @api/master/rocket_db_pools/index.html#configuration
-[Derive `Database`]: @api/master/rocket_db_pools/derive.Database.html
-[`Connection<$Type>`]: @api/master/rocket_db_pools/struct.Connection.html
+[`rkt_db_pools`]: @api/master/rkt_db_pools/index.html
+[supported database driver list]: @api/master/rkt_db_pools/index.html#supported-drivers
+[database driver features]: @api/master/rkt_db_pools/index.html#supported-drivers
+[`Pool`]: @api/master/rkt_db_pools/index.html#supported-drivers
+[Configure]: @api/master/rkt_db_pools/index.html#configuration
+[Derive `Database`]: @api/master/rkt_db_pools/derive.Database.html
+[`Connection<$Type>`]: @api/master/rkt_db_pools/struct.Connection.html
 
 ### Driver Features
 
 Only the minimal features for each driver crate are enabled by
-`rocket_db_pools`. To use additional driver functionality exposed via its
+`rkt_db_pools`. To use additional driver functionality exposed via its
 crate's features, you'll need to depend on the crate directly with those
 features enabled in `Cargo.toml`:
 
@@ -304,21 +304,21 @@ version = "0.7"
 default-features = false
 features = ["macros", "migrate"]
 
-[dependencies.rocket_db_pools]
-package = "rocket_db_pools-community"
+[dependencies.rkt_db_pools]
+package = "rkt_db_pools-community"
 version = "0.3.2"
 features = ["sqlx_sqlite"]
 ```
 
 ### Synchronous ORMs
 
-While [`rocket_db_pools`] provides support for `async` ORMs and should thus be
+While [`rkt_db_pools`] provides support for `async` ORMs and should thus be
 the preferred solution, Rocket also provides support for synchronous, blocking
-ORMs like [Diesel] via the [`rocket_sync_db_pools`] library, which you may wish
-to explore. Usage is similar, but not identical, to `rocket_db_pools`. See the
+ORMs like [Diesel] via the [`rkt_sync_db_pools`] library, which you may wish
+to explore. Usage is similar, but not identical, to `rkt_db_pools`. See the
 crate docs for complete usage details.
 
-[`rocket_sync_db_pools`]: @api/master/rocket_sync_db_pools/index.html
+[`rkt_sync_db_pools`]: @api/master/rkt_sync_db_pools/index.html
 [diesel]: https://diesel.rs/
 
 ### Examples
@@ -326,5 +326,5 @@ crate docs for complete usage details.
 For examples of CRUD-like "blog" JSON APIs backed by a SQLite database driven by
 each of `sqlx`, `diesel`, and `rusqlite`, with migrations run automatically for
 the former two drivers, see the [databases example](@git/master/examples/databases). The
-`sqlx` example uses `rocket_db_pools` while the `diesel` and `rusqlite` examples
-use `rocket_sync_db_pools`.
+`sqlx` example uses `rkt_db_pools` while the `diesel` and `rusqlite` examples
+use `rkt_sync_db_pools`.

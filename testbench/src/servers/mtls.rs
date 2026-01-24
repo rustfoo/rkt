@@ -9,7 +9,7 @@ fn test_mtls(mandatory: bool) -> Result<()> {
         "#);
 
         #[get("/")]
-        fn hello(cert: rocket::mtls::Certificate<'_>) -> String {
+        fn hello(cert: rkt::mtls::Certificate<'_>) -> String {
             format!("{}:{}[{}] {}", cert.serial(), cert.version(), cert.issuer(), cert.subject())
         }
 

@@ -37,12 +37,11 @@ impl Route {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::Route;
-    /// use rocket::http::Method;
-    /// # use rocket::local::blocking::Client;
-    /// # use rocket::route::dummy_handler as handler;
+    /// use rkt::Route;
+    /// use rkt::http::Method;
+    /// # use rkt::local::blocking::Client;
+    /// # use rkt::route::dummy_handler as handler;
     ///
     /// // This route handles GET requests to `/<hello>`.
     /// let a = Route::new(Method::Get, "/<hello>", handler);
@@ -50,7 +49,7 @@ impl Route {
     /// // This route handles GET requests to `/здрасти`.
     /// let b = Route::new(Method::Get, "/здрасти", handler);
     ///
-    /// # let client = Client::debug(rocket::build()).unwrap();
+    /// # let client = Client::debug(rkt::build()).unwrap();
     /// // Let's say `request` is `GET /hello`. The request matches only `a`:
     /// let request = client.get("/hello");
     /// # let request = request.inner();
@@ -105,12 +104,11 @@ impl Catcher {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     ///
-    /// use rocket::Catcher;
-    /// use rocket::http::Status;
-    /// # use rocket::local::blocking::Client;
-    /// # use rocket::catcher::dummy_handler as handler;
+    /// use rkt::Catcher;
+    /// use rkt::http::Status;
+    /// # use rkt::local::blocking::Client;
+    /// # use rkt::catcher::dummy_handler as handler;
     ///
     /// // This catcher handles 404 errors with a base of `/`.
     /// let a = Catcher::new(404, handler);
@@ -118,7 +116,7 @@ impl Catcher {
     /// // This catcher handles 404 errors with a base of `/bar`.
     /// let b = a.clone().map_base(|_| format!("/bar")).unwrap();
     ///
-    /// # let client = Client::debug(rocket::build()).unwrap();
+    /// # let client = Client::debug(rkt::build()).unwrap();
     /// // Let's say `request` is `GET /` that 404s. The error matches only `a`:
     /// let request = client.get("/");
     /// # let request = request.inner();

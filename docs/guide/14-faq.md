@@ -47,7 +47,7 @@ mainly consists of:
 
 The goal is for functionality like templating, sessions, ORMs, and so on to be
 implemented entirely outside of Rocket while maintaining a first-class feel and
-experience. Indeed, crates like [`rocket_dyn_templates`] and [`rocket_db_pools`]
+experience. Indeed, crates like [`rkt_dyn_templates`] and [`rkt_db_pools`]
 do just this. As a result, Rocket is neither "bare-bones" nor is it a kitchen
 sink for all possible features.
 
@@ -83,8 +83,8 @@ time can be further reduced by using faster linkers like `lld`. We think the
 trade-off is worth it. Rocket will never compromise security, correctness, or
 usability to "win" at benchmarks of any sort.
 
-[`rocket_dyn_templates`]: @api/master/rocket_dyn_templates/
-[`rocket_db_pools`]: @api/master/rocket_db_pools/
+[`rkt_dyn_templates`]: @api/master/rkt_dyn_templates/
+[`rkt_db_pools`]: @api/master/rkt_db_pools/
 {{ endfaq() }}
 
 
@@ -258,7 +258,7 @@ Can I, and if so how, do I use WebSockets?
 {{ answer() }}
 
 You can! WebSocket support is provided by the officially maintained
-[`rocket_ws`](@api/master/rocket_ws/) crate. You'll find all the docs you need
+[`rkt_ws`](@api/master/rkt_ws/) crate. You'll find all the docs you need
 there.
 
 Rocket _also_ supports [Server-Sent Events], which allows for real-time
@@ -375,8 +375,8 @@ derive `Responder` for a struct that contains the header value, which adds the
 header to the response:
 
 ```rust
-# #[macro_use] extern crate rocket;
-# use rocket::http::Header;
+# #[macro_use] extern crate rkt;
+# use rkt::http::Header;
 
 # type HeaderType = Header<'static>;
 
@@ -408,13 +408,13 @@ serialize JSON manually. Instead, use the existing [`Json`] responder, like in
 the example below:
 
 ```rust
-# #[derive(rocket::serde::Serialize)]
-# #[serde(crate = "rocket::serde")]
+# #[derive(rkt::serde::Serialize)]
+# #[serde(crate = "rkt::serde")]
 # struct Person { name: String, age: usize };
 
-use rocket::request::Request;
-use rocket::response::{self, Response, Responder};
-use rocket::serde::json::Json;
+use rkt::request::Request;
+use rkt::response::{self, Response, Responder};
+use rkt::serde::json::Json;
 
 impl<'r> Responder<'r, 'static> for Person {
     fn respond_to(self, req: &'r Request<'_>) -> response::Result<'static> {
@@ -443,9 +443,9 @@ If you're returning _two_ different responses, use a `Result<T, E>` or an
 If you need to return _more_ than two kinds, [derive a custom `Responder`] `enum`:
 
 ```rust
-# use rocket::response::Responder;
-use rocket::fs::NamedFile;
-use rocket::http::ContentType;
+# use rkt::response::Responder;
+use rkt::fs::NamedFile;
+use rkt::http::ContentType;
 
 #[derive(Responder)]
 enum Error<'r, T> {
@@ -492,7 +492,7 @@ How do I access managed state outside of a Rocket-related context?
 Use an `Arc`, like this:
 
 ```rust
-# use rocket::*;
+# use rkt::*;
 use std::sync::Arc;
 
 #[launch]
@@ -505,7 +505,7 @@ fn rocket() -> _ {
         let use_state = external;
     });
 
-    rocket::build().manage(state)
+    rkt::build().manage(state)
 }
 ```
 
@@ -518,11 +518,11 @@ How do I make Rocket a _part_ of my application as opposed to the whole thing?
 Use the `#[main]` attribute and manually call [`launch()`]:
 
 ```rust,no_run
-#[rocket::main]
+#[rkt::main]
 async fn main() {
     # let should_start_server = false;
     if should_start_server {
-        let result = rocket::build().launch().await;
+        let result = rkt::build().launch().await;
     } else {
         // do something else
     }
@@ -557,7 +557,7 @@ Common mistakes when running examples include:
 {{ endfaq() }}
 
 {{ faq("unsat-bound") }}
-The trait bound `rocket::Responder` (`FromRequest`, etc.) is not satisfied.
+The trait bound `rkt::Responder` (`FromRequest`, etc.) is not satisfied.
 {{ answer() }}
 
 If you're fairly certain a type implements a given Rocket trait but still get an
@@ -583,7 +583,7 @@ is to depend on a `contrib` library from git while also depending on a
 
 ```toml
 rocket = { package = "rocket-community", version = "0.6.0" }
-rocket_db_pools = { git = "https://github.com/rocket-rs-community/Rocket.git" }
+rkt_db_pools = { git = "https://github.com/rocket-rs-community/Rocket.git" }
 ```
 
 This is _never_ correct. If libraries or applications interact via types from a

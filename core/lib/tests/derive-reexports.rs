@@ -1,8 +1,8 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::form::{FromForm, FromFormField};
-use rocket::response::Responder;
-use rocket::{get, routes};
+use rkt::form::{FromForm, FromFormField};
+use rkt::response::Responder;
+use rkt::{get, routes};
 
 #[derive(FromFormField)]
 enum Thing {
@@ -47,7 +47,7 @@ fn number(params: ThingForm) -> DerivedResponder {
 
 #[test]
 fn test_derive_reexports() {
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     let client = Client::debug_with(routes![index, number]).unwrap();
 

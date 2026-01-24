@@ -1,10 +1,10 @@
 use std::borrow::Cow;
 use std::fmt;
 
-use rocket::http::{ContentType, Status};
-use rocket::request::{self, FromRequest};
-use rocket::serde::Serialize;
-use rocket::{Ignite, Request, Rocket, Sentinel};
+use rkt::http::{ContentType, Status};
+use rkt::request::{self, FromRequest};
+use rkt::serde::Serialize;
+use rkt::{Ignite, Request, Rocket, Sentinel};
 
 use crate::{context::ContextManager, Template};
 
@@ -16,9 +16,8 @@ use crate::{context::ContextManager, Template};
 /// used as a request guard in any request handler.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket;
-/// # #[macro_use] extern crate rocket_dyn_templates_community as rocket_dyn_templates;
-/// use rocket_dyn_templates::{Template, Metadata, context};
+/// # #[macro_use] extern crate rkt;
+/// use rkt_dyn_templates::{Template, Metadata, context};
 ///
 /// #[get("/")]
 /// fn homepage(metadata: Metadata) -> Template {
@@ -32,7 +31,7 @@ use crate::{context::ContextManager, Template};
 /// }
 ///
 /// fn main() {
-///     rocket::build()
+///     rkt::build()
 ///         .attach(Template::fairing())
 ///         // ...
 ///     # ;
@@ -47,10 +46,9 @@ impl Metadata<'_> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
+    /// # #[macro_use] extern crate rkt;
     /// #
-    /// use rocket_dyn_templates::Metadata;
+    /// use rkt_dyn_templates::Metadata;
     ///
     /// #[get("/")]
     /// fn handler(metadata: Metadata) {
@@ -67,10 +65,9 @@ impl Metadata<'_> {
     /// # Example
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
+    /// # #[macro_use] extern crate rkt;
     /// #
-    /// use rocket_dyn_templates::Metadata;
+    /// use rkt_dyn_templates::Metadata;
     ///
     /// #[get("/")]
     /// fn handler(metadata: Metadata) {
@@ -89,10 +86,9 @@ impl Metadata<'_> {
     /// # Examples
     ///
     /// ```rust
-    /// # #[macro_use] extern crate rocket;
-    /// # extern crate rocket_dyn_templates_community as rocket_dyn_templates;
-    /// use rocket::http::ContentType;
-    /// use rocket_dyn_templates::{Metadata, Template, context};
+    /// # #[macro_use] extern crate rkt;
+    /// use rkt::http::ContentType;
+    /// use rkt_dyn_templates::{Metadata, Template, context};
     ///
     /// #[get("/")]
     /// fn send_email(metadata: Metadata) -> Option<()> {
@@ -153,7 +149,7 @@ impl Sentinel for Metadata<'_> {
 /// Retrieves the template metadata. If a template fairing hasn't been attached,
 /// an error is printed and an empty `Err` with status `InternalServerError`
 /// (`500`) is returned.
-#[rocket::async_trait]
+#[rkt::async_trait]
 impl<'r> FromRequest<'r> for Metadata<'r> {
     type Error = ();
 

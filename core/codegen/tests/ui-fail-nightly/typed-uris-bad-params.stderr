@@ -285,4 +285,4 @@ error[E0271]: type mismatch resolving `<String as FromParam<'_>>::Error == &str`
   --> tests/ui-fail-nightly/typed-uris-bad-params.rs:17:37
    |
 17 | fn optionals(id: Option<i32>, name: Result<String, &str>) {  }
-   |                                     ^^^^^^^^^^^^^^^^^^^^ expected `Empty`, found `&str`
+   |                                     ^^^^^^^^^^^^^^^^^^^^ expected `&str`, found `Empty`

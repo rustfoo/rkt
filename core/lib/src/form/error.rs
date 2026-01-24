@@ -29,8 +29,7 @@ use crate::http::Status;
 /// to the field `foo.bar`, you might write the following:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::Errors;
+/// use rkt::form::Errors;
 ///
 /// let errors = Errors::new();
 /// let errors_for_foo = errors.iter().filter(|e| e.is_for("foo.bar"));
@@ -44,8 +43,7 @@ use crate::http::Status;
 /// [`ErrorKind`](ErrorKind#constructing) for the full list.
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form;
+/// use rkt::form;
 ///
 /// fn at_most_10() -> form::Result<'static, usize> {
 ///     // Using `From<PartIntError> => ErrorKind::Int => Errors`.
@@ -85,8 +83,7 @@ pub struct Errors<'v>(Vec<Error<'v>>);
 /// from. See [`ErrorKind`](ErrorKind#constructing).
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::Error;
+/// use rkt::form::Error;
 ///
 /// fn at_most_10_not_even() -> Result<usize, Error<'static>> {
 ///     // Using `From<PartIntError> => ErrorKind::Int`.
@@ -120,8 +117,7 @@ pub struct Errors<'v>(Vec<Error<'v>>);
 /// to the field `foo.bar`, you might write the following:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::form::Errors;
+/// use rkt::form::Errors;
 ///
 /// let errors = Errors::new();
 /// let errors_for_foo = errors.iter().filter(|e| e.is_for("foo.bar"));
@@ -249,8 +245,7 @@ impl<'v> Errors<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::Errors;
+    /// use rkt::form::Errors;
     ///
     /// let errors = Errors::new();
     /// assert!(errors.is_empty());
@@ -265,8 +260,7 @@ impl<'v> Errors<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Errors, ErrorKind};
+    /// use rkt::form::error::{Errors, ErrorKind};
     ///
     /// let mut errors = Errors::from(ErrorKind::Missing);
     /// assert!(errors[0].name.is_none());
@@ -290,8 +284,7 @@ impl<'v> Errors<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Errors, ErrorKind};
+    /// use rkt::form::error::{Errors, ErrorKind};
     ///
     /// let mut errors = Errors::from(ErrorKind::Missing);
     /// assert!(errors[0].name.is_none());
@@ -319,8 +312,7 @@ impl<'v> Errors<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Errors, ErrorKind};
+    /// use rkt::form::error::{Errors, ErrorKind};
     ///
     /// let mut errors = Errors::from(ErrorKind::Missing);
     /// assert!(errors[0].value.is_none());
@@ -344,8 +336,7 @@ impl<'v> Errors<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Errors, ErrorKind};
+    /// use rkt::form::error::{Errors, ErrorKind};
     ///
     /// let mut errors = Errors::from(ErrorKind::Missing);
     /// assert!(errors[0].value.is_none());
@@ -373,9 +364,8 @@ impl<'v> Errors<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Error, Errors, ErrorKind};
-    /// use rocket::http::Status;
+    /// use rkt::form::error::{Error, Errors, ErrorKind};
+    /// use rkt::http::Status;
     ///
     /// let mut errors = Errors::new();
     /// assert_eq!(errors.status(), Status::InternalServerError);
@@ -457,8 +447,7 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::Error;
+    /// use rkt::form::Error;
     ///
     /// fn from_fmt(error: std::fmt::Error) -> Error<'static> {
     ///     Error::custom(error)
@@ -476,8 +465,7 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Error, ErrorKind, Entity};
+    /// use rkt::form::error::{Error, ErrorKind, Entity};
     ///
     /// let error = Error::validation("invalid foo: need bar");
     /// assert!(matches!(error.kind, ErrorKind::Validation(_)));
@@ -493,8 +481,7 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Error, ErrorKind, Entity};
+    /// use rkt::form::error::{Error, ErrorKind, Entity};
     ///
     /// let error = Error::from(ErrorKind::Missing);
     /// assert_eq!(error.entity, Entity::Field);
@@ -512,8 +499,7 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Error, ErrorKind, Entity};
+    /// use rkt::form::error::{Error, ErrorKind, Entity};
     ///
     /// let mut error = Error::from(ErrorKind::Missing);
     /// assert_eq!(error.entity, Entity::Field);
@@ -531,8 +517,7 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Error, ErrorKind};
+    /// use rkt::form::error::{Error, ErrorKind};
     ///
     /// let error = Error::from(ErrorKind::Missing);
     /// assert!(error.name.is_none());
@@ -553,8 +538,7 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Error, ErrorKind};
+    /// use rkt::form::error::{Error, ErrorKind};
     ///
     /// let mut error = Error::from(ErrorKind::Missing);
     /// assert!(error.name.is_none());
@@ -577,8 +561,7 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Error, ErrorKind};
+    /// use rkt::form::error::{Error, ErrorKind};
     ///
     /// let error = Error::from(ErrorKind::Missing);
     /// assert!(error.value.is_none());
@@ -599,8 +582,7 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::error::{Error, ErrorKind};
+    /// use rkt::form::error::{Error, ErrorKind};
     ///
     /// let mut error = Error::from(ErrorKind::Missing);
     /// assert!(error.value.is_none());
@@ -630,8 +612,7 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::Error;
+    /// use rkt::form::Error;
     ///
     /// // returns `false` without a field name
     /// let error = Error::validation("bad `foo`");
@@ -684,8 +665,7 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::form::Error;
+    /// use rkt::form::Error;
     ///
     /// // returns `false` without a field name
     /// let error = Error::validation("bad `foo`");
@@ -729,9 +709,8 @@ impl<'v> Error<'v> {
     /// # Example
     ///
     ///  ```rust
-    /// # extern crate rocket_community as rocket;
-    ///  use rocket::form::error::{Error, ErrorKind, Entity};
-    ///  use rocket::http::Status;
+    ///  use rkt::form::error::{Error, ErrorKind, Entity};
+    ///  use rkt::http::Status;
     ///
     ///  let error = Error::validation("bad `foo`");
     ///  assert_eq!(error.status(), Status::UnprocessableEntity);

@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::response::Redirect;
+use rkt::response::Redirect;
 
 #[get("/http")]
 fn http() -> Redirect {
@@ -15,7 +15,7 @@ fn redirect() -> Redirect {
 
 mod test_absolute_uris_okay {
     use super::*;
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     #[test]
     fn redirect_works() {

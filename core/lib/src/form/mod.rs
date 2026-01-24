@@ -382,7 +382,7 @@ mod tests;
 pub type Result<'v, T> = std::result::Result<T, Errors<'v>>;
 
 #[doc(hidden)]
-pub use rocket_codegen::{FromForm, FromFormField};
+pub use rkt_codegen::{FromForm, FromFormField};
 
 #[doc(inline)]
 pub use self::error::{Error, Errors};

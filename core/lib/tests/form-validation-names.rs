@@ -1,9 +1,9 @@
-extern crate rocket_community as rocket;
+extern crate rkt;
 
 use std::fmt::Debug;
 
-use rocket::form::error::{Error, ErrorKind, Errors};
-use rocket::form::{Form, FromForm};
+use rkt::form::error::{Error, ErrorKind, Errors};
+use rkt::form::{Form, FromForm};
 
 #[derive(Debug, FromForm)]
 #[allow(dead_code)]

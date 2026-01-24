@@ -1,10 +1,10 @@
-use rocket::{Rocket, Build};
-use rocket::fairing::AdHoc;
-use rocket::response::{Debug, status::Created};
-use rocket::serde::{Serialize, Deserialize, json::Json};
+use rkt::{Rocket, Build};
+use rkt::fairing::AdHoc;
+use rkt::response::{Debug, status::Created};
+use rkt::serde::{Serialize, Deserialize, json::Json};
 
-use rocket_db_pools::{Database, Connection};
-use rocket_db_pools::diesel::{prelude::*, MysqlPool};
+use rkt_db_pools::{Database, Connection};
+use rkt_db_pools::diesel::{prelude::*, MysqlPool};
 
 type Result<T, E = Debug<diesel::result::Error>> = std::result::Result<T, E>;
 
@@ -13,7 +13,7 @@ type Result<T, E = Debug<diesel::result::Error>> = std::result::Result<T, E>;
 struct Db(MysqlPool);
 
 #[derive(Debug, Clone, Deserialize, Serialize, Queryable, Insertable)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 #[diesel(table_name = posts)]
 struct Post {
     #[serde(skip_deserializing)]
@@ -91,7 +91,7 @@ async fn destroy(mut db: Connection<Db>) -> Result<()> {
 }
 
 async fn run_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
-    use rocket_db_pools::diesel::AsyncConnectionWrapper;
+    use rkt_db_pools::diesel::AsyncConnectionWrapper;
     use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 
     const MIGRATIONS: EmbeddedMigrations = embed_migrations!("db/diesel/mysql-migrations");
@@ -105,7 +105,7 @@ async fn run_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
         });
 
     // `run_pending_migrations` blocks, so it must be run in `spawn_blocking`
-    rocket::tokio::task::spawn_blocking(move || {
+    rkt::tokio::task::spawn_blocking(move || {
         let mut conn: AsyncConnectionWrapper<_> = conn.into();
         conn.run_pending_migrations(MIGRATIONS).expect("diesel migrations");
     }).await.expect("diesel migrations");

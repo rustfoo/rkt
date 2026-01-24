@@ -2,8 +2,8 @@ use super::task::Task;
 
 use rand::{self, distr::Alphanumeric, Rng};
 
-use rocket::http::{ContentType, Status};
-use rocket::local::asynchronous::Client;
+use rkt::http::{ContentType, Status};
+use rkt::local::asynchronous::Client;
 
 // We use a lock to synchronize between tests so DB operations don't collide.
 // For now. In the future, we'll have a nice way to run each test in a DB
@@ -14,7 +14,7 @@ macro_rules! run_test {
     (|$client:ident, $conn:ident| $block:expr) => ({
         let _lock = DB_LOCK.lock();
 
-        rocket::async_test(async move {
+        rkt::async_test(async move {
             let $client = Client::tracked(super::rocket()).await.expect("Rocket client");
             let db = super::DbConn::get_one($client.rocket()).await;
             let $conn = db.expect("failed to get database connection for testing");
@@ -27,7 +27,7 @@ macro_rules! run_test {
 
 #[test]
 fn test_index() {
-    use rocket::local::blocking::Client;
+    use rkt::local::blocking::Client;
 
     let _lock = DB_LOCK.lock();
     let client = Client::tracked(super::rocket()).unwrap();

@@ -9,9 +9,8 @@
 //! overrides the `Content-Type` to the value in `.0`:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! # use rocket::get;
-//! use rocket::http::ContentType;
+//! # use rkt::get;
+//! use rkt::http::ContentType;
 //!
 //! #[get("/")]
 //! fn index() -> (ContentType, &'static str) {
@@ -27,8 +26,7 @@
 //! instead:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! use rocket::response::content;
+//! use rkt::response::content;
 //!
 //! let response = content::RawHtml("<h1>Hello, world!</h1>");
 //! ```

@@ -2,7 +2,7 @@ use std::borrow::Cow;
 use std::path::{Path, PathBuf};
 
 use rand::Rng;
-use rocket::request::FromParam;
+use rkt::request::FromParam;
 
 /// A _probably_ unique paste ID.
 #[derive(UriDisplayPath)]

@@ -27,13 +27,12 @@ pin_project! {
     /// [`Stream`]: https://docs.rs/futures/0.3/futures/stream/trait.Stream.html
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
     /// use std::io::Cursor;
     ///
-    /// use rocket::{Request, Response};
-    /// use rocket::futures::stream::{Stream, StreamExt};
-    /// use rocket::response::{self, Responder, stream::ReaderStream};
-    /// use rocket::http::ContentType;
+    /// use rkt::{Request, Response};
+    /// use rkt::futures::stream::{Stream, StreamExt};
+    /// use rkt::response::{self, Responder, stream::ReaderStream};
+    /// use rkt::http::ContentType;
     ///
     /// struct MyStream<S>(S);
     ///
@@ -58,12 +57,11 @@ pin_project! {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::*;
-    /// use rocket::response::stream::ReaderStream;
-    /// use rocket::futures::stream::{repeat, StreamExt};
-    /// use rocket::tokio::time::{self, Duration};
-    /// use rocket::tokio::fs::File;
+    /// # use rkt::*;
+    /// use rkt::response::stream::ReaderStream;
+    /// use rkt::futures::stream::{repeat, StreamExt};
+    /// use rkt::tokio::time::{self, Duration};
+    /// use rkt::tokio::fs::File;
     ///
     /// // Stream the contents of `safe/path` followed by `another/safe/path`.
     /// #[get("/reader/stream")]
@@ -116,13 +114,12 @@ impl<R: Unpin> ReaderStream<One<R>> {
     /// Stream the bytes from a remote TCP connection:
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// # use rocket::*;
+    /// # use rkt::*;
     /// use std::io;
     /// use std::net::SocketAddr;
     ///
-    /// use rocket::tokio::net::TcpStream;
-    /// use rocket::response::stream::ReaderStream;
+    /// use rkt::tokio::net::TcpStream;
+    /// use rkt::response::stream::ReaderStream;
     ///
     /// #[get("/stream")]
     /// async fn stream() -> io::Result<ReaderStream![TcpStream]> {

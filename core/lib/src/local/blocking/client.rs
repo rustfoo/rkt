@@ -19,10 +19,9 @@ use crate::{Error, Ignite, Orbit, Phase, Rocket};
 /// dispatches a local `POST /` request with a body of `Hello, world!`.
 ///
 /// ```rust,no_run
-/// # extern crate rocket_community as rocket;
-/// use rocket::local::blocking::Client;
+/// use rkt::local::blocking::Client;
 ///
-/// let rocket = rocket::build();
+/// let rocket = rkt::build();
 /// let client = Client::tracked(rocket).expect("valid rocket");
 /// let response = client.post("/")
 ///     .body("Hello, world!")
@@ -113,7 +112,7 @@ impl Client {
     }
 
     // Generates the public API methods, which call the private methods above.
-    pub_client_impl!("use rocket::local::blocking::Client;");
+    pub_client_impl!("use rkt::local::blocking::Client;");
 }
 
 impl std::fmt::Debug for Client {
@@ -133,7 +132,7 @@ impl Drop for Client {
 #[cfg(doctest)]
 mod doctest {
     /// ```compile_fail
-    /// use rocket::local::blocking::Client;
+    /// use rkt::local::blocking::Client;
     ///
     /// fn not_sync<T: Sync>() {};
     /// not_sync::<Client>();

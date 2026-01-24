@@ -5,11 +5,11 @@ use std::process::Stdio;
 use std::sync::Once;
 use std::time::Duration;
 
-use rocket::fairing::AdHoc;
-use rocket::listener::{Bind, DefaultListener};
-use rocket::serde::{Deserialize, DeserializeOwned, Serialize};
-use rocket::trace::Trace;
-use rocket::{Build, Ignite, Rocket};
+use rkt::fairing::AdHoc;
+use rkt::listener::{Bind, DefaultListener};
+use rkt::serde::{Deserialize, DeserializeOwned, Serialize};
+use rkt::trace::Trace;
+use rkt::{Build, Ignite, Rocket};
 
 use ipc_channel::ipc::{IpcOneShotServer, IpcReceiver, IpcSender};
 
@@ -24,18 +24,18 @@ pub struct Server {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 pub enum Message {
     Liftoff(bool, u16),
     Failure,
 }
 
 #[derive(Serialize, Deserialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 pub struct Token(String);
 
 #[derive(Serialize, Deserialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 pub struct Launched(());
 
 fn stdio() -> Stdio {
@@ -118,7 +118,7 @@ impl Token {
     pub fn with_launch<F, Fut>(self, rocket: Rocket<Build>, launch: F) -> Launched
     where
         F: FnOnce(Rocket<Ignite>) -> Fut + Send + Sync + 'static,
-        Fut: Future<Output = Result<Rocket<Ignite>, rocket::Error>> + Send,
+        Fut: Future<Output = Result<Rocket<Ignite>, rkt::Error>> + Send,
     {
         let server = self.0.clone();
         let rocket = rocket.attach(AdHoc::on_liftoff("Liftoff", move |rocket| {
@@ -137,7 +137,7 @@ impl Token {
             launch(rocket).await
         };
 
-        if let Err(e) = rocket::execute(launch) {
+        if let Err(e) = rkt::execute(launch) {
             let sender = IpcSender::<Message>::connect(server).unwrap();
             let _ = sender.send(Message::Failure);
             let _ = sender.send(Message::Failure);
@@ -171,7 +171,7 @@ macro_rules! spawn {
     ($($arg:ident : $t:ty),* => $rocket:block) => {{
         #[allow(unused_parens)]
         fn _server((token, $($arg),*): ($crate::Token, $($t),*)) -> $crate::Launched {
-            let rocket: rocket::Rocket<rocket::Build> = $rocket;
+            let rocket: rkt::Rocket<rkt::Build> = $rocket;
             token.launch(rocket)
         }
 

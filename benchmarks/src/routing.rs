@@ -1,8 +1,8 @@
 use criterion::{criterion_group, Criterion};
 
-use rocket::{route, config, Request, Data, Route, Config};
-use rocket::http::{Method, RawStr, ContentType, Accept, Status};
-use rocket::local::blocking::{Client, LocalRequest};
+use rkt::{route, config, Request, Data, Route, Config};
+use rkt::http::{Method, RawStr, ContentType, Accept, Status};
+use rkt::local::blocking::{Client, LocalRequest};
 
 fn dummy_handler<'r>(req: &'r Request, _: Data<'r>) -> route::BoxFuture<'r> {
     route::Outcome::from(req, ()).pin()
@@ -89,7 +89,7 @@ fn client(routes: Vec<Route>) -> Client {
         ..Default::default()
     };
 
-    match Client::untracked(rocket::custom(config).mount("/", routes)) {
+    match Client::untracked(rkt::custom(config).mount("/", routes)) {
         Ok(client) => client,
         Err(e) => {
             drop(e);

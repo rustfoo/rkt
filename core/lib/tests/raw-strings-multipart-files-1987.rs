@@ -1,9 +1,9 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::form::Form;
-use rocket::http::ContentType;
-use rocket::local::blocking::Client;
+use rkt::form::Form;
+use rkt::http::ContentType;
+use rkt::local::blocking::Client;
 
 #[derive(FromForm)]
 struct Data<'r> {
@@ -12,7 +12,7 @@ struct Data<'r> {
     baz: &'r str,
 }
 
-#[rocket::post("/", data = "<form>")]
+#[rkt::post("/", data = "<form>")]
 fn form(form: Form<Data<'_>>) -> String {
     form.foo.to_string() + form.bar + form.baz
 }
@@ -40,7 +40,7 @@ fn test_multipart_raw_strings_from_files() {
     ]
     .join("\r\n");
 
-    let client = Client::debug_with(rocket::routes![form]).unwrap();
+    let client = Client::debug_with(rkt::routes![form]).unwrap();
     let response = client
         .post("/")
         .header(

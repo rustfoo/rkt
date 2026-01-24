@@ -1,96 +1,96 @@
 #![allow(dead_code)]
 
 mod main_a {
-    #[rocket::main]
+    #[rkt::main]
     fn foo() { }
 
 }
 
 mod main_b {
-    #[rocket::main]
+    #[rkt::main]
     async fn foo() { }
 
 }
 
 mod main_d {
-    #[rocket::main]
+    #[rkt::main]
     fn main() {
-        let _ = rocket::build().launch().await;
+        let _ = rkt::build().launch().await;
     }
 }
 
 mod main_f {
-    #[rocket::main]
+    #[rkt::main]
     async fn main() {
-        rocket::build()
+        rkt::build()
     }
 }
 
 // launch
 
 mod launch_a {
-    #[rocket::launch]
+    #[rkt::launch]
     async fn rocket() -> String {
-        let _ = rocket::build().launch().await;
-        rocket::build()
+        let _ = rkt::build().launch().await;
+        rkt::build()
 
     }
 }
 
 mod launch_b {
-    #[rocket::launch]
+    #[rkt::launch]
     async fn rocket() -> _ {
-        let _ = rocket::build().launch().await;
+        let _ = rkt::build().launch().await;
         "hi".to_string()
     }
 }
 
 mod launch_c {
-    #[rocket::launch]
-    fn main() -> rocket::Rocket<rocket::Build> {
-        rocket::build()
+    #[rkt::launch]
+    fn main() -> rkt::Rocket<rkt::Build> {
+        rkt::build()
     }
 }
 
 mod launch_d {
-    #[rocket::launch]
+    #[rkt::launch]
     async fn rocket() {
-        let _ = rocket::build().launch().await;
-        rocket::build()
+        let _ = rkt::build().launch().await;
+        rkt::build()
     }
 }
 
 mod launch_e {
-    #[rocket::launch]
+    #[rkt::launch]
     fn rocket() {
-        rocket::build()
+        rkt::build()
     }
 }
 
 mod launch_f {
-    #[rocket::launch]
+    #[rkt::launch]
     fn rocket() -> _ {
-        let _ = rocket::build().launch().await;
-        rocket::build()
+        let _ = rkt::build().launch().await;
+        rkt::build()
     }
 }
 
 mod launch_g {
-    #[rocket::launch]
+    #[rkt::launch]
     fn main() -> &'static str {
-        let _ = rocket::build().launch().await;
+        let _ = rkt::build().launch().await;
         "hi"
     }
 }
 
 mod launch_h {
-    #[rocket::launch]
+    #[rkt::launch]
     async fn main() -> _ {
-        rocket::build()
+        rkt::build()
     }
 }
 
-#[rocket::main]
-async fn main() -> rocket::Rocket<rocket::Build> {
-    rocket::build()
+#[rkt::main]
+async fn main() -> rkt::Rocket<rkt::Build> {
+    rkt::build()
 }

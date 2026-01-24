@@ -10,8 +10,7 @@
 //! that implements [`Deserialize`] can be extracted from the figment:
 //!
 //! ```rust
-//! # extern crate rocket_community as rocket;
-//! use rocket::fairing::AdHoc;
+//! use rkt::fairing::AdHoc;
 //!
 //! #[derive(serde::Deserialize)]
 //! struct AppConfig {
@@ -19,9 +18,9 @@
 //!     port: u16,
 //! }
 //!
-//! #[rocket::launch]
+//! #[rkt::launch]
 //! fn rocket() -> _ {
-//!     rocket::build().attach(AdHoc::config::<AppConfig>())
+//!     rkt::build().attach(AdHoc::config::<AppConfig>())
 //! }
 //! ```
 //!
@@ -43,8 +42,8 @@
 //!
 //! ## Custom Providers
 //!
-//! A custom provider can be set via [`rocket::custom()`], which replaces calls to
-//! [`rocket::build()`]. The configured provider can be built on top of
+//! A custom provider can be set via [`rkt::custom()`], which replaces calls to
+//! [`rkt::build()`]. The configured provider can be built on top of
 //! [`Config::figment()`], [`Config::default()`], both, or neither. The
 //! [Figment](figment) documentation has full details on instantiating existing
 //! providers like [`Toml`]() and [`Env`] as well as creating custom providers for
@@ -54,16 +53,16 @@
 //! providers with Rocket's default provider:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket_community as rocket;
-//! use rocket::data::{Limits, ToByteUnit};
+//! # #[macro_use] extern crate rkt;
+//! use rkt::data::{Limits, ToByteUnit};
 //!
 //! #[launch]
 //! fn rocket() -> _ {
-//!     let figment = rocket::Config::figment()
+//!     let figment = rkt::Config::figment()
 //!         .merge(("port", 1111))
 //!         .merge(("limits", Limits::new().limit("json", 2.mebibytes())));
 //!
-//!     rocket::custom(figment).mount("/", routes![/* .. */])
+//!     rkt::custom(figment).mount("/", routes![/* .. */])
 //! }
 //! ```
 //!
@@ -75,10 +74,10 @@
 //! follows:
 //!
 //! ```rust
-//! # #[macro_use] extern crate rocket_community as rocket;
+//! # #[macro_use] extern crate rkt;
 //! use serde::{Serialize, Deserialize};
 //! use figment::{Figment, Profile, providers::{Format, Toml, Serialized, Env}};
-//! use rocket::fairing::AdHoc;
+//! use rkt::fairing::AdHoc;
 //!
 //! #[derive(Debug, Deserialize, Serialize)]
 //! struct Config {
@@ -94,20 +93,20 @@
 //!
 //! #[launch]
 //! fn rocket() -> _ {
-//!     let figment = Figment::from(rocket::Config::default())
+//!     let figment = Figment::from(rkt::Config::default())
 //!         .merge(Serialized::defaults(Config::default()))
 //!         .merge(Toml::file("App.toml").nested())
 //!         .merge(Env::prefixed("APP_").global())
 //!         .select(Profile::from_env_or("APP_PROFILE", "default"));
 //!
-//!     rocket::custom(figment)
+//!     rkt::custom(figment)
 //!         .mount("/", routes![/* .. */])
 //!         .attach(AdHoc::config::<Config>())
 //! }
 //! ```
 //!
-//! [`rocket::custom()`]: crate::custom()
-//! [`rocket::build()`]: crate::build()
+//! [`rkt::custom()`]: crate::custom()
+//! [`rkt::build()`]: crate::build()
 //! [`Toml`]: figment::providers::Toml
 //! [`Env`]: figment::providers::Env
 

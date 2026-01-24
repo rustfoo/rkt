@@ -1,7 +1,7 @@
 #[macro_use]
-extern crate rocket_community as rocket;
+extern crate rkt;
 
-use rocket::form::{Form, Strict};
+use rkt::form::{Form, Strict};
 
 #[derive(FromForm)]
 struct MyForm<'r> {
@@ -20,8 +20,8 @@ fn lenient<'r>(form: Form<MyForm<'r>>) -> &'r str {
 
 mod strict_and_lenient_forms_tests {
     use super::*;
-    use rocket::http::{ContentType, Status};
-    use rocket::local::blocking::Client;
+    use rkt::http::{ContentType, Status};
+    use rkt::local::blocking::Client;
 
     const FIELD_VALUE: &str = "just_some_value";
 

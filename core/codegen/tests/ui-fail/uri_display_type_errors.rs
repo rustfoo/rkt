@@ -1,4 +1,4 @@
-#[macro_use] extern crate rocket;
+#[macro_use] extern crate rkt;
 
 struct BadType;
 

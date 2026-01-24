@@ -1,7 +1,7 @@
-use rocket::serde::{Serialize, Deserialize, msgpack::MsgPack};
+use rkt::serde::{Serialize, Deserialize, msgpack::MsgPack};
 
 #[derive(Serialize, Deserialize)]
-#[serde(crate = "rocket::serde")]
+#[serde(crate = "rkt::serde")]
 struct Message<'r> {
     id: usize,
     message: &'r str
@@ -17,8 +17,8 @@ fn echo(data: MsgPack<Message<'_>>) -> &str {
     data.message
 }
 
-pub fn stage() -> rocket::fairing::AdHoc {
-    rocket::fairing::AdHoc::on_ignite("MessagePack", |rocket| async {
+pub fn stage() -> rkt::fairing::AdHoc {
+    rkt::fairing::AdHoc::on_ignite("MessagePack", |rocket| async {
         rocket.mount("/msgpack", routes![echo, get])
     })
 }

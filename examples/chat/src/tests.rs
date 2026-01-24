@@ -3,13 +3,13 @@ use std::ops::Range;
 use rand::{rng, Rng};
 use rand::distr::Alphanumeric;
 
-use rocket::http::{ContentType, Status};
-use rocket::http::uri::fmt::{UriDisplay, Query};
-use rocket::local::asynchronous::{Client, LocalResponse};
+use rkt::http::{ContentType, Status};
+use rkt::http::uri::fmt::{UriDisplay, Query};
+use rkt::local::asynchronous::{Client, LocalResponse};
 
-use rocket::tokio::{sync, join};
-use rocket::tokio::io::{BufReader, AsyncBufReadExt};
-use rocket::serde::json;
+use rkt::tokio::{sync, join};
+use rkt::tokio::io::{BufReader, AsyncBufReadExt};
+use rkt::serde::json;
 
 use super::*;
 

@@ -30,15 +30,14 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 /// ## Async Trait
 ///
 /// [`FromRequest`] is an _async_ trait. Implementations of `FromRequest` must
-/// be decorated with an attribute of `#[rocket::async_trait]`:
+/// be decorated with an attribute of `#[rkt::async_trait]`:
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::request::{self, Request, FromRequest};
+/// use rkt::request::{self, Request, FromRequest};
 /// # struct MyType;
 /// # type MyError = String;
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromRequest<'r> for MyType {
 ///     type Error = MyError;
 ///
@@ -57,8 +56,8 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 /// guard.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
-/// # use rocket::http::Method;
+/// #[macro_use] extern crate rkt;
+/// # use rkt::http::Method;
 /// # type A = Method; type B = Method; type C = Method; type T = ();
 /// #[get("/<param>")]
 /// fn index(param: isize, a: A, b: B, c: C) -> T { /* ... */ }
@@ -203,10 +202,10 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 /// `sensitive` handler.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// #
-/// use rocket::http::Status;
-/// use rocket::request::{self, Outcome, Request, FromRequest};
+/// use rkt::http::Status;
+/// use rkt::request::{self, Outcome, Request, FromRequest};
 ///
 /// struct ApiKey<'r>(&'r str);
 ///
@@ -216,7 +215,7 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 ///     Invalid,
 /// }
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromRequest<'r> for ApiKey<'r> {
 ///     type Error = ApiKeyError;
 ///
@@ -251,11 +250,11 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 /// routes (`admin_dashboard` and `user_dashboard`):
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// # #[macro_use] extern crate rkt;
 /// # #[cfg(feature = "secrets")] mod wrapper {
-/// # use rocket::outcome::{IntoOutcome, try_outcome};
-/// # use rocket::request::{self, Outcome, FromRequest, Request};
-/// # use rocket::http::Status;
+/// # use rkt::outcome::{IntoOutcome, try_outcome};
+/// # use rkt::request::{self, Outcome, FromRequest, Request};
+/// # use rkt::http::Status;
 /// # struct User { id: String, is_admin: bool }
 /// # struct Database;
 /// # impl Database {
@@ -263,7 +262,7 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 /// #         Ok(User { id, is_admin: false })
 /// #     }
 /// # }
-/// # #[rocket::async_trait]
+/// # #[rkt::async_trait]
 /// # impl<'r> FromRequest<'r> for Database {
 /// #     type Error = ();
 /// #     async fn from_request(request: &'r Request<'_>) -> Outcome<Database, ()> {
@@ -273,7 +272,7 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 /// #
 /// # struct Admin { user: User }
 /// #
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromRequest<'r> for User {
 ///     type Error = ();
 ///
@@ -287,7 +286,7 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 ///     }
 /// }
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromRequest<'r> for Admin {
 ///     type Error = ();
 ///
@@ -316,11 +315,10 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 /// used, as illustrated below:
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
 /// # #[cfg(feature = "secrets")] mod wrapper {
-/// # use rocket::outcome::{IntoOutcome, try_outcome};
-/// # use rocket::request::{self, Outcome, FromRequest, Request};
-/// # use rocket::http::Status;
+/// # use rkt::outcome::{IntoOutcome, try_outcome};
+/// # use rkt::request::{self, Outcome, FromRequest, Request};
+/// # use rkt::http::Status;
 /// # struct User { id: String, is_admin: bool }
 /// # struct Database;
 /// # impl Database {
@@ -328,7 +326,7 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 /// #         Ok(User { id, is_admin: false })
 /// #     }
 /// # }
-/// # #[rocket::async_trait]
+/// # #[rkt::async_trait]
 /// # impl<'r> FromRequest<'r> for Database {
 /// #     type Error = ();
 /// #     async fn from_request(request: &'r Request<'_>) -> Outcome<Database, ()> {
@@ -338,7 +336,7 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 /// #
 /// # struct Admin<'a> { user: &'a User }
 /// #
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromRequest<'r> for &'r User {
 ///     type Error = std::convert::Infallible;
 ///
@@ -357,7 +355,7 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 ///     }
 /// }
 ///
-/// #[rocket::async_trait]
+/// #[rkt::async_trait]
 /// impl<'r> FromRequest<'r> for Admin<'r> {
 ///     type Error = std::convert::Infallible;
 ///

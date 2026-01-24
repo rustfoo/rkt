@@ -13,12 +13,12 @@ use crate::sentinel::Sentry;
 /// [`#[route]`](macro@crate::route) series of attributes to generate a `Route`.
 ///
 /// ```rust
-/// # #[macro_use] extern crate rocket_community as rocket;
+/// #[macro_use] extern crate rkt;
 /// # use std::path::PathBuf;
 /// #[get("/route/<path..>?query", rank = 2, format = "json")]
 /// fn route_name(path: PathBuf) { /* handler procedure */ }
 ///
-/// use rocket::http::{Method, MediaType};
+/// use rkt::http::{Method, MediaType};
 ///
 /// let route = routes![route_name].remove(0);
 /// assert_eq!(route.name.unwrap(), "route_name");
@@ -102,13 +102,12 @@ use crate::sentinel::Sentry;
 /// ### Example
 ///
 /// ```rust
-/// # extern crate rocket_community as rocket;
-/// use rocket::Route;
-/// use rocket::http::Method;
+/// use rkt::Route;
+/// use rkt::http::Method;
 ///
 /// macro_rules! assert_rank {
 ///     ($($uri:expr => $rank:expr,)*) => {$(
-///         let route = Route::new(Method::Get, $uri, rocket::route::dummy_handler);
+///         let route = Route::new(Method::Get, $uri, rkt::route::dummy_handler);
 ///         assert_eq!(route.rank, $rank);
 ///     )*}
 /// }
@@ -197,10 +196,9 @@ impl Route {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Route;
-    /// use rocket::http::Method;
-    /// # use rocket::route::dummy_handler as handler;
+    /// use rkt::Route;
+    /// use rkt::http::Method;
+    /// # use rkt::route::dummy_handler as handler;
     ///
     /// // this is a route matching requests to `GET /`
     /// let index = Route::new(Method::Get, "/", handler);
@@ -229,10 +227,9 @@ impl Route {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Route;
-    /// use rocket::http::Method;
-    /// # use rocket::route::dummy_handler as handler;
+    /// use rkt::Route;
+    /// use rkt::http::Method;
+    /// # use rkt::route::dummy_handler as handler;
     ///
     /// let foo = Route::ranked(1, Method::Post, "/foo?bar", handler);
     /// assert_eq!(foo.rank, 1);
@@ -271,11 +268,10 @@ impl Route {
     /// `base`. Otherwise, `base` is prefixed to the existing `base`.
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Route;
-    /// use rocket::http::Method;
-    /// # use rocket::route::dummy_handler as handler;
-    /// # use rocket::uri;
+    /// use rkt::Route;
+    /// use rkt::http::Method;
+    /// # use rkt::route::dummy_handler as handler;
+    /// # use rkt::uri;
     ///
     /// // The default base is `/`.
     /// let index = Route::new(Method::Get, "/foo/bar", handler);
@@ -320,11 +316,10 @@ impl Route {
     /// # Example
     ///
     /// ```rust
-    /// # extern crate rocket_community as rocket;
-    /// use rocket::Route;
-    /// use rocket::http::Method;
-    /// # use rocket::route::dummy_handler as handler;
-    /// # use rocket::uri;
+    /// use rkt::Route;
+    /// use rkt::http::Method;
+    /// # use rkt::route::dummy_handler as handler;
+    /// # use rkt::uri;
     ///
     /// let index = Route::new(Method::Get, "/foo/bar", handler);
     /// assert_eq!(index.uri.base(), "/");

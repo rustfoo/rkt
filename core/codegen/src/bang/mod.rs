@@ -35,14 +35,14 @@ fn struct_maker_vec(
 }
 
 pub fn routes_macro(input: proc_macro::TokenStream) -> TokenStream {
-    struct_maker_vec(input, quote!(::rocket::Route), |e| quote!(#e.into_route()))
+    struct_maker_vec(input, quote!(::rkt::Route), |e| quote!(#e.into_route()))
         .unwrap_or_else(|diag| diag.emit_as_expr_tokens())
 }
 
 pub fn catchers_macro(input: proc_macro::TokenStream) -> TokenStream {
     struct_maker_vec(
         input,
-        quote!(::rocket::Catcher),
+        quote!(::rkt::Catcher),
         |e| quote!(#e.into_catcher()),
     )
     .unwrap_or_else(|diag| diag.emit_as_expr_tokens())
@@ -51,7 +51,7 @@ pub fn catchers_macro(input: proc_macro::TokenStream) -> TokenStream {
 pub fn uri_macro(input: proc_macro::TokenStream) -> TokenStream {
     uri::_uri_macro(input.into()).unwrap_or_else(|diag| {
         diag.emit_as_expr_tokens_or(quote! {
-            rocket::http::uri::Origin::root()
+            rkt::http::uri::Origin::root()
         })
     })
 }
@@ -64,7 +64,7 @@ pub fn uri_internal_macro(input: proc_macro::TokenStream) -> TokenStream {
     // generating a rather confusing error message when there's a type-mismatch.
     uri::_uri_internal_macro(input.into()).unwrap_or_else(|diag| {
         diag.emit_as_expr_tokens_or(quote! {
-            rocket::http::uri::Origin::root()
+            rkt::http::uri::Origin::root()
         })
     })
 }

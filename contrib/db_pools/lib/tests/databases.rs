@@ -1,11 +1,9 @@
-extern crate rocket_db_pools_community as rocket_db_pools;
-
 macro_rules! check_types_match {
     ($feature:expr, $name:ident, $Pool:ty, $Conn:ty $(,)?) => {
         #[cfg(feature = $feature)]
         mod $name {
-            use rocket::*;
-            use rocket_db_pools::{Connection, Database};
+            use rkt::*;
+            use rkt_db_pools::{Connection, Database};
 
             #[derive(Database)]
             #[database("foo")]
