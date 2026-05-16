@@ -288,7 +288,7 @@ fn internal_uri_macro_decl(route: &Route) -> TokenStream {
         pub mod #inner_macro_name {
             #[doc(hidden)]
             #[macro_export]
-            /// Rocket generated URI macro.
+            /// rkt generated URI macro.
             macro_rules! #inner_macro_name {
                 ($($token:tt)*) => {{
                     ::rkt::rocket_internal_uri!(#route_uri, (#(#uri_args),*), $($token)*)
@@ -428,10 +428,10 @@ fn codegen_route(route: Route) -> Result<TokenStream> {
 
         #[doc(hidden)]
         #[allow(nonstandard_style)]
-        /// Rocket code generated proxy structure.
+        /// rkt code generated proxy structure.
         #deprecated #vis struct #handler_fn_name {  }
 
-        /// Rocket code generated proxy static conversion implementations.
+        /// rkt code generated proxy static conversion implementations.
         #[allow(nonstandard_style, deprecated, clippy::style)]
         impl #handler_fn_name {
             fn into_info(self) -> #_route::StaticInfo {
@@ -467,7 +467,7 @@ fn codegen_route(route: Route) -> Result<TokenStream> {
             }
         }
 
-        /// Rocket code generated wrapping URI macro.
+        /// rkt code generated wrapping URI macro.
         #internal_uri_macro
     })
 }

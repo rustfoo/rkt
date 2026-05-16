@@ -41,7 +41,7 @@ impl Client {
             .build()
             .expect("create tokio runtime");
 
-        // Initialize the Rocket instance
+        // Initialize the rkt instance
         let inner = Some(runtime.block_on(asynchronous::Client::_new(rocket, tracked, secure))?);
         Ok(Self {
             inner,
@@ -49,7 +49,7 @@ impl Client {
         })
     }
 
-    // WARNING: This is unstable! Do not use this method outside of Rocket!
+    // WARNING: This is unstable! Do not use this method outside of rkt!
     #[doc(hidden)]
     pub fn _test<T, F>(f: F) -> T
     where

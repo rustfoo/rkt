@@ -12,7 +12,7 @@ use crate::http::RawStr;
 ///
 /// There are no restrictions on the value of the directive. In particular, the
 /// value can be wholly unsafe to use as a file name in common contexts. As
-/// such, Rocket sanitizes the value into a version that _is_ safe to use as a
+/// such, rkt sanitizes the value into a version that _is_ safe to use as a
 /// file name in common contexts; this sanitized version can be retrieved via
 /// [`FileName::as_str()`] and is returned by [`TempFile::name()`].
 ///

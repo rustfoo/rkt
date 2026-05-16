@@ -21,26 +21,26 @@ use crate::response::Response;
 ///
 /// Each error or forward is paired with a status code. Guards and responders
 /// indicate the status code themselves via their `Err` and `Outcome` return
-/// value. A complete routing failure is always a `404`. Rocket invokes the
+/// value. A complete routing failure is always a `404`. rkt invokes the
 /// error handler for the catcher with an error's status code, or in the case of
 /// every route resulting in a forward, the last forwarded status code.
 ///
 /// ### Error Handler Restrictions
 ///
 /// Because error handlers are a last resort, they should not fail to produce a
-/// response. If an error handler _does_ fail, Rocket invokes its default `500`
+/// response. If an error handler _does_ fail, rkt invokes its default `500`
 /// error catcher. Error handlers cannot forward.
 ///
 /// # Routing
 ///
-/// If a route fails by returning an error [`Outcome`], Rocket routes the
+/// If a route fails by returning an error [`Outcome`], rkt routes the
 /// erroring request to the highest precedence catcher among all the catchers
 /// that [match](Catcher::matches()). See [`Catcher::matches()`] for details on
 /// matching. Precedence is determined by the catcher's _base_, which is
 /// provided as the first argument to [`Rocket::register()`]. Catchers with more
 /// non-empty segments have a higher precedence.
 ///
-/// Rocket provides [built-in defaults](#built-in-default), but _default_
+/// rkt provides [built-in defaults](#built-in-default), but _default_
 /// catchers can also be registered. A _default_ catcher is a catcher with no
 /// explicit status code: `None`.
 ///
@@ -51,14 +51,14 @@ use crate::response::Response;
 ///
 /// Two catchers are said to _collide_ if there exists an error that matches
 /// both catchers. Colliding catchers present a routing ambiguity and are thus
-/// disallowed by Rocket. Because catchers can be constructed dynamically,
+/// disallowed by rkt. Because catchers can be constructed dynamically,
 /// collision checking is done at [`ignite`](crate::Rocket::ignite()) time,
 /// after it becomes statically impossible to register any more catchers on an
 /// instance of `Rocket`.
 ///
 /// ## Built-In Default
 ///
-/// Rocket's provides a built-in default catcher that can handle all errors. It
+/// rkt's provides a built-in default catcher that can handle all errors. It
 /// produces HTML or JSON, depending on the value of the `Accept` header. As
 /// such, catchers only need to be registered if an error needs to be handled in
 /// a custom fashion. The built-in default never conflicts with any

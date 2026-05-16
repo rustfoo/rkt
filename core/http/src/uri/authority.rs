@@ -108,7 +108,7 @@ impl<'a> Authority<'a> {
     /// assert_eq!(uri.port(), None);
     ///
     /// // Invalid authority URIs fail to parse.
-    /// Authority::parse("https://rocket.rs").expect_err("invalid authority");
+    /// Authority::parse("https://example.com").expect_err("invalid authority");
     ///
     /// // Prefer to use `uri!()` when the input is statically known:
     /// let uri = uri!("user:pass@host");
@@ -133,10 +133,10 @@ impl<'a> Authority<'a> {
     /// # extern crate rkt;
     /// use rkt::http::uri::Authority;
     ///
-    /// let source = format!("rocket.rs:8000");
+    /// let source = format!("example.com:8000");
     /// let uri = Authority::parse_owned(source).expect("valid URI");
     /// assert!(uri.user_info().is_none());
-    /// assert_eq!(uri.host(), "rocket.rs");
+    /// assert_eq!(uri.host(), "example.com");
     /// assert_eq!(uri.port(), Some(8000));
     /// ```
     pub fn parse_owned(string: String) -> Result<Authority<'static>, Error<'static>> {

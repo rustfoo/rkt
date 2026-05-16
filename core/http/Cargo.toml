@@ -1,19 +1,19 @@
 [package]
 name = "rkt_http"
-version = "0.6.0"
-authors = ["Sergio Benitez <sb@sergio.bz>"]
+version.workspace = true
+authors.workspace = true
 description = """
 Types, traits, and parsers for HTTP requests, responses, and headers.
 """
 documentation = "https://docs.rs/rkt/latest/rkt_http/"
-homepage = "https://rkt.rs"
-repository = "https://github.com/rustfoo/rkt"
-readme = "../../README.md"
+homepage.workspace = true
+repository.workspace = true
+readme.workspace = true
 keywords = ["rkt", "rocket", "web", "framework", "http"]
-license = "MIT OR Apache-2.0"
+license.workspace = true
 categories = ["web-programming"]
-edition = "2021"
-rust-version = "1.82.0"
+edition.workspace = true
+rust-version.workspace = true
 
 [lints]
 workspace = true

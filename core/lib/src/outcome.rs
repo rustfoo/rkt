@@ -8,7 +8,7 @@
 //! handled and should instead be _forwarded_ to whatever can handle the
 //! processing next.
 //!
-//! The `Outcome` type is the return type of many of the core Rocket traits,
+//! The `Outcome` type is the return type of many of the core rkt traits,
 //! including [`FromRequest`](crate::request::FromRequest), [`FromData`]
 //! [`Responder`]. It is also the return type of request handlers via the
 //! [`Response`](crate::response::Response) type.
@@ -41,7 +41,7 @@
 //! fails with some error and no processing can or should continue as a result.
 //! The meaning of an error depends on the context.
 //!
-//! In Rocket, an `Error` generally means that a request is taken out of normal
+//! In rkt, an `Error` generally means that a request is taken out of normal
 //! processing. The request is then given to the catcher corresponding to some
 //! status code. Users can catch errors by requesting a type of `Result<S, E>`
 //! or `Option<S>` in request handlers. For example, if a user's handler looks
@@ -66,7 +66,7 @@
 //! wants to indicate that the requested processing should be _forwarded_ to the
 //! next available processor. Again, the exact meaning depends on the context.
 //!
-//! In Rocket, a `Forward` generally means that a request is forwarded to the
+//! In rkt, a `Forward` generally means that a request is forwarded to the
 //! next available request handler. For example, consider the following request
 //! handler:
 //!

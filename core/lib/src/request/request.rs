@@ -24,7 +24,7 @@ use crate::listener::{Certificates, Endpoint};
 
 /// The type of an incoming web request.
 ///
-/// This should be used sparingly in Rocket applications. In particular, it
+/// This should be used sparingly in rkt applications. In particular, it
 /// should likely only be used when writing [`FromRequest`] implementations. It
 /// contains all of the information for a given web request except for the body
 /// data. This includes the HTTP method, URI, cookies, headers, and more.
@@ -225,7 +225,7 @@ impl<'r> Request<'r> {
     ///
     /// Using the user-controlled `host` to construct URLs is a security hazard!
     /// _Never_ do so without first validating the host against a whitelist. For
-    /// this reason, Rocket disallows constructing host-prefixed URIs with
+    /// this reason, rkt disallows constructing host-prefixed URIs with
     /// [`uri!`]. _Always_ use [`uri!`] to construct URIs.
     ///
     /// [`uri!`]: crate::uri!
@@ -243,14 +243,14 @@ impl<'r> Request<'r> {
     ///
     /// assert_eq!(request.host(), None);
     ///
-    /// request.set_host(Host::from(uri!("rocket.rs")));
+    /// request.set_host(Host::from(uri!("example.com")));
     /// let host = request.host().unwrap();
-    /// assert_eq!(host.domain(), "rocket.rs");
+    /// assert_eq!(host.domain(), "example.com");
     /// assert_eq!(host.port(), None);
     ///
-    /// request.set_host(Host::from(uri!("rocket.rs:2392")));
+    /// request.set_host(Host::from(uri!("example.com:2392")));
     /// let host = request.host().unwrap();
-    /// assert_eq!(host.domain(), "rocket.rs");
+    /// assert_eq!(host.domain(), "example.com");
     /// assert_eq!(host.port(), Some(2392));
     /// ```
     ///
@@ -272,21 +272,21 @@ impl<'r> Request<'r> {
     /// // Whitelist of known hosts. In a real setting, you might retrieve this
     /// // list from config at ignite-time using tools like `AdHoc::config()`.
     /// const WHITELIST: [Host<'static>; 3] = [
-    ///     Host::new(uri!("rocket.rs")),
-    ///     Host::new(uri!("rocket.rs:443")),
-    ///     Host::new(uri!("guide.rocket.rs:443")),
+    ///     Host::new(uri!("example.com")),
+    ///     Host::new(uri!("example.com:443")),
+    ///     Host::new(uri!("guide.example.com:443")),
     /// ];
     ///
-    /// // A request with a host of "rocket.rs". Note the case-insensitivity.
-    /// request.set_host(Host::from(uri!("ROCKET.rs")));
+    /// // A request with a host of "example.com". Note the case-insensitivity.
+    /// request.set_host(Host::from(uri!("EXAMPLE.com")));
     /// let prefix = request.host().and_then(|h| h.to_absolute("https", &WHITELIST));
     ///
-    /// // `rocket.rs` is in the whitelist, so we'll get back a `Some`.
+    /// // `example.com` is in the whitelist, so we'll get back a `Some`.
     /// assert!(prefix.is_some());
     /// if let Some(prefix) = prefix {
     ///     // We can use this prefix to safely construct URIs.
     ///     let uri = uri!(prefix, token("some-secret-token"));
-    ///     assert_eq!(uri, "https://ROCKET.rs/token?secret=some-secret-token");
+    ///     assert_eq!(uri, "https://EXAMPLE.com/token?secret=some-secret-token");
     /// }
     ///
     /// // A request with a host of "attacker-controlled.com".
@@ -316,7 +316,7 @@ impl<'r> Request<'r> {
     ///
     /// # Example
     ///
-    /// Set the host to `rocket.rs:443`.
+    /// Set the host to `example.com:443`.
     ///
     /// ```rust
     /// use rkt::http::uri::Host;
@@ -327,9 +327,9 @@ impl<'r> Request<'r> {
     ///
     /// assert_eq!(request.host(), None);
     ///
-    /// request.set_host(Host::from(uri!("rocket.rs:443")));
+    /// request.set_host(Host::from(uri!("example.com:443")));
     /// let host = request.host().unwrap();
-    /// assert_eq!(host.domain(), "rocket.rs");
+    /// assert_eq!(host.domain(), "example.com");
     /// assert_eq!(host.port(), Some(443));
     /// ```
     #[inline(always)]
@@ -535,7 +535,7 @@ impl<'r> Request<'r> {
     /// // starting without an "X-Real-IP" header or remote address
     /// assert!(request.client_ip().is_none());
     ///
-    /// // add a remote address; this is done by Rocket automatically
+    /// // add a remote address; this is done by rkt automatically
     /// let localhost_9190 = SocketAddr::new(IpAddr::V4(Ipv4Addr::LOCALHOST), 9190);
     /// request.set_remote(Endpoint::Tcp(localhost_9190));
     /// assert_eq!(request.client_ip().unwrap(), Ipv4Addr::LOCALHOST);
@@ -937,7 +937,7 @@ impl<'r> Request<'r> {
     /// parsed from the `n`th dynamic parameter.
     ///
     /// This method exists only to be used by manual routing. To retrieve
-    /// parameters from a request, use Rocket's code generation facilities.
+    /// parameters from a request, use rkt's code generation facilities.
     ///
     /// # Example
     ///
@@ -976,7 +976,7 @@ impl<'r> Request<'r> {
     /// will be empty.
     ///
     /// This method exists only to be used by manual routing. To retrieve
-    /// segments from a request, use Rocket's code generation facilities.
+    /// segments from a request, use rkt's code generation facilities.
     ///
     /// # Example
     ///
@@ -1011,10 +1011,10 @@ impl<'r> Request<'r> {
     /// # Warning
     ///
     /// This method exists _only_ to be used by manual routing and should
-    /// _never_ be used in a regular Rocket application. It is much more
+    /// _never_ be used in a regular rkt application. It is much more
     /// expensive to use this method than to retrieve query parameters via
-    /// Rocket's codegen. To retrieve query values from a request, _always_
-    /// prefer to use Rocket's code generation facilities.
+    /// rkt's codegen. To retrieve query values from a request, _always_
+    /// prefer to use rkt's code generation facilities.
     ///
     /// # Error
     ///
@@ -1133,7 +1133,7 @@ impl<'r> Request<'r> {
         &mut self.state.cookies
     }
 
-    /// Convert from Hyper types into a Rocket Request.
+    /// Convert from Hyper types into a rkt Request.
     pub(crate) fn from_hyp(
         rocket: &'r Rocket<Orbit>,
         hyper: &'r hyper::http::request::Parts,

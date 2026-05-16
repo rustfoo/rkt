@@ -375,7 +375,7 @@ mod handlebars_tests {
             file.sync_all().expect("sync file");
         }
 
-        // set up the template before initializing the Rocket instance so
+        // set up the template before initializing the rkt instance so
         // that it will be picked up in the initial loading of templates.
         let reload_path = template_root().join("hbs").join("reload.txt.hbs");
         write_file(&reload_path, INITIAL_TEXT);

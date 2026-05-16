@@ -1,11 +1,11 @@
 //! Parsing and validation of HTTP forms and fields.
 //!
-//! See the [forms guide](https://rocket.rs/master/guide/requests#forms) for
+//! See the [forms guide](https://rkt.rs/guide/requests#forms) for
 //! general form support documentation.
 //!
 //! # Field Wire Format
 //!
-//! Rocket's field wire format is a flexible, non-self-descriptive, text-based
+//! rkt's field wire format is a flexible, non-self-descriptive, text-based
 //! encoding of arbitrarily nested structure keys and their corresponding
 //! values. The general grammar is:
 //!

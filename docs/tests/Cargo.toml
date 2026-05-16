@@ -1,8 +1,8 @@
 [package]
 name = "rkt_docs_tests"
-version = "0.6.0"
+version.workspace = true
 workspace = "../../"
-edition = "2021"
+edition.workspace = true
 publish = false
 
 [lints.rust]
@@ -10,21 +10,24 @@ missing_docs = "allow"
 missing_abi = "allow"
 
 [dependencies]
-rkt = { path = "../../core/lib", features = ["secrets"] }
+rkt = { workspace = true, features = ["secrets"] }
 
 [dev-dependencies]
-rkt = { path = "../../core/lib", features = ["secrets", "json", "mtls"] }
+rkt = { workspace = true, features = ["secrets", "json", "mtls"] }
 figment = { version = "0.10.17", features = ["toml", "env"] }
 tokio = { version = "1", features = ["macros", "io-std"] }
 rand = "0.9"
+diesel = { version = "2", features = ["sqlite", "r2d2", "returning_clauses_for_sqlite_3_35"] }
+diesel_migrations = "2"
+
+[dependencies.sqlx]
+version = "0.8"
+default-features = false
+features = ["sqlite", "macros", "migrate", "runtime-tokio"]
 
 [dev-dependencies.rkt_dyn_templates]
 path = "../../contrib/dyn_templates"
 features = ["tera"]
-
-[dev-dependencies.rkt_db_pools]
-path = "../../contrib/db_pools/lib"
-features = ["sqlx_sqlite"]
 
 [dev-dependencies.rkt_ws]
 path = "../../contrib/ws"

@@ -257,7 +257,7 @@ impl From<&NoSniff> for Header<'static> {
 /// that can arise and how to roll this out in a large scale setting. So, if
 /// you use TLS, use HSTS, but roll it out with care.
 ///
-/// [TLS]: https://rocket.rs/guide/configuration/#configuring-tls
+/// [TLS]: https://rkt.rs/guide/configuration/#configuring-tls
 /// [Strict-Transport-Security]: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security
 /// [Yelp engineering]: https://engineeringblog.yelp.com/2017/09/the-road-to-hsts.html
 #[derive(PartialEq, Copy, Clone)]
@@ -456,13 +456,13 @@ impl From<&Prefetch> for Header<'static> {
 ///
 /// // In addition to defaults, block access to geolocation and USB features.
 /// // Enable camera and microphone features only for the serving origin. Enable
-/// // payment request access for the current origin and `https://rocket.rs`.
+/// // payment request access for the current origin and `https://example.com`.
 /// let permission = Permission::default()
 ///     .block(Feature::Geolocation)
 ///     .block(Feature::Usb)
 ///     .allow(Feature::Camera, Allow::This)
 ///     .allow(Feature::Microphone, Allow::This)
-///     .allow(Feature::Payment, [Allow::This, Allow::Origin(uri!("https://rocket.rs"))]);
+///     .allow(Feature::Payment, [Allow::This, Allow::Origin(uri!("https://example.com"))]);
 ///
 /// rkt::build().attach(Shield::default().enable(permission));
 /// ```
@@ -507,7 +507,7 @@ impl Permission {
     /// #[macro_use] extern crate rkt;
     /// use rkt::shield::{Permission, Feature, Allow};
     ///
-    /// let rocket = Allow::Origin(uri!("https://rocket.rs"));
+    /// let rocket = Allow::Origin(uri!("https://example.com"));
     ///
     /// let perm = Permission::allowed(Feature::Usb, Allow::This);
     /// let perm = Permission::allowed(Feature::Usb, Allow::Any);
@@ -557,7 +557,7 @@ impl Permission {
     /// #[macro_use] extern crate rkt;
     /// use rkt::shield::{Permission, Feature, Allow};
     ///
-    /// let rocket = Allow::Origin(uri!("https://rocket.rs"));
+    /// let rocket = Allow::Origin(uri!("https://example.com"));
     /// let perm = Permission::allowed(Feature::Usb, Allow::This)
     ///     .allow(Feature::Payment, [rocket, Allow::This]);
     /// ```

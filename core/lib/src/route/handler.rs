@@ -13,11 +13,11 @@ pub type BoxFuture<'r, T = Outcome<'r>> = futures::future::BoxFuture<'r, T>;
 /// Trait implemented by [`Route`](crate::Route) request handlers.
 ///
 /// In general, you will never need to implement `Handler` manually or be
-/// concerned about the `Handler` trait; Rocket's code generation handles
+/// concerned about the `Handler` trait; rkt's code generation handles
 /// everything for you. You only need to learn about this trait if you want to
 /// provide an external, library-based mechanism to handle requests where
 /// request handling depends on input from the user. In other words, if you want
-/// to write a plugin for Rocket that looks mostly like a static route but need
+/// to write a plugin for rkt that looks mostly like a static route but need
 /// user provided state to make a request handling decision, you should consider
 /// implementing a custom `Handler`.
 ///
@@ -121,7 +121,7 @@ pub type BoxFuture<'r, T = Outcome<'r>> = futures::future::BoxFuture<'r, T>;
 ///
 /// Pros:
 ///
-///   * The handler is easier to implement since Rocket's code generation
+///   * The handler is easier to implement since rkt's code generation
 ///     ensures type-safety at all levels.
 ///
 /// Cons:
@@ -135,11 +135,11 @@ pub type BoxFuture<'r, T = Outcome<'r>> = futures::future::BoxFuture<'r, T>;
 /// `Handler` implementation is preferred.
 #[crate::async_trait]
 pub trait Handler: Cloneable + Send + Sync + 'static {
-    /// Called by Rocket when a `Request` with its associated `Data` should be
+    /// Called by rkt when a `Request` with its associated `Data` should be
     /// handled by this handler.
     ///
     /// The variant of `Outcome` returned by the returned `Future` determines
-    /// what Rocket does next. If the return value is a `Success(Response)`, the
+    /// what rkt does next. If the return value is a `Success(Response)`, the
     /// wrapped `Response` is used to respond to the client. If the return value
     /// is an `Error(Status)`, the error catcher for `Status` is invoked to
     /// generate a response. Otherwise, if the return value is `Forward(Data)`,

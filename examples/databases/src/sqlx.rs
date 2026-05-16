@@ -1,15 +1,10 @@
-use rkt::{Rocket, Build, futures};
-use rkt::fairing::{self, AdHoc};
+use rkt::{Rocket, Build, State, futures};
+use rkt::fairing::AdHoc;
 use rkt::response::status::Created;
 use rkt::serde::{Serialize, Deserialize, json::Json};
 
-use rkt_db_pools::{Database, Connection};
-
 use futures::{stream::TryStreamExt, future::TryFutureExt};
-
-#[derive(Database)]
-#[database("sqlx")]
-struct Db(sqlx::SqlitePool);
+use sqlx::SqlitePool;
 
 type Result<T, E = rkt::response::Debug<sqlx::Error>> = std::result::Result<T, E>;
 
@@ -23,13 +18,13 @@ struct Post {
 }
 
 #[post("/", data = "<post>")]
-async fn create(mut db: Connection<Db>, mut post: Json<Post>) -> Result<Created<Json<Post>>> {
+async fn create(pool: &State<SqlitePool>, mut post: Json<Post>) -> Result<Created<Json<Post>>> {
     // NOTE: sqlx#2543, sqlx#1648 mean we can't use the pithier `fetch_one()`.
     let results = sqlx::query!(
             "INSERT INTO posts (title, text) VALUES (?, ?) RETURNING id",
             post.title, post.text
         )
-        .fetch(&mut **db)
+        .fetch(pool.inner())
         .try_collect::<Vec<_>>()
         .await?;
 
@@ -38,9 +33,9 @@ async fn create(mut db: Connection<Db>, mut post: Json<Post>) -> Result<Created<
 }
 
 #[get("/")]
-async fn list(mut db: Connection<Db>) -> Result<Json<Vec<i64>>> {
+async fn list(pool: &State<SqlitePool>) -> Result<Json<Vec<i64>>> {
     let ids = sqlx::query!("SELECT id FROM posts")
-        .fetch(&mut **db)
+        .fetch(pool.inner())
         .map_ok(|record| record.id)
         .try_collect::<Vec<_>>()
         .await?;
@@ -49,47 +44,67 @@ async fn list(mut db: Connection<Db>) -> Result<Json<Vec<i64>>> {
 }
 
 #[get("/<id>")]
-async fn read(mut db: Connection<Db>, id: i64) -> Option<Json<Post>> {
+async fn read(pool: &State<SqlitePool>, id: i64) -> Option<Json<Post>> {
     sqlx::query!("SELECT id, title, text FROM posts WHERE id = ?", id)
-        .fetch_one(&mut **db)
+        .fetch_one(pool.inner())
         .map_ok(|r| Json(Post { id: Some(r.id), title: r.title, text: r.text }))
         .await
         .ok()
 }
 
 #[delete("/<id>")]
-async fn delete(mut db: Connection<Db>, id: i64) -> Result<Option<()>> {
+async fn delete(pool: &State<SqlitePool>, id: i64) -> Result<Option<()>> {
     let result = sqlx::query!("DELETE FROM posts WHERE id = ?", id)
-        .execute(&mut **db)
+        .execute(pool.inner())
         .await?;
 
     Ok((result.rows_affected() == 1).then_some(()))
 }
 
 #[delete("/")]
-async fn destroy(mut db: Connection<Db>) -> Result<()> {
-    sqlx::query!("DELETE FROM posts").execute(&mut **db).await?;
-
+async fn destroy(pool: &State<SqlitePool>) -> Result<()> {
+    sqlx::query!("DELETE FROM posts").execute(pool.inner()).await?;
     Ok(())
 }
 
-async fn run_migrations(rocket: Rocket<Build>) -> fairing::Result {
-    match Db::fetch(&rocket) {
-        Some(db) => match sqlx::migrate!("db/sqlx/migrations").run(&**db).await {
-            Ok(_) => Ok(rocket),
-            Err(e) => {
-                error!("Failed to initialize SQLx database: {}", e);
-                Err(rocket)
-            }
+async fn init_db(rocket: Rocket<Build>) -> rkt::fairing::Result {
+    use sqlx::sqlite::SqliteConnectOptions;
+    use std::str::FromStr;
+
+    let url = match rocket.figment().extract_inner::<String>("databases.sqlx.url") {
+        Ok(url) => url,
+        Err(e) => {
+            error!("sqlx database URL not configured: {e}");
+            return Err(rocket);
         }
-        None => Err(rocket),
+    };
+
+    let opts = match SqliteConnectOptions::from_str(&url) {
+        Ok(opts) => opts.create_if_missing(true),
+        Err(e) => {
+            error!("invalid sqlx database URL: {e}");
+            return Err(rocket);
+        }
+    };
+
+    match SqlitePool::connect_with(opts).await {
+        Ok(pool) => {
+            if let Err(e) = sqlx::migrate!("db/sqlx/migrations").run(&pool).await {
+                error!("sqlx migrations failed: {e}");
+                return Err(rocket);
+            }
+            Ok(rocket.manage(pool))
+        }
+        Err(e) => {
+            error!("failed to connect to sqlx database: {e}");
+            Err(rocket)
+        }
     }
 }
 
 pub fn stage() -> AdHoc {
     AdHoc::on_ignite("SQLx Stage", |rocket| async {
-        rocket.attach(Db::init())
-            .attach(AdHoc::try_on_ignite("SQLx Migrations", run_migrations))
+        rocket.attach(AdHoc::try_on_ignite("SQLx Database", init_db))
             .mount("/sqlx", routes![list, create, read, delete, destroy])
     })
 }

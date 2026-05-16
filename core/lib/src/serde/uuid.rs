@@ -7,7 +7,7 @@
 //!
 //! ```toml
 //! [dependencies.rocket]
-//! version = "0.6.0"
+//! version = "1.0.0"
 //! features = ["uuid"]
 //! ```
 //!
@@ -65,7 +65,7 @@
 //! # Extra Features
 //!
 //! The [`uuid`](https://docs.rs/uuid/1) crate exposes extra `v{n}` features
-//! for generating UUIDs which are not enabled by Rocket. To enable these
+//! for generating UUIDs which are not enabled by rkt. To enable these
 //! features, depend on `uuid` directly. The extra functionality can be accessed
 //! via both `rkt::serde::uuid::Uuid` or the direct `uuid::Uuid`; the types
 //! are one and the same.

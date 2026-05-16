@@ -73,7 +73,7 @@ impl Client {
         })
     }
 
-    // WARNING: This is unstable! Do not use this method outside of Rocket!
+    // WARNING: This is unstable! Do not use this method outside of rkt!
     // This is used by the `Client` doctests.
     #[doc(hidden)]
     pub fn _test<T, F>(f: F) -> T

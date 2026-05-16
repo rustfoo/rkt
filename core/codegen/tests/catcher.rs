@@ -1,4 +1,4 @@
-// Rocket sometimes generates mangled identifiers that activate the
+// rkt sometimes generates mangled identifiers that activate the
 // non_snake_case lint. We deny the lint in this test to ensure that
 // code generation uses #[allow(non_snake_case)] in the appropriate places.
 #![deny(non_snake_case)]

@@ -736,7 +736,7 @@ impl<'h> HeaderMap<'h> {
     /// Consumes `self` and returns an iterator over all of the headers stored
     /// in the map in the way they are stored. This is a low-level mechanism and
     /// should likely not be used.
-    /// WARNING: This is unstable! Do not use this method outside of Rocket!
+    /// WARNING: This is unstable! Do not use this method outside of rkt!
     #[doc(hidden)]
     #[inline]
     pub fn into_iter_raw(self) -> impl Iterator<Item = (Uncased<'h>, Vec<Cow<'h, str>>)> {

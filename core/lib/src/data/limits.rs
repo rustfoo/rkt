@@ -8,7 +8,7 @@ use crate::http::uncased::Uncased;
 ///
 /// A `Limits` structure contains a mapping from a given hierarchical data type
 /// ("form", "data-form", "ext/pdf", and so on) to the maximum size in bytes
-/// that should be accepted by Rocket for said data type. For instance, if the
+/// that should be accepted by rkt for said data type. For instance, if the
 /// limit for "form" is set to `256`, only 256 bytes from an incoming non-data
 /// form (that is, url-encoded) will be accepted.
 ///
@@ -49,7 +49,7 @@ use crate::http::uncased::Uncased;
 ///
 /// # Built-in Limits
 ///
-/// The following table details recognized built-in limits used by Rocket.
+/// The following table details recognized built-in limits used by rkt.
 ///
 /// | Limit Name        | Default | Type         | Description                           |
 /// |-------------------|---------|--------------|---------------------------------------|

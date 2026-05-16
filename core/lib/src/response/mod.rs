@@ -1,6 +1,6 @@
 //! Types and traits to build and send responses.
 //!
-//! The return type of a Rocket handler can be any type that implements the
+//! The return type of a rkt handler can be any type that implements the
 //! [`Responder`] trait, which means that the type knows how to generate a
 //! [`Response`]. Among other things, this module contains several such types.
 //!

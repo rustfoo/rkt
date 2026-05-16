@@ -5,12 +5,12 @@ use rkt::response::Redirect;
 
 #[get("/http")]
 fn http() -> Redirect {
-    Redirect::to(uri!("http://rocket.rs"))
+    Redirect::to(uri!("http://example.com"))
 }
 
 #[get("/rocket")]
 fn redirect() -> Redirect {
-    Redirect::to("https://rocket.rs:80")
+    Redirect::to("https://example.com:80")
 }
 
 mod test_absolute_uris_okay {
@@ -23,10 +23,10 @@ mod test_absolute_uris_okay {
 
         let response = client.get(uri!(http)).dispatch();
         let location = response.headers().get_one("Location");
-        assert_eq!(location, Some("http://rocket.rs"));
+        assert_eq!(location, Some("http://example.com"));
 
         let response = client.get(uri!(redirect)).dispatch();
         let location = response.headers().get_one("Location");
-        assert_eq!(location, Some("https://rocket.rs:80"));
+        assert_eq!(location, Some("https://example.com:80"));
     }
 }

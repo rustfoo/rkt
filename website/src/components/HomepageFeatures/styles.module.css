@@ -1,0 +1,34 @@
+.features {
+  padding: 4rem 0;
+  width: 100%;
+}
+
+.featureRow {
+  row-gap: 2rem;
+}
+
+.featureCard {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.5rem;
+}
+
+.featureIcon {
+  font-size: 2rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.featureTitle {
+  font-size: 1.1rem;
+  margin-bottom: 0.4rem;
+}
+
+.featureDesc {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+  opacity: 0.85;
+}

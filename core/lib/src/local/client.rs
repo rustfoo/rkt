@@ -14,7 +14,7 @@ macro_rules! req_method {
         #[doc = $NAME]
         /// ` request to the URI `uri`.
         ///
-        /// When dispatched, the request will be served by the instance of Rocket
+        /// When dispatched, the request will be served by the instance of rkt
         /// within `self`. The request is not dispatched automatically. To actually
         /// dispatch the request, call [`LocalRequest::dispatch()`] on the returned
         /// request.
@@ -196,7 +196,7 @@ macro_rules! pub_client_impl {
     /// Create a local `GET` request to the URI `uri`.
     ///
     /// When dispatched, the request will be served by the instance of
-    /// Rocket within `self`. The request is not dispatched automatically.
+    /// rkt within `self`. The request is not dispatched automatically.
     /// To actually dispatch the request, call [`LocalRequest::dispatch()`]
     /// on the returned request.
     ///

@@ -182,7 +182,7 @@ fn authority() {
         "sergio@spark" => Authority::new("sergio", "spark", None),
         "sergio@spark:230" => Authority::new("sergio", "spark", 230),
         "sergio@[1::]:230" => Authority::new("sergio", "[1::]", 230),
-        "rocket.rs:8000" => Authority::new(None, "rocket.rs", 8000),
+        "example.com:8000" => Authority::new(None, "example.com", 8000),
         "[1::2::3]:80" => Authority::new(None, "[1::2::3]", 80),
         "bar:" => Authority::new(None, "bar", None), // could be absolute too
     );
@@ -215,18 +215,18 @@ fn absolute() {
                 "/a/b", "key=value&key2=value2"),
         "ftp://foo.com:21/abc" =>
             Absolute::new("ftp", Authority::new(None, "foo.com", 21), "/abc", None),
-        "http://rocket.rs/abc" =>
-            Absolute::new("http", Authority::new(None, "rocket.rs", None), "/abc", None),
-        "http://s:b@rocket.rs/abc" =>
-            Absolute::new("http", Authority::new("s:b", "rocket.rs", None), "/abc", None),
-        "http://rocket.rs/abc?q" =>
-            Absolute::new("http", Authority::new(None, "rocket.rs", None), "/abc", "q"),
-        "http://rocket.rs" =>
-            Absolute::new("http", Authority::new(None, "rocket.rs", None), "", None),
-        "git://s::@rocket.rs:443/abc?q" =>
-            Absolute::new("git", Authority::new("s::", "rocket.rs", 443), "/abc", "q"),
-        "git://:@rocket.rs:443/abc?q" =>
-            Absolute::new("git", Authority::new(":", "rocket.rs", 443), "/abc", "q"),
+        "http://example.com/abc" =>
+            Absolute::new("http", Authority::new(None, "example.com", None), "/abc", None),
+        "http://s:b@example.com/abc" =>
+            Absolute::new("http", Authority::new("s:b", "example.com", None), "/abc", None),
+        "http://example.com/abc?q" =>
+            Absolute::new("http", Authority::new(None, "example.com", None), "/abc", "q"),
+        "http://example.com" =>
+            Absolute::new("http", Authority::new(None, "example.com", None), "", None),
+        "git://s::@example.com:443/abc?q" =>
+            Absolute::new("git", Authority::new("s::", "example.com", 443), "/abc", "q"),
+        "git://:@example.com:443/abc?q" =>
+            Absolute::new("git", Authority::new(":", "example.com", 443), "/abc", "q"),
         "a://b?test" => Absolute::new("a", Authority::new(None, "b", None), "", "test"),
         "a://b:?test" => Absolute::new("a", Authority::new(None, "b", None), "", "test"),
         "a://b:1?test" => Absolute::new("a", Authority::new(None, "b", 1), "", "test"),
@@ -270,7 +270,7 @@ fn reference() {
 fn display() {
     assert_displays_eq! {
         "abc", "@):0", "[a]",
-        "http://rocket.rs", "http://a:b@rocket.rs", "git://a@b:800/foo?bar",
+        "http://example.com", "http://a:b@example.com", "git://a@b:800/foo?bar",
         "git://a@b:800/foo?bar#baz",
         "a:b", "a@b", "a?b", "a?b#c",
     }

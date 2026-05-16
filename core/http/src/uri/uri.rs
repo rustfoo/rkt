@@ -9,9 +9,9 @@ use crate::uri::{Absolute, Asterisk, Authority, Origin, Reference};
 ///
 /// # Usage
 ///
-/// In Rocket, this type will rarely be used directly. Instead, you will
+/// In rkt, this type will rarely be used directly. Instead, you will
 /// typically encounter URIs via the [`Origin`] type. This is because all
-/// incoming requests accepted by Rocket contain URIs in origin-form.
+/// incoming requests accepted by rkt contain URIs in origin-form.
 ///
 /// ## Parsing
 ///
@@ -147,10 +147,10 @@ impl<'a> Uri<'a> {
     /// let uri = Uri::from(uri!("/a/b/c?query"));
     /// assert!(uri.origin().is_some());
     ///
-    /// let uri = Uri::parse::<Absolute>("https://rocket.rs").expect("valid URI");
+    /// let uri = Uri::parse::<Absolute>("https://example.com").expect("valid URI");
     /// assert!(uri.origin().is_none());
     ///
-    /// let uri = Uri::from(uri!("https://rocket.rs"));
+    /// let uri = Uri::from(uri!("https://example.com"));
     /// assert!(uri.origin().is_none());
     /// ```
     pub fn origin(&self) -> Option<&Origin<'a>> {
@@ -175,10 +175,10 @@ impl<'a> Uri<'a> {
     /// let uri = Uri::from(uri!("user:pass@domain.com"));
     /// assert!(uri.authority().is_some());
     ///
-    /// let uri = Uri::parse::<Absolute>("https://rocket.rs").expect("valid URI");
+    /// let uri = Uri::parse::<Absolute>("https://example.com").expect("valid URI");
     /// assert!(uri.authority().is_none());
     ///
-    /// let uri = Uri::from(uri!("https://rocket.rs"));
+    /// let uri = Uri::from(uri!("https://example.com"));
     /// assert!(uri.authority().is_none());
     /// ```
     pub fn authority(&self) -> Option<&Authority<'a>> {
@@ -197,10 +197,10 @@ impl<'a> Uri<'a> {
     /// # #[macro_use] extern crate rkt;
     /// use rkt::http::uri::{Uri, Absolute, Origin};
     ///
-    /// let uri = Uri::parse::<Absolute>("http://rocket.rs").expect("valid URI");
+    /// let uri = Uri::parse::<Absolute>("http://example.com").expect("valid URI");
     /// assert!(uri.absolute().is_some());
     ///
-    /// let uri = Uri::from(uri!("http://rocket.rs"));
+    /// let uri = Uri::from(uri!("http://example.com"));
     /// assert!(uri.absolute().is_some());
     ///
     /// let uri = Uri::parse::<Origin>("/path").expect("valid URI");
@@ -231,10 +231,10 @@ impl<'a> Uri<'a> {
     /// let uri = Uri::from(uri!("foo/bar"));
     /// assert!(uri.reference().is_some());
     ///
-    /// let uri = Uri::parse::<Absolute>("https://rocket.rs").expect("valid URI");
+    /// let uri = Uri::parse::<Absolute>("https://example.com").expect("valid URI");
     /// assert!(uri.reference().is_none());
     ///
-    /// let uri = Uri::from(uri!("https://rocket.rs"));
+    /// let uri = Uri::from(uri!("https://example.com"));
     /// assert!(uri.reference().is_none());
     /// ```
     pub fn reference(&self) -> Option<&Reference<'a>> {

@@ -79,7 +79,7 @@ use crate::{sentinel, shield::Shield, Catcher, Config, Route};
 ///   To launch an instance of `Rocket`, it _must_ progress through all three
 ///   phases. To progress into the ignite or launch phases, a tokio `async`
 ///   runtime is required. The [`#[main]`](crate::main) attribute initializes a
-///   Rocket-specific tokio runtime and runs the attributed `async fn` inside of
+///   rkt-specific tokio runtime and runs the attributed `async fn` inside of
 ///   it:
 ///
 ///   ```rust,no_run
@@ -106,11 +106,11 @@ use crate::{sentinel, shield::Shield, Catcher, Config, Route};
 ///
 ///   For extreme and rare cases in which [`#[main]`](crate::main) imposes
 ///   obstinate restrictions, use [`rkt::execute()`](crate::execute()) to
-///   execute Rocket's `launch()` future.
+///   execute rkt's `launch()` future.
 ///
 /// * **Automatic Launching**
 ///
-///   Manually progressing an instance of Rocket though its phases is only
+///   Manually progressing an instance of rkt though its phases is only
 ///   necessary when either an instance's finalized state is to be inspected (in
 ///   the _ignite_ phase) or the instance is expected to deorbit due to
 ///   [`Rocket::shutdown()`]. In the more common case when neither is required,
@@ -314,7 +314,7 @@ impl Rocket<Build> {
     ///
     ///   * any route URI is not a valid origin URI. (**Note:** _This kind of
     ///     panic is guaranteed not to occur if the routes were generated using
-    ///     Rocket's code generation._)
+    ///     rkt's code generation._)
     ///
     /// # Examples
     ///
@@ -418,15 +418,15 @@ impl Rocket<Build> {
         )
     }
 
-    /// Add `state` to the state managed by this instance of Rocket.
+    /// Add `state` to the state managed by this instance of rkt.
     ///
     /// This method can be called any number of times as long as each call
     /// refers to a different `T`.
     ///
     /// Managed state can be retrieved by any request handler via the
     /// [`State`](crate::State) request guard. In particular, if a value of type `T`
-    /// is managed by Rocket, adding `State<T>` to the list of arguments in a
-    /// request handler instructs Rocket to retrieve the managed value.
+    /// is managed by rkt, adding `State<T>` to the list of arguments in a
+    /// request handler instructs rkt to retrieve the managed value.
     ///
     /// # Panics
     ///
@@ -473,7 +473,7 @@ impl Rocket<Build> {
         self
     }
 
-    /// Attaches a fairing to this instance of Rocket. No fairings are eagerly
+    /// Attaches a fairing to this instance of rkt. No fairings are eagerly
     /// executed; fairings are executed at their appropriate time.
     ///
     /// If the attached fairing is a [singleton] and a fairing of the same type
@@ -714,7 +714,7 @@ impl Rocket<Ignite> {
 }
 
 impl Rocket<Orbit> {
-    /// Rocket wraps all connections in a `CancellableIo` struct, an internal
+    /// rkt wraps all connections in a `CancellableIo` struct, an internal
     /// structure that gracefully closes I/O when it receives a signal. That
     /// signal is the `shutdown` future. When the future resolves,
     /// `CancellableIo` begins to terminate in grace, mercy, and finally force
@@ -802,7 +802,7 @@ impl Rocket<Orbit> {
     /// fn rocket() -> _ {
     ///     rkt::build()
     ///         .attach(AdHoc::on_liftoff("Config", |rocket| Box::pin(async move {
-    ///             println!("Rocket launch config: {:?}", rocket.config());
+    ///             println!("rkt launch config: {:?}", rocket.config());
     ///         })))
     /// }
     /// ```
@@ -848,7 +848,7 @@ impl Rocket<Orbit> {
 
 impl<P: Phase> Rocket<P> {
     /// Returns an iterator over all of the routes mounted on this instance of
-    /// Rocket. The order is unspecified.
+    /// rkt. The order is unspecified.
     ///
     /// # Example
     ///
@@ -879,7 +879,7 @@ impl<P: Phase> Rocket<P> {
     }
 
     /// Returns an iterator over all of the catchers registered on this instance
-    /// of Rocket. The order is unspecified.
+    /// of rkt. The order is unspecified.
     ///
     /// # Example
     ///
@@ -1210,7 +1210,7 @@ impl<P: Phase> Rocket<P> {
     ///     let result = rkt::build().launch().await;
     ///
     ///     // this is reachable only after `Shutdown::notify()` or `Ctrl+C`.
-    ///     println!("Rocket: deorbit.");
+    ///     println!("rkt: deorbit.");
     /// }
     /// ```
     pub async fn launch(self) -> Result<Rocket<Ignite>, Error> {

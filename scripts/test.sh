@@ -74,26 +74,6 @@ function indir() {
 }
 
 function test_contrib() {
-  DB_POOLS_FEATURES=(
-    deadpool_postgres
-    deadpool_redis
-    sqlx_mysql
-    sqlx_postgres
-    sqlx_sqlite
-    mongodb
-    diesel_mysql
-    diesel_postgres
-  )
-
-  SYNC_DB_POOLS_FEATURES=(
-    diesel_postgres_pool
-    diesel_sqlite_pool
-    diesel_mysql_pool
-    postgres_pool
-    sqlite_pool
-    memcache_pool
-  )
-
   DYN_TEMPLATES_FEATURES=(
     tera
     handlebars
@@ -103,16 +83,6 @@ function test_contrib() {
   WS_FEATURES=(
     tungstenite
   )
-
-  for feature in "${DB_POOLS_FEATURES[@]}"; do
-    echo ":: Building and testing db_pools [$feature]..."
-    $CARGO test -p rkt_db_pools --no-default-features --features $feature $@
-  done
-
-  for feature in "${SYNC_DB_POOLS_FEATURES[@]}"; do
-    echo ":: Building and testing sync_db_pools [$feature]..."
-    $CARGO test -p rkt_sync_db_pools --no-default-features --features $feature $@
-  done
 
   for feature in "${DYN_TEMPLATES_FEATURES[@]}"; do
     echo ":: Building and testing dyn_templates [$feature]..."
@@ -249,12 +219,6 @@ echo "  EXTRA FLAGS: $@"
 
 echo ":: Ensuring core crate versions match..."
 check_versions_match "${CORE_CRATE_ROOTS[@]}"
-
-echo ":: Ensuring contrib sync_db_pools versions match..."
-check_versions_match "${CONTRIB_SYNC_DB_POOLS_CRATE_ROOTS[@]}"
-
-echo ":: Ensuring contrib db_pools versions match..."
-check_versions_match "${CONTRIB_DB_POOLS_CRATE_ROOTS[@]}"
 
 echo ":: Ensuring minimum style requirements are met..."
 check_style

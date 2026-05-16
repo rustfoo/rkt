@@ -49,9 +49,9 @@ fn uri_serde() {
             [default]
             asterisk = "*"
             origin = "/foo/bar?baz"
-            authority = "user:pass@rocket.rs:80"
-            absolute = "https://rocket.rs/foo/bar"
-            reference = "https://rocket.rs:8000/index.html"
+            authority = "user:pass@example.com:80"
+            absolute = "https://example.com/foo/bar"
+            reference = "https://example.com:8000/index.html"
         "#,
         )?;
 
@@ -61,9 +61,9 @@ fn uri_serde() {
             UriContainer {
                 asterisk: Asterisk,
                 origin: uri!("/foo/bar?baz"),
-                authority: uri!("user:pass@rocket.rs:80"),
-                absolute: uri!("https://rocket.rs/foo/bar"),
-                reference: uri!("https://rocket.rs:8000/index.html").into(),
+                authority: uri!("user:pass@example.com:80"),
+                absolute: uri!("https://example.com/foo/bar"),
+                reference: uri!("https://example.com:8000/index.html").into(),
             }
         );
 
@@ -73,9 +73,9 @@ fn uri_serde() {
             UriContainerOwned {
                 asterisk: Asterisk,
                 origin: uri!("/foo/bar?baz"),
-                authority: uri!("user:pass@rocket.rs:80"),
-                absolute: uri!("https://rocket.rs/foo/bar"),
-                reference: uri!("https://rocket.rs:8000/index.html").into(),
+                authority: uri!("user:pass@example.com:80"),
+                absolute: uri!("https://example.com/foo/bar"),
+                reference: uri!("https://example.com:8000/index.html").into(),
             }
         );
 
@@ -88,9 +88,9 @@ fn uri_serde_round_trip() {
     let tmp = Figment::from(Serialized::defaults(UriContainer {
         asterisk: Asterisk,
         origin: uri!("/foo/bar?baz"),
-        authority: uri!("user:pass@rocket.rs:80"),
-        absolute: uri!("https://rocket.rs/foo/bar"),
-        reference: uri!("https://rocket.rs:8000/index.html").into(),
+        authority: uri!("user:pass@example.com:80"),
+        absolute: uri!("https://example.com/foo/bar"),
+        reference: uri!("https://example.com:8000/index.html").into(),
     }));
 
     let uris: UriContainer<'_> = tmp.extract().unwrap();
@@ -99,9 +99,9 @@ fn uri_serde_round_trip() {
         UriContainer {
             asterisk: Asterisk,
             origin: uri!("/foo/bar?baz"),
-            authority: uri!("user:pass@rocket.rs:80"),
-            absolute: uri!("https://rocket.rs/foo/bar"),
-            reference: uri!("https://rocket.rs:8000/index.html").into(),
+            authority: uri!("user:pass@example.com:80"),
+            absolute: uri!("https://example.com/foo/bar"),
+            reference: uri!("https://example.com:8000/index.html").into(),
         }
     );
 
@@ -111,18 +111,18 @@ fn uri_serde_round_trip() {
         UriContainerOwned {
             asterisk: Asterisk,
             origin: uri!("/foo/bar?baz"),
-            authority: uri!("user:pass@rocket.rs:80"),
-            absolute: uri!("https://rocket.rs/foo/bar"),
-            reference: uri!("https://rocket.rs:8000/index.html").into(),
+            authority: uri!("user:pass@example.com:80"),
+            absolute: uri!("https://example.com/foo/bar"),
+            reference: uri!("https://example.com:8000/index.html").into(),
         }
     );
 
     let tmp = Figment::from(Serialized::defaults(UriContainerOwned {
         asterisk: Asterisk,
         origin: uri!("/foo/bar?baz"),
-        authority: uri!("user:pass@rocket.rs:80"),
-        absolute: uri!("https://rocket.rs/foo/bar"),
-        reference: uri!("https://rocket.rs:8000/index.html").into(),
+        authority: uri!("user:pass@example.com:80"),
+        absolute: uri!("https://example.com/foo/bar"),
+        reference: uri!("https://example.com:8000/index.html").into(),
     }));
 
     let uris: UriContainer<'_> = tmp.extract().unwrap();
@@ -131,9 +131,9 @@ fn uri_serde_round_trip() {
         UriContainer {
             asterisk: Asterisk,
             origin: uri!("/foo/bar?baz"),
-            authority: uri!("user:pass@rocket.rs:80"),
-            absolute: uri!("https://rocket.rs/foo/bar"),
-            reference: uri!("https://rocket.rs:8000/index.html").into(),
+            authority: uri!("user:pass@example.com:80"),
+            absolute: uri!("https://example.com/foo/bar"),
+            reference: uri!("https://example.com:8000/index.html").into(),
         }
     );
 
@@ -143,9 +143,9 @@ fn uri_serde_round_trip() {
         UriContainerOwned {
             asterisk: Asterisk,
             origin: uri!("/foo/bar?baz"),
-            authority: uri!("user:pass@rocket.rs:80"),
-            absolute: uri!("https://rocket.rs/foo/bar"),
-            reference: uri!("https://rocket.rs:8000/index.html").into(),
+            authority: uri!("user:pass@example.com:80"),
+            absolute: uri!("https://example.com/foo/bar"),
+            reference: uri!("https://example.com:8000/index.html").into(),
         }
     );
 }

@@ -300,19 +300,6 @@ macro_rules! define_methods {
     };
 }
 
-impl Method {
-    /// Deprecated. Returns `self.allows_request_body() == Some(true)`.
-    ///
-    /// Use [`Method::allows_request_body()`] instead.
-    #[deprecated(since = "0.6.0", note = "use Self::allows_request_body()")]
-    pub const fn supports_payload(self) -> bool {
-        match self.allows_request_body() {
-            Some(v) => v,
-            None => false,
-        }
-    }
-}
-
 use define_methods;
 
 #[derive(Debug, PartialEq, Eq)]

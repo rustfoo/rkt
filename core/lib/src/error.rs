@@ -1,4 +1,4 @@
-//! Types representing various errors that can occur in a Rocket application.
+//! Types representing various errors that can occur in a rkt application.
 
 use std::error::Error as StdError;
 use std::sync::Arc;
@@ -15,8 +15,8 @@ use crate::{Catcher, Ignite, Orbit, Phase, Rocket, Route};
 /// An `Error` is returned by [`Rocket::launch()`] or [`Rocket::ignite()`] on
 /// failure to launch or ignite, respectively. An `Error` may occur when the
 /// configuration is invalid, when a route or catcher collision is detected, or
-/// when a fairing fails to launch. An `Error` may also occur when the Rocket
-/// instance fails to liftoff or when the Rocket instance fails to shutdown.
+/// when a fairing fails to launch. An `Error` may also occur when the rkt
+/// instance fails to liftoff or when the rkt instance fails to shutdown.
 /// Finally, an `Error` may occur when a sentinel requests an abort.
 ///
 /// To determine the kind of error that occurred, use [`Error::kind()`].
@@ -76,12 +76,12 @@ pub enum ErrorKind {
     SentinelAborts(Vec<crate::sentinel::Sentry>),
     /// The configuration profile is not debug but no secret key is configured.
     InsecureSecretKey(Profile),
-    /// Liftoff failed. Contains the Rocket instance that failed to shutdown.
+    /// Liftoff failed. Contains the rkt instance that failed to shutdown.
     Liftoff(
         Result<Box<Rocket<Ignite>>, Arc<Rocket<Orbit>>>,
         tokio::task::JoinError,
     ),
-    /// Shutdown failed. Contains the Rocket instance that failed to shutdown.
+    /// Shutdown failed. Contains the rkt instance that failed to shutdown.
     Shutdown(Arc<Rocket<Orbit>>),
 }
 

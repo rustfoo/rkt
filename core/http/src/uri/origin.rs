@@ -7,7 +7,7 @@ use crate::{RawStr, RawStrBuf};
 
 /// A URI with an absolute path and optional query: `/path?query`.
 ///
-/// Origin URIs are the primary type of URI encountered in Rocket applications.
+/// Origin URIs are the primary type of URI encountered in rkt applications.
 /// They are also the _simplest_ type of URIs, made up of only a path and an
 /// optional query.
 ///
@@ -26,7 +26,7 @@ use crate::{RawStr, RawStrBuf};
 ///
 /// # Normalization
 ///
-/// Rocket prefers, and will sometimes require, origin URIs to be _normalized_.
+/// rkt prefers, and will sometimes require, origin URIs to be _normalized_.
 /// A normalized origin URI is a valid origin URI that contains no empty
 /// segments except optionally a trailing slash.
 ///
@@ -141,7 +141,7 @@ impl<'a> Origin<'a> {
     }
 
     // Used mostly for testing and to construct known good URIs from other parts
-    // of Rocket. This should _really_ not be used outside of Rocket because the
+    // of rkt. This should _really_ not be used outside of rkt because the
     // resulting `Origin's` are not guaranteed to be valid origin URIs!
     #[doc(hidden)]
     pub fn new<P, Q>(path: P, query: Option<Q>) -> Origin<'a>
@@ -157,7 +157,7 @@ impl<'a> Origin<'a> {
     }
 
     // Used mostly for testing and to construct known good URIs from other parts
-    // of Rocket. This should _really_ not be used outside of Rocket because the
+    // of rkt. This should _really_ not be used outside of rkt because the
     // resulting `Origin's` are not guaranteed to be valid origin URIs!
     #[doc(hidden)]
     pub fn path_only<P: Into<Cow<'a, str>>>(path: P) -> Origin<'a> {
@@ -165,7 +165,7 @@ impl<'a> Origin<'a> {
     }
 
     // Used mostly for testing and to construct known good URIs from other parts
-    // of Rocket. This should _really_ not be used outside of Rocket because the
+    // of rkt. This should _really_ not be used outside of rkt because the
     // resulting `Origin's` are not guaranteed to be valid origin URIs!
     #[doc(hidden)]
     pub const fn const_new(path: &'a str, query: Option<&'a str>) -> Origin<'a> {
@@ -216,7 +216,7 @@ impl<'a> Origin<'a> {
     }
 
     // Parses an `Origin` which is allowed to contain _any_ `UTF-8` character.
-    // The path must still be absolute `/..`. Don't use this outside of Rocket!
+    // The path must still be absolute `/..`. Don't use this outside of rkt!
     #[doc(hidden)]
     pub fn parse_route(string: &'a str) -> Result<Origin<'a>, Error<'a>> {
         use pear::error::Expected;

@@ -277,7 +277,7 @@ impl<'r> Builder<'r> {
     ///
     /// **NOTE**: Responses registering I/O handlers for upgraded protocols
     /// **should not** set the response status to `101 Switching Protocols`, nor set the
-    /// `Connection` or `Upgrade` headers. Rocket automatically sets these
+    /// `Connection` or `Upgrade` headers. rkt automatically sets these
     /// headers as needed. See [`Response`#upgrading] for details.
     ///
     /// # Example
@@ -477,14 +477,14 @@ impl<'r> Builder<'r> {
 /// client. Note that protocol names are treated case-insensitively during
 /// matching.
 ///
-/// If a connection is upgraded, Rocket automatically set the following in the
+/// If a connection is upgraded, rkt automatically set the following in the
 /// upgrade response:
 ///   * The response status to `101 Switching Protocols`.
 ///   * The `Connection: Upgrade` header.
 ///   * The `Upgrade` header's value to the selected protocol.
 ///
 /// As such, a response **should never** set a `101` status nor the `Connection`
-/// or `Upgrade` headers: Rocket handles this automatically. Instead, it should
+/// or `Upgrade` headers: rkt handles this automatically. Instead, it should
 /// set a status and headers to use in case the connection is not upgraded,
 /// either due to an error or because the client did not request an upgrade.
 ///
@@ -963,7 +963,7 @@ impl<'r> Response<'r> {
     ///
     /// Responses registering I/O handlers for upgraded protocols **should not**
     /// set the response status to `101`, nor set the `Connection` or `Upgrade`
-    /// headers. Rocket automatically sets these headers as needed. See
+    /// headers. rkt automatically sets these headers as needed. See
     /// [`Response`#upgrading] for details.
     ///
     /// If a handler was previously registered for `protocol`, this `handler`

@@ -70,9 +70,9 @@
 //! }
 //! ```
 
-#![doc(html_root_url = "https://api.rocket.rs/master/rkt_ws")]
-#![doc(html_favicon_url = "https://rocket.rs/images/favicon.ico")]
-#![doc(html_logo_url = "https://rocket.rs/images/logo-boxed.png")]
+#![doc(html_root_url = "https://docs.rs/rkt_ws/latest/rkt_ws")]
+#![doc(html_favicon_url = "https://rkt.rs/images/favicon.ico")]
+#![doc(html_logo_url = "https://rkt.rs/images/logo-boxed.png")]
 
 mod tungstenite {
     #[doc(inline)]
@@ -207,7 +207,7 @@ pub mod result {
 ///
 /// # Expression Position
 ///
-/// When invoked as an expression, the macro behaves similarly to Rocket's
+/// When invoked as an expression, the macro behaves similarly to rkt's
 /// [`stream!`](rkt::response::stream::stream) macro. Specifically, it
 /// supports `yield` and `for await` syntax. It is invoked as follows:
 ///

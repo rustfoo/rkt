@@ -10,7 +10,7 @@ use crate::shutdown::{ShutdownConfig, TripWire};
 /// A request guard and future for graceful shutdown.
 ///
 /// A server shutdown is manually requested by calling [`Shutdown::notify()`]
-/// or, if enabled, through [automatic triggers] like `Ctrl-C`. Rocket will stop
+/// or, if enabled, through [automatic triggers] like `Ctrl-C`. rkt will stop
 /// accepting new requests, finish handling any pending requests, wait a grace
 /// period before cancelling any outstanding I/O, and return `Ok()` to the
 /// caller of [`Rocket::launch()`]. Graceful shutdown is configured via

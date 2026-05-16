@@ -14,7 +14,7 @@ use crate::Request;
 /// This type implements the [`FromData`] trait. It provides a generic means to
 /// parse arbitrary structures from incoming form data.
 ///
-/// See the [forms guide](https://rocket.rs/master/guide/requests#forms) for
+/// See the [forms guide](https://rkt.rs/guide/requests#forms) for
 /// general form support documentation.
 ///
 /// # Leniency
@@ -290,10 +290,10 @@ impl Form<()> {
     /// ```rust
     /// use rkt::form::{Form, ValueField};
     ///
-    /// let string = "name=Bobby Brown&&&email=me@rocket.rs";
+    /// let string = "name=Bobby Brown&&&email=me@example.com";
     /// let mut values = Form::values(string);
     /// assert_eq!(values.next().unwrap(), ValueField::parse("name=Bobby Brown"));
-    /// assert_eq!(values.next().unwrap(), ValueField::parse("email=me@rocket.rs"));
+    /// assert_eq!(values.next().unwrap(), ValueField::parse("email=me@example.com"));
     /// assert!(values.next().is_none());
     /// ```
     pub fn values(string: &str) -> impl Iterator<Item = ValueField<'_>> {

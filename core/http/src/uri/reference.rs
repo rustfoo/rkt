@@ -32,10 +32,10 @@ use crate::RawStr;
 /// # #[macro_use] extern crate rkt;
 /// use rkt::http::uri::Reference;
 ///
-/// let absolute = uri!("http://rocket.rs");
+/// let absolute = uri!("http://example.com");
 /// let reference: Reference = absolute.into();
 /// assert_eq!(reference.scheme(), Some("http"));
-/// assert_eq!(reference.authority().unwrap().host(), "rocket.rs");
+/// assert_eq!(reference.authority().unwrap().host(), "example.com");
 ///
 /// let origin = uri!("/foo/bar");
 /// let reference: Reference = origin.into();
@@ -212,7 +212,7 @@ impl<'a> Reference<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let uri = uri!("http://rocket.rs?foo#bar");
+    /// let uri = uri!("http://example.com?foo#bar");
     /// assert_eq!(uri.scheme(), Some("http"));
     ///
     /// let uri = uri!("ftp:/?foo#bar");
@@ -234,8 +234,8 @@ impl<'a> Reference<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let uri = uri!("http://rocket.rs:4444?foo#bar");
-    /// let auth = uri!("rocket.rs:4444");
+    /// let uri = uri!("http://example.com:4444?foo#bar");
+    /// let auth = uri!("example.com:4444");
     /// assert_eq!(uri.authority().unwrap(), &auth);
     ///
     /// let uri = uri!("?foo#bar");
@@ -252,7 +252,7 @@ impl<'a> Reference<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let uri = uri!("http://rocket.rs/guide?foo#bar");
+    /// let uri = uri!("http://example.com/guide?foo#bar");
     /// assert_eq!(uri.path(), "/guide");
     /// ```
     #[inline(always)]
@@ -269,16 +269,16 @@ impl<'a> Reference<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let uri = uri!("http://rocket.rs/guide");
+    /// let uri = uri!("http://example.com/guide");
     /// assert!(uri.query().is_none());
     ///
-    /// let uri = uri!("http://rocket.rs/guide?");
+    /// let uri = uri!("http://example.com/guide?");
     /// assert_eq!(uri.query().unwrap(), "");
     ///
-    /// let uri = uri!("http://rocket.rs/guide?foo#bar");
+    /// let uri = uri!("http://example.com/guide?foo#bar");
     /// assert_eq!(uri.query().unwrap(), "foo");
     ///
-    /// let uri = uri!("http://rocket.rs/guide?q=bar");
+    /// let uri = uri!("http://example.com/guide?q=bar");
     /// assert_eq!(uri.query().unwrap(), "q=bar");
     /// ```
     #[inline(always)]
@@ -295,11 +295,11 @@ impl<'a> Reference<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let uri = uri!("http://rocket.rs/guide?foo#bar");
+    /// let uri = uri!("http://example.com/guide?foo#bar");
     /// assert_eq!(uri.fragment().unwrap(), "bar");
     ///
     /// // Fragment parts aren't normalized away, unlike query parts.
-    /// let uri = uri!("http://rocket.rs/guide?foo#");
+    /// let uri = uri!("http://example.com/guide?foo#");
     /// assert_eq!(uri.fragment().unwrap(), "");
     /// ```
     #[inline(always)]
@@ -326,11 +326,11 @@ impl<'a> Reference<'a> {
     /// assert!(Reference::parse("http://").unwrap().is_normalized());
     /// assert!(Reference::parse("http://foo.rs/foo/bar").unwrap().is_normalized());
     /// assert!(Reference::parse("foo:bar#baz").unwrap().is_normalized());
-    /// assert!(Reference::parse("http://rocket.rs#foo").unwrap().is_normalized());
+    /// assert!(Reference::parse("http://example.com#foo").unwrap().is_normalized());
     /// assert!(Reference::parse("http://?").unwrap().is_normalized());
-    /// assert!(Reference::parse("git://rocket.rs/").unwrap().is_normalized());
-    /// assert!(Reference::parse("http://rocket.rs?#foo").unwrap().is_normalized());
-    /// assert!(Reference::parse("http://rocket.rs#foo").unwrap().is_normalized());
+    /// assert!(Reference::parse("git://example.com/").unwrap().is_normalized());
+    /// assert!(Reference::parse("http://example.com?#foo").unwrap().is_normalized());
+    /// assert!(Reference::parse("http://example.com#foo").unwrap().is_normalized());
     ///
     /// assert!(!Reference::parse("http:/foo//bar").unwrap().is_normalized());
     /// assert!(!Reference::parse("foo:bar?baz&&bop#c").unwrap().is_normalized());
@@ -338,7 +338,7 @@ impl<'a> Reference<'a> {
     /// // Recall that `uri!()` normalizes static input.
     /// assert!(uri!("http:/foo//bar").is_normalized());
     /// assert!(uri!("foo:bar?baz&&bop#c").is_normalized());
-    /// assert!(uri!("http://rocket.rs///foo////bar#cat").is_normalized());
+    /// assert!(uri!("http://example.com///foo////bar#cat").is_normalized());
     /// ```
     pub fn is_normalized(&self) -> bool {
         let normalized_query = self.query().is_none_or(|q| q.is_normalized());
@@ -357,7 +357,7 @@ impl<'a> Reference<'a> {
     /// ```rust
     /// use rkt::http::uri::Reference;
     ///
-    /// let mut uri = Reference::parse("git://rocket.rs/").unwrap();
+    /// let mut uri = Reference::parse("git://example.com/").unwrap();
     /// assert!(uri.is_normalized());
     ///
     /// let mut uri = Reference::parse("http:/foo//bar?baz&&#cat").unwrap();
@@ -393,7 +393,7 @@ impl<'a> Reference<'a> {
     /// ```rust
     /// use rkt::http::uri::Reference;
     ///
-    /// let mut uri = Reference::parse("git://rocket.rs/").unwrap();
+    /// let mut uri = Reference::parse("git://example.com/").unwrap();
     /// assert!(uri.is_normalized());
     /// assert!(uri.into_normalized().is_normalized());
     ///

@@ -9,7 +9,7 @@ use crate::sentinel::Sentry;
 ///
 /// A route consists of exactly the information in its fields. While a `Route`
 /// can be instantiated directly, doing so should be a rare or nonexistent
-/// event. Instead, a Rocket application should use Rocket's
+/// event. Instead, a rkt application should use rkt's
 /// [`#[route]`](macro@crate::route) series of attributes to generate a `Route`.
 ///
 /// ```rust
@@ -47,7 +47,7 @@ use crate::sentinel::Sentry;
 ///
 /// Two routes are said to [collide](Route::collides_with()) if there exists a
 /// request that matches both routes. Colliding routes present a routing
-/// ambiguity and are thus disallowed by Rocket. Because routes can be
+/// ambiguity and are thus disallowed by rkt. Because routes can be
 /// constructed dynamically, collision checking is done at
 /// [`ignite`](crate::Rocket::ignite()) time, after it becomes statically
 /// impossible to add any more routes to an instance of `Rocket`.
@@ -63,12 +63,12 @@ use crate::sentinel::Sentry;
 /// are attempted in ascending rank order. If a higher precedence route returns
 /// an `Outcome` of `Forward`, the next highest precedence route is attempted,
 /// and so on, until a route returns `Success` or `Error`, or there are no
-/// more routes to try. When all routes have been attempted, Rocket issues a
+/// more routes to try. When all routes have been attempted, rkt issues a
 /// `404` error, handled by the appropriate [`Catcher`](crate::Catcher).
 ///
 /// ## Default Ranking
 ///
-/// Most collisions are automatically resolved by Rocket's _default rank_. The
+/// Most collisions are automatically resolved by rkt's _default rank_. The
 /// default rank prefers static components over dynamic components in both paths
 /// and queries: the _more_ static a route's path and query are, the lower its
 /// rank and thus the higher its precedence.
@@ -186,7 +186,7 @@ impl Route {
     ///
     /// # Panics
     ///
-    /// Panics if `path` is not a valid Rocket route URI.
+    /// Panics if `path` is not a valid rkt route URI.
     ///
     /// A valid route URI is any valid [`Origin`](uri::Origin) URI that is
     /// normalized, that is, does not contain any empty segments except for an
@@ -217,7 +217,7 @@ impl Route {
     ///
     /// # Panics
     ///
-    /// Panics if `path` is not a valid Rocket route URI.
+    /// Panics if `path` is not a valid rkt route URI.
     ///
     /// A valid route URI is any valid [`Origin`](uri::Origin) URI that is
     /// normalized, that is, does not contain any empty segments except for an

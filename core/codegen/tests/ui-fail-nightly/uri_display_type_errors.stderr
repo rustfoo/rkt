@@ -10,14 +10,14 @@ help: the trait `UriDisplay<rkt::http::uri::fmt::Query>` is not implemented for 
 3 | struct BadType;
   | ^^^^^^^^^^^^^^
   = help: the following other types implement trait `UriDisplay<P>`:
-            `&T` implements `UriDisplay<P>`
-            `&mut T` implements `UriDisplay<P>`
-            `BTreeMap<K, V>` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-            `Bar1` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-            `Bar2` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-            `Bar3` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-            `Bar4` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-            `Bar5` implements `UriDisplay<rkt::http::uri::fmt::Query>`
+            BTreeMap<K, V>
+            Bar1
+            Bar2
+            Bar3
+            Bar4
+            Bar5
+            Bar6
+            HashMap<K, V>
           and $N others
   = note: required for `&BadType` to implement `UriDisplay<rkt::http::uri::fmt::Query>`
 note: required by a bound in `rkt::http::uri::fmt::Formatter::<'i, P>::write_value`
@@ -38,14 +38,14 @@ help: the trait `UriDisplay<rkt::http::uri::fmt::Query>` is not implemented for 
  3 | struct BadType;
    | ^^^^^^^^^^^^^^
    = help: the following other types implement trait `UriDisplay<P>`:
-             `&T` implements `UriDisplay<P>`
-             `&mut T` implements `UriDisplay<P>`
-             `BTreeMap<K, V>` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar1` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar2` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar3` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar4` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar5` implements `UriDisplay<rkt::http::uri::fmt::Query>`
+             BTreeMap<K, V>
+             Bar1
+             Bar2
+             Bar3
+             Bar4
+             Bar5
+             Bar6
+             HashMap<K, V>
            and $N others
    = note: required for `&BadType` to implement `UriDisplay<rkt::http::uri::fmt::Query>`
 note: required by a bound in `rkt::http::uri::fmt::Formatter::<'_, rkt::http::uri::fmt::Query>::write_named_value`
@@ -66,14 +66,14 @@ help: the trait `UriDisplay<rkt::http::uri::fmt::Query>` is not implemented for 
  3 | struct BadType;
    | ^^^^^^^^^^^^^^
    = help: the following other types implement trait `UriDisplay<P>`:
-             `&T` implements `UriDisplay<P>`
-             `&mut T` implements `UriDisplay<P>`
-             `BTreeMap<K, V>` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar1` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar2` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar3` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar4` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar5` implements `UriDisplay<rkt::http::uri::fmt::Query>`
+             BTreeMap<K, V>
+             Bar1
+             Bar2
+             Bar3
+             Bar4
+             Bar5
+             Bar6
+             HashMap<K, V>
            and $N others
    = note: required for `&BadType` to implement `UriDisplay<rkt::http::uri::fmt::Query>`
 note: required by a bound in `rkt::http::uri::fmt::Formatter::<'_, rkt::http::uri::fmt::Query>::write_named_value`
@@ -94,14 +94,14 @@ help: the trait `UriDisplay<rkt::http::uri::fmt::Query>` is not implemented for 
  3 | struct BadType;
    | ^^^^^^^^^^^^^^
    = help: the following other types implement trait `UriDisplay<P>`:
-             `&T` implements `UriDisplay<P>`
-             `&mut T` implements `UriDisplay<P>`
-             `BTreeMap<K, V>` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar1` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar2` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar3` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar4` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar5` implements `UriDisplay<rkt::http::uri::fmt::Query>`
+             BTreeMap<K, V>
+             Bar1
+             Bar2
+             Bar3
+             Bar4
+             Bar5
+             Bar6
+             HashMap<K, V>
            and $N others
    = note: required for `&BadType` to implement `UriDisplay<rkt::http::uri::fmt::Query>`
    = note: 1 redundant requirement hidden
@@ -124,14 +124,14 @@ help: the trait `UriDisplay<rkt::http::uri::fmt::Query>` is not implemented for 
  3 | struct BadType;
    | ^^^^^^^^^^^^^^
    = help: the following other types implement trait `UriDisplay<P>`:
-             `&T` implements `UriDisplay<P>`
-             `&mut T` implements `UriDisplay<P>`
-             `BTreeMap<K, V>` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar1` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar2` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar3` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar4` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar5` implements `UriDisplay<rkt::http::uri::fmt::Query>`
+             BTreeMap<K, V>
+             Bar1
+             Bar2
+             Bar3
+             Bar4
+             Bar5
+             Bar6
+             HashMap<K, V>
            and $N others
    = note: required for `&BadType` to implement `UriDisplay<rkt::http::uri::fmt::Query>`
    = note: 1 redundant requirement hidden
@@ -154,14 +154,14 @@ help: the trait `UriDisplay<rkt::http::uri::fmt::Query>` is not implemented for 
  3 | struct BadType;
    | ^^^^^^^^^^^^^^
    = help: the following other types implement trait `UriDisplay<P>`:
-             `&T` implements `UriDisplay<P>`
-             `&mut T` implements `UriDisplay<P>`
-             `BTreeMap<K, V>` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar1` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar2` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar3` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar4` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar5` implements `UriDisplay<rkt::http::uri::fmt::Query>`
+             BTreeMap<K, V>
+             Bar1
+             Bar2
+             Bar3
+             Bar4
+             Bar5
+             Bar6
+             HashMap<K, V>
            and $N others
    = note: required for `&BadType` to implement `UriDisplay<rkt::http::uri::fmt::Query>`
    = note: 1 redundant requirement hidden
@@ -183,19 +183,23 @@ help: the trait `UriDisplay<rkt::http::uri::fmt::Path>` is not implemented for `
    |
  3 | struct BadType;
    | ^^^^^^^^^^^^^^
-   = help: the following other types implement trait `UriDisplay<P>`:
-             `&T` implements `UriDisplay<P>`
-             `&mut T` implements `UriDisplay<P>`
-             `BTreeMap<K, V>` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar1` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar2` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar3` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar4` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-             `Bar5` implements `UriDisplay<rkt::http::uri::fmt::Query>`
-           and $N others
+help: the following other types implement trait `UriDisplay<P>`
+  --> tests/ui-fail-nightly/uri_display_type_errors.rs:39:10
+   |
+39 | #[derive(UriDisplayPath)]
+   |          ^^^^^^^^^^^^^^ `Baz`
+   |
+  ::: $WORKSPACE/core/http/src/uri/fmt/uri_display.rs
+   |
+   | impl UriDisplay<Path> for path::Path {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `std::path::Path`
+...
+   | impl UriDisplay<Path> for path::PathBuf {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `PathBuf`
    = note: required for `&BadType` to implement `UriDisplay<rkt::http::uri::fmt::Path>`
 note: required by a bound in `rkt::http::uri::fmt::Formatter::<'i, P>::write_value`
   --> $WORKSPACE/core/http/src/uri/fmt/formatter.rs
    |
    |     pub fn write_value<T: UriDisplay<P>>(&mut self, value: T) -> fmt::Result {
    |                           ^^^^^^^^^^^^^ required by this bound in `Formatter::<'i, P>::write_value`
+   = note: this error originates in the derive macro `UriDisplayPath` (in Nightly builds, run with -Z macro-backtrace for more info)

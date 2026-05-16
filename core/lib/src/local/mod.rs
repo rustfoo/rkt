@@ -1,8 +1,8 @@
 //! Structures for local dispatching of requests, primarily for testing.
 //!
 //! This module allows for simple request dispatching against a local,
-//! non-networked instance of Rocket. The primary use of this module is to unit
-//! and integration test Rocket applications by crafting requests, dispatching
+//! non-networked instance of rkt. The primary use of this module is to unit
+//! and integration test rkt applications by crafting requests, dispatching
 //! them, and verifying the response.
 //!
 //! # Async. vs. Blocking
@@ -21,14 +21,14 @@
 //! APIs.
 //!
 //! Both APIs include a `Client` structure that is used to create `LocalRequest`
-//! structures that can be dispatched against a given [`Rocket`](crate::Rocket)
+//! structures that can be dispatched against a given [`Rocket`](crate::rkt)
 //! instance to yield a `LocalResponse` structure. The APIs are identical except
 //! in that the `asynchronous` APIs return `Future`s for otherwise blocking
 //! operations.
 //!
 //! # Unit/Integration Testing
 //!
-//! This module is primarily intended to be used to test a Rocket application by
+//! This module is primarily intended to be used to test a rkt application by
 //! constructing requests via `Client`, dispatching them, and validating the
 //! resulting response. As a complete example, consider the following "Hello,
 //! world!" application, with testing.
@@ -80,7 +80,7 @@
 //!
 //! For more details on testing, see the [testing guide].
 //!
-//! [testing guide]: https://rocket.rs/master/guide/testing/
+//! [testing guide]: https://rkt.rs/guide/testing/
 //! [`Client`]: crate::local::asynchronous::Client
 //!
 //! # `Client`

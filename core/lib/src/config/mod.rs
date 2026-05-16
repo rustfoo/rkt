@@ -2,11 +2,11 @@
 //!
 //! See the [configuration guide] for full details.
 //!
-//! [configuration guide]: https://rocket.rs/master/guide/configuration/
+//! [configuration guide]: https://rkt.rs/guide/configuration/
 //!
 //! ## Extracting Configuration Parameters
 //!
-//! Rocket exposes the active [`Figment`] via [`Rocket::figment()`]. Any value
+//! rkt exposes the active [`Figment`] via [`Rocket::figment()`]. Any value
 //! that implements [`Deserialize`] can be extracted from the figment:
 //!
 //! ```rust
@@ -50,7 +50,7 @@
 //! more complex cases.
 //!
 //! Configuration values can be overridden at runtime by merging figment's tuple
-//! providers with Rocket's default provider:
+//! providers with rkt's default provider:
 //!
 //! ```rust
 //! # #[macro_use] extern crate rkt;
@@ -66,7 +66,7 @@
 //! }
 //! ```
 //!
-//! An application that wants to use Rocket's defaults for [`Config`], but not
+//! An application that wants to use rkt's defaults for [`Config`], but not
 //! its configuration sources, while allowing the application to be configured
 //! via an `App.toml` file that uses top-level keys as profiles (`.nested()`)
 //! and `APP_` environment variables as global overrides (`.global()`), and

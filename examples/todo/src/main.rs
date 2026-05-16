@@ -1,12 +1,10 @@
 #[macro_use] extern crate rkt;
-#[macro_use] extern crate rkt_sync_db_pools;
-#[macro_use] extern crate diesel;
 
 #[cfg(test)]
 mod tests;
 mod task;
 
-use rkt::{Rocket, Build};
+use rkt::{Rocket, Build, State};
 use rkt::fairing::AdHoc;
 use rkt::request::FlashMessage;
 use rkt::response::{Flash, Redirect};
@@ -15,35 +13,33 @@ use rkt::form::Form;
 use rkt::fs::{FileServer, relative};
 
 use rkt_dyn_templates::Template;
+use sqlx::SqlitePool;
 
 use crate::task::{Task, Todo};
-
-#[database("sqlite_database")]
-pub struct DbConn(diesel::SqliteConnection);
 
 #[derive(Debug, Serialize)]
 #[serde(crate = "rkt::serde")]
 struct Context {
     flash: Option<(String, String)>,
-    tasks: Vec<Task>
+    tasks: Vec<Task>,
 }
 
 impl Context {
-    pub async fn err<M: std::fmt::Display>(conn: &DbConn, msg: M) -> Context {
+    pub async fn err<M: std::fmt::Display>(pool: &SqlitePool, msg: M) -> Context {
         Context {
             flash: Some(("error".into(), msg.to_string())),
-            tasks: Task::all(conn).await.unwrap_or_default()
+            tasks: Task::all(pool).await.unwrap_or_default(),
         }
     }
 
-    pub async fn raw(conn: &DbConn, flash: Option<(String, String)>) -> Context {
-        match Task::all(conn).await {
+    pub async fn raw(pool: &SqlitePool, flash: Option<(String, String)>) -> Context {
+        match Task::all(pool).await {
             Ok(tasks) => Context { flash, tasks },
             Err(e) => {
                 error!("DB Task::all() error: {e}");
                 Context {
                     flash: Some(("error".into(), "Fail to access database.".into())),
-                    tasks: vec![]
+                    tasks: vec![],
                 }
             }
         }
@@ -51,11 +47,11 @@ impl Context {
 }
 
 #[post("/", data = "<todo_form>")]
-async fn new(todo_form: Form<Todo>, conn: DbConn) -> Flash<Redirect> {
+async fn new(todo_form: Form<Todo>, pool: &State<SqlitePool>) -> Flash<Redirect> {
     let todo = todo_form.into_inner();
     if todo.description.is_empty() {
         Flash::error(Redirect::to("/"), "Description cannot be empty.")
-    } else if let Err(e) = Task::insert(todo, &conn).await {
+    } else if let Err(e) = Task::insert(todo, pool).await {
         error!("DB insertion error: {e}");
         Flash::error(Redirect::to("/"), "Todo could not be inserted due an internal error.")
     } else {
@@ -64,52 +60,73 @@ async fn new(todo_form: Form<Todo>, conn: DbConn) -> Flash<Redirect> {
 }
 
 #[put("/<id>")]
-async fn toggle(id: i32, conn: DbConn) -> Result<Redirect, Template> {
-    match Task::toggle_with_id(id, &conn).await {
+async fn toggle(id: i64, pool: &State<SqlitePool>) -> Result<Redirect, Template> {
+    match Task::toggle_with_id(id, pool).await {
         Ok(_) => Ok(Redirect::to("/")),
         Err(e) => {
             error!("DB toggle({id}) error: {e}");
-            Err(Template::render("index", Context::err(&conn, "Failed to toggle task.").await))
+            Err(Template::render("index", Context::err(pool, "Failed to toggle task.").await))
         }
     }
 }
 
 #[delete("/<id>")]
-async fn delete(id: i32, conn: DbConn) -> Result<Flash<Redirect>, Template> {
-    match Task::delete_with_id(id, &conn).await {
+async fn delete(id: i64, pool: &State<SqlitePool>) -> Result<Flash<Redirect>, Template> {
+    match Task::delete_with_id(id, pool).await {
         Ok(_) => Ok(Flash::success(Redirect::to("/"), "Todo was deleted.")),
         Err(e) => {
             error!("DB deletion({id}) error: {e}");
-            Err(Template::render("index", Context::err(&conn, "Failed to delete task.").await))
+            Err(Template::render("index", Context::err(pool, "Failed to delete task.").await))
         }
     }
 }
 
 #[get("/")]
-async fn index(flash: Option<FlashMessage<'_>>, conn: DbConn) -> Template {
+async fn index(flash: Option<FlashMessage<'_>>, pool: &State<SqlitePool>) -> Template {
     let flash = flash.map(FlashMessage::into_inner);
-    Template::render("index", Context::raw(&conn, flash).await)
+    Template::render("index", Context::raw(pool, flash).await)
 }
 
-async fn run_migrations(rocket: Rocket<Build>) -> Rocket<Build> {
-    use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+async fn init_db(rocket: Rocket<Build>) -> rkt::fairing::Result {
+    use sqlx::sqlite::SqliteConnectOptions;
+    use std::str::FromStr;
 
-    const MIGRATIONS: EmbeddedMigrations = embed_migrations!("migrations");
+    let url = match rocket.figment().extract_inner::<String>("databases.sqlite_database.url") {
+        Ok(url) => url,
+        Err(e) => {
+            error!("database URL not configured: {e}");
+            return Err(rocket);
+        }
+    };
 
-    DbConn::get_one(&rocket).await
-        .expect("database connection")
-        .run(|conn| { conn.run_pending_migrations(MIGRATIONS).expect("diesel migrations"); })
-        .await;
+    let opts = match SqliteConnectOptions::from_str(&url) {
+        Ok(opts) => opts.create_if_missing(true),
+        Err(e) => {
+            error!("invalid database URL: {e}");
+            return Err(rocket);
+        }
+    };
 
-    rocket
+    match SqlitePool::connect_with(opts).await {
+        Ok(pool) => {
+            if let Err(e) = sqlx::migrate!().run(&pool).await {
+                error!("migrations failed: {e}");
+                return Err(rocket);
+            }
+            Ok(rocket.manage(pool))
+        }
+        Err(e) => {
+            error!("failed to connect to database: {e}");
+            Err(rocket)
+        }
+    }
 }
 
 #[launch]
 fn rocket() -> _ {
     rkt::build()
-        .attach(DbConn::fairing())
+        .attach(AdHoc::try_on_ignite("SQLite Database", init_db))
         .attach(Template::fairing())
-        .attach(AdHoc::on_ignite("Run Migrations", run_migrations))
         .mount("/", FileServer::new(relative!("static")))
         .mount("/", routes![index])
         .mount("/todo", routes![new, toggle, delete])

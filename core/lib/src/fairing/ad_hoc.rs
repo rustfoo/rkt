@@ -21,7 +21,7 @@ use crate::{Build, Data, Orbit, Request, Response, Rocket};
 ///
 /// The following snippet creates a `Rocket` instance with two ad-hoc fairings.
 /// The first, a liftoff fairing named "Liftoff Printer", simply prints a message
-/// indicating that Rocket has launched. The second named "Put Rewriter", a
+/// indicating that rkt has launched. The second named "Put Rewriter", a
 /// request fairing, rewrites the method of all requests to be `PUT`.
 ///
 /// ```rust
@@ -58,7 +58,7 @@ enum AdHocKind {
     /// An ad-hoc **ignite** fairing. Called during ignition.
     Ignite(Once<dyn FnOnce(Rocket<Build>) -> BoxFuture<'static, Result> + Send + 'static>),
 
-    /// An ad-hoc **liftoff** fairing. Called just after Rocket launches.
+    /// An ad-hoc **liftoff** fairing. Called just after rkt launches.
     Liftoff(Once<dyn for<'a> FnOnce(&'a Rocket<Orbit>) -> BoxFuture<'a, ()> + Send + 'static>),
 
     /// An ad-hoc **request** fairing. Called when a request is received.
@@ -88,7 +88,7 @@ enum AdHocKind {
 
 impl AdHoc {
     /// Constructs an `AdHoc` ignite fairing named `name`. The function `f` will
-    /// be called by Rocket during the [`Rocket::ignite()`] phase.
+    /// be called by rkt during the [`Rocket::ignite()`] phase.
     ///
     /// This version of an `AdHoc` ignite fairing cannot abort ignite. For a
     /// fallible version that can, see [`AdHoc::try_on_ignite()`].
@@ -112,7 +112,7 @@ impl AdHoc {
     }
 
     /// Constructs an `AdHoc` ignite fairing named `name`. The function `f` will
-    /// be called by Rocket during the [`Rocket::ignite()`] phase. Returning an
+    /// be called by rkt during the [`Rocket::ignite()`] phase. Returning an
     /// `Err` aborts ignition and thus launch.
     ///
     /// For an infallible version, see [`AdHoc::on_ignite()`].
@@ -137,7 +137,7 @@ impl AdHoc {
     }
 
     /// Constructs an `AdHoc` liftoff fairing named `name`. The function `f`
-    /// will be called by Rocket just after [`Rocket::launch()`].
+    /// will be called by rkt just after [`Rocket::launch()`].
     ///
     /// # Example
     ///
@@ -146,7 +146,7 @@ impl AdHoc {
     ///
     /// // A fairing that prints a message just before launching.
     /// let fairing = AdHoc::on_liftoff("Boom!", |_| Box::pin(async move {
-    ///     println!("Rocket has lifted off!");
+    ///     println!("rkt has lifted off!");
     /// }));
     /// ```
     pub fn on_liftoff<F: Send + Sync + 'static>(name: &'static str, f: F) -> AdHoc
@@ -160,7 +160,7 @@ impl AdHoc {
     }
 
     /// Constructs an `AdHoc` request fairing named `name`. The function `f`
-    /// will be called and the returned `Future` will be `await`ed by Rocket
+    /// will be called and the returned `Future` will be `await`ed by rkt
     /// when a new request is received.
     ///
     /// # Example
@@ -190,7 +190,7 @@ impl AdHoc {
     // https://github.com/rust-lang/rust/issues/64552#issuecomment-666084589
 
     /// Constructs an `AdHoc` response fairing named `name`. The function `f`
-    /// will be called and the returned `Future` will be `await`ed by Rocket
+    /// will be called and the returned `Future` will be `await`ed by rkt
     /// when a response is ready to be sent.
     ///
     /// # Example
@@ -217,7 +217,7 @@ impl AdHoc {
     }
 
     /// Constructs an `AdHoc` shutdown fairing named `name`. The function `f`
-    /// will be called by Rocket when [shutdown is triggered].
+    /// will be called by rkt when [shutdown is triggered].
     ///
     /// [shutdown is triggered]: crate::config::ShutdownConfig#triggers
     ///
@@ -228,7 +228,7 @@ impl AdHoc {
     ///
     /// // A fairing that prints a message just before launching.
     /// let fairing = AdHoc::on_shutdown("Bye!", |_| Box::pin(async move {
-    ///     println!("Rocket is on its way back!");
+    ///     println!("rkt is on its way back!");
     /// }));
     /// ```
     pub fn on_shutdown<F: Send + Sync + 'static>(name: &'static str, f: F) -> AdHoc
@@ -285,7 +285,7 @@ impl AdHoc {
     /// all URIs in all incoming requests.
     ///
     /// The fairing returned by this method is intended largely for applications
-    /// that migrated from Rocket v0.4 to Rocket v0.5. In Rocket v0.4, requests
+    /// that migrated from rkt v0.4 to rkt v0.5. In rkt v0.4, requests
     /// with a trailing slash in the URI were treated as if the trailing slash
     /// were not present. For example, the request URI `/foo/` would match the
     /// route `/<a>` with `a = foo`. If the application depended on this
@@ -347,7 +347,7 @@ impl AdHoc {
     /// let response = client.get("/bar").dispatch();
     /// assert_eq!(response.into_string().unwrap(), "bar");
     /// ```
-    // #[deprecated(since = "0.7", note = "routing from Rocket 0.6 is now standard")]
+    // #[deprecated(since = "0.7", note = "routing from rkt 0.6 is now standard")]
     pub fn uri_normalizer() -> impl Fairing {
         #[derive(Default)]
         struct Normalizer {

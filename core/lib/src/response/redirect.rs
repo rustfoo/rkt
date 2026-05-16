@@ -39,7 +39,7 @@ use crate::response::{self, Responder, Response};
 ///
 /// #[get("/bye/<name>/<age>")]
 /// fn bye(name: String, age: u8) -> Redirect {
-///     Redirect::to(uri!("https://rocket.rs/bye", hello(name, age), "?bye#now"))
+///     Redirect::to(uri!("https://example.com/bye", hello(name, age), "?bye#now"))
 /// }
 /// ```
 ///
@@ -80,7 +80,7 @@ impl Redirect {
     /// use rkt::response::Redirect;
     ///
     /// let redirect = Redirect::temporary(uri!("some/other/path"));
-    /// let redirect = Redirect::temporary(uri!("https://rocket.rs?foo"));
+    /// let redirect = Redirect::temporary(uri!("https://example.com?foo"));
     /// let redirect = Redirect::temporary(format!("some-{}-thing", "crazy"));
     /// ```
     pub fn temporary<U: TryInto<Reference<'static>>>(uri: U) -> Redirect {

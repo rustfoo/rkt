@@ -1,23 +1,23 @@
 #![recursion_limit = "256"]
-#![doc(html_root_url = "https://api.rocket.rs/master")]
-#![doc(html_favicon_url = "https://rocket.rs/images/favicon.ico")]
-#![doc(html_logo_url = "https://rocket.rs/images/logo-boxed.png")]
+#![doc(html_root_url = "https://docs.rs/rkt/latest/rkt")]
+#![doc(html_favicon_url = "https://rkt.rs/images/favicon.ico")]
+#![doc(html_logo_url = "https://rkt.rs/images/logo-boxed.png")]
 #![cfg_attr(nightly, feature(doc_cfg))]
 #![cfg_attr(nightly, feature(decl_macro))]
 
-//! # Rocket - Core API Documentation
+//! # rkt - Core API Documentation
 //!
-//! Hello, and welcome to the core Rocket API documentation!
+//! Hello, and welcome to the core rkt API documentation!
 //!
 //! This API documentation is highly technical and is purely a reference.
-//! There's an [overview] of Rocket on the main site as well as a [full,
+//! There's an [overview] of rkt on the main site as well as a [full,
 //! detailed guide]. If you'd like pointers on getting started, see the
 //! [quickstart] or [getting started] chapters of the guide.
 //!
-//! [overview]: https://rocket.rs/master/overview
-//! [full, detailed guide]: https://rocket.rs/master/guide
-//! [quickstart]: https://rocket.rs/master/guide/quickstart
-//! [getting started]: https://rocket.rs/master/guide/getting-started
+//! [overview]: https://rkt.rs/overview
+//! [full, detailed guide]: https://rkt.rs/guide
+//! [quickstart]: https://rkt.rs/guide/quickstart
+//! [getting started]: https://rkt.rs/guide/getting-started
 //!
 //! ## Usage
 //!
@@ -25,17 +25,11 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rkt = { package = version = "0.6.0" }
+//! rkt = { package = version = "1.0.0" }
 //! ```
 //!
-//! (Note that this is a community fork of Rocket. The `package = "rocket_community"`
-//! configuration enables the documentation and example code to work as expected.)
-//!
-//! <small>Note that development versions, tagged with `-dev`, are not published
-//! and need to be specified as [git dependencies].</small>
-//!
-//! See the [guide](https://rocket.rs/master/guide) for more information on how
-//! to write Rocket applications. Here's a simple example to get you started:
+//! See the [guide](https://rkt.rs/guide) for more information on how
+//! to write rkt applications. Here's a simple example to get you started:
 //!
 //! [git dependencies]: https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#specifying-dependencies-from-git-repositories
 //!
@@ -55,12 +49,12 @@
 //!
 //! ## Features
 //!
-//! To avoid compiling unused dependencies, Rocket feature-gates optional
+//! To avoid compiling unused dependencies, rkt feature-gates optional
 //! functionality, some enabled by default:
 //!
 //! | Feature         | Default? | Description                                             |
 //! |-----------------|----------|---------------------------------------------------------|
-//! | `trace`         | Yes      | Enables the default Rocket tracing [subscriber].        |
+//! | `trace`         | Yes      | Enables the default rkt tracing [subscriber].        |
 //! | `http2`         | Yes      | Support for HTTP/2 (enabled by default).                |
 //! | `secrets`       | No       | Support for authenticated, encrypted [private cookies]. |
 //! | `tls`           | No       | Support for [TLS] encrypted connections.                |
@@ -75,43 +69,43 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rkt = { version = "0.6.0", features = ["secrets", "tls", "json"] }
+//! rkt = { version = "1.0.0", features = ["secrets", "tls", "json"] }
 //! ```
 //!
 //! Conversely, HTTP/2 can be disabled:
 //!
 //! ```toml
 //! [dependencies]
-//! rkt = { version = "0.6.0", default-features = false }
+//! rkt = { version = "1.0.0", default-features = false }
 //! ```
 //!
 //! [subscriber]: crate::trace::subscriber
 //! [JSON (de)serialization]: crate::serde::json
 //! [MessagePack (de)serialization]: crate::serde::msgpack
 //! [UUID value parsing and (de)serialization]: crate::serde::uuid
-//! [private cookies]: https://rocket.rs/master/guide/requests/#private-cookies
-//! [TLS]: https://rocket.rs/master/guide/configuration/#tls
+//! [private cookies]: https://rkt.rs/guide/requests/#private-cookies
+//! [TLS]: https://rkt.rs/guide/configuration/#tls
 //! [mutual TLS]: crate::mtls
 //! [HTTP/3]: crate::listener::quic
 //!
 //! ## Configuration
 //!
-//! Rocket offers a rich, extensible configuration system built on [Figment]. By
-//! default, Rocket applications are configured via a `Rocket.toml` file
+//! rkt offers a rich, extensible configuration system built on [Figment]. By
+//! default, rkt applications are configured via a `Rocket.toml` file
 //! and/or `ROCKET_{PARAM}` environment variables, but applications may
 //! configure their own sources. See the [configuration guide] for full details.
 //!
 //! ## Testing
 //!
 //! The [`local`] module contains structures that facilitate unit and
-//! integration testing of a Rocket application. The top-level [`local`] module
+//! integration testing of a rkt application. The top-level [`local`] module
 //! documentation and the [testing guide] include detailed examples.
 //!
-//! [configuration guide]: https://rocket.rs/master/guide/configuration/
-//! [testing guide]: https://rocket.rs/master/guide/testing/#testing
+//! [configuration guide]: https://rkt.rs/guide/configuration/
+//! [testing guide]: https://rkt.rs/guide/testing/#testing
 //! [Figment]: https://docs.rs/figment
 
-// Allows using Rocket's codegen in Rocket itself.
+// Allows using rkt's codegen in rkt itself.
 extern crate self as rkt;
 
 #[doc(hidden)]
@@ -214,7 +208,7 @@ pub use crate::state::State;
 /// ```
 ///
 /// All `impl`s for a trait declared with `#[async_trait]` must themselves be
-/// decorated with `#[async_trait]`. Many of Rocket's traits, such as
+/// decorated with `#[async_trait]`. Many of rkt's traits, such as
 /// [`FromRequest`](crate::request::FromRequest) and
 /// [`Fairing`](crate::fairing::Fairing) are `async`. As such, implementations
 /// of said traits must be decorated with `#[async_trait]`. See the individual
@@ -238,7 +232,7 @@ pub fn custom<T: figment::Provider>(provider: T) -> Rocket<Build> {
     Rocket::custom(provider)
 }
 
-/// WARNING: This is unstable! Do not use this method outside of Rocket!
+/// WARNING: This is unstable! Do not use this method outside of rkt!
 #[doc(hidden)]
 pub fn async_run<F, R>(fut: F, workers: usize, sync: usize, force_end: bool, name: &str) -> R
 where
@@ -260,13 +254,13 @@ where
     result
 }
 
-/// WARNING: This is unstable! Do not use this method outside of Rocket!
+/// WARNING: This is unstable! Do not use this method outside of rkt!
 #[doc(hidden)]
 pub fn async_test<R>(fut: impl std::future::Future<Output = R>) -> R {
     async_run(fut, 1, 32, true, &format!("{WORKER_PREFIX}-test-thread"))
 }
 
-/// WARNING: This is unstable! Do not use this method outside of Rocket!
+/// WARNING: This is unstable! Do not use this method outside of rkt!
 #[doc(hidden)]
 pub fn async_main<R>(fut: impl std::future::Future<Output = R> + Send) -> R {
     fn bail<T, E: crate::trace::Trace>(e: E) -> T {
@@ -279,9 +273,9 @@ pub fn async_main<R>(fut: impl std::future::Future<Output = R> + Send) -> R {
     // Tokio doesn't let us take the state from one async env and migrate it to
     // another, so we need to use one, making this impossible.
     //
-    // So as a result, we only use values from Rocket's figment. These
+    // So as a result, we only use values from rkt's figment. These
     // values won't reflect swaps of `Rocket` in attach fairings with different
-    // config values, or values from non-Rocket configs. See tokio-rs/tokio#3329
+    // config values, or values from non-rkt configs. See tokio-rs/tokio#3329
     // for a necessary resolution in `tokio`.
     let fig = Config::figment();
     let workers = fig.extract_inner(Config::WORKERS).unwrap_or_else(bail);
@@ -299,7 +293,7 @@ pub fn async_main<R>(fut: impl std::future::Future<Output = R> + Send) -> R {
     )
 }
 
-/// Executes a `future` to completion on a new tokio-based Rocket async runtime.
+/// Executes a `future` to completion on a new tokio-based rkt async runtime.
 ///
 /// The runtime is terminated on shutdown, and the future's resolved value is
 /// returned.
@@ -308,12 +302,12 @@ pub fn async_main<R>(fut: impl std::future::Future<Output = R> + Send) -> R {
 ///
 /// This function is a low-level mechanism intended to be used to execute the
 /// future returned by [`Rocket::launch()`] in a self-contained async runtime
-/// designed for Rocket. It runs futures in exactly the same manner as
+/// designed for rkt. It runs futures in exactly the same manner as
 /// [`#[launch]`](crate::launch) and [`#[main]`](crate::main) do and is thus
-/// _never_ the preferred mechanism for running a Rocket application. _Always_
+/// _never_ the preferred mechanism for running a rkt application. _Always_
 /// prefer to use the [`#[launch]`](crate::launch) or [`#[main]`](crate::main)
 /// attributes. For example [`#[main]`](crate::main) can be used even when
-/// Rocket is just a small part of a bigger application:
+/// rkt is just a small part of a bigger application:
 ///
 /// ```rust,no_run
 /// #[rkt::main]
@@ -331,11 +325,11 @@ pub fn async_main<R>(fut: impl std::future::Future<Output = R> + Send) -> R {
 /// }
 /// ```
 ///
-/// See [Rocket#launching] for more on using these attributes.
+/// See [rkt#launching] for more on using these attributes.
 ///
 /// # Example
 ///
-/// Build an instance of Rocket, launch it, and wait for shutdown:
+/// Build an instance of rkt, launch it, and wait for shutdown:
 ///
 /// ```rust,no_run
 /// use rkt::fairing::AdHoc;
@@ -350,7 +344,7 @@ pub fn async_main<R>(fut: impl std::future::Future<Output = R> + Send) -> R {
 /// rkt::execute(rocket.launch());
 /// ```
 ///
-/// Launch a pre-built instance of Rocket and wait for it to shutdown:
+/// Launch a pre-built instance of rkt and wait for it to shutdown:
 ///
 /// ```rust,no_run
 /// use rkt::{Rocket, Ignite, Phase, Error};
@@ -360,7 +354,7 @@ pub fn async_main<R>(fut: impl std::future::Future<Output = R> + Send) -> R {
 /// }
 /// ```
 ///
-/// Do async work to build an instance of Rocket, launch, and wait for shutdown:
+/// Do async work to build an instance of rkt, launch, and wait for shutdown:
 ///
 /// ```rust,no_run
 /// use rkt::fairing::AdHoc;
@@ -382,7 +376,7 @@ where
 }
 
 /// Returns a future that evaluates to `true` exactly when there is a presently
-/// running tokio async runtime that was likely started by Rocket.
+/// running tokio async runtime that was likely started by rkt.
 fn running_within_rocket_async_rt() -> impl std::future::Future<Output = bool> {
     use futures::FutureExt;
 

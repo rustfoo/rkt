@@ -16,7 +16,7 @@ use crate::http::uncased::AsUncased;
 /// implement [`FromFormField`] instead, which offers a simplified interface to
 /// parsing a single form field.
 ///
-/// For a gentle introduction to forms in Rocket, see the [forms guide].
+/// For a gentle introduction to forms in rkt, see the [forms guide].
 ///
 /// # Form Guards
 ///
@@ -65,7 +65,7 @@ use crate::http::uncased::AsUncased;
 /// [FromFormField]: crate::form::FromFormField
 /// [`shift()`ed]: NameView::shift()
 /// [`key()`]: NameView::key()
-/// [forms guide]: https://rocket.rs/master/guide/requests/#forms
+/// [forms guide]: https://rkt.rs/guide/requests/#forms
 ///
 /// # Parsing Strategy
 ///
@@ -98,7 +98,7 @@ use crate::http::uncased::AsUncased;
 ///
 /// # Provided Implementations
 ///
-/// Rocket implements `FromForm` for many common types. As a result, most
+/// rkt implements `FromForm` for many common types. As a result, most
 /// applications will never need a custom implementation of `FromForm` or
 /// `FromFormField`. Their behavior is documented in the table below.
 ///
@@ -201,7 +201,7 @@ use crate::http::uncased::AsUncased;
 ///
 /// # Push Parsing
 ///
-/// `FromForm` describes a push-based parser for Rocket's [field wire format].
+/// `FromForm` describes a push-based parser for rkt's [field wire format].
 /// Fields are preprocessed into either [`ValueField`]s or [`DataField`]s which
 /// are then pushed to the parser in [`FromForm::push_value()`] or
 /// [`FromForm::push_data()`], respectively. Both url-encoded forms and
@@ -306,7 +306,7 @@ use crate::http::uncased::AsUncased;
 ///
 /// The following example uses `f1=v1&f2=v2` to illustrate field/value pairs
 /// `(f1, v2)` and `(f2, v2)`. This is the same encoding used to send HTML forms
-/// over HTTP, though Rocket's push-parsers are unaware of any specific
+/// over HTTP, though rkt's push-parsers are unaware of any specific
 /// encoding, dealing only with logical `field`s, `index`es, and `value`s.
 ///
 /// ### A Single Field (`T: FormFormField`)
@@ -385,7 +385,7 @@ use crate::http::uncased::AsUncased;
 /// # Implementing
 ///
 /// Implementing `FromForm` should be a rare occurrence. Prefer instead to use
-/// Rocket's built-in derivation or, for custom types, implementing
+/// rkt's built-in derivation or, for custom types, implementing
 /// [`FromFormField`].
 ///
 /// An implementation of `FromForm` consists of implementing the three stages

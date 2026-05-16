@@ -13,8 +13,9 @@ This directory contains projects showcasing Rocket's features.
   * **[`todo`](./todo)**
 
     A todo app with a web UI to add, delete, and mark/unmark items. Uses a
-    SQLite database driven by diesel. Runs migrations automatically at start-up.
-    Uses tera to render templates.
+    SQLite database driven by sqlx. Runs migrations automatically at start-up.
+    Uses tera to render templates. Demonstrates managing a database pool via
+    `State<SqlitePool>`.
 
   * **[`chat`](./chat)**
 
@@ -33,10 +34,8 @@ This directory contains projects showcasing Rocket's features.
     box. Uses private cookies for a session-based authentication.
 
   * **[`databases`](./databases)** - Implements a CRUD-like "blog" JSON API
-    backed by a SQLite database driven by each of `sqlx`, `diesel`, and
-    `rusqlite`. Runs migrations automatically for the former two drivers. Uses
-    `contrib` database support for all drivers (`rocket_db_pools` for the first;
-    `rocket_sync_db_pools` for the other latter two).
+    backed by SQLite. Shows two pooling approaches: async via `sqlx` and
+    synchronous via `diesel` + `r2d2`. Both use `State<T>` directly.
 
   * **[`error-handling`](./error-handling)** - Exhibits the use of scoped
     catchers; contains commented out lines that will cause a launch-time error

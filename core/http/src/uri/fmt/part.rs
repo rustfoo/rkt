@@ -7,7 +7,7 @@ use crate::parse::IndexedStr;
 /// this trait are marker types that represent a part of a URI at the
 /// type-level.
 ///
-/// This trait is _sealed_: it cannot be implemented outside of Rocket.
+/// This trait is _sealed_: it cannot be implemented outside of rkt.
 ///
 /// # Usage
 ///
