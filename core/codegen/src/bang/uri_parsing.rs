@@ -95,7 +95,7 @@ pub enum Validation<'a> {
     Ok(Vec<&'a ArgExpr>),
 }
 
-// This is invoked by Rocket itself. The `uri!` macro expands to a call to a
+// This is invoked by rkt itself. The `uri!` macro expands to a call to a
 // route-specific macro which in-turn expands to a call to `internal_uri!`,
 // passing along the user's invocation (`uri_mac`) from the original `uri!`
 // call. This is necessary so that we can converge the type information in the

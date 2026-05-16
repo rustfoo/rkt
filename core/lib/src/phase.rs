@@ -18,12 +18,12 @@ pub trait Stateful: private::Sealed {
     fn as_mut(&mut self) -> StateRefMut<'_>;
 }
 
-/// A marker trait for Rocket's launch phases.
+/// A marker trait for rkt's launch phases.
 ///
 /// This treat is implemented by the three phase marker types: [`Build`],
 /// [`Ignite`], and [`Orbit`], representing the three phases to launch an
 /// instance of [`Rocket`]. This trait is _sealed_ and cannot be implemented
-/// outside of Rocket.
+/// outside of rkt.
 ///
 /// For a description of the three phases, see [`Rocket#phases`].
 pub trait Phase: private::Sealed {
@@ -80,7 +80,7 @@ macro_rules! phases {
 }
 
 phases! {
-    /// The initial launch [`Phase`]. See [Rocket#build](`Rocket#build`) for
+    /// The initial launch [`Phase`]. See [rkt#build](`Rocket#build`) for
     /// phase details.
     ///
     /// An instance of `Rocket` in this phase is typed as [`Rocket<Build>`]: a
@@ -94,7 +94,7 @@ phases! {
     }
 
     /// The second launch [`Phase`]: post-build but pre-orbit. See
-    /// [Rocket#ignite](`Rocket#ignite`) for details.
+    /// [rkt#ignite](`Rocket#ignite`) for details.
     ///
     /// An instance of `Rocket` in this phase is typed as [`Rocket<Ignite>`] and
     /// represents a fully built and finalized application server ready for
@@ -108,7 +108,7 @@ phases! {
         pub(crate) shutdown: Stages,
     }
 
-    /// The final launch [`Phase`]. See [Rocket#orbit](`Rocket#orbit`) for
+    /// The final launch [`Phase`]. See [rkt#orbit](`Rocket#orbit`) for
     /// details.
     ///
     /// An instance of `Rocket` in this phase is typed as [`Rocket<Orbit>`] and

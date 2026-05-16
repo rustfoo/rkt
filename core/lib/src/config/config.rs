@@ -10,12 +10,12 @@ use crate::data::Limits;
 use crate::http::uncased::Uncased;
 use crate::request::{self, FromRequest, Request};
 
-/// Rocket server configuration.
+/// rkt server configuration.
 ///
 /// See the [module level docs](crate::config) as well as the [configuration
 /// guide] for further details.
 ///
-/// [configuration guide]: https://rocket.rs/master/guide/configuration/
+/// [configuration guide]: https://rkt.rs/guide/configuration/
 ///
 /// # Defaults
 ///
@@ -61,7 +61,7 @@ pub struct Config {
     pub profile: Profile,
     /// Number of threads to use for executing futures. **(default: `num_cores`)**
     ///
-    /// _**Note:** Rocket only reads this value from sources in the [default
+    /// _**Note:** rkt only reads this value from sources in the [default
     /// provider](Config::figment())._
     pub workers: usize,
     /// Limit on threads to start for blocking tasks. **(default: `512`)**
@@ -276,7 +276,7 @@ impl Config {
     /// use rkt::Config;
     /// use rkt::figment::providers::{Toml, Format, Env};
     ///
-    /// // Use Rocket's default `Figment`, but allow values from `MyApp.toml`
+    /// // Use rkt's default `Figment`, but allow values from `MyApp.toml`
     /// // and `MY_APP_` prefixed environment variables to supersede its values.
     /// let figment = Config::figment()
     ///     .merge(("some-thing", 123))
@@ -304,7 +304,7 @@ impl Config {
     /// use rkt::Config;
     /// use rkt::figment::providers::{Toml, Format, Env};
     ///
-    /// // Use Rocket's default `Figment`, but allow values from `MyApp.toml`
+    /// // Use rkt's default `Figment`, but allow values from `MyApp.toml`
     /// // and `MY_APP_` prefixed environment variables to supersede its values.
     /// let figment = Config::figment()
     ///     .merge(Toml::file("MyApp.toml").nested())

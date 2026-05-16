@@ -28,12 +28,12 @@ pub type Outcome<'r, T, E = <T as FromData<'r>>::Error> =
 ///
 /// A route can have at most one data guard. Above, `var` is used as the
 /// argument name for the data guard type `DataGuard`. When the `submit` route
-/// matches, Rocket will call the `FromData` implementation for the type `T`.
+/// matches, rkt will call the `FromData` implementation for the type `T`.
 /// The handler will only be called if the guard returns successfully.
 ///
 /// ## Build-In Guards
 ///
-/// Rocket provides implementations for `FromData` for many types. Their
+/// rkt provides implementations for `FromData` for many types. Their
 /// behavior is documented here:
 ///
 ///   * `Data`: Returns the untouched `Data`.
@@ -109,7 +109,7 @@ pub type Outcome<'r, T, E = <T as FromData<'r>>::Error> =
 ///
 ///     _Limited by the `form` or `data-form` [data limit]._
 ///
-///     Parses the incoming data stream into fields according to Rocket's [field
+///     Parses the incoming data stream into fields according to rkt's [field
 ///     wire format], pushes each field to `T`'s [`FromForm`] [push parser], and
 ///     finalizes the form. Parsing is done on the stream without reading the
 ///     data into memory. If the request has as a [`ContentType::Form`], the

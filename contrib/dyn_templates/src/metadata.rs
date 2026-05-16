@@ -12,7 +12,7 @@ use crate::{context::ContextManager, Template};
 ///
 /// # Usage
 ///
-/// The `Metadata` type implements Rocket's [`FromRequest`] trait, so it can be
+/// The `Metadata` type implements rkt's [`FromRequest`] trait, so it can be
 /// used as a request guard in any request handler.
 ///
 /// ```rust

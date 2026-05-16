@@ -1,16 +1,16 @@
 [package]
 name = "rkt_ws"
-version = "0.1.4"
-authors = ["Sergio Benitez <sb@sergio.bz>"]
+version.workspace = true
+authors.workspace = true
 description = "WebSocket support for rkt."
 #documentation = "https://api.rocket.rs/master/rocket_ws/"
-#homepage = "https://rocket.rs"
-#repository = "https://github.com/rwf2/Rocket/tree/master/contrib/ws"
+homepage.workspace = true
+repository.workspace = true
 readme = "README.md"
 keywords = ["rkt", "rocket", "web", "framework", "websocket"]
-license = "MIT OR Apache-2.0"
-edition = "2021"
-rust-version = "1.82"
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
 
 [lints]
 workspace = true
@@ -23,8 +23,7 @@ tungstenite = ["tokio-tungstenite"]
 tokio-tungstenite = { version = "0.24", optional = true }
 
 [dependencies.rkt]
-version = "0.6.0"
-path = "../../core/lib"
+workspace = true
 default-features = false
 
 [package.metadata.docs.rs]

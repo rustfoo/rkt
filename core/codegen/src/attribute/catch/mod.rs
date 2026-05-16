@@ -81,10 +81,10 @@ pub fn _catch(
 
         #[doc(hidden)]
         #[allow(nonstandard_style)]
-        /// Rocket code generated proxy structure.
+        /// rkt code generated proxy structure.
         #deprecated #vis struct #user_catcher_fn_name {  }
 
-        /// Rocket code generated proxy static conversion implementations.
+        /// rkt code generated proxy static conversion implementations.
         #[allow(nonstandard_style, deprecated, clippy::style)]
         impl #user_catcher_fn_name {
             fn into_info(self) -> #_catcher::StaticInfo {

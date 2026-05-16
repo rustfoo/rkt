@@ -8,7 +8,7 @@ use crate::{Data, Request};
 
 /// A form field with a string value.
 ///
-/// Rocket preprocesses all form fields into either [`ValueField`]s or
+/// rkt preprocesses all form fields into either [`ValueField`]s or
 /// [`DataField`]s. All fields from url-encoded forms, and fields without
 /// Content-Types from multipart forms, are preprocessed as a `ValueField`.
 #[derive(Debug, Clone)]
@@ -21,7 +21,7 @@ pub struct ValueField<'r> {
 
 /// A multipart form field with an underlying data stream.
 ///
-/// Rocket preprocesses all form fields into either [`ValueField`]s or
+/// rkt preprocesses all form fields into either [`ValueField`]s or
 /// [`DataField`]s. Multipart form fields with a `Content-Type` are preprocessed
 /// as a `DataField`. The underlying data is _not_ read into memory, but
 /// instead, streamable from the contained [`Data`] structure.

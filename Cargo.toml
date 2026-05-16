@@ -4,14 +4,25 @@ members = [
   "core/lib/",
   "core/codegen/",
   "core/http/",
-  "contrib/db_pools/codegen/",
-  "contrib/db_pools/lib/",
-  "contrib/sync_db_pools/codegen/",
-  "contrib/sync_db_pools/lib/",
   "contrib/dyn_templates/",
   "contrib/ws/",
   "docs/tests",
 ]
+
+[workspace.package]
+version = "1.0.0"
+authors = ["Sergio Benitez <sb@sergio.bz>"]
+license = "MIT OR Apache-2.0"
+edition = "2021"
+rust-version = "1.82.0"
+homepage = "https://rkt.rs"
+repository = "https://github.com/rustfoo/rkt"
+readme = "README.md"
+
+[workspace.dependencies]
+rkt                     = { version = "1.0.0", path = "core/lib/" }
+rkt_http                = { version = "1.0.0", path = "core/http/" }
+rkt_codegen             = { version = "1.0.0", path = "core/codegen/" }
 
 [workspace.lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(nightly)'] }

@@ -10,7 +10,7 @@
 //!
 //! ## Deriving `Serialize`, `Deserialize`
 //!
-//! For convenience, Rocket re-exports `serde`'s `Serialize` and `Deserialize`
+//! For convenience, rkt re-exports `serde`'s `Serialize` and `Deserialize`
 //! traits and derive macros from this module. However, due to Rust's limited
 //! support for derive macro re-exports, using the re-exported derive macros
 //! requires annotating structures with `#[serde(crate = "rkt::serde")]`:

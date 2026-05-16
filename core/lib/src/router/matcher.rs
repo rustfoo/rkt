@@ -63,7 +63,7 @@ impl Route {
     /// assert!(b.matches(&request));
     ///
     /// // But `b` is more specific, so it has lower rank (higher precedence)
-    /// // by default, so Rocket would route the request to `b`, not `a`.
+    /// // by default, so rkt would route the request to `b`, not `a`.
     /// assert!(b.rank < a.rank);
     /// ```
     #[tracing::instrument(level = "trace", name = "matching", skip_all, ret)]
@@ -130,7 +130,7 @@ impl Catcher {
     /// assert!(b.matches(Status::NotFound, &request));
     ///
     /// // Note that because `b`'s base' has more complete segments that `a's,
-    /// // Rocket would route the error to `b`, not `a`, even though both match.
+    /// // rkt would route the error to `b`, not `a`, even though both match.
     /// let a_count = a.base().segments().filter(|s| !s.is_empty()).count();
     /// let b_count = b.base().segments().filter(|s| !s.is_empty()).count();
     /// assert!(b_count > a_count);

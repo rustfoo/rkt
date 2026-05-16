@@ -4,21 +4,22 @@ use rand::{self, distr::Alphanumeric, Rng};
 
 use rkt::http::{ContentType, Status};
 use rkt::local::asynchronous::Client;
+use sqlx::SqlitePool;
 
 // We use a lock to synchronize between tests so DB operations don't collide.
 // For now. In the future, we'll have a nice way to run each test in a DB
 // transaction so we can regain concurrency.
-static DB_LOCK: parking_lot::Mutex<()> = parking_lot::const_mutex(());
+static DB_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
 
 macro_rules! run_test {
-    (|$client:ident, $conn:ident| $block:expr) => ({
+    (|$client:ident, $pool:ident| $block:expr) => ({
         let _lock = DB_LOCK.lock();
 
         rkt::async_test(async move {
             let $client = Client::tracked(super::rocket()).await.expect("Rocket client");
-            let db = super::DbConn::get_one($client.rocket()).await;
-            let $conn = db.expect("failed to get database connection for testing");
-            Task::delete_all(&$conn).await.expect("failed to delete all tasks for testing");
+            let $pool = $client.rocket().state::<SqlitePool>()
+                .expect("database pool managed");
+            Task::delete_all($pool).await.expect("failed to delete all tasks for testing");
 
             $block
         })
@@ -37,9 +38,9 @@ fn test_index() {
 
 #[test]
 fn test_insertion_deletion() {
-    run_test!(|client, conn| {
+    run_test!(|client, pool| {
         // Get the tasks before making changes.
-        let init_tasks = Task::all(&conn).await.unwrap();
+        let init_tasks = Task::all(pool).await.unwrap();
 
         // Issue a request to insert a new task.
         client
@@ -50,7 +51,7 @@ fn test_insertion_deletion() {
             .await;
 
         // Ensure we have one more task in the database.
-        let new_tasks = Task::all(&conn).await.unwrap();
+        let new_tasks = Task::all(pool).await.unwrap();
         assert_eq!(new_tasks.len(), init_tasks.len() + 1);
 
         // Ensure the task is what we expect.
@@ -58,11 +59,11 @@ fn test_insertion_deletion() {
         assert!(!new_tasks[0].completed);
 
         // Issue a request to delete the task.
-        let id = new_tasks[0].id.unwrap();
+        let id = new_tasks[0].id;
         client.delete(format!("/todo/{}", id)).dispatch().await;
 
         // Ensure it's gone.
-        let final_tasks = Task::all(&conn).await.unwrap();
+        let final_tasks = Task::all(pool).await.unwrap();
         assert_eq!(final_tasks.len(), init_tasks.len());
         if !final_tasks.is_empty() {
             assert_ne!(final_tasks[0].description, "My first task");
@@ -72,7 +73,7 @@ fn test_insertion_deletion() {
 
 #[test]
 fn test_toggle() {
-    run_test!(|client, conn| {
+    run_test!(|client, pool| {
         // Issue a request to insert a new task; ensure it's not yet completed.
         client
             .post("/todo")
@@ -81,22 +82,16 @@ fn test_toggle() {
             .dispatch()
             .await;
 
-        let task = Task::all(&conn).await.unwrap()[0].clone();
+        let task = Task::all(pool).await.unwrap()[0].clone();
         assert!(!task.completed);
 
         // Issue a request to toggle the task; ensure it is completed.
-        client
-            .put(format!("/todo/{}", task.id.unwrap()))
-            .dispatch()
-            .await;
-        assert!(Task::all(&conn).await.unwrap()[0].completed);
+        client.put(format!("/todo/{}", task.id)).dispatch().await;
+        assert!(Task::all(pool).await.unwrap()[0].completed);
 
         // Issue a request to toggle the task; ensure it's not completed again.
-        client
-            .put(format!("/todo/{}", task.id.unwrap()))
-            .dispatch()
-            .await;
-        assert!(!Task::all(&conn).await.unwrap()[0].completed);
+        client.put(format!("/todo/{}", task.id)).dispatch().await;
+        assert!(!Task::all(pool).await.unwrap()[0].completed);
     })
 }
 
@@ -104,9 +99,9 @@ fn test_toggle() {
 fn test_many_insertions() {
     const ITER: usize = 100;
 
-    run_test!(|client, conn| {
+    run_test!(|client, pool| {
         // Get the number of tasks initially.
-        let init_num = Task::all(&conn).await.unwrap().len();
+        let init_num = Task::all(pool).await.unwrap().len();
         let mut descs = Vec::new();
 
         for i in 0..ITER {
@@ -128,7 +123,7 @@ fn test_many_insertions() {
             descs.insert(0, desc);
 
             // Ensure the task was inserted properly and all other tasks remain.
-            let tasks = Task::all(&conn).await.unwrap();
+            let tasks = Task::all(pool).await.unwrap();
             assert_eq!(tasks.len(), init_num + i + 1);
 
             for j in 0..i {
@@ -140,7 +135,7 @@ fn test_many_insertions() {
 
 #[test]
 fn test_bad_form_submissions() {
-    run_test!(|client, _conn| {
+    run_test!(|client, _pool| {
         // Submit an empty form. We should get a 422 but no flash error.
         let res = client
             .post("/todo")

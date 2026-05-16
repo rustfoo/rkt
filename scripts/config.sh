@@ -53,16 +53,6 @@ CORE_CRATE_ROOTS=(
     "${CORE_HTTP_ROOT}"
 )
 
-CONTRIB_SYNC_DB_POOLS_CRATE_ROOTS=(
-    "${CONTRIB_ROOT}/sync_db_pools/lib"
-    "${CONTRIB_ROOT}/sync_db_pools/codegen"
-)
-
-CONTRIB_DB_POOLS_CRATE_ROOTS=(
-    "${CONTRIB_ROOT}/db_pools/lib"
-    "${CONTRIB_ROOT}/db_pools/codegen"
-)
-
 # Root of infrastructure directories.
 EXAMPLES_DIR=$(relative "examples") || exit $?
 DOC_DIR=$(relative "target/doc") || exit $?
@@ -92,8 +82,6 @@ function print_environment() {
   echo "  CORE_LIB_ROOT: ${CORE_LIB_ROOT}"
   echo "  CORE_CODEGEN_ROOT: ${CORE_CODEGEN_ROOT}"
   echo "  CORE_HTTP_ROOT: ${CORE_HTTP_ROOT}"
-  echo "  CONTRIB_SYNC_DB_POOLS_CRATE_ROOTS: ${CONTRIB_SYNC_DB_POOLS_CRATE_ROOTS[*]}"
-  echo "  CONTRIB_DB_POOLS_CRATE_ROOTS: ${CONTRIB_DB_POOLS_CRATE_ROOTS[*]}"
   echo "  EXAMPLES_DIR: ${EXAMPLES_DIR}"
   echo "  DOC_DIR: ${DOC_DIR}"
   echo "  date(): $(future_date)"

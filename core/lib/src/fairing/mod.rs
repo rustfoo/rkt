@@ -3,9 +3,9 @@
 //! Fairings allow for structured interposition at various points in the
 //! application lifetime. Fairings can be seen as a restricted form of
 //! "middleware". A fairing is an arbitrary structure with methods representing
-//! callbacks that Rocket will run at requested points in a program. You can use
+//! callbacks that rkt will run at requested points in a program. You can use
 //! fairings to rewrite or record information about requests and responses, or
-//! to perform an action once a Rocket application has launched.
+//! to perform an action once a rkt application has launched.
 //!
 //! To learn more about writing a fairing, see the [`Fairing`] trait
 //! documentation. You can also use [`AdHoc`] to create a fairing on-the-fly
@@ -13,10 +13,10 @@
 //!
 //! ## Attaching
 //!
-//! You must inform Rocket about fairings that you wish to be active by calling
+//! You must inform rkt about fairings that you wish to be active by calling
 //! [`Rocket::attach()`] method on the application's [`Rocket`] instance and
 //! passing in the appropriate [`Fairing`]. For instance, to attach fairings
-//! named `req_fairing` and `res_fairing` to a new Rocket instance, you might
+//! named `req_fairing` and `res_fairing` to a new rkt instance, you might
 //! write:
 //!
 //! ```rust
@@ -28,7 +28,7 @@
 //!     .attach(res_fairing);
 //! ```
 //!
-//! Once a fairing is attached, Rocket will execute it at the appropriate time,
+//! Once a fairing is attached, rkt will execute it at the appropriate time,
 //! which varies depending on the fairing implementation. See the [`Fairing`]
 //! trait documentation for more information on the dispatching of fairing
 //! methods.
@@ -76,15 +76,15 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 // appropriate response. This allows the users to handle `OPTIONS` requests
 // when they'd like but default to the fairing when they don't want to.
 
-/// Trait implemented by fairings: Rocket's structured middleware.
+/// Trait implemented by fairings: rkt's structured middleware.
 ///
 /// # Considerations
 ///
 /// Fairings are a large hammer that can easily be abused and misused. If you
 /// are considering writing a `Fairing` implementation, first consider if it is
 /// appropriate to do so. While middleware is often the best solution to some
-/// problems in other frameworks, it is often a suboptimal solution in Rocket.
-/// This is because Rocket provides richer mechanisms such as [request guards]
+/// problems in other frameworks, it is often a suboptimal solution in rkt.
+/// This is because rkt provides richer mechanisms such as [request guards]
 /// and [data guards] that can be used to accomplish the same objective in a
 /// cleaner, more composable, and more robust manner.
 ///
@@ -104,7 +104,7 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 /// There are five kinds of fairing callbacks: launch, liftoff, request,
 /// response, and shutdown. A fairing can request any combination of these
 /// callbacks through the `kind` field of the [`Info`] structure returned from
-/// the `info` method. Rocket will only invoke the callbacks identified in the
+/// the `info` method. rkt will only invoke the callbacks identified in the
 /// fairing's [`Kind`].
 ///
 /// The callback kinds are as follows:
@@ -130,8 +130,8 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 ///   * **<a name="liftoff">Liftoff</a> (`on_liftoff`)**
 ///
 ///     A liftoff callback, represented by the [`Fairing::on_liftoff()`] method,
-///     is called immediately after a Rocket application has launched. At this
-///     point, Rocket has opened a socket for listening but has not yet begun
+///     is called immediately after a rkt application has launched. At this
+///     point, rkt has opened a socket for listening but has not yet begun
 ///     accepting connections. A liftoff callback can inspect the `Rocket`
 ///     instance that has launched and even schedule a shutdown using
 ///     [`Shutdown::notify()`](crate::Shutdown::notify()) via
@@ -145,7 +145,7 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 ///     A request callback, represented by the [`Fairing::on_request()`] method,
 ///     is called just after a request is received, immediately after
 ///     pre-processing the request with method changes due to `_method` form
-///     fields. At this point, Rocket has parsed the incoming HTTP request into
+///     fields. At this point, rkt has parsed the incoming HTTP request into
 ///     [`Request`] and [`Data`] structures but has not routed the request. A
 ///     request callback can modify the request at will and [`Data::peek()`]
 ///     into the incoming data. It may not, however, abort or respond directly
@@ -157,15 +157,15 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 ///
 ///     A response callback, represented by the [`Fairing::on_response()`]
 ///     method, is called when a response is ready to be sent to the client. At
-///     this point, Rocket has completed all routing, including to error
+///     this point, rkt has completed all routing, including to error
 ///     catchers, and has generated the would-be final response. A response
 ///     callback can modify the response at will. For example, a response
 ///     callback can provide a default response when the user fails to handle
 ///     the request by checking for 404 responses. Note that a given `Request`
 ///     may have changed between `on_request` and `on_response` invocations.
-///     Apart from any change made by other fairings, Rocket sets the method for
+///     Apart from any change made by other fairings, rkt sets the method for
 ///     `HEAD` requests to `GET` if there is no matching `HEAD` handler for that
-///     request. Additionally, Rocket will automatically strip the body for
+///     request. Additionally, rkt will automatically strip the body for
 ///     `HEAD` requests _after_ response fairings have run.
 ///
 ///   * **<a name="shutdown">Shutdown</a> (`on_shutdown`)**
@@ -175,7 +175,7 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 ///     shutdown has commenced but not completed; no new requests are accepted
 ///     but the application may still be actively serving existing requests.
 ///
-///     Rocket guarantees, however, that all requests are completed or aborted
+///     rkt guarantees, however, that all requests are completed or aborted
 ///     once [grace and mercy periods] have expired. This implies that a
 ///     shutdown fairing that (asynchronously) sleeps for `grace + mercy + ε`
 ///     seconds before executing any logic will execute said logic after all
@@ -211,12 +211,12 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 /// can also implement any of the available callbacks: `on_ignite`, `on_liftoff`,
 /// `on_request`, and `on_response`. A `Fairing` _must_ set the appropriate
 /// callback kind in the `kind` field of the returned `Info` structure from
-/// [`info`] for a callback to actually be called by Rocket.
+/// [`info`] for a callback to actually be called by rkt.
 ///
 /// ## Fairing `Info`
 ///
 /// Every `Fairing` must implement the [`info`] method, which returns an
-/// [`Info`] structure. This structure is used by Rocket to:
+/// [`Info`] structure. This structure is used by rkt to:
 ///
 ///   1. Assign a name to the `Fairing`.
 ///
@@ -227,7 +227,7 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 ///   2. Determine which callbacks to actually issue on the `Fairing`.
 ///
 ///      This is the `kind` field of type [`Kind`]. This field is a bitset that
-///      represents the kinds of callbacks the fairing wishes to receive. Rocket
+///      represents the kinds of callbacks the fairing wishes to receive. rkt
 ///      will only invoke the callbacks that are flagged in this set. `Kind`
 ///      structures can be `or`d together to represent any combination of kinds
 ///      of callbacks. For instance, to request liftoff and response callbacks,
@@ -423,7 +423,7 @@ pub type Result<T = Rocket<Build>, E = Rocket<Build>> = std::result::Result<T, E
 /// }
 /// ```
 ///
-/// [request-local state]: https://rocket.rs/master/guide/state/#request-local-state
+/// [request-local state]: https://rkt.rs/guide/state/#request-local-state
 #[crate::async_trait]
 pub trait Fairing: Send + Sync + AsAny + 'static {
     /// Returns an [`Info`] structure containing the `name` and [`Kind`] of this
@@ -433,11 +433,11 @@ pub trait Fairing: Send + Sync + AsAny + 'static {
     /// This is the only required method of a `Fairing`. All other methods have
     /// no-op default implementations.
     ///
-    /// Rocket will only dispatch callbacks to this fairing for the kinds in the
+    /// rkt will only dispatch callbacks to this fairing for the kinds in the
     /// `kind` field of the returned `Info` structure. For instance, if
-    /// `Kind::Ignite | Kind::Request` is used, then Rocket will only call the
+    /// `Kind::Ignite | Kind::Request` is used, then rkt will only call the
     /// `on_ignite` and `on_request` methods of the fairing. Similarly, if
-    /// `Kind::Response` is used, Rocket will only call the `on_response` method
+    /// `Kind::Response` is used, rkt will only call the `on_response` method
     /// of this fairing.
     ///
     /// # Example

@@ -3,7 +3,7 @@ use std::ops::BitOr;
 /// Information about a [`Fairing`](crate::fairing::Fairing).
 ///
 /// The `name` field is an arbitrary name for a fairing. The `kind` field is a
-/// is an `or`d set of [`Kind`] structures. Rocket uses the values set in `Kind`
+/// is an `or`d set of [`Kind`] structures. rkt uses the values set in `Kind`
 /// to determine which callbacks from a given `Fairing` implementation to
 /// actually call.
 ///

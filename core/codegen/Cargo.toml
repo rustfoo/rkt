@@ -1,16 +1,16 @@
 [package]
 name = "rkt_codegen"
-version = "0.6.0"
-authors = ["Sergio Benitez <sb@sergio.bz>"]
+version.workspace = true
+authors.workspace = true
 description = "Procedural macros for the rkt web framework."
 documentation = "https://docs.rs/rkt/latest/rkt/"
-homepage = "https://rkt.rs"
-repository = "https://github.com/rustfoo/rkt"
-readme = "../../README.md"
+homepage.workspace = true
+repository.workspace = true
+readme.workspace = true
 keywords = ["rkt", "rocket", "web", "framework", "code", "generation"]
-license = "MIT OR Apache-2.0"
-edition = "2021"
-rust-version = "1.82.0"
+license.workspace = true
+edition.workspace = true
+rust-version.workspace = true
 
 [lints]
 workspace = true
@@ -24,7 +24,7 @@ quote = "1.0"
 syn = { version = "2.0", features = ["full", "visit", "visit-mut", "extra-traits"] }
 proc-macro2 = "1.0.60"
 devise = "0.4"
-rkt_http = { version = "0.6.0", path = "../http/" }
+rkt_http = { workspace = true }
 unicode-xid = "0.2"
 version_check = "0.9"
 glob = "0.3"

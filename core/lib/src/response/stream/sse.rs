@@ -53,7 +53,7 @@ use crate::response::{
 ///
 /// Server-Sent Events suffer from certain pitfalls. We encourage readers to
 /// read through [pitfalls](struct@EventStream#pitfalls) before making use of
-/// Rocket's SSE support.
+/// rkt's SSE support.
 ///
 /// # Comments
 ///
@@ -62,7 +62,7 @@ use crate::response::{
 /// most clients. This includes JavaScript's `EventSource`. As such, they serve
 /// little utility beyond debugging a raw data stream and keeping a connection
 /// alive. See [heartbeat](struct@EventStream#heartbeat) for information on
-/// Rocket's `EventStream` keep-alive.
+/// rkt's `EventStream` keep-alive.
 ///
 /// # Fields
 ///
@@ -109,10 +109,10 @@ use crate::response::{
 ///   5. `data`
 ///
 /// The `event` and `id` fields _cannot_ contain new lines or carriage returns.
-/// Rocket's default implementation automatically converts new lines and
+/// rkt's default implementation automatically converts new lines and
 /// carriage returns in `event` and `id` fields to spaces.
 ///
-/// The `data` and `comment` fields _cannot_ contain carriage returns. Rocket
+/// The `data` and `comment` fields _cannot_ contain carriage returns. rkt
 /// converts the unencoded sequence `\r\n` and the isolated `\r` into a
 /// protocol-level `\n`, that is, in such a way that they are interpreted as
 /// `\n` at the client. For example, the raw message `foo\r\nbar\rbaz` is
@@ -316,7 +316,7 @@ impl Event {
     /// use rkt::response::stream::Event;
     ///
     /// // The comment "🚀" will be sent.
-    /// let event = Event::comment("Rocket is great!").with_comment("🚀");
+    /// let event = Event::comment("rkt is great!").with_comment("🚀");
     ///
     /// // The two below are equivalent.
     /// let event = Event::comment("bye").with_data("goodbye");
@@ -483,14 +483,14 @@ impl Event {
 ///    due to interference with the line protocol.
 ///
 ///    The protocol allows expressing new lines as multiple messages, however,
-///    and Rocket automatically transforms a message of `foo\nbar` into two
+///    and rkt automatically transforms a message of `foo\nbar` into two
 ///    messages, `foo` and `bar`, so that they are reconstructed (automatically)
 ///    as `foo\nbar` on the client-side. For messages that only contain new
 ///    lines `\n`, the conversion is lossless.
 ///
 ///    However, the protocol has no mechanism for expressing carriage returns
 ///    and thus it is not possible to send unencoded carriage returns via SSE.
-///    Rocket handles carriage returns like it handles new lines: it splits the
+///    rkt handles carriage returns like it handles new lines: it splits the
 ///    data into multiple messages. Thus, a sequence of `\r\n` becomes `\n` at
 ///    the client side. A single `\r` that is not part of an `\r\n` sequence
 ///    also becomes `\n` at the client side. As a result, the message

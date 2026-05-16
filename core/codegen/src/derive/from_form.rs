@@ -135,7 +135,7 @@ pub fn derive_from_form(input: proc_macro::TokenStream) -> TokenStream {
                 let (impl_gen, _, where_clause)  = gen.split_for_impl();
                 let output = mapper::input_default(mapper, input)?;
                 Ok(quote_spanned! { mixed(input.span())=>
-                    /// Rocket generated FormForm context.
+                    /// rkt generated FormForm context.
                     #[doc(hidden)]
                     #[allow(private_bounds)]
                     #vis struct #ctxt_ty #impl_gen #where_clause {

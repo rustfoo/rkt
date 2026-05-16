@@ -141,7 +141,7 @@ note: error occurred while deriving `Responder`
    |          ^^^^^^^^^
    = note: this error originates in the derive macro `Responder` (in Nightly builds, run with -Z macro-backtrace for more info)
 
-error[E0433]: failed to resolve: use of unresolved module or unlinked crate `rocket`
+error[E0433]: cannot find module or crate `rocket` in this scope
   --> tests/ui-fail-nightly/responder.rs:57:14
    |
 57 |     NotFound(rocket::fs::NamedFile),
@@ -158,7 +158,7 @@ help: if you import `fs`, refer to it directly
 57 +     NotFound(fs::NamedFile),
    |
 
-error[E0433]: failed to resolve: use of unresolved module or unlinked crate `rocket`
+error[E0433]: cannot find module or crate `rocket` in this scope
   --> tests/ui-fail-nightly/responder.rs:59:16
    |
 59 |     A(&'r str, rocket::http::ContentType),

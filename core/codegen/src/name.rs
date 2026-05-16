@@ -7,7 +7,7 @@ use syn::{ext::IdentExt, Ident};
 /// typically constructed indirectly via FromMeta, or From<Ident> or directly
 /// from a string via `Name::new()`. A name is tokenized as a string.
 ///
-/// Some "names" in Rocket include:
+/// Some "names" in rkt include:
 ///   * Dynamic parameter: `name` in `<name>`
 ///   * Renamed fields: `foo` in #[field(name = "foo")].
 ///

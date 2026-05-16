@@ -50,7 +50,7 @@ where
 }
 
 impl Rocket<Orbit> {
-    /// Preprocess the request for Rocket things. Currently, this means:
+    /// Preprocess the request for rkt things. Currently, this means:
     ///
     ///   * Rewriting the method in the request if _method form field exists.
     ///   * Run the request fairings.
@@ -93,7 +93,7 @@ impl Rocket<Orbit> {
     /// the successful response is used directly.
     ///
     /// Finally, new cookies in the cookie jar are added to the response,
-    /// Rocket-specific headers are written, and response fairings are run. Note
+    /// rkt-specific headers are written, and response fairings are run. Note
     /// that error responses have special cookie handling. See `handle_error`.
     pub(crate) async fn dispatch<'r, 's: 'r>(
         &'s self,
@@ -273,7 +273,7 @@ impl Rocket<Orbit> {
     /// In order of preference, invoked handler is:
     ///   * the user's registered handler for `status`
     ///   * the user's registered `default` handler
-    ///   * Rocket's default handler for `status`
+    ///   * rkt's default handler for `status`
     ///
     /// Return `Ok(result)` if the handler succeeded. Returns `Ok(Some(Status))`
     /// if the handler ran to completion but failed. Returns `Ok(None)` if the

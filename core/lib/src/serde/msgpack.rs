@@ -9,7 +9,7 @@
 //!
 //! ```toml
 //! [dependencies.rocket]
-//! version = "0.6.0"
+//! version = "1.0.0"
 //! features = ["msgpack"]
 //! ```
 //!
@@ -61,7 +61,7 @@ pub use rmp_serde::decode::Error;
 ///
 /// The differences between [`MsgPack<T>`] and [`Compact<T>`] are documented on
 /// [`Compact<T>`]. In most cases, [`MsgPack<T>`] is preferable, although compact
-/// was the default prior to Rocket version 0.6.
+/// was the default prior to rkt version 0.6.
 ///
 /// ## Receiving MessagePack
 ///

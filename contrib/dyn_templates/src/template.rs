@@ -188,7 +188,7 @@ impl Template {
     }
 
     /// Render the template named `name` with the context `context` into a
-    /// `String`. This method should **not** be used in any running Rocket
+    /// `String`. This method should **not** be used in any running rkt
     /// application. This method should only be used during testing to validate
     /// `Template` responses. For other uses, use [`render()`](#method.render)
     /// instead.

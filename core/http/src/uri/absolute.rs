@@ -21,7 +21,7 @@ use crate::uri::{as_utf8_unchecked, fmt, Authority, Data, Error, Path, Query};
 ///
 /// # Normalization
 ///
-/// Rocket prefers _normalized_ absolute URIs, an absolute URI with the
+/// rkt prefers _normalized_ absolute URIs, an absolute URI with the
 /// following properties:
 ///
 ///   * If there is an authority, the path is empty or absolute.
@@ -37,8 +37,8 @@ use crate::uri::{as_utf8_unchecked, fmt, Authority, Data, Error, Path, Query};
 /// # extern crate rkt;
 /// # use rkt::http::uri::Absolute;
 /// # let valid_uris = [
-/// "http://rocket.rs",
-/// "http://rocket.rs/",
+/// "http://example.com",
+/// "http://example.com/",
 /// "ftp:/a/b/",
 /// "ftp:/a/b/?",
 /// "scheme:/foo/bar",
@@ -110,16 +110,16 @@ impl<'a> Absolute<'a> {
     /// use rkt::http::uri::Absolute;
     ///
     /// // Parse a valid authority URI.
-    /// let uri = Absolute::parse("https://rocket.rs").expect("valid URI");
+    /// let uri = Absolute::parse("https://example.com").expect("valid URI");
     /// assert_eq!(uri.scheme(), "https");
-    /// assert_eq!(uri.authority().unwrap().host(), "rocket.rs");
+    /// assert_eq!(uri.authority().unwrap().host(), "example.com");
     /// assert_eq!(uri.path(), "");
     /// assert!(uri.query().is_none());
     ///
     /// // Prefer to use `uri!()` when the input is statically known:
-    /// let uri = uri!("https://rocket.rs");
+    /// let uri = uri!("https://example.com");
     /// assert_eq!(uri.scheme(), "https");
-    /// assert_eq!(uri.authority().unwrap().host(), "rocket.rs");
+    /// assert_eq!(uri.authority().unwrap().host(), "example.com");
     /// assert_eq!(uri.path(), "");
     /// assert!(uri.query().is_none());
     /// ```
@@ -140,9 +140,9 @@ impl<'a> Absolute<'a> {
     /// # extern crate rkt;
     /// use rkt::http::uri::Absolute;
     ///
-    /// let source = format!("https://rocket.rs/foo/{}/three", 2);
+    /// let source = format!("https://example.com/foo/{}/three", 2);
     /// let uri = Absolute::parse_owned(source).expect("valid URI");
-    /// assert_eq!(uri.authority().unwrap().host(), "rocket.rs");
+    /// assert_eq!(uri.authority().unwrap().host(), "example.com");
     /// assert_eq!(uri.path(), "/foo/2/three");
     /// assert!(uri.query().is_none());
     /// ```
@@ -182,10 +182,10 @@ impl<'a> Absolute<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let uri = uri!("https://rocket.rs:80");
+    /// let uri = uri!("https://example.com:80");
     /// assert_eq!(uri.scheme(), "https");
     /// let authority = uri.authority().unwrap();
-    /// assert_eq!(authority.host(), "rocket.rs");
+    /// assert_eq!(authority.host(), "example.com");
     /// assert_eq!(authority.port(), Some(80));
     ///
     /// let uri = uri!("file:/web/home");
@@ -202,10 +202,10 @@ impl<'a> Absolute<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let uri = uri!("ftp://rocket.rs/foo/bar");
+    /// let uri = uri!("ftp://example.com/foo/bar");
     /// assert_eq!(uri.path(), "/foo/bar");
     ///
-    /// let uri = uri!("ftp://rocket.rs");
+    /// let uri = uri!("ftp://example.com");
     /// assert!(uri.path().is_empty());
     /// ```
     #[inline(always)]
@@ -222,10 +222,10 @@ impl<'a> Absolute<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let uri = uri!("ftp://rocket.rs/foo?bar");
+    /// let uri = uri!("ftp://example.com/foo?bar");
     /// assert_eq!(uri.query().unwrap(), "bar");
     ///
-    /// let uri = uri!("ftp://rocket.rs");
+    /// let uri = uri!("ftp://example.com");
     /// assert!(uri.query().is_none());
     /// ```
     #[inline(always)]
@@ -242,7 +242,7 @@ impl<'a> Absolute<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let mut uri = uri!("ftp://rocket.rs/foo?bar");
+    /// let mut uri = uri!("ftp://example.com/foo?bar");
     /// assert_eq!(uri.query().unwrap(), "bar");
     ///
     /// uri.clear_query();
@@ -265,14 +265,14 @@ impl<'a> Absolute<'a> {
     /// # #[macro_use] extern crate rkt;
     /// use rkt::http::uri::Absolute;
     ///
-    /// assert!(uri!("http://rocket.rs").is_normalized());
-    /// assert!(uri!("http://rocket.rs///foo////bar").is_normalized());
+    /// assert!(uri!("http://example.com").is_normalized());
+    /// assert!(uri!("http://example.com///foo////bar").is_normalized());
     ///
     /// assert!(Absolute::parse("http:/").unwrap().is_normalized());
     /// assert!(Absolute::parse("http://").unwrap().is_normalized());
     /// assert!(Absolute::parse("http://foo.rs/foo/bar").unwrap().is_normalized());
     /// assert!(Absolute::parse("foo:bar").unwrap().is_normalized());
-    /// assert!(Absolute::parse("git://rocket.rs/").unwrap().is_normalized());
+    /// assert!(Absolute::parse("git://example.com/").unwrap().is_normalized());
     ///
     /// assert!(!Absolute::parse("http:/foo//bar").unwrap().is_normalized());
     /// assert!(!Absolute::parse("foo:bar?baz&&bop").unwrap().is_normalized());
@@ -294,10 +294,10 @@ impl<'a> Absolute<'a> {
     /// ```rust
     /// use rkt::http::uri::Absolute;
     ///
-    /// let mut uri = Absolute::parse("git://rocket.rs").unwrap();
+    /// let mut uri = Absolute::parse("git://example.com").unwrap();
     /// assert!(uri.is_normalized());
     ///
-    /// let mut uri = Absolute::parse("git://rocket.rs/").unwrap();
+    /// let mut uri = Absolute::parse("git://example.com/").unwrap();
     /// assert!(uri.is_normalized());
     ///
     /// let mut uri = Absolute::parse("http:/foo//bar").unwrap();
@@ -333,7 +333,7 @@ impl<'a> Absolute<'a> {
     /// ```rust
     /// use rkt::http::uri::Absolute;
     ///
-    /// let mut uri = Absolute::parse("git://rocket.rs/").unwrap();
+    /// let mut uri = Absolute::parse("git://example.com/").unwrap();
     /// assert!(uri.is_normalized());
     ///
     /// let mut uri = Absolute::parse("http:/foo//bar").unwrap();
@@ -355,15 +355,15 @@ impl<'a> Absolute<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let mut uri = uri!("https://rocket.rs:80");
+    /// let mut uri = uri!("https://example.com:80");
     /// let authority = uri.authority().unwrap();
-    /// assert_eq!(authority.host(), "rocket.rs");
+    /// assert_eq!(authority.host(), "example.com");
     /// assert_eq!(authority.port(), Some(80));
     ///
-    /// let new_authority = uri!("rocket.rs:443");
+    /// let new_authority = uri!("example.com:443");
     /// uri.set_authority(new_authority);
     /// let authority = uri.authority().unwrap();
-    /// assert_eq!(authority.host(), "rocket.rs");
+    /// assert_eq!(authority.host(), "example.com");
     /// assert_eq!(authority.port(), Some(443));
     /// ```
     #[inline(always)]
@@ -377,15 +377,15 @@ impl<'a> Absolute<'a> {
     ///
     /// ```rust
     /// # #[macro_use] extern crate rkt;
-    /// let uri = uri!("https://rocket.rs:80");
+    /// let uri = uri!("https://example.com:80");
     /// let authority = uri.authority().unwrap();
-    /// assert_eq!(authority.host(), "rocket.rs");
+    /// assert_eq!(authority.host(), "example.com");
     /// assert_eq!(authority.port(), Some(80));
     ///
-    /// let new_authority = uri!("rocket.rs");
+    /// let new_authority = uri!("example.com");
     /// let uri = uri.with_authority(new_authority);
     /// let authority = uri.authority().unwrap();
-    /// assert_eq!(authority.host(), "rocket.rs");
+    /// assert_eq!(authority.host(), "example.com");
     /// assert_eq!(authority.port(), None);
     /// ```
     #[inline(always)]

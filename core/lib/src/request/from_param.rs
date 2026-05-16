@@ -7,7 +7,7 @@ use crate::http::uri::{error::PathError, fmt::Path, Segments};
 
 /// Trait to convert a dynamic path segment string to a concrete value.
 ///
-/// This trait is used by Rocket's code generation facilities to parse dynamic
+/// This trait is used by rkt's code generation facilities to parse dynamic
 /// path segment string values into a given type. That is, when a path contains
 /// a dynamic segment `<param>` where `param` has some type `T` that implements
 /// `FromParam`, `T::from_param` will be called.
@@ -98,7 +98,7 @@ use crate::http::uri::{error::PathError, fmt::Path, Segments};
 ///
 /// # Provided Implementations
 ///
-/// Rocket implements `FromParam` for several standard library types. Their
+/// rkt implements `FromParam` for several standard library types. Their
 /// behavior is documented here.
 ///
 ///   *

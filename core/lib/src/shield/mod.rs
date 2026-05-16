@@ -4,7 +4,7 @@
 //! security and privacy headers into all outgoing responses. It takes some
 //! inspiration from [helmetjs], a similar piece of middleware for [express].
 //!
-//! [fairing]: https://rocket.rs/master/guide/fairings/
+//! [fairing]: https://rkt.rs/guide/fairings/
 //! [helmetjs]: https://helmetjs.github.io/
 //! [express]: https://expressjs.com
 //!
@@ -44,7 +44,7 @@
 //!
 //! # Usage
 //!
-//! By default, [`Shield::default()`] is attached to all instances Rocket. To
+//! By default, [`Shield::default()`] is attached to all instances rkt. To
 //! change the default, including removing all `Shield` headers, attach a
 //! configured instance of [`Shield`]:
 //!
@@ -73,7 +73,7 @@
 //! use rkt::http::uri::Uri;
 //! use rkt::shield::{Shield, Referrer, Prefetch, ExpectCt, NoSniff};
 //!
-//! let report_uri = uri!("https://report.rocket.rs");
+//! let report_uri = uri!("https://report.example.com");
 //! let shield = Shield::default()
 //!     .enable(Referrer::NoReferrer)
 //!     .enable(Prefetch::Off)

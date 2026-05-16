@@ -277,7 +277,7 @@ impl RawStr {
     /// # extern crate rkt;
     /// use rkt::http::RawStr;
     ///
-    /// // Note: Rocket should never hand you a bad `&RawStr`.
+    /// // Note: rkt should never hand you a bad `&RawStr`.
     /// let bytes = &[93, 12, 0, 13, 1];
     /// let encoded = RawStr::percent_encode_bytes(&bytes[..]);
     /// assert_eq!(encoded.as_str(), "]%0C%00%0D%01");

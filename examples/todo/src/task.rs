@@ -1,28 +1,12 @@
 use rkt::serde::Serialize;
-use diesel::{self, prelude::*};
+use sqlx::SqlitePool;
 
-mod schema {
-    table! {
-        tasks {
-            id -> Nullable<Integer>,
-            description -> Text,
-            completed -> Bool,
-        }
-    }
-}
-
-use self::schema::tasks;
-
-use crate::DbConn;
-
-#[derive(Serialize, Queryable, Insertable, Debug, Clone)]
+#[derive(Debug, Clone, Serialize, sqlx::FromRow)]
 #[serde(crate = "rkt::serde")]
-#[diesel(table_name = tasks)]
 pub struct Task {
-    #[serde(skip_deserializing)]
-    pub id: Option<i32>,
+    pub id: i64,
     pub description: String,
-    pub completed: bool
+    pub completed: bool,
 }
 
 #[derive(Debug, FromForm)]
@@ -31,41 +15,43 @@ pub struct Todo {
 }
 
 impl Task {
-    pub async fn all(conn: &DbConn) -> QueryResult<Vec<Task>> {
-        conn.run(|c| {
-            tasks::table.order(tasks::id.desc()).load::<Task>(c)
-        }).await
+    pub async fn all(pool: &SqlitePool) -> sqlx::Result<Vec<Task>> {
+        sqlx::query_as::<_, Task>(
+            "SELECT id, description, completed FROM tasks ORDER BY id DESC"
+        )
+        .fetch_all(pool)
+        .await
     }
 
-    /// Returns the number of affected rows: 1.
-    pub async fn insert(todo: Todo, conn: &DbConn) -> QueryResult<usize> {
-        conn.run(|c| {
-            let t = Task { id: None, description: todo.description, completed: false };
-            diesel::insert_into(tasks::table).values(&t).execute(c)
-        }).await
-    }
-
-    /// Returns the number of affected rows: 1.
-    pub async fn toggle_with_id(id: i32, conn: &DbConn) -> QueryResult<usize> {
-        conn.run(move |c| {
-            let task = tasks::table.filter(tasks::id.eq(id)).get_result::<Task>(c)?;
-            let new_status = !task.completed;
-            let updated_task = diesel::update(tasks::table.filter(tasks::id.eq(id)));
-            updated_task.set(tasks::completed.eq(new_status)).execute(c)
-        }).await
-    }
-
-    /// Returns the number of affected rows: 1.
-    pub async fn delete_with_id(id: i32, conn: &DbConn) -> QueryResult<usize> {
-        conn.run(move |c| diesel::delete(tasks::table)
-            .filter(tasks::id.eq(id))
-            .execute(c))
+    pub async fn insert(todo: Todo, pool: &SqlitePool) -> sqlx::Result<()> {
+        sqlx::query("INSERT INTO tasks (description, completed) VALUES (?, 0)")
+            .bind(todo.description)
+            .execute(pool)
             .await
+            .map(|_| ())
     }
 
-    /// Returns the number of affected rows.
+    pub async fn toggle_with_id(id: i64, pool: &SqlitePool) -> sqlx::Result<()> {
+        sqlx::query("UPDATE tasks SET completed = NOT completed WHERE id = ?")
+            .bind(id)
+            .execute(pool)
+            .await
+            .map(|_| ())
+    }
+
+    pub async fn delete_with_id(id: i64, pool: &SqlitePool) -> sqlx::Result<()> {
+        sqlx::query("DELETE FROM tasks WHERE id = ?")
+            .bind(id)
+            .execute(pool)
+            .await
+            .map(|_| ())
+    }
+
     #[cfg(test)]
-    pub async fn delete_all(conn: &DbConn) -> QueryResult<usize> {
-        conn.run(|c| diesel::delete(tasks::table).execute(c)).await
+    pub async fn delete_all(pool: &SqlitePool) -> sqlx::Result<()> {
+        sqlx::query("DELETE FROM tasks")
+            .execute(pool)
+            .await
+            .map(|_| ())
     }
 }

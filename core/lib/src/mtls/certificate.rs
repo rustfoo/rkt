@@ -125,7 +125,7 @@ impl<'r> FromRequest<'r> for Certificate<'r> {
 }
 
 impl<'a> Certificate<'a> {
-    /// PRIVATE: For internal Rocket use only!
+    /// PRIVATE: For internal rkt use only!
     fn parse<'r>(chain: &'r [CertificateDer<'r>]) -> Result<Certificate<'r>> {
         let data = chain.first().ok_or(Error::Empty)?;
         let x509 = Certificate::parse_one(data)?;

@@ -1,28 +1,10 @@
-# Rocket
+# rkt
 
-[![Build Status](https://github.com/rocket-rs-community/Rocket/workflows/CI/badge.svg)](https://github.com/rocket-rs-community/Rocket/actions)
-[![Rocket Homepage](https://img.shields.io/badge/web-rocket.rs-red.svg?style=flat&label=https&colorB=d33847)](https://github.com/rocket-rs-community/Rocket)
-[![Current Crates.io Version](https://img.shields.io/crates/v/rocket_community.svg)](https://crates.io/crates/rocket_community)
-[![Matrix: #rocket:mozilla.org](https://img.shields.io/badge/style-%23rocket:mozilla.org-blue.svg?style=flat&label=[m])](https://chat.mozilla.org/#/room/#rocket:mozilla.org)
+[![Build Status](https://github.com/rustfoo/rkt/workflows/CI/badge.svg)](https://github.com/rustfoo/rkt/actions)
+[![Current Crates.io Version](https://img.shields.io/crates/v/rkt.svg)](https://crates.io/crates/rkt)
+[![Minimum Rust Version](https://img.shields.io/badge/rustc-1.82.0+-orange.svg)](https://www.rust-lang.org/)
 
-
-> [!IMPORTANT]
-> This is a community fork of the Rocket.rs project.
->
-> To switch to the community edition change your dependency import from:
->
-> ```toml
-> rocket = "0.6.0-xxx"
-> ```
->
-> to:
->
-> ```toml
-> rocket = { package = "rocket-community", version = "0.6.0" }
-> ```
-
-Rocket is an async web framework for Rust with a focus on usability, security,
-extensibility, and speed.
+**rkt** is an async web framework for Rust with a focus on usability, security, extensibility, and speed.
 
 ```rust
 #[macro_use] extern crate rkt;
@@ -38,45 +20,55 @@ fn rocket() -> _ {
 }
 ```
 
-Visiting `localhost:8000/hello/John/58`, for example, will trigger the `hello`
-route resulting in the string `Hello, 58 year old named John!` being sent to the
-browser. If an `<age>` string was passed in that can't be parsed as a `u8`, the
-route won't get called, resulting in a 404 error.
+Visiting `localhost:8000/hello/John/58` will trigger the `hello` route, returning
+`Hello, 58 year old named John!`. If `<age>` can't be parsed as a `u8`, the route
+won't be called and a 404 is returned automatically.
+
+> **rkt** is a community-maintained continuation of [Rocket](https://github.com/rwf2/Rocket),
+> the Rust web framework originally created by [Sergio Benitez](https://github.com/SergioBenitez)
+> and the Rocket contributors. We are deeply grateful for their foundational work —
+> rkt would not exist without it. The original project remains available at
+> [github.com/rwf2/Rocket](https://github.com/rwf2/Rocket).
+
+## Getting Started
+
+Add `rkt` to your `Cargo.toml`:
+
+```toml
+[dependencies]
+rkt = "1.0.0"
+```
+
+## Crates
+
+| Crate | Description | Docs |
+|-------|-------------|------|
+| `rkt` | Core framework | [![docs.rs](https://img.shields.io/docsrs/rkt)](https://docs.rs/rkt) |
+| `rkt_dyn_templates` | Dynamic template rendering (Tera, Handlebars, MiniJinja) | [![docs.rs](https://img.shields.io/docsrs/rkt_dyn_templates)](https://docs.rs/rkt_dyn_templates) |
+| `rkt_ws` | WebSocket support | [![docs.rs](https://img.shields.io/docsrs/rkt_ws)](https://docs.rs/rkt_ws) |
+
+## Features
+
+- **HTTP/1.1 & HTTP/2** — built on Hyper
+- **HTTP/3 preview** — via s2n-quic (enable with `http3-preview`)
+- **TLS & mTLS** — via Rustls (enable with `tls` / `mtls`)
+- **Secret cookies** — signed and encrypted cookie support (enable with `secrets`)
+- **WebSockets** — first-class support via `rkt_ws`
+- **Dynamic templates** — Tera, Handlebars, and MiniJinja via `rkt_dyn_templates`
+- **Tracing** — structured logging via the `tracing` ecosystem
+- **Type-safe routing** — compile-time checked routes, guards, and responders
+- **Extensible** — fairings, request guards, and custom responders
 
 ## Documentation
 
-Rocket is extensively documented:
-
-  * [Overview]: A brief look at what makes Rocket special.
-  * [Quickstart]: How to get started as quickly as possible.
-  * [Getting Started]: How to start your first Rocket project.
-  * [Guide]: A detailed guide and reference to Rocket.
-  * [API Documentation]: The "rustdocs".
-
-[Quickstart]: https://rocket.rs/guide/quickstart
-[Getting Started]: https://rocket.rs/guide/getting-started
-[Overview]: https://rocket.rs/overview/
-[Guide]: https://rocket.rs/guide/
-[API Documentation]: https://api.rocket.rs
-
-Documentation for the `master` branch is available at https://rocket.rs/master
-and https://api.rocket.rs/master.
-
-Documentation for major release version `${x}` is available at
-`https://[api.]rocket.rs/v${x}`. For example, the v0.4 docs are available at
-https://rocket.rs/v0.4 and https://api.rocket.rs/v0.4.
-
-Finally, API docs for active git branches are available at
-`https://api.rocket.rs/${branch}`. For example, API docs for the `master` branch
-are available at https://api.rocket.rs/master. Branch rustdocs are built and
-deployed on every commit.
+- [Guide](https://rkt.rs/guide/) — detailed reference covering all features
+- [API Docs](https://docs.rs/rkt) — full rustdoc reference
+- [Examples](examples#readme) — runnable example projects in this repo
 
 ## Examples
 
-The [examples](examples#readme) directory contains complete crates that showcase
-Rocket's features and usage. Each example can be compiled and run with Cargo.
-For instance, the following sequence of commands builds and runs the `hello`
-example:
+Each subdirectory under [`examples/`](examples#readme) is a self-contained Cargo crate.
+To run one:
 
 ```sh
 cd examples/hello
@@ -85,44 +77,31 @@ cargo run
 
 ## Getting Help
 
-If you find yourself needing help outside of the documentation, you may:
-
-  * Ask questions via [GitHub discussions questions].
-  * Chat with us at [`#rocket:mozilla.org`] on Matrix (join [via Element]).
-
-[`#rocket:mozilla.org`]: https://chat.mozilla.org/#/room/#rocket:mozilla.org
-[via Element]: https://chat.mozilla.org/#/room/#rocket:mozilla.org
-[GitHub discussions questions]: https://github.com/rwf2/Rocket/discussions/categories/questions
+- Open a [GitHub Discussion](https://github.com/rustfoo/rkt/discussions) for questions
+- File a [bug report or feature request](https://github.com/rustfoo/rkt/issues)
 
 ## Contributing
 
-Contributions are absolutely, positively welcomed and encouraged! If you're
-interested in contributing code, please first read [CONTRIBUTING] for complete
-guidelines. Additionally, you could:
+Contributions are welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) before
+submitting a pull request. You can also help by:
 
-  1. Submit a feature request or bug report as an [issue].
-  2. Ask for improved documentation as an [issue].
-  3. Comment on [issues that require feedback].
-  4. Answers questions in [GitHub discussions questions].
-  5. Share a project in [GitHub discussions show & tell].
+1. Reporting bugs or requesting features via [issues](https://github.com/rustfoo/rkt/issues)
+2. Improving documentation
+3. Sharing projects built with rkt in [Show & Tell](https://github.com/rustfoo/rkt/discussions)
 
-[issue]: https://github.com/rwf2/Rocket/issues
-[issues that require feedback]: https://github.com/rwf2/Rocket/issues?q=is%3Aissue+is%3Aopen+label%3A%22feedback+wanted%22
-[pull requests]: https://github.com/rwf2/Rocket/pulls
-[CONTRIBUTING]: CONTRIBUTING.md
-[GitHub discussions show & tell]: https://github.com/rwf2/Rocket/discussions/categories/show-tell
+## Acknowledgements
+
+rkt is built on the shoulders of the [Rocket](https://github.com/rwf2/Rocket) project.
+Sincere thanks to [Sergio Benitez](https://github.com/SergioBenitez) for creating
+Rocket and to all past and present Rocket contributors for the work that makes
+this framework possible.
 
 ## License
 
-Rocket is licensed under either of the following, at your option:
+rkt is dual-licensed under your choice of:
 
- * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or https://www.apache.org/licenses/LICENSE-2.0)
- * MIT License ([LICENSE-MIT](LICENSE-MIT) or https://opensource.org/licenses/MIT)
+- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or https://www.apache.org/licenses/LICENSE-2.0)
+- MIT License ([LICENSE-MIT](LICENSE-MIT) or https://opensource.org/licenses/MIT)
 
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in Rocket by you shall be dual licensed under the MIT License and
-Apache License, Version 2.0, without any additional terms or conditions.
-
-The Rocket website docs are licensed under [separate terms](docs/LICENSE). Any
-contribution intentionally submitted for inclusion in the Rocket website docs by
-you shall be licensed under those terms.
+Any contribution you submit will be dual-licensed under the same terms, unless
+you explicitly state otherwise.

@@ -16,7 +16,7 @@ use crate::shutdown::Sig;
 /// properties control _how_.
 ///
 /// When a shutdown is triggered by an externally or internally initiated
-/// [`Shutdown::notify()`], Rocket allows application I/O to make progress for
+/// [`Shutdown::notify()`], rkt allows application I/O to make progress for
 /// at most `grace` seconds before initiating connection-level shutdown.
 /// Connection shutdown forcibly terminates _application_ I/O, but connections
 /// are allowed an additional `mercy` seconds to shutdown before being
@@ -27,7 +27,7 @@ use crate::shutdown::Sig;
 ///
 /// # Triggers
 ///
-/// _All_ graceful shutdowns are initiated via [`Shutdown::notify()`]. Rocket
+/// _All_ graceful shutdowns are initiated via [`Shutdown::notify()`]. rkt
 /// can be configured to call [`Shutdown::notify()`] automatically on certain
 /// conditions, specified via the `ctrlc` and `signals` properties of this
 /// structure. More specifically, if `ctrlc` is `true` (the default), `ctrl-c`
@@ -38,7 +38,7 @@ use crate::shutdown::Sig;
 ///
 /// # Grace Period
 ///
-/// Once a shutdown is triggered, Rocket stops accepting new connections and
+/// Once a shutdown is triggered, rkt stops accepting new connections and
 /// waits at most `grace` seconds before initiating connection shutdown.
 /// Applications can `await` the [`Shutdown`] future to detect
 /// a shutdown and cancel any server-initiated I/O, such as from [infinite
@@ -49,21 +49,21 @@ use crate::shutdown::Sig;
 ///
 /// # Mercy Period
 ///
-/// After the grace period has elapsed, Rocket initiates connection shutdown,
+/// After the grace period has elapsed, rkt initiates connection shutdown,
 /// allowing connection-level I/O termination such as TLS's `close_notify` to
-/// proceed nominally. Rocket waits at most `mercy` seconds for connections to
+/// proceed nominally. rkt waits at most `mercy` seconds for connections to
 /// shutdown before forcefully terminating all connections.
 ///
 /// # Runaway I/O
 ///
-/// If tasks are _still_ executing after both periods _and_ a Rocket configured
-/// async runtime is in use, Rocket waits an unspecified amount of time (not to
+/// If tasks are _still_ executing after both periods _and_ a rkt configured
+/// async runtime is in use, rkt waits an unspecified amount of time (not to
 /// exceed 1s) and forcefully terminates the asynchronous runtime. This
 /// guarantees that the server process terminates, prohibiting uncooperative,
 /// runaway I/O from preventing shutdown altogether.
 ///
-/// A "Rocket configured runtime" is one started by the `#[rkt::main]` and
-/// `#[launch]` attributes. Rocket _never_ forcefully terminates a custom
+/// A "rkt configured runtime" is one started by the `#[rkt::main]` and
+/// `#[launch]` attributes. rkt _never_ forcefully terminates a custom
 /// runtime. A server that creates its own async runtime must take care to
 /// terminate itself if tasks it spawns fail to cooperate.
 ///
@@ -78,7 +78,7 @@ use crate::shutdown::Sig;
 ///
 /// # Example
 ///
-/// As with all Rocket configuration options, when using the default
+/// As with all rkt configuration options, when using the default
 /// [`Config::figment()`](crate::Config::figment()), `Shutdown` can be
 /// configured via a `Rocket.toml` file. As always, defaults are provided
 /// (documented below), and thus configuration only needs to provided to change
@@ -181,11 +181,11 @@ pub struct ShutdownConfig {
     /// Whether to force termination of an async runtime that refuses to
     /// cooperatively shutdown.
     ///
-    /// Rocket _never_ forcefully terminates a custom runtime, irrespective of
+    /// rkt _never_ forcefully terminates a custom runtime, irrespective of
     /// this value. A server that creates its own async runtime must take care
     /// to terminate itself if it fails to cooperate.
     ///
-    /// _**Note:** Rocket only reads this value from sources in the [default
+    /// _**Note:** rkt only reads this value from sources in the [default
     /// provider](crate::Config::figment())._
     ///
     /// **default: `true`**

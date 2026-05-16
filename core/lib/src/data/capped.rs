@@ -34,7 +34,7 @@ impl std::ops::Deref for N {
 /// # Example
 ///
 /// Since `Capped<TempFile>` implements `FromData`, it can be used as a data
-/// guard. The following Rocket route accepts a raw upload and stores the upload
+/// guard. The following rkt route accepts a raw upload and stores the upload
 /// in a different directory depending on whether the file exceeded the data
 /// limit or not. See [`TempFile`] for details on temporary file storage
 /// locations and limits.
@@ -60,7 +60,7 @@ impl std::ops::Deref for N {
 /// [`FromData`]: crate::data::FromData
 /// [`FromForm`]: crate::form::FromForm
 /// [`TempFile`]: crate::fs::TempFile
-// TODO: `Capped` not particularly usable outside Rocket due to coherence.
+// TODO: `Capped` not particularly usable outside rkt due to coherence.
 #[derive(Debug, Copy, Clone)]
 pub struct Capped<T> {
     /// The capped value itself.

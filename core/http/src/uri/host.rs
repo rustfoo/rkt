@@ -23,7 +23,7 @@ use crate::uri::{Absolute, Authority};
 ///
 /// # URI Construction
 ///
-/// A `Host` is _not_ a [`Uri`](crate::uri::Uri), and none of Rocket's APIs will
+/// A `Host` is _not_ a [`Uri`](crate::uri::Uri), and none of rkt's APIs will
 /// accept a `Host` value as such. This is because doing so would facilitate the
 /// construction of URIs to internal routes in a manner controllable by an
 /// attacker, inevitably leading to "HTTP Host header attacks".
@@ -44,23 +44,23 @@ use crate::uri::{Absolute, Authority};
 /// // Whitelist of known hosts. In a real setting, you might retrieve this
 /// // list from config at ignite-time using tools like `AdHoc::config()`.
 /// const WHITELIST: [Host<'static>; 4] = [
-///     Host::new(uri!("rocket.rs")),
-///     Host::new(uri!("rocket.rs:443")),
-///     Host::new(uri!("guide.rocket.rs")),
-///     Host::new(uri!("guide.rocket.rs:443")),
+///     Host::new(uri!("example.com")),
+///     Host::new(uri!("example.com:443")),
+///     Host::new(uri!("guide.example.com")),
+///     Host::new(uri!("guide.example.com:443")),
 /// ];
 ///
 /// // Use `Host::to_absolute()` to case-insensitively check a host against a
 /// // whitelist, returning an `Absolute` usable as a `uri!()` prefix.
-/// let host = Host::new(uri!("guide.ROCKET.rs"));
+/// let host = Host::new(uri!("guide.EXAMPLE.com"));
 /// let prefix = host.to_absolute("https", &WHITELIST);
 ///
-/// // Since `guide.rocket.rs` is in the whitelist, `prefix` is `Some`.
+/// // Since `guide.example.com` is in the whitelist, `prefix` is `Some`.
 /// assert!(prefix.is_some());
 /// if let Some(prefix) = prefix {
 ///     // We can use this prefix to safely construct URIs.
 ///     let uri = uri!(prefix, token("some-secret-token"));
-///     assert_eq!(uri, "https://guide.ROCKET.rs/token?secret=some-secret-token");
+///     assert_eq!(uri, "https://guide.EXAMPLE.com/token?secret=some-secret-token");
 /// }
 /// ```
 ///
@@ -104,8 +104,8 @@ impl<'a> Host<'a> {
     /// let host = Host::new(uri!("foo:bar@developer.mozilla.org:1234"));
     /// assert_eq!(host.to_string(), "developer.mozilla.org:1234");
     ///
-    /// let host = Host::new(uri!("rocket.rs:443"));
-    /// assert_eq!(host.to_string(), "rocket.rs:443");
+    /// let host = Host::new(uri!("example.com:443"));
+    /// assert_eq!(host.to_string(), "example.com:443");
     /// ```
     pub const fn new(authority: Authority<'a>) -> Self {
         Host(authority)
@@ -133,7 +133,7 @@ impl<'a> Host<'a> {
     /// assert_eq!(host.port(), Some(311));
     ///
     /// // Invalid hosts fail to parse.
-    /// Host::parse("https://rocket.rs").expect_err("invalid host");
+    /// Host::parse("https://example.com").expect_err("invalid host");
     ///
     /// // Prefer to use `uri!()` when the input is statically known:
     /// let host = Host::new(uri!("domain"));
@@ -164,9 +164,9 @@ impl<'a> Host<'a> {
     /// # extern crate rkt;
     /// use rkt::http::uri::Host;
     ///
-    /// let source = format!("rocket.rs:8000");
+    /// let source = format!("example.com:8000");
     /// let host = Host::parse_owned(source).expect("valid host");
-    /// assert_eq!(host.domain(), "rocket.rs");
+    /// assert_eq!(host.domain(), "example.com");
     /// assert_eq!(host.port(), Some(8000));
     /// ```
     pub fn parse_owned(string: String) -> Result<Host<'static>, Error<'static>> {

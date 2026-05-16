@@ -23,7 +23,7 @@ fn test(base: &str, stage: AdHoc) {
     assert_eq!(client.get(base).dispatch().into_json::<Vec<i64>>(), Some(vec![]));
 
     // Add some random posts, ensure they're listable and readable.
-    for i in 1..=N{
+    for i in 1..=N {
         let title = format!("My Post - {}", i);
         let text = format!("Once upon a time, at {}'o clock...", i);
         let post = Post { title: title.clone(), text: text.clone() };
@@ -70,9 +70,4 @@ fn test_sqlx() {
 #[test]
 fn test_diesel() {
     test("/diesel", crate::diesel_sqlite::stage())
-}
-
-#[test]
-fn test_rusqlite() {
-    test("/rusqlite", crate::rusqlite::stage())
 }

@@ -1,7 +1,7 @@
 //! Support for mutual TLS client certificates.
 //!
 //! For details on how to configure mutual TLS, see [`MtlsConfig`] and the [TLS
-//! guide](https://rocket.rs/master/guide/configuration/#tls). See
+//! guide](https://rkt.rs/guide/configuration/#tls). See
 //! [`Certificate`] for a request guard that validates, verifies, and retrieves
 //! client certificates.
 
@@ -25,7 +25,7 @@ pub mod x509 {
     //! [`x509_parser`](https://docs.rs/x509-parser/0.13).
     //!
     //! Lack of documentation is directly inherited from the source crate.
-    //! Prefer to use Rocket's wrappers when possible.
+    //! Prefer to use rkt's wrappers when possible.
 
     pub use x509_parser::prelude::*;
 }

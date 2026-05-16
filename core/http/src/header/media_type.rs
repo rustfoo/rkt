@@ -92,7 +92,7 @@ macro_rules! media_types {
         );
     )+
 
-    /// Returns `true` if this MediaType is known to Rocket. In other words,
+    /// Returns `true` if this MediaType is known to rkt. In other words,
     /// returns `true` if there is an associated constant for `self`.
     pub fn is_known(&self) -> bool {
         if let Source::Known(_) = self.source {

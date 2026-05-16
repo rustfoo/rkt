@@ -1,20 +1,20 @@
 [package]
 name = "rkt"
-version = "0.6.0"
-authors = ["Sergio Benitez <sb@sergio.bz>"]
+version.workspace = true
+authors.workspace = true
 description = """
 Web framework with a focus on usability, security, extensibility, and speed. (Community Fork)
 """
 documentation = "https://docs.rs/rustfoo/latest/rkt/"
-homepage = "https://rkt.rs"
-repository = "https://github.com/rustfoo/rkt"
-readme = "../../README.md"
+homepage.workspace = true
+repository.workspace = true
+readme.workspace = true
 keywords = ["rkt", "rocket", "web", "framework", "server"]
-license = "MIT OR Apache-2.0"
+license.workspace = true
 build = "build.rs"
 categories = ["web-programming::http-server"]
-edition = "2021"
-rust-version = "1.82.0"
+edition.workspace = true
+rust-version.workspace = true
 
 [package.metadata.docs.rs]
 all-features = true
@@ -87,12 +87,10 @@ default-features = false
 features = ["fmt", "tracing-log", "parking_lot"]
 
 [dependencies.rkt_codegen]
-version = "0.6.0"
-path = "../codegen"
+workspace = true
 
 [dependencies.rkt_http]
-version = "0.6.0"
-path = "../http"
+workspace = true
 features = ["serde"]
 
 [dependencies.tokio]

@@ -1,1 +1,1 @@
-rkt::internal_guide_tests!("../guide/*.md");
+rkt::internal_guide_tests!("../../website/docs/*.md");

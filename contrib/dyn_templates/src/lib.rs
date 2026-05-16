@@ -1,6 +1,6 @@
-//! Dynamic templating engine support for Rocket.
+//! Dynamic templating engine support for rkt.
 //!
-//! This crate adds support for dynamic template rendering to Rocket. It
+//! This crate adds support for dynamic template rendering to rkt. It
 //! automatically discovers templates, provides a `Responder` to render
 //! templates, and automatically reloads templates when compiled in debug mode.
 //! At present, it supports [Handlebars] and [Tera].
@@ -79,7 +79,7 @@
 //! See the [configuration chapter] of the guide for more information on
 //! configuration.
 //!
-//! [configuration chapter]: https://rocket.rs/master/guide/configuration
+//! [configuration chapter]: https://rkt.rs/guide/configuration
 //!
 //! ## Template Naming and Content-Types
 //!
@@ -128,7 +128,7 @@
 //! fn index() -> Template {
 //!     // Using the `context! { }` macro.
 //!     Template::render("index", context! {
-//!         site_name: "Rocket - Home Page",
+//!         site_name: "rkt - Home Page",
 //!         version: 127,
 //!     })
 //! }
@@ -144,7 +144,7 @@
 //!
 //!     // Using an existing `IndexContext`, which implements `Serialize`.
 //!     Template::render("index", IndexContext {
-//!         site_name: "Rocket - Home Page",
+//!         site_name: "rkt - Home Page",
 //!         version: 127,
 //!     })
 //! }
@@ -176,9 +176,9 @@
 //! ([`Metadata::contains_template()`]), and to render templates to `String`
 //! ([`Metadata::render()`]).
 
-#![doc(html_root_url = "https://api.rocket.rs/master/rkt_dyn_templates")]
-#![doc(html_favicon_url = "https://rocket.rs/images/favicon.ico")]
-#![doc(html_logo_url = "https://rocket.rs/images/logo-boxed.png")]
+#![doc(html_root_url = "https://docs.rs/rkt_dyn_templates/latest/rkt_dyn_templates")]
+#![doc(html_favicon_url = "https://rkt.rs/images/favicon.ico")]
+#![doc(html_logo_url = "https://rkt.rs/images/logo-boxed.png")]
 
 #[macro_use]
 extern crate rkt;

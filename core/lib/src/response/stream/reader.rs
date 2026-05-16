@@ -77,7 +77,7 @@ pin_project! {
     /// }
     ///
     /// // Stream the contents of the file `safe/path`. This is identical to
-    /// // returning `File` directly; Rocket responders stream and never buffer.
+    /// // returning `File` directly; rkt responders stream and never buffer.
     /// #[get("/reader/stream/one")]
     /// async fn stream_one() -> std::io::Result<ReaderStream![File]> {
     ///     let file = File::open("safe/path").await?;

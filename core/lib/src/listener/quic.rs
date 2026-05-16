@@ -1,12 +1,12 @@
 //! Experimental support for Quic and HTTP/3.
 //!
-//! To enable Rocket's experimental support for HTTP/3 and Quic, enable the
+//! To enable rkt's experimental support for HTTP/3 and Quic, enable the
 //! `http3-preview` feature and provide a valid TLS configuration:
 //!
 //! ```toml
 //! // Add the following to your Cargo.toml:
 //! [dependencies]
-//! rocket = { package = "rocket_community", version = "0.6.0", features = ["http3-preview"] }
+//! rkt = { version = "1.0.0", features = ["http3-preview"] }
 //!
 //! // In your Rocket.toml or other equivalent config source:
 //! [default.tls]
@@ -14,11 +14,11 @@
 //! key = "private/rsa_sha256_key.pem"
 //! ```
 //!
-//! The launch message confirms that Rocket is serving traffic over Quic in
+//! The launch message confirms that rkt is serving traffic over Quic in
 //! addition to TCP:
 //!
 //! ```sh
-//! > 🚀 Rocket has launched on https://127.0.0.1:8000 (QUIC + mTLS)
+//! > 🚀 rkt has launched on https://127.0.0.1:8000 (QUIC + mTLS)
 //! ```
 //!
 //! mTLS is not yet supported via this implementation.

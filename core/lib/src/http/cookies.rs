@@ -136,13 +136,13 @@ pub use cookie::{Cookie, Iter, SameSite};
 ///
 /// ## Encryption Key
 ///
-/// To encrypt private cookies, Rocket uses the 256-bit key specified in the
-/// `secret_key` configuration parameter. If one is not specified, Rocket will
+/// To encrypt private cookies, rkt uses the 256-bit key specified in the
+/// `secret_key` configuration parameter. If one is not specified, rkt will
 /// automatically generate a fresh key. Note, however, that a private cookie can
 /// only be decrypted with the same key with which it was encrypted. As such, it
 /// is important to set a `secret_key` configuration parameter when using
 /// private cookies so that cookies decrypt properly after an application
-/// restart. Rocket will emit a warning if an application is run in production
+/// restart. rkt will emit a warning if an application is run in production
 /// mode without a configured `secret_key`.
 ///
 /// Generating a string suitable for use as a `secret_key` configuration value
@@ -385,7 +385,7 @@ impl<'a> CookieJar<'a> {
     ///     jar.remove(Cookie::build("name").path("/login"));
     ///
     ///     // Use a custom-built cookie to set a custom path and domain.
-    ///     jar.remove(Cookie::build("id").path("/guide").domain("rocket.rs"));
+    ///     jar.remove(Cookie::build("id").path("/guide").domain("example.com"));
     /// }
     /// ```
     pub fn remove<C: Into<Cookie<'static>>>(&self, cookie: C) {
@@ -425,7 +425,7 @@ impl<'a> CookieJar<'a> {
     ///     jar.remove_private(Cookie::build("name").path("/login"));
     ///
     ///     // Use a custom-built cookie to set a custom path and domain.
-    ///     let cookie = Cookie::build("id").path("/guide").domain("rocket.rs");
+    ///     let cookie = Cookie::build("id").path("/guide").domain("example.com");
     ///     jar.remove_private(cookie);
     /// }
     /// ```

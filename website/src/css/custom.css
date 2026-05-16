@@ -1,0 +1,29 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* rkt / Rocket brand palette — muted red */
+:root {
+  --ifm-color-primary: #9b3a3a;
+  --ifm-color-primary-dark: #8a3333;
+  --ifm-color-primary-darker: #823030;
+  --ifm-color-primary-darkest: #6b2727;
+  --ifm-color-primary-light: #ac4141;
+  --ifm-color-primary-lighter: #b14545;
+  --ifm-color-primary-lightest: #c05858;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #c97070;
+  --ifm-color-primary-dark: #c06060;
+  --ifm-color-primary-darker: #b85858;
+  --ifm-color-primary-darkest: #a04545;
+  --ifm-color-primary-light: #d28080;
+  --ifm-color-primary-lighter: #d68888;
+  --ifm-color-primary-lightest: #de9e9e;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}

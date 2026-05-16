@@ -464,7 +464,7 @@ impl<'v> TempFile<'v> {
     /// async fn handle(mut file: TempFile<'_>) -> std::io::Result<()> {
     ///     # let some_dir = std::env::temp_dir();
     ///     if let Some(name) = file.name() {
-    ///         // Because of Rocket's sanitization, this is safe.
+    ///         // Because of rkt's sanitization, this is safe.
     ///         file.persist_to(&some_dir.join(name)).await?;
     ///     }
     ///

@@ -18,7 +18,7 @@ use crate::uri::fmt::{self, Part};
 ///
 /// In the rare case that `UriDisplay` is implemented manually, this trait, too,
 /// must be implemented explicitly. In the majority of cases, implementation can
-/// be automated. Rocket provides [`impl_from_uri_param_identity!`] to generate
+/// be automated. rkt provides [`impl_from_uri_param_identity!`] to generate
 /// the _identity_ implementations automatically. For a type `T`, these are:
 ///
 ///   * `impl<P: Part> FromUriParam<P, T> for T`
@@ -39,7 +39,7 @@ use crate::uri::fmt::{self, Part};
 ///
 /// This trait allows types that differ from the route URI parameter's types to
 /// be used in their place at no cost. For instance, the following
-/// implementation, provided by Rocket, allows an `&str` to be used in a `uri!`
+/// implementation, provided by rkt, allows an `&str` to be used in a `uri!`
 /// invocation for route URI parameters declared as `String`:
 ///
 /// ```rust
@@ -110,7 +110,7 @@ use crate::uri::fmt::{self, Part};
 /// reference types: `String` and `&str`, for instance. In this case, it's
 /// desirable to allow an `&str` to be used in place of a `String`.
 ///
-/// When implementing `FromUriParam`, be aware that Rocket will use the
+/// When implementing `FromUriParam`, be aware that rkt will use the
 /// [`UriDisplay`] implementation of [`FromUriParam::Target`], _not_ of the
 /// source type. Incorrect implementations can result in creating unsafe URIs.
 ///

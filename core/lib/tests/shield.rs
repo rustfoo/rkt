@@ -139,7 +139,7 @@ fn additional_headers_test() {
 
 #[test]
 fn uri_test() {
-    let enforce_uri = uri!("https://rocket.rs");
+    let enforce_uri = uri!("https://example.com");
     let shield = Shield::default().enable(ExpectCt::ReportAndEnforce(
         Duration::seconds(30),
         enforce_uri,
@@ -149,7 +149,7 @@ fn uri_test() {
         assert_header!(
             response,
             "Expect-CT",
-            "max-age=30, enforce, report-uri=\"https://rocket.rs\""
+            "max-age=30, enforce, report-uri=\"https://example.com\""
         );
     });
 }
@@ -229,7 +229,7 @@ fn permission_test() {
         );
     });
 
-    let uri = uri!("http://rocket.rs");
+    let uri = uri!("http://example.com");
     let permission = Permission::allowed(Feature::Usb, Allow::Origin(uri))
         .allow(Feature::Camera, [Allow::This])
         .block(Feature::WebShare);
@@ -239,24 +239,24 @@ fn permission_test() {
         assert_header!(
             r,
             "Permissions-Policy",
-            "usb=(\"http://rocket.rs\"), camera=(self), web-share=()"
+            "usb=(\"http://example.com\"), camera=(self), web-share=()"
         );
     });
 
-    let origin1 = Allow::Origin(uri!("http://rocket.rs"));
-    let origin2 = Allow::Origin(uri!("https://rocket.rs"));
+    let origin1 = Allow::Origin(uri!("http://example.com"));
+    let origin2 = Allow::Origin(uri!("https://example.com"));
     let shield = Shield::default().enable(Permission::allowed(Feature::Camera, [origin1, origin2]));
 
     dispatch!(shield, |r: LocalResponse<'_>| {
         assert_header!(
             r,
             "Permissions-Policy",
-            "camera=(\"http://rocket.rs\" \"https://rocket.rs\")"
+            "camera=(\"http://example.com\" \"https://example.com\")"
         );
     });
 
-    let origin1 = Allow::Origin(uri!("http://rocket.rs"));
-    let origin2 = Allow::Origin(uri!("https://rocket.rs"));
+    let origin1 = Allow::Origin(uri!("http://example.com"));
+    let origin2 = Allow::Origin(uri!("https://example.com"));
     let perm = Permission::allowed(Feature::Accelerometer, [origin1, origin2]).block(Feature::Usb);
 
     let shield = Shield::default().enable(perm);
@@ -264,7 +264,7 @@ fn permission_test() {
         assert_header!(
             r,
             "Permissions-Policy",
-            "accelerometer=(\"http://rocket.rs\" \"https://rocket.rs\"), usb=()"
+            "accelerometer=(\"http://example.com\" \"https://example.com\"), usb=()"
         );
     });
 }

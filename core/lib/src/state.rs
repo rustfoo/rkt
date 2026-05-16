@@ -13,7 +13,7 @@ use crate::{Ignite, Phase, Rocket, Sentinel};
 ///
 /// A reference `&State<T>` type is a request guard which retrieves the managed
 /// state managing for some type `T`. A value for the given type must previously
-/// have been registered to be managed by Rocket via [`Rocket::manage()`]. The
+/// have been registered to be managed by rkt via [`Rocket::manage()`]. The
 /// type being managed must be thread safe and sendable across thread
 /// boundaries as multiple handlers in multiple threads may be accessing the
 /// value at once. In other words, it must implement [`Send`] + [`Sync`] +
@@ -156,7 +156,7 @@ impl<T: Send + Sync + 'static> State<T> {
     /// Borrow the inner value.
     ///
     /// Using this method is typically unnecessary as `State` implements
-    /// [`Deref`] with a [`Deref::Target`] of `T`. This means Rocket will
+    /// [`Deref`] with a [`Deref::Target`] of `T`. This means rkt will
     /// automatically coerce a `State<T>` to an `&T` as required. This method
     /// should only be used when a longer lifetime is required.
     ///

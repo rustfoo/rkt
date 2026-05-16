@@ -47,7 +47,7 @@ use crate::{Ignite, Rocket};
 /// # })
 /// ```
 ///
-/// At ignition time, effected by the `#[launch]` attribute here, Rocket probes
+/// At ignition time, effected by the `#[launch]` attribute here, rkt probes
 /// all types in all mounted routes for `Sentinel` implementations. In this
 /// example, the types are: `usize`, `State<String>`, and `Response`. Those that
 /// implement `Sentinel` are queried for an abort trigger via their
@@ -138,7 +138,7 @@ use crate::{Ignite, Rocket};
 ///
 /// # Limitations
 ///
-/// Because Rocket must know which `Sentinel` implementation to query based on
+/// Because rkt must know which `Sentinel` implementation to query based on
 /// its _written_ type, generally only explicitly written, resolved, concrete
 /// types are eligible to be sentinels. A typical application will only work
 /// with such types, but there are several common cases to be aware of.
@@ -219,7 +219,7 @@ use crate::{Ignite, Rocket};
 /// ## Type Macros
 ///
 /// It is impossible to determine, a priori, what a type macro will expand to.
-/// As such, Rocket is unable to determine which sentinels, if any, a type macro
+/// As such, rkt is unable to determine which sentinels, if any, a type macro
 /// references, and thus no sentinels are discovered from type macros.
 ///
 /// Even approximations are impossible. For example, consider the following:
@@ -241,10 +241,10 @@ use crate::{Ignite, Rocket};
 /// sentinel, the macro actually expands to `&'_ rkt::Config`, which is _not_
 /// the `State` sentinel.
 ///
-/// Because Rocket knows the exact syntax expected by type macros that it
+/// Because rkt knows the exact syntax expected by type macros that it
 /// exports, such as the [typed stream] macros, discovery in these macros works
 /// as expected. You should prefer not to use type macros aside from those
-/// exported by Rocket, or if necessary, restrict your use to those that always
+/// exported by rkt, or if necessary, restrict your use to those that always
 /// expand to types without sentinels.
 ///
 /// [typed stream]: crate::response::stream
@@ -282,7 +282,7 @@ use crate::{Ignite, Rocket};
 ///
 /// If a `MyResponder` is returned by any mounted route, its `abort()` method
 /// will be invoked. If the required conditions aren't met, signaled by
-/// returning `true` from `abort()`, Rocket aborts launch.
+/// returning `true` from `abort()`, rkt aborts launch.
 pub trait Sentinel {
     /// Returns `true` if launch should be aborted and `false` otherwise.
     fn abort(rocket: &Rocket<Ignite>) -> bool;

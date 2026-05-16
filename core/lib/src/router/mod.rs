@@ -1,4 +1,4 @@
-//! Rocket's router.
+//! rkt's router.
 
 mod collider;
 mod matcher;

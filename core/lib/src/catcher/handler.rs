@@ -90,12 +90,12 @@ pub type BoxFuture<'r, T = Result<'r>> = futures::future::BoxFuture<'r, T>;
 ///      of internal state.
 #[crate::async_trait]
 pub trait Handler: Cloneable + Send + Sync + 'static {
-    /// Called by Rocket when an error with `status` for a given `Request`
+    /// Called by rkt when an error with `status` for a given `Request`
     /// should be handled by this handler.
     ///
     /// Error handlers _should not_ fail and thus _should_ always return `Ok`.
     /// Nevertheless, failure is allowed, both for convenience and necessity. If
-    /// an error handler fails, Rocket's default `500` catcher is invoked. If it
+    /// an error handler fails, rkt's default `500` catcher is invoked. If it
     /// succeeds, the returned `Response` is used to respond to the client.
     async fn handle<'r>(&self, status: Status, req: &'r Request<'_>) -> Result<'r>;
 }

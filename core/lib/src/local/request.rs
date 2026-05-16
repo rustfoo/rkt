@@ -1,7 +1,7 @@
 macro_rules! pub_request_impl {
     ($import:literal $($prefix:tt $suffix:tt)?) =>
 {
-    /// Borrows the inner `Request` as seen by Rocket.
+    /// Borrows the inner `Request` as seen by rkt.
     ///
     /// Note that no routing has occurred and that there is no remote
     /// address unless one has been explicitly set with
@@ -22,7 +22,7 @@ macro_rules! pub_request_impl {
         self._request()
     }
 
-    /// Mutably borrows the inner `Request` as seen by Rocket.
+    /// Mutably borrows the inner `Request` as seen by rkt.
     ///
     /// Note that no routing has occurred and that there is no remote
     /// address unless one has been explicitly set with

@@ -30,7 +30,7 @@ use crate::http::Header;
 ///
 /// # Examples
 ///
-/// As with all Rocket configuration options, when using the default
+/// As with all rkt configuration options, when using the default
 /// [`Config::figment()`](crate::Config::figment()), `Ident` can be configured
 /// via a `Rocket.toml` file. When no value for `ident` is provided, the value
 /// defaults to `"Rocket"`. Because a default is provided, configuration only
@@ -92,7 +92,7 @@ macro_rules! ident {
 impl Ident {
     /// Returns a new `Ident` with the string `ident`.
     ///
-    /// When configured as the [`Config::ident`](crate::Config::ident), Rocket
+    /// When configured as the [`Config::ident`](crate::Config::ident), rkt
     /// will set a `Server` header with the `ident` value on all responses.
     ///
     /// # Errors
@@ -111,13 +111,13 @@ impl Ident {
     /// let ident = Ident::try_new("Rocket").unwrap();
     /// assert_eq!(ident.as_str(), Some("Rocket"));
     ///
-    /// let ident = Ident::try_new("Rocket Run").unwrap();
-    /// assert_eq!(ident.as_str(), Some("Rocket Run"));
+    /// let ident = Ident::try_new("rkt Run").unwrap();
+    /// assert_eq!(ident.as_str(), Some("rkt Run"));
     ///
-    /// let ident = Ident::try_new(" Rocket");
+    /// let ident = Ident::try_new(" rkt");
     /// assert!(ident.is_err());
     ///
-    /// let ident = Ident::try_new("Rocket\nRun");
+    /// let ident = Ident::try_new("rkt\nRun");
     /// assert!(ident.is_err());
     ///
     /// let ident = Ident::try_new("\tShip");
@@ -135,7 +135,7 @@ impl Ident {
 
     /// Returns a new `Ident` which is `None`.
     ///
-    /// When configured as the [`Config::ident`](crate::Config::ident), Rocket
+    /// When configured as the [`Config::ident`](crate::Config::ident), rkt
     /// will not set a `Server` header on any response. Any `Server` header
     /// emitted by the application will still be written out.
     ///
@@ -161,8 +161,8 @@ impl Ident {
     /// let ident = Ident::try_new("Rocket").unwrap();
     /// assert_eq!(ident.as_str(), Some("Rocket"));
     ///
-    /// let ident = Ident::try_new("Rocket/1 (Unix)").unwrap();
-    /// assert_eq!(ident.as_str(), Some("Rocket/1 (Unix)"));
+    /// let ident = Ident::try_new("rkt/1 (Unix)").unwrap();
+    /// assert_eq!(ident.as_str(), Some("rkt/1 (Unix)"));
     ///
     /// let ident = Ident::none();
     /// assert_eq!(ident.as_str(), None);

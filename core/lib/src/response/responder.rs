@@ -51,7 +51,7 @@ use crate::response::{self, Response};
 ///
 /// # Provided Implementations
 ///
-/// Rocket implements `Responder` for several standard library types. Their
+/// rkt implements `Responder` for several standard library types. Their
 /// behavior is documented here. Note that the `Result` implementation is
 /// overloaded, allowing for two `Responder`s to be used at once, depending on
 /// the variant.
@@ -297,7 +297,7 @@ pub trait Responder<'r, 'o: 'r> {
     /// The `request` parameter is the `Request` that this `Responder` is
     /// responding to.
     ///
-    /// When using Rocket's code generation, if an `Ok(Response)` is returned,
+    /// When using rkt's code generation, if an `Ok(Response)` is returned,
     /// the response will be written out to the client. If an `Err(Status)` is
     /// returned, the error catcher for the given status is retrieved and called
     /// to generate a final error response, which is then written out to the

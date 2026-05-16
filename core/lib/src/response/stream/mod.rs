@@ -11,7 +11,7 @@
 //! # Raw Streams
 //!
 //! Rust does not yet natively support syntax for creating arbitrary generators,
-//! and as such, for creating streams. To ameliorate this, Rocket exports
+//! and as such, for creating streams. To ameliorate this, rkt exports
 //! [`stream!`], which retrofit generator syntax, allowing raw `impl Stream`s to
 //! be defined using `yield` and `for await` syntax:
 //!
@@ -155,7 +155,7 @@
 //!
 //! Infinite responders, like the one defined in `hello` above, will prolong
 //! shutdown initiated via [`Shutdown::notify()`](crate::Shutdown::notify()) for
-//! the defined grace period. After the grace period has elapsed, Rocket will
+//! the defined grace period. After the grace period has elapsed, rkt will
 //! abruptly terminate the responder.
 //!
 //! To avoid abrupt termination, graceful shutdown can be detected via the

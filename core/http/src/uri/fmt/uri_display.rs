@@ -89,7 +89,7 @@ use crate::RawStr;
 /// uri!(get_item(id = 100, track = None as Option<&str>));
 /// ```
 ///
-/// After verifying parameters and their types, Rocket will generate code
+/// After verifying parameters and their types, rkt will generate code
 /// similar (in spirit) to the following:
 ///
 /// ```rust
@@ -111,7 +111,7 @@ use crate::RawStr;
 ///
 /// # Provided Implementations
 ///
-/// Rocket implements `UriDisplay<P>` for all `P: Part` for several built-in
+/// rkt implements `UriDisplay<P>` for all `P: Part` for several built-in
 /// types.
 ///
 ///   * **i8, i16, i32, i64, i128, isize, u8, u16, u32, u64, u128, usize, f32,
@@ -128,7 +128,7 @@ use crate::RawStr;
 ///
 ///     Uses the implementation of `UriDisplay` for `T`.
 ///
-/// Rocket implements `UriDisplay<Path>` (but not `UriDisplay<Query>`) for
+/// rkt implements `UriDisplay<Path>` (but not `UriDisplay<Query>`) for
 /// several built-in types.
 ///
 ///   * `T` for **`Option<T>`** _where_ **`T: UriDisplay<Path>`**
@@ -147,7 +147,7 @@ use crate::RawStr;
 ///     as the parameter in `uri!`. Note that `Result<T, E>` itself _does not_
 ///     implement `UriDisplay<Path>`.
 ///
-/// Rocket implements `UriDisplay<Query>` (but not `UriDisplay<Path>`) for
+/// rkt implements `UriDisplay<Query>` (but not `UriDisplay<Path>`) for
 /// several built-in types.
 ///
 ///   * **`Form<T>`, `LenientForm<T>`** _where_ **`T: FromUriParam + FromForm`**
