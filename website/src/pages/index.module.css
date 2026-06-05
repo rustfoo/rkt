@@ -1,8 +1,8 @@
-/* Hero */
+/* ── Hero ────────────────────────────────────────────────────── */
 .hero {
   background: linear-gradient(135deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary-dark) 100%);
   color: #fff;
-  padding: 4rem 2rem;
+  padding: 5rem 2rem;
 }
 
 .heroInner {
@@ -33,10 +33,10 @@
 }
 
 .heroTagline {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 500;
   margin: 0 0 1rem;
-  opacity: 0.9;
+  opacity: 0.75;
   color: #fff;
 }
 
@@ -55,19 +55,191 @@
   flex-wrap: wrap;
 }
 
-.heroButtons .button--outline {
-  border-color: rgba(255, 255, 255, 0.7);
-  color: #fff;
+.heroOutlineBtn {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  color: #fff !important;
 }
 
-.heroButtons .button--outline:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #fff;
-  color: #fff;
+.heroOutlineBtn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: #fff !important;
 }
 
-/* Code snippet */
 .heroCode {
   flex: 1;
   min-width: 0;
+}
+
+/* ── Shared layout ───────────────────────────────────────────── */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section {
+  padding: 4.5rem 0;
+}
+
+.sectionAlt {
+  background: var(--ifm-color-emphasis-100);
+}
+
+.sectionTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+/* ── Feature grid ────────────────────────────────────────────── */
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .featureGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .featureGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.featureCard {
+  padding: 1.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-top: 3px solid var(--ifm-color-primary);
+  background: var(--ifm-background-color);
+}
+
+.featureCard h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.featureCard p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ifm-color-emphasis-700);
+  margin: 0;
+}
+
+/* ── Quick start ─────────────────────────────────────────────── */
+.quickStartInner {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .quickStartInner {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.quickStartText h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.quickStartText p {
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin-bottom: 1rem;
+  color: var(--ifm-color-emphasis-700);
+}
+
+.quickStartText p:last-of-type {
+  margin-bottom: 1.5rem;
+}
+
+/* ── Crate cards ─────────────────────────────────────────────── */
+.crateGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 900px) {
+  .crateGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.crateCard {
+  padding: 1.5rem;
+  border-radius: 6px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-color);
+}
+
+.crateName {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ifm-color-primary);
+  background: var(--ifm-color-emphasis-100);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  margin-bottom: 0.65rem;
+}
+
+.crateDesc {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ifm-color-emphasis-700);
+  margin-bottom: 0.75rem;
+}
+
+.crateLink {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}
+
+.crateLink:hover {
+  text-decoration: underline;
+}
+
+/* ── CTA banner ──────────────────────────────────────────────── */
+.ctaBanner {
+  background: linear-gradient(135deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary-dark) 100%);
+  color: #fff;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.ctaTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.5rem;
+}
+
+.ctaButtons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ctaOutlineBtn {
+  border-color: rgba(255, 255, 255, 0.6) !important;
+  color: #fff !important;
+}
+
+.ctaOutlineBtn:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: #fff !important;
 }
