@@ -24,7 +24,7 @@ serde = ["dep:serde", "uncased/with-serde-alloc"]
 uuid = ["dep:uuid"]
 
 [dependencies]
-tinyvec = { version = "1.6", features = ["std", "rustc_1_57"] }
+tinyvec = { version = "1.11", features = ["std", "rustc_1_57"] }
 percent-encoding = "2"
 time = { version = "0.3", features = ["formatting", "macros"] }
 indexmap = "2"
