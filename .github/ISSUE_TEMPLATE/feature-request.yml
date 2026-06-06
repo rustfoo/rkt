@@ -6,25 +6,25 @@ body:
     attributes:
       value: >
         **Thanks for taking the time to request a feature!** Your request helps
-        make Rocket better.
+        make rkt better.
 
 
-        Please note that Rocket is designed to have a small but pluggable core.
-        Feature requests that can be implemented outside of Rocket _are
+        Please note that rkt is designed to have a small but pluggable core.
+        Feature requests that can be implemented outside of rkt _are
         typically declined._ In your request, please make a strong case for why
-        this feature can't or shouldn't be implemented outside of Rocket.
+        this feature can't or shouldn't be implemented outside of rkt.
   - type: textarea
     attributes:
       label: What's missing?
       description: >
-        Provide a brief overview of the functionality that's missing in Rocket
+        Provide a brief overview of the functionality that's missing in rkt
         today, which problem(s) that functionality would solve for you, and what
         the functionality would enable you to do.
       placeholder: >
-        example: I frequently want to do X, but Rocket makes it hard. It would
-        be nice if Rocket...
+        example: I frequently want to do X, but rkt makes it hard. It would
+        be nice if rkt...
 
-        example: I want to do X but Rocket makes it impossible because...
+        example: I want to do X but rkt makes it impossible because...
 
         example: Feature Z exists, but it has these N drawbacks: [..]. What if...
     validations:
@@ -38,11 +38,11 @@ body:
         useful.
   - type: textarea
     attributes:
-      label: Why can't this be implemented outside of Rocket?
+      label: Why can't this be implemented outside of rkt?
       description: >
         Please make a strong case for why this feature can't or shouldn't be
-        implemented outside of Rocket. We are likely to decline feature requests
-        that can exist outside of Rocket without compromise.
+        implemented outside of rkt. We are likely to decline feature requests
+        that can exist outside of rkt without compromise.
     validations:
       required: true
   - type: textarea
@@ -62,12 +62,3 @@ body:
       label: Additional Context
       description: >
         Feel free to provide any additional context for your request.
-  - type: checkboxes
-    attributes:
-      label: System Checks
-      description: "Please confirm all of the following:"
-      options:
-        - label: I do not believe that this feature can or should be implemented outside of Rocket.
-          required: true
-        - label: I was unable to find a previous request for this feature.
-          required: true
