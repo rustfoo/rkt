@@ -1,14 +1,1 @@
 blank_issues_enabled: true
-contact_links:
-  - name: FAQ
-    url: https://rocket.rs/guide/faq/
-    about: Please see our FAQ for answers to common questions.
-  - name: Questions
-    url: https://github.com/rwf2/Rocket/discussions/new?category=questions
-    about: For other questions or help, please use GitHub discussions.
-  - name: Feedback
-    url: https://github.com/rwf2/Rocket/discussions/new/choose
-    about: For general chat or feedback, please use GitHub discussions.
-  - name: Chat
-    url: https://chat.mozilla.org/#/room/#rocket:mozilla.org
-    about: Chat with us live on rocket:mozilla.org on Matrix.
