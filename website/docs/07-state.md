@@ -238,7 +238,7 @@ Add `sqlx` to `Cargo.toml`:
 
 ```toml
 [dependencies.sqlx]
-version = "0.8"
+version = "0.9"
 default-features = false
 features = ["sqlite", "macros", "migrate", "runtime-tokio"]
 ```

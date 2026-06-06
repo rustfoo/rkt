@@ -57,10 +57,7 @@
 //! #
 //! #[get("/echo")]
 //! fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
-//!     let ws = ws.config(ws::Config {
-//!         max_send_queue: Some(5),
-//!         ..Default::default()
-//!     });
+//!     let ws = ws.config(ws::Config::default().max_message_size(Some(8192)));
 //!
 //!     ws::Stream! { ws =>
 //!         for await message in ws {
@@ -114,7 +111,7 @@ pub use self::websocket::{Channel, WebSocket};
 /// #[get("/echo")]
 /// fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
 ///     ws::Stream! { ws =>
-///         yield ws::Message::Ping(vec![b'h', b'i'])
+///         yield ws::Message::Ping(vec![b'h', b'i'].into())
 ///     }
 /// }
 /// ```
@@ -137,16 +134,11 @@ pub use self::tungstenite::Message;
 ///
 /// #[get("/echo")]
 /// fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
-///     let ws = ws.config(ws::Config {
-///         // Enable backpressure with a max send queue size of `5`.
-///         max_send_queue: Some(5),
+///     let ws = ws.config(ws::Config::default()
 ///         // Decrease the maximum (complete) message size to 4MiB.
-///         max_message_size: Some(4.mebibytes().as_u64() as usize),
+///         .max_message_size(Some(4.mebibytes().as_u64() as usize))
 ///         // Decrease the maximum size of _one_ frame (not message) to 1MiB.
-///         max_frame_size: Some(1.mebibytes().as_u64() as usize),
-///         // Use the default values for the rest.
-///         ..Default::default()
-///     });
+///         .max_frame_size(Some(1.mebibytes().as_u64() as usize)));
 ///
 ///     ws::Stream! { ws =>
 ///         for await message in ws {

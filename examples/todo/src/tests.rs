@@ -1,6 +1,6 @@
 use super::task::Task;
 
-use rand::{self, distr::Alphanumeric, Rng};
+use rand::{self, distr::Alphanumeric, RngExt};
 
 use rkt::http::{ContentType, Status};
 use rkt::local::asynchronous::Client;

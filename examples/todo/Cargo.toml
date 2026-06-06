@@ -9,7 +9,7 @@ publish = false
 rkt = { path = "../../core/lib" }
 
 [dependencies.sqlx]
-version = "0.8"
+version = "0.9"
 default-features = false
 features = ["sqlite", "macros", "migrate", "runtime-tokio"]
 
@@ -18,4 +18,4 @@ path = "../../contrib/dyn_templates"
 features = ["tera"]
 
 [dev-dependencies]
-rand = "0.9"
+rand = "0.10"

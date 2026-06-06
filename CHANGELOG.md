@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Remove deprecated call to set_linger
 
+### Changed
+
+- Upgrade dependencies: x509-parser 0.18, rand 0.10, sqlx 0.9, tokio-tungstenite 0.29
 
 ## 1.0.0 - 2026-06-04
 
