@@ -20,7 +20,7 @@ default = ["tungstenite"]
 tungstenite = ["tokio-tungstenite"]
 
 [dependencies]
-tokio-tungstenite = { version = "0.24", optional = true }
+tokio-tungstenite = { version = "0.29", optional = true }
 
 [dependencies.rkt]
 workspace = true

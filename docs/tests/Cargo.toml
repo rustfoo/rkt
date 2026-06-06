@@ -16,12 +16,12 @@ rkt = { workspace = true, features = ["secrets"] }
 rkt = { workspace = true, features = ["secrets", "json", "mtls"] }
 figment = { version = "0.10.17", features = ["toml", "env"] }
 tokio = { version = "1", features = ["macros", "io-std"] }
-rand = "0.9"
+rand = "0.10"
 diesel = { version = "2", features = ["sqlite", "r2d2", "returning_clauses_for_sqlite_3_35"] }
 diesel_migrations = "2"
 
 [dependencies.sqlx]
-version = "0.8"
+version = "0.9"
 default-features = false
 features = ["sqlite", "macros", "migrate", "runtime-tokio"]
 
