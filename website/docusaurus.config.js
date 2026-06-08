@@ -31,6 +31,27 @@ const config = {
   organizationName: 'rustfoo', // Usually your GitHub org/user name.
   projectName: 'rkt', // Usually your repo name.
 
+  // Mobile / PWA icons (Docusaurus only auto-links `favicon`, not these).
+  headTags: [
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'apple-touch-icon',
+        sizes: '180x180',
+        href: '/img/apple-touch-icon.png',
+      },
+    },
+    {
+      tagName: 'link',
+      attributes: {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '192x192',
+        href: '/img/rkt_favicon-192.png',
+      },
+    },
+  ],
+
   // @-alias links in the ported guide are not yet resolved — warn rather than fail the build.
   onBrokenLinks: 'warn',
 
@@ -63,8 +84,8 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
+      // Brand social card (link preview)
+      image: 'img/rkt-social-card.png',
       colorMode: {
         defaultMode: 'dark',
         disableSwitch: true,
@@ -72,6 +93,10 @@ const config = {
       },
       navbar: {
         title: 'rkt',
+        logo: {
+          alt: 'rkt mascot',
+          src: 'img/rkt_mascot.svg',
+        },
         items: [
           {
             type: 'docSidebar',

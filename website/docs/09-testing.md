@@ -276,7 +276,7 @@ mod test {
 ```
 
 The tests can be run with `cargo test`. You can find the full source code to
-[this example on GitHub](@git/master/examples/testing).
+[this example on GitHub](https://github.com/rustfoo/rkt/tree/main/examples/testing).
 
 ## Asynchronous Testing
 
@@ -292,7 +292,7 @@ a case. For more information, see the [`rkt::local`] and
 
 [`rkt::local`]: https://docs.rs/rkt/latest/rkt/local/index.html
 [`rkt::local::asynchronous`]: https://docs.rs/rkt/latest/rkt/local/asynchronous/index.html
-[`async_required` `testing` example]: @git/master/examples/testing/src/async_required.rs
+[`async_required` `testing` example]: https://github.com/rustfoo/rkt/blob/main/examples/testing/src/async_required.rs
 
 ## Codegen Debug
 

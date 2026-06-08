@@ -118,7 +118,7 @@ can read more about how Rocket formulates responses in the [responses section]
 of the guide or at the [API documentation for the Responder
 trait](https://docs.rs/rkt/latest/rkt/response/trait.Responder.html).
 
-[responses section]: ../responses/
+[responses section]: ./responses/
 
 Remember that routes first need to be mounted before Rocket dispatches requests
 to them. To mount the `index` route, modify the main function so that it reads:
@@ -414,7 +414,7 @@ async fn upload(paste: Data<'_>) -> std::io::Result<String> {
 ```
 
 [`Data`]: https://docs.rs/rkt/latest/rkt/data/struct.Data.html
-[data guard]: ../requests/#body-data
+[data guard]: ./requests/#body-data
 
 Your code should:
 
@@ -550,4 +550,4 @@ through some of them to get a better feel for Rocket. Here are some ideas:
     cleans up idling old pastes in `upload/`.
 
 You can find the full source code for the [completed pastebin tutorial on
-GitHub](@git/master/examples/pastebin).
+GitHub](https://github.com/rustfoo/rkt/tree/main/examples/pastebin).

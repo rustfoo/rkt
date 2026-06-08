@@ -122,7 +122,7 @@ fn json() -> RawTeapotJson {
 
 Responders may fail instead of generating a response by returning an `Err` with
 a status code. When this happens, Rocket forwards the request to the [error
-catcher](../requests/#error-catchers) for that status code.
+catcher](./requests/#error-catchers) for that status code.
 
 If an error catcher has been registered for the given status code, Rocket will
 invoke it. The catcher creates and returns a response to the client. If no error
@@ -376,7 +376,7 @@ are:
 [`Redirect`]: https://docs.rs/rkt/latest/rkt/response/struct.Redirect.html
 [`Flash`]: https://docs.rs/rkt/latest/rkt/response/struct.Flash.html
 [`MsgPack`]: https://docs.rs/rkt/latest/rkt/serde/msgpack/struct.MsgPack.html
-[`Template`]: @api/master/rkt_dyn_templates/struct.Template.html
+[`Template`]: https://docs.rs/rkt_dyn_templates/latest/rkt_dyn_templates/struct.Template.html
 
 ### Async Streams
 
@@ -436,7 +436,7 @@ how to detect and handle graceful shutdown requests.
 [`ReaderStream`]: https://docs.rs/rkt/latest/rkt/response/stream/struct.ReaderStream.html
 [`TextStream`]: https://docs.rs/rkt/latest/rkt/response/stream/struct.TextStream.html
 [`EventStream`]: https://docs.rs/rkt/latest/rkt/response/stream/struct.EventStream.html
-[`chat` example]: @git/master/examples/chat
+[`chat` example]: https://github.com/rustfoo/rkt/tree/main/examples/chat
 
 ### WebSockets
 
@@ -474,7 +474,7 @@ fn echo_stream(ws: WebSocket) -> Stream!['static] {
 For complete usage details, see the [`rkt_ws`] documentation.
 
 [HTTP connection upgrades]: https://docs.rs/rkt/latest/rkt/response/struct.Response.html#upgrading
-[`rkt_ws`]: @api/master/rkt_ws/
+[`rkt_ws`]: https://docs.rs/rkt_ws/latest/rkt_ws/
 
 ### JSON
 
@@ -513,7 +513,7 @@ The [serialization example] provides further illustration.
 [`Json`]: https://docs.rs/rkt/latest/rkt/serde/json/struct.Json.html
 [`Serialize`]: https://docs.serde.rs/serde/trait.Serialize.html
 [`serde`]: https://serde.rs
-[serialization example]: @git/master/examples/serialization
+[serialization example]: https://github.com/rustfoo/rkt/tree/main/examples/serialization
 
 ## Templates
 
@@ -562,7 +562,7 @@ fn index() -> Template {
 
 To render a template, it must first be registered. The `Template` fairing
 automatically registers all discoverable templates when attached. The
-[Fairings](../fairings/) sections of the guide provides more information on
+[Fairings](./fairings/) sections of the guide provides more information on
 fairings. To attach the template fairing, simply call
 `.attach(Template::fairing())` on an instance of `Rocket` as follows:
 
@@ -592,7 +592,7 @@ the name `"index"` in templates, i.e, `extends "index"` or `extends "base"`
 for `base.html.tera`.
 :::
 
-[`context!`]: @api/master/rkt_dyn_templates/macro.context.html
+[`context!`]: https://docs.rs/rkt_dyn_templates/latest/rkt_dyn_templates/macro.context.html
 
 ### Live Reloading
 
@@ -604,10 +604,10 @@ reloading is disabled.
 
 The [`Template`] API documentation contains more information about templates,
 including how to customize a template engine to add custom helpers and filters.
-The [templating example](@git/master/examples/templating) uses Tera, Handlebars and MiniJinja
+The [templating example](https://github.com/rustfoo/rkt/tree/main/examples/templating) uses Tera, Handlebars and MiniJinja
 templating to implement the same application.
 
-[configurable]: ../configuration/
+[configurable]: ./configuration/
 
 ## Typed URIs
 

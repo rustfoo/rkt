@@ -32,7 +32,7 @@ For any deployment, it's important to keep in mind:
      `0.0.0.0`. Your deployment environment may have different requirements.
      Recall that by default, you can set the address and port via the
      environment variables `ROCKET_ADDRESS` and `ROCKET_PORT` as well as through
-     [many other means](../configuration).
+     [many other means](./configuration).
 
   2. **Asset Bundling**
 
@@ -93,7 +93,7 @@ For any deployment, it's important to keep in mind:
 The following section addresses these concerns and more for common deployment
 scenarios.
 
-[DDoS mitigation]: @github/issues/1405
+[DDoS mitigation]: https://github.com/rwf2/Rocket/issues/1405
 [graceful shutdown]: https://docs.rs/rkt/latest/rkt/shutdown/struct.ShutdownConfig.html
 [`Shutdown`]: https://docs.rs/rkt/latest/rkt/struct.Shutdown.html
 [shutdown fairings]: https://docs.rs/rkt/latest/rkt/fairing/trait.Fairing.html#shutdown
@@ -329,4 +329,4 @@ environment, we provide only the following general guidelines:
     This level may omit messages helpful in understanding application
     misbehavior. To reenable those messages, set `ROCKET_LOG_LEVEL=debug`.
 
-[configuration profile]: ../configuration/#profiles
+[configuration profile]: ./configuration/#profiles

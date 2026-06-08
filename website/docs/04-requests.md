@@ -103,7 +103,7 @@ request contains a body of `Content-Type: application/x-www-form-urlencoded` and
 the form's **first** field has the name `_method` and a valid HTTP method name
 as its value (such as `"PUT"`), that field's value is used as the method for the
 incoming request.  This allows rkt applications to submit non-`POST` forms.
-The [todo example](@git/master/examples/todo/static/index.html.tera#L47) makes use of this
+The [todo example](https://github.com/rustfoo/rkt/blob/main/examples/todo/static/index.html.tera#L47) makes use of this
 feature to submit `PUT` and `DELETE` requests from a web form.
 
 ## Dynamic Paths
@@ -649,7 +649,7 @@ be set and removed using the `CookieJar` guard. The [cookies example] on GitHub
 illustrates further use of the `CookieJar` type to get and set cookies, while
 the [`CookieJar`] documentation contains complete usage information.
 
-[cookies example]: @git/master/examples/cookies
+[cookies example]: https://github.com/rustfoo/rkt/tree/main/examples/cookies
 
 ### Private Cookies
 
@@ -718,7 +718,7 @@ guide.
 [`get_private`]: https://docs.rs/rkt/latest/rkt/http/struct.CookieJar.html#method.get_private
 [`add_private`]: https://docs.rs/rkt/latest/rkt/http/struct.CookieJar.html#method.add_private
 [`remove_private`]: https://docs.rs/rkt/latest/rkt/http/struct.CookieJar.html#method.remove_private
-[Configuration]: ../configuration/
+[Configuration]: ./configuration/
 
 ## Format
 
@@ -836,7 +836,7 @@ We always use the extra annotation in the guide, but you may prefer the
 alternative.
 :::
 
-See the [JSON example](@git/master/examples/serialization/src/json.rs) on GitHub for a
+See the [JSON example](https://github.com/rustfoo/rkt/blob/main/examples/serialization/src/json.rs) on GitHub for a
 complete example.
 
 :::note[JSON support requires enabling rkt's `json` feature flag.]
@@ -1879,7 +1879,7 @@ forms feature.
 
 [`Contextual`]: https://docs.rs/rkt/latest/rkt/form/struct.Contextual.html
 [`Context`]: https://docs.rs/rkt/latest/rkt/form/struct.Context.html
-[forms example]: @git/master/examples/forms
+[forms example]: https://github.com/rustfoo/rkt/tree/main/examples/forms
 
 ## Query Strings
 

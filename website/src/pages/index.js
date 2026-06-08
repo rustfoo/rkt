@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import Layout from '@theme/Layout';
 import CodeBlock from '@theme/CodeBlock';
 import styles from './index.module.css';
@@ -106,11 +107,16 @@ function CrateCard({ name, description, link, linkLabel }) {
 
 function Hero() {
   const { siteConfig } = useDocusaurusContext();
+  const mascotUrl = useBaseUrl('/img/rkt_mascot.svg');
   return (
     <header className={styles.hero}>
+      <div className={styles.heroGlow} aria-hidden="true" />
       <div className={styles.heroInner}>
         <div className={styles.heroText}>
-          <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
+          <div className={styles.heroLockup}>
+            <img className={styles.heroMascot} src={mascotUrl} alt="rkt mascot" />
+            <h1 className={styles.heroTitle}>{siteConfig.title}</h1>
+          </div>
           <p className={styles.heroTagline}>{siteConfig.tagline}</p>
           <p className={styles.heroSubtitle}>
             An async web framework for Rust. Routes are type-checked at compile

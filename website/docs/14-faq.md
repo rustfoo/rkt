@@ -45,7 +45,7 @@ sink for all possible features.
 Unlike other frameworks, Rocket makes it its mission to help you avoid security
 and correctness blunders. It does this by including, out-of-the-box:
 
-  * A flexible, type-based [configuration](../configuration/) system.
+  * A flexible, type-based [configuration](./configuration/) system.
   * [Security and privacy headers](https://docs.rs/rkt/latest/rkt/shield/) by default.
   * Zero-Copy RFC compliant [URI parsers](https://docs.rs/rkt/latest/rkt/http/uri).
   * Safe, [typed URIs](https://docs.rs/rkt/latest/rkt/macro.uri.html) with compile-time checking.
@@ -74,8 +74,8 @@ time can be further reduced by using faster linkers like `lld`. We think the
 trade-off is worth it. Rocket will never compromise security, correctness, or
 usability to "win" at benchmarks of any sort.
 
-[`rkt_dyn_templates`]: @api/master/rkt_dyn_templates/
-[`rkt_ws`]: @api/master/rkt_ws/
+[`rkt_dyn_templates`]: https://docs.rs/rkt_dyn_templates/latest/rkt_dyn_templates/
+[`rkt_ws`]: https://docs.rs/rkt_ws/latest/rkt_ws/
 </div>
 </details>
 
@@ -190,8 +190,8 @@ zero-copy parsing and deserialization.
 <small>* A common mistake is to pit against Rocket's "Hello, world!" without
 normalizing for response size, especially security headers.</small>
 
-[managed state]: ../state/#managed-state
-[request-local state]: ../state/#request-local-state
+[managed state]: ./state/#managed-state
+[request-local state]: ./state/#request-local-state
 </div>
 </details>
 
@@ -219,7 +219,7 @@ you'd like to see here!
 [Rust-Lang.org]: https://www.rust-lang.org/
 [Plume]: https://github.com/Plume-org/Plume
 [Hagrid]: https://gitlab.com/keys.openpgp.org/hagrid
-[SourceGraph Syntax Highlighter]: https://github.com/sourcegraph/sourcegraph/tree/main/docker-images/syntax-highlighter
+[SourceGraph Syntax Highlighter]: https://github.com/sourcegraph/sourcegraph-public-snapshot/tree/main/docker-images/syntax-highlighter
 [Let us know]: https://github.com/rustfoo/rkt/discussions
 [Revolt]: https://github.com/revoltchat/backend
 </div>
@@ -277,7 +277,7 @@ Can I, and if so how, do I use WebSockets?
 <div class="content">
 
 You can! WebSocket support is provided by the officially maintained
-[`rkt_ws`](@api/master/rkt_ws/) crate. You'll find all the docs you need
+[`rkt_ws`](https://docs.rs/rkt_ws/latest/rkt_ws/) crate. You'll find all the docs you need
 there.
 
 Rocket _also_ supports [Server-Sent Events], which allows for real-time
@@ -287,7 +287,7 @@ the [chat example] uses SSE to implement a real-time, multiroom chat
 application.
 
 [Server-Sent Events]: https://docs.rs/rkt/latest/rkt/response/stream/struct.EventStream.html
-[chat example]: @git/master/examples/chat
+[chat example]: https://github.com/rustfoo/rkt/tree/main/examples/chat
 </div>
 </details>
 
@@ -329,7 +329,7 @@ submissions into any type that implements [`FromForm`]. This includes types like
 [`TempFile`] which streams the decoded data to disk for persistence.
 
 [multipart]: https://datatracker.ietf.org/doc/html/rfc7578
-[multipart forms]: ../requests/#multipart
+[multipart forms]: ./requests/#multipart
 [`TempFile`]: https://docs.rs/rkt/latest/rkt/fs/enum.TempFile.html
 [`DataField`]: https://docs.rs/rkt/latest/rkt/data/struct.Data.html
 [`Form`]: https://docs.rs/rkt/latest/rkt/form/struct.Form.html
@@ -366,7 +366,7 @@ out-of-the-box, and you can implement your own, too. See the following:
   * Form Guards: [`FromForm`]
   * Request Guards: [`FromRequest`]
 
-[philosophy]: ../introduction/#foreword
+[philosophy]: ./introduction/#foreword
 [`FromParam`]: https://docs.rs/rkt/latest/rkt/request/trait.FromParam.html
 [`FromSegments`]: https://docs.rs/rkt/latest/rkt/request/trait.FromSegments.html
 [`FromData`]: https://docs.rs/rkt/latest/rkt/data/trait.FromData.html
@@ -641,8 +641,8 @@ is to depend on a `contrib` library from git while also depending on a
 `crates.io` version of Rocket or vice-versa:
 
 ```toml
-rocket = { package = "rocket-community", version = "1.0.0" }
-rkt_dyn_templates = { git = "https://github.com/rocket-rs-community/Rocket.git" }
+rkt = { version = "1.0.0" }
+rkt_dyn_templates = { git = "https://github.com/rustfoo/rkt.git" }
 ```
 
 This is _never_ correct. If libraries or applications interact via types from a

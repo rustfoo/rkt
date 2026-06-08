@@ -5,7 +5,7 @@ sidebar_label: "Configuration"
 
 # Configuration
 
-Rocket's configuration system is flexible. Based on [Figment](@figment), it
+Rocket's configuration system is flexible. Based on [Figment](https://docs.rs/figment/latest/figment), it
 allows you to configure your application the way _you_ want while also providing
 a sensible set of defaults.
 
@@ -64,13 +64,13 @@ Values provided in a `default` profile are used as fall-back values when the
 selected profile doesn't contain a requested value, while values in the `global`
 profile supplant any values with the same name in any profile.
 
-[`Provider`]: @figment/trait.Provider.html
-[`Profile`]: @figment/struct.Profile.html
+[`Provider`]: https://docs.rs/figment/latest/figment/trait.Provider.html
+[`Profile`]: https://docs.rs/figment/latest/figment/struct.Profile.html
 [`Config`]: https://docs.rs/rkt/latest/rkt/struct.Config.html
 [`Config::figment()`]: https://docs.rs/rkt/latest/rkt/struct.Config.html#method.figment
-[`Toml`]: @figment/providers/struct.Toml.html
-[`Json`]: @figment/providers/struct.Json.html
-[`Figment`]: @figment/struct.Figment.html
+[`Toml`]: https://docs.rs/figment/latest/figment/providers/struct.Toml.html
+[`Json`]: https://docs.rs/figment/latest/figment/providers/struct.Json.html
+[`Figment`]: https://docs.rs/figment/latest/figment/struct.Figment.html
 [`Deserialize`]: https://docs.rs/rkt/latest/rkt/serde/trait.Deserialize.html
 [`LogLevel`]: https://docs.rs/rkt/latest/rkt/config/enum.LogLevel.html
 [`Limits`]: https://docs.rs/rkt/latest/rkt/data/struct.Limits.html
@@ -223,7 +223,7 @@ enabled. Failure to do so results in a hard error at launch time. The value of
 the parameter may either be a 256-bit base64 or hex string or a slice of 32
 bytes.
 
-[private cookies]: ../requests/#private-cookies
+[private cookies]: ./requests/#private-cookies
 
 ### Limits
 
@@ -248,7 +248,7 @@ Security). To enable TLS support:
 
      ```toml,ignore
      [dependencies]
-     rocket = { package = "rocket-community", version = "1.0.0", features = ["tls"] }
+     rkt = { version = "1.0.0", features = ["tls"] }
      ```
 
   2. Configure a TLS certificate chain and private key via the `tls.key` and
@@ -307,8 +307,8 @@ achieved by creating a [`Fairing`] which checks the SNI exposed in the
 [`Request::sni`] method.
 :::
 
-[`Fairing`]: ../fairings
-[`Request::sni`]: https://docs.rs/rocket-community/latest/rkt_community/struct.Request.html#method.sni
+[`Fairing`]: ./fairings
+[`Request::sni`]: https://docs.rs/rkt/latest/rkt/request/struct.Request.html#method.sni
 
 ### Mutual TLS
 
@@ -324,7 +324,7 @@ enabled and support configured via the `tls.mutual` config parameter:
 
    ```toml,ignore
    [dependencies]
-   rocket = { package = "rocket-community", version = "1.0.0", features = ["mtls"] }
+   rkt = { version = "1.0.0", features = ["mtls"] }
    ```
 
    This implicitly enables the `tls` feature.
@@ -371,7 +371,7 @@ fn auth(cert: Certificate<'_>) {
 }
 ```
 
-The [TLS example](@git/master/examples/tls) illustrates a fully configured TLS server with
+The [TLS example](https://github.com/rustfoo/rkt/tree/main/examples/tls) illustrates a fully configured TLS server with
 mutual TLS.
 
 :::warning[Rocket's built-in TLS supports only TLS 1.2 and 1.3.]
@@ -437,10 +437,10 @@ fn rocket() -> _ {
 
 Rocket will use the installed default whenever TLS is operational.
 
-[`rustls`]: @rustls
-[`CryptoProvider`]: @rustls/crypto/struct.CryptoProvider.html
-[`ring`]: @rustls/crypto/ring/index.html
-[installing]: @rustls/crypto/struct.CryptoProvider.html#method.install_default
+[`rustls`]: https://docs.rs/rustls/latest/rustls
+[`CryptoProvider`]: https://docs.rs/rustls/latest/rustls/crypto/struct.CryptoProvider.html
+[`ring`]: https://docs.rs/rustls/latest/rustls/crypto/ring/index.html
+[installing]: https://docs.rs/rustls/latest/rustls/crypto/struct.CryptoProvider.html#method.install_default
 
 ### Workers
 
@@ -463,7 +463,7 @@ virtual resources are scarce. Rocket only executes work on blocking threads when
 required, such as when performing file system I/O via [`TempFile`] or running
 synchronous database queries.
 
-[`spawn_blocking`]: @tokio/task/fn.spawn_blocking.html
+[`spawn_blocking`]: https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html
 [`TempFile`]: https://docs.rs/rkt/latest/rkt/fs/enum.TempFile.html
 
 ## Extracting Values
@@ -539,7 +539,7 @@ fn rocket() -> _ {
 A custom provider can be set via [`rkt::custom()`], which replaces calls to
 [`rkt::build()`]. The configured provider can be built on top of
 [`Config::figment()`], [`Config::default()`], both, or neither. The
-[Figment](@figment) documentation has full details on instantiating existing
+[Figment](https://docs.rs/figment/latest/figment) documentation has full details on instantiating existing
 providers like [`Toml`] and [`Json`] as well as creating custom providers for
 more complex cases.
 
