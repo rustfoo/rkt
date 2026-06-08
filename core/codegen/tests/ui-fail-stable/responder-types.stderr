@@ -21,16 +21,19 @@ error[E0277]: the trait bound `Header<'_>: From<u8>` is not satisfied
 11 |     other: u8,
    |     ^^^^^^^^^ the trait `From<u8>` is not implemented for `Header<'_>`
    |
-   = help: the following other types implement trait `From<T>`:
-             `Header<'_>` implements `From<&Cookie<'_>>`
-             `Header<'_>` implements `From<&ExpectCt>`
-             `Header<'_>` implements `From<&Frame>`
-             `Header<'_>` implements `From<&Hsts>`
-             `Header<'_>` implements `From<&NoSniff>`
-             `Header<'_>` implements `From<&Permission>`
-             `Header<'_>` implements `From<&Prefetch>`
-             `Header<'_>` implements `From<&Referrer>`
-           and $N others
+   = help: `Header<'_>` implements trait `From<T>`:
+             From<&Cookie<'_>>
+             From<&ExpectCt>
+             From<&Frame>
+             From<&Hsts>
+             From<&NoSniff>
+             From<&Permission>
+             From<&Prefetch>
+             From<&Referrer>
+             From<&XssFilter>
+             From<Accept>
+             From<ContentType>
+             From<Cookie<'_>>
    = note: required for `u8` to implement `Into<Header<'_>>`
 note: required by a bound in `Response::<'r>::set_header`
   --> $WORKSPACE/core/lib/src/response/response.rs
@@ -61,16 +64,19 @@ error[E0277]: the trait bound `Header<'_>: From<u8>` is not satisfied
 17 |     other: u8,
    |     ^^^^^^^^^ the trait `From<u8>` is not implemented for `Header<'_>`
    |
-   = help: the following other types implement trait `From<T>`:
-             `Header<'_>` implements `From<&Cookie<'_>>`
-             `Header<'_>` implements `From<&ExpectCt>`
-             `Header<'_>` implements `From<&Frame>`
-             `Header<'_>` implements `From<&Hsts>`
-             `Header<'_>` implements `From<&NoSniff>`
-             `Header<'_>` implements `From<&Permission>`
-             `Header<'_>` implements `From<&Prefetch>`
-             `Header<'_>` implements `From<&Referrer>`
-           and $N others
+   = help: `Header<'_>` implements trait `From<T>`:
+             From<&Cookie<'_>>
+             From<&ExpectCt>
+             From<&Frame>
+             From<&Hsts>
+             From<&NoSniff>
+             From<&Permission>
+             From<&Prefetch>
+             From<&Referrer>
+             From<&XssFilter>
+             From<Accept>
+             From<ContentType>
+             From<Cookie<'_>>
    = note: required for `u8` to implement `Into<Header<'_>>`
 note: required by a bound in `Response::<'r>::set_header`
   --> $WORKSPACE/core/lib/src/response/response.rs
@@ -84,16 +90,19 @@ error[E0277]: the trait bound `Header<'_>: From<std::string::String>` is not sat
 24 |     then: String,
    |     ^^^^^^^^^^^^ the trait `From<std::string::String>` is not implemented for `Header<'_>`
    |
-   = help: the following other types implement trait `From<T>`:
-             `Header<'_>` implements `From<&Cookie<'_>>`
-             `Header<'_>` implements `From<&ExpectCt>`
-             `Header<'_>` implements `From<&Frame>`
-             `Header<'_>` implements `From<&Hsts>`
-             `Header<'_>` implements `From<&NoSniff>`
-             `Header<'_>` implements `From<&Permission>`
-             `Header<'_>` implements `From<&Prefetch>`
-             `Header<'_>` implements `From<&Referrer>`
-           and $N others
+   = help: `Header<'_>` implements trait `From<T>`:
+             From<&Cookie<'_>>
+             From<&ExpectCt>
+             From<&Frame>
+             From<&Hsts>
+             From<&NoSniff>
+             From<&Permission>
+             From<&Prefetch>
+             From<&Referrer>
+             From<&XssFilter>
+             From<Accept>
+             From<ContentType>
+             From<Cookie<'_>>
    = note: required for `std::string::String` to implement `Into<Header<'_>>`
 note: required by a bound in `Response::<'r>::set_header`
   --> $WORKSPACE/core/lib/src/response/response.rs
