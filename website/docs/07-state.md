@@ -71,7 +71,7 @@ rkt::build()
 
 State that is being managed by Rocket can be retrieved via the
 [`&State`](https://docs.rs/rkt/latest/rkt/struct.State.html) type: a [request
-guard](../requests/#request-guards) for managed state. To use the request guard,
+guard](./requests/#request-guards) for managed state. To use the request guard,
 add a `&State<T>` type to any request handler, where `T` is the type of the
 managed state. For example, we can retrieve and respond with the current
 `HitCount` in a `count` route as follows:
@@ -117,7 +117,7 @@ Rocket will log an error message and return a **500** error to the client.
 :::
 
 You can find a complete example using the `HitCount` structure in the [state
-example on GitHub](@git/master/examples/state) and learn more about the [`manage`
+example on GitHub](https://github.com/rustfoo/rkt/tree/main/examples/state) and learn more about the [`manage`
 method](https://docs.rs/rkt/latest/rkt/struct.Rocket.html#method.manage) and [`State`
 type](https://docs.rs/rkt/latest/rkt/struct.State.html) in the API docs.
 
@@ -355,12 +355,12 @@ async fn get_item(pool: &State<DbPool>, id: i32) -> Option<String> {
 ### Examples
 
 For complete working examples — including a todo app with a web UI, templates,
-and automatic migrations — see the [`todo` example](@git/master/examples/todo)
-(sqlx + SQLite) and the [`databases` example](@git/master/examples/databases)
+and automatic migrations — see the [`todo` example](https://github.com/rustfoo/rkt/tree/main/examples/todo)
+(sqlx + SQLite) and the [`databases` example](https://github.com/rustfoo/rkt/tree/main/examples/databases)
 (sqlx + Diesel).
 
 [`manage()`]: https://docs.rs/rkt/latest/rkt/struct.Rocket.html#method.manage
 [`&State<Pool>`]: https://docs.rs/rkt/latest/rkt/struct.State.html
 [`sqlx`]: https://docs.rs/sqlx/
 [`AdHoc`]: https://docs.rs/rkt/latest/rkt/fairing/struct.AdHoc.html
-[`spawn_blocking`]: @tokio/task/fn.spawn_blocking.html
+[`spawn_blocking`]: https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html

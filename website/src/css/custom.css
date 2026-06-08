@@ -4,26 +4,87 @@
  * work well for content-centric websites.
  */
 
-/* rkt / Rocket brand palette — muted red */
+/* ── rkt brand tokens ─────────────────────────────────────────── */
 :root {
-  --ifm-color-primary: #9b3a3a;
-  --ifm-color-primary-dark: #8a3333;
-  --ifm-color-primary-darker: #823030;
-  --ifm-color-primary-darkest: #6b2727;
-  --ifm-color-primary-light: #ac4141;
-  --ifm-color-primary-lighter: #b14545;
-  --ifm-color-primary-lightest: #c05858;
+  --rkt-red: #d21c21;
+  --rkt-red-bright: #e84a4f;
+  --rkt-red-dark: #9e1419;
+  --rkt-slate: #49545e;
+  --rkt-slate-dark: #2b3138;
+  --rkt-slate-darker: #1c2127;
+
+  /* Punchy brand-red primary ramp */
+  --ifm-color-primary: #d21c21;
+  --ifm-color-primary-dark: #bd191d;
+  --ifm-color-primary-darker: #b2181c;
+  --ifm-color-primary-darkest: #931316;
+  --ifm-color-primary-light: #e02b30;
+  --ifm-color-primary-lighter: #e33b40;
+  --ifm-color-primary-lightest: #e95f63;
+
   --ifm-code-font-size: 95%;
+  --ifm-button-border-radius: 8px;
+  --ifm-heading-font-weight: 700;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
+/* The site ships in dark mode (switch disabled) — tune for that. */
 [data-theme='dark'] {
-  --ifm-color-primary: #c97070;
-  --ifm-color-primary-dark: #c06060;
-  --ifm-color-primary-darker: #b85858;
-  --ifm-color-primary-darkest: #a04545;
-  --ifm-color-primary-light: #d28080;
-  --ifm-color-primary-lighter: #d68888;
-  --ifm-color-primary-lightest: #de9e9e;
+  /* Brighter red so it pops against the dark slate background */
+  --ifm-color-primary: #f0565a;
+  --ifm-color-primary-dark: #ed3a3f;
+  --ifm-color-primary-darker: #eb2c31;
+  --ifm-color-primary-darkest: #d21c21;
+  --ifm-color-primary-light: #f37275;
+  --ifm-color-primary-lighter: #f48083;
+  --ifm-color-primary-lightest: #f8a6a8;
+
+  --ifm-background-color: #181c20;
+  --ifm-background-surface-color: #1f242a;
+  --ifm-navbar-background-color: #1b2025;
+  --ifm-footer-background-color: var(--rkt-slate-darker);
+
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* ── Navbar polish ────────────────────────────────────────────── */
+.navbar {
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 18px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.navbar__logo {
+  height: 2rem;
+}
+
+.navbar__title {
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  font-size: 1.25rem;
+}
+
+/* ── Buttons: punchier primary ────────────────────────────────── */
+.button--primary {
+  --ifm-button-background-color: var(--rkt-red);
+  --ifm-button-border-color: var(--rkt-red);
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(210, 28, 33, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.button--primary:hover {
+  --ifm-button-background-color: var(--rkt-red-bright);
+  --ifm-button-border-color: var(--rkt-red-bright);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(210, 28, 33, 0.45);
+}
+
+/* ── Misc accents ─────────────────────────────────────────────── */
+.menu__link--active,
+.table-of-contents__link--active {
+  font-weight: 700;
+}
+
+html {
+  scroll-behavior: smooth;
 }

@@ -43,9 +43,9 @@ policies.
 :::
 
 [`Fairing`]: https://docs.rs/rkt/latest/rkt/fairing/trait.Fairing.html
-[request guard]: ../requests/#request-guards
-[request guards]: ../requests/#request-guards
-[data guards]: ../requests/#body-data
+[request guard]: ./requests/#request-guards
+[request guards]: ./requests/#request-guards
+[data guards]: ./requests/#body-data
 
 ### Attaching
 

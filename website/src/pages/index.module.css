@@ -1,16 +1,49 @@
 /* ── Hero ────────────────────────────────────────────────────── */
 .hero {
-  background: linear-gradient(135deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary-dark) 100%);
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(800px 520px at 85% -15%, var(--rkt-slate) 0%, transparent 60%),
+    linear-gradient(160deg, var(--rkt-slate-dark) 0%, var(--rkt-slate-darker) 100%);
   color: #fff;
-  padding: 5rem 2rem;
+  padding: 6rem 2rem;
+}
+
+/* Soft slate highlight for depth */
+.heroGlow {
+  position: absolute;
+  top: -25%;
+  right: -8%;
+  width: 560px;
+  height: 560px;
+  background: radial-gradient(circle, rgba(73, 84, 94, 0.45) 0%, transparent 70%);
+  filter: blur(50px);
+  pointer-events: none;
+  z-index: 0;
 }
 
 .heroInner {
+  position: relative;
+  z-index: 1;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   gap: 3rem;
+}
+
+.heroLockup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.heroMascot {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.35));
 }
 
 @media (max-width: 900px) {
@@ -25,11 +58,12 @@
 }
 
 .heroTitle {
-  font-size: 4rem;
-  font-weight: 800;
-  margin: 0 0 0.25rem;
+  font-size: 4.5rem;
+  font-weight: 900;
+  margin: 0;
   color: #fff;
-  letter-spacing: -1px;
+  letter-spacing: -2px;
+  line-height: 1;
 }
 
 .heroTagline {
@@ -112,10 +146,17 @@
 
 .featureCard {
   padding: 1.5rem;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid var(--ifm-color-emphasis-200);
   border-top: 3px solid var(--ifm-color-primary);
-  background: var(--ifm-background-color);
+  background: var(--ifm-background-surface-color, var(--ifm-background-color));
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.featureCard:hover {
+  transform: translateY(-4px);
+  border-top-color: var(--rkt-red-bright);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
 }
 
 .featureCard h3 {
@@ -178,9 +219,15 @@
 
 .crateCard {
   padding: 1.5rem;
-  border-radius: 6px;
+  border-radius: 10px;
   border: 1px solid var(--ifm-color-emphasis-200);
-  background: var(--ifm-background-color);
+  background: var(--ifm-background-surface-color, var(--ifm-background-color));
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.crateCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
 }
 
 .crateName {
@@ -214,9 +261,11 @@
 
 /* ── CTA banner ──────────────────────────────────────────────── */
 .ctaBanner {
-  background: linear-gradient(135deg, var(--ifm-color-primary-darkest) 0%, var(--ifm-color-primary-dark) 100%);
+  background:
+    radial-gradient(700px 300px at 50% 0%, rgba(232, 74, 79, 0.4) 0%, transparent 70%),
+    linear-gradient(135deg, var(--rkt-red-dark) 0%, var(--rkt-red) 100%);
   color: #fff;
-  padding: 4rem 2rem;
+  padding: 4.5rem 2rem;
   text-align: center;
 }
 
