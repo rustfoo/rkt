@@ -5,7 +5,7 @@ authors.workspace = true
 description = """
 Types, traits, and parsers for HTTP requests, responses, and headers.
 """
-documentation = "https://docs.rs/rkt/latest/rkt_http/"
+documentation = "https://docs.rs/rkt_http/latest/rkt_http/"
 homepage.workspace = true
 repository.workspace = true
 readme.workspace = true
