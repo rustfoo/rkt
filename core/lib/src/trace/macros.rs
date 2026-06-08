@@ -46,7 +46,7 @@ macro_rules! event {
 }
 
 // Re-exports the macro at $path with the name $name. The point is to allow
-// a `#[macro_use] extern crate rocket` to also automatically import the
+// a `#[macro_use] extern crate rkt` to also automatically import the
 // relevant tracing macros.
 macro_rules! reexport {
     ($path:ident::$name:ident) => (

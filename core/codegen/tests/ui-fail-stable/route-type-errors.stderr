@@ -133,7 +133,7 @@ help: the trait `FromRequest<'_>` is not implemented for `Q`
              &'r Host<'r>
              &'r Limits
              &'r Route
-             &'r rkt::Config
+             &'r State<T>
            and $N others
 
 error[E0277]: the trait bound `Q: FromParam<'_>` is not satisfied
@@ -177,7 +177,7 @@ help: the trait `FromRequest<'_>` is not implemented for `Q`
              &'r Host<'r>
              &'r Limits
              &'r Route
-             &'r rkt::Config
+             &'r State<T>
            and $N others
 
 error[E0277]: the trait bound `Q: FromParam<'_>` is not satisfied
