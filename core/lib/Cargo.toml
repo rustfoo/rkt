@@ -5,7 +5,7 @@ authors.workspace = true
 description = """
 Web framework with a focus on usability, security, extensibility, and speed. (Community Fork)
 """
-documentation = "https://docs.rs/rustfoo/latest/rkt/"
+documentation = "https://docs.rs/rkt/latest/rkt/"
 homepage.workspace = true
 repository.workspace = true
 readme.workspace = true
