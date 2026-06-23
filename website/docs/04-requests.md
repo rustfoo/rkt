@@ -667,7 +667,7 @@ feature:
 
 ```toml
 ## in Cargo.toml
-rkt = { version = "1.0.0", features = ["secrets"] }
+rkt = { version = "1.0.1", features = ["secrets"] }
 ```
 
 The API for retrieving, adding, and removing private cookies is identical except
@@ -847,7 +847,7 @@ docs](https://docs.rs/rkt/latest/rkt/#features) for a list of available features
 feature can be enabled in the `Cargo.toml`:
 
 ```toml
-rkt = { version = "1.0.0", features = ["json"] }
+rkt = { version = "1.0.1", features = ["json"] }
 ```
 :::
 
