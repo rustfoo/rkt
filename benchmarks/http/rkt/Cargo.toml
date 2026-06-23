@@ -1,0 +1,13 @@
+[package]
+name = "rkt-bench"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[[bin]]
+name = "rkt-bench"
+path = "src/main.rs"
+
+[dependencies]
+rkt = { path = "../../../core/lib/", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
