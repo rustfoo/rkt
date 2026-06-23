@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+
+# Re-exec under bash if invoked via `sh` (which runs bash in POSIX mode and
+# breaks this script). $BASH is unset when running as POSIX `sh`.
+if [ -z "${BASH:-}" ]; then
+  exec bash "$0" "$@"
+fi
+
 set -e
 
 # Brings in _ROOT, _DIR, _DIRS globals.
