@@ -61,7 +61,7 @@ DOC_DIR=$(relative "target/doc") || exit $?
 VERSION=$(git grep -h "^version" "${CORE_LIB_ROOT}" | head -n 1 | cut -d '"' -f2)
 GIT_BRANCH="$(git branch --show-current)"
 GIT_BRANCH=${GIT_BRANCH:-$BRANCH}
-IS_DEV_BRANCH=$( [[ $GIT_BRANCH == "v"* ]]; echo $? )
+if [[ $GIT_BRANCH == "v"* ]]; then IS_DEV_BRANCH=0; else IS_DEV_BRANCH=1; fi
 
 case $IS_DEV_BRANCH in
   1) DOC_VERSION="${GIT_BRANCH}-$(future_date)" ;;
