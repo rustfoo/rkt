@@ -34,3 +34,6 @@ roadmap/
 
 # Uploads in pastebin example.
 examples/pastebin/upload/*
+
+# Benchmark files
+benchmarks/http/static/*
