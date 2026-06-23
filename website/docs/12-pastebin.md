@@ -58,7 +58,7 @@ Then add the usual rkt dependencies to the `Cargo.toml` file:
 
 ```toml
 [dependencies]
-rkt = "1.0.0"
+rkt = "1.0.1"
 ```
 
 And finally, create a skeleton rkt application to work off of in

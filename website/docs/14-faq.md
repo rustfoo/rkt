@@ -641,7 +641,7 @@ is to depend on a `contrib` library from git while also depending on a
 `crates.io` version of Rocket or vice-versa:
 
 ```toml
-rkt = { version = "1.0.0" }
+rkt = { version = "1.0.1" }
 rkt_dyn_templates = { git = "https://github.com/rustfoo/rkt.git" }
 ```
 
