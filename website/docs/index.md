@@ -6,7 +6,7 @@ sidebar_position: 1
 
 Welcome to rkt!
 
-This is the official guide for rvt v1.0.0. It is designed to serve as a
+This is the official guide for rkt v1.0.1. It is designed to serve as a
 starting point to writing web applications with rkt and Rust.
 
 The guide is also designed to be a reference for experienced Rocket developers.
