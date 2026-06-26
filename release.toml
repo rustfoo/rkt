@@ -1,0 +1,14 @@
+# cargo-release configuration.
+#
+# `Cargo.toml` (workspace.package.version) is the single source of truth for the
+# rkt version; every crate inherits it via `version.workspace = true`. The
+# documented version strings (READMEs, website, guide) are kept in lockstep by
+# `pre-release-replacements`, defined under [package.metadata.release] in
+# core/lib/Cargo.toml so they run exactly once (cargo-release otherwise applies
+# workspace-level replacements once per crate, resolving paths per-crate).
+#
+# Release a new version with, e.g.:  cargo release 1.0.2 --execute
+# (omit --execute for a dry run).
+
+# Bump every crate in the workspace together.
+shared-version = true

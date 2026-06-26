@@ -179,7 +179,7 @@ function QuickStart() {
             </Link>
           </div>
           <div className={styles.quickStartCode}>
-            <CodeBlock language="toml" title="Cargo.toml">{`[dependencies]\nrkt = "1.0.0"`}</CodeBlock>
+            <CodeBlock language="toml" title="Cargo.toml">{`[dependencies]\nrkt = "1.0.1"`}</CodeBlock>
             <CodeBlock language="rust" title="src/main.rs">{TYPED_EXAMPLE}</CodeBlock>
           </div>
         </div>

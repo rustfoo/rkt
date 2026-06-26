@@ -19,6 +19,23 @@ rust-version.workspace = true
 [package.metadata.docs.rs]
 all-features = true
 
+# cargo-release: keep documented version strings in lockstep with the workspace
+# version. These run once (scoped to the `rkt` crate); paths are relative to
+# this manifest (core/lib/), so `../../` reaches the repo root. See release.toml.
+[package.metadata.release]
+pre-release-replacements = [
+  { file = "../../README.md",                          search = 'rkt = "[0-9][0-9A-Za-z.-]*"',                       replace = 'rkt = "{{version}}"' },
+  { file = "../../website/src/pages/index.js",          search = 'rkt = "[0-9][0-9A-Za-z.-]*"',                       replace = 'rkt = "{{version}}"' },
+  { file = "../../website/docs/index.md",               search = 'guide for rkt v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z]+(\.[0-9A-Za-z]+)*)?', replace = 'guide for rkt v{{version}}' },
+  { file = "../../website/docs/02-getting-started.md",  search = 'rkt = "[0-9][0-9A-Za-z.-]*"',                       replace = 'rkt = "{{version}}"' },
+  { file = "../../website/docs/12-pastebin.md",         search = 'rkt = "[0-9][0-9A-Za-z.-]*"',                       replace = 'rkt = "{{version}}"' },
+  { file = "../../website/docs/14-faq.md",              search = 'rkt = \{ version = "[0-9][0-9A-Za-z.-]*"',          replace = 'rkt = { version = "{{version}}"' },
+  { file = "../../website/docs/10-configuration.md",    search = 'rkt = \{ version = "[0-9][0-9A-Za-z.-]*"',          replace = 'rkt = { version = "{{version}}"' },
+  { file = "../../website/docs/04-requests.md",         search = 'rkt = \{ version = "[0-9][0-9A-Za-z.-]*"',          replace = 'rkt = { version = "{{version}}"' },
+  { file = "../../contrib/ws/README.md",                search = 'package = "rkt_ws", version = "[0-9][0-9A-Za-z.-]*"', replace = 'package = "rkt_ws", version = "{{version}}"' },
+  { file = "../../contrib/dyn_templates/README.md",     search = 'version = "[0-9][0-9A-Za-z.-]*"',                   replace = 'version = "{{version}}"' },
+]
+
 [lints]
 workspace = true
 
