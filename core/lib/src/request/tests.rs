@@ -47,3 +47,43 @@ fn test_multiple_headers_merge_into_one_from_hyp() {
     assert_headers!("friend" => ["alice"], "friend" => ["bob"], "friend" => ["carol"]);
     assert_headers!("friend" => ["alice"], "friend" => ["bob"], "enemy" => ["carol"]);
 }
+
+// Regression: a request received over the network (i.e. built via `from_hyp`,
+// not via `add_header`) must still derive its secure context from a configured
+// proxy-proto header. Lazy headers mean `from_hyp` no longer routes through
+// `add_header`/`bust_header_cache`, so the update must happen in `from_hyp`.
+#[test]
+fn test_secure_context_from_proxy_proto_from_hyp() {
+    use crate::http::ProxyProto;
+
+    fn proto_client() -> Client {
+        let mut config = crate::Config::debug_default();
+        config.proxy_proto_header = Some("X-Forwarded-Proto".into());
+        Client::debug(crate::custom(config)).unwrap()
+    }
+
+    fn request_with(proto: Option<&'static str>) -> bool {
+        let mut req = hyper::Request::get("/test").body(()).unwrap();
+        if let Some(proto) = proto {
+            req.headers_mut().append(
+                "X-Forwarded-Proto",
+                hyper::header::HeaderValue::from_static(proto),
+            );
+        }
+
+        let client = proto_client();
+        let hyper = req.into_parts().0;
+        let request =
+            Request::from_hyp(client.rocket(), &hyper, ConnectionMeta::default()).unwrap();
+
+        if let Some(proto) = proto {
+            assert_eq!(request.proxy_proto(), Some(ProxyProto::from(proto)));
+        }
+
+        request.context_is_likely_secure()
+    }
+
+    assert!(request_with(Some("https")));
+    assert!(!request_with(Some("http")));
+    assert!(!request_with(None));
+}

@@ -27,6 +27,10 @@ pub struct ErasedRequest {
     // XXX: SAFETY: This (dependent) field must come first due to drop order!
     request: Request<'static>,
     _rocket: Arc<Rocket<Orbit>>,
+    // SAFETY-CRITICAL: `request` borrows from `_parts`: `Request::header_src`
+    // (and the header map lazily built from it) point at `_parts.headers`.
+    // `_parts` must therefore remain boxed (stable address across moves of
+    // this struct) and must never be mutated or replaced after construction.
     _parts: Box<Parts>,
 }
 
