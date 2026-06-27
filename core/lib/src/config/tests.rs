@@ -247,6 +247,50 @@ fn test_cli_colors() {
 }
 
 #[test]
+fn test_debug_headers() {
+    figment::Jail::expect_with(|jail| {
+        let config = Config::from(Config::figment());
+        assert_eq!(config.debug_headers, false);
+
+        jail.create_file(
+            "Rocket.toml",
+            r#"
+                [default]
+                debug_headers = true
+            "#,
+        )?;
+
+        let config = Config::from(Config::figment());
+        assert_eq!(config.debug_headers, true);
+
+        jail.create_file(
+            "Rocket.toml",
+            r#"
+                [default]
+                debug_headers = false
+            "#,
+        )?;
+
+        let config = Config::from(Config::figment());
+        assert_eq!(config.debug_headers, false);
+
+        jail.set_env("ROCKET_DEBUG_HEADERS", true);
+        let config = Config::from(Config::figment());
+        assert_eq!(config.debug_headers, true);
+
+        jail.set_env("ROCKET_DEBUG_HEADERS", false);
+        let config = Config::from(Config::figment());
+        assert_eq!(config.debug_headers, false);
+
+        // Only TOML booleans are accepted: `1` is an integer and must fail.
+        jail.set_env("ROCKET_DEBUG_HEADERS", 1);
+        assert!(Config::figment().extract::<Config>().is_err());
+
+        Ok(())
+    })
+}
+
+#[test]
 fn test_profiles_merge() {
     figment::Jail::expect_with(|jail| {
         jail.create_file(

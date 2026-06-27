@@ -35,11 +35,20 @@ impl Rocket<Orbit> {
         connection: ConnectionMeta,
     ) -> Result<hyper::Response<ReaderStream<ErasedResponse>>, http::Error> {
         connection.trace_debug();
+
+        // `span_debug!` runs its closure even when the subscriber discards
+        // `DEBUG` events, so also check that the level is enabled to avoid
+        // materializing and formatting headers that will never be logged.
+        let debug_headers = self.config.debug_headers
+            && tracing::enabled!(tracing::Level::DEBUG);
         let request = ErasedRequest::new(self, parts, |rocket, parts| {
             Request::from_hyp(rocket, parts, connection).unwrap_or_else(|e| e)
         });
 
-        span_debug!("request headers" => request.inner().headers().iter().trace_all_debug());
+        if debug_headers {
+            span_debug!("request headers" => request.inner().headers().iter().trace_all_debug());
+        }
+
         let mut response = request
             .into_response(
                 stream,
@@ -58,7 +67,10 @@ impl Rocket<Orbit> {
 
         // TODO: Should upgrades be handled in dispatch?
         response.inner().trace_info();
-        span_debug!("response headers" => response.inner().headers().iter().trace_all_debug());
+        if debug_headers {
+            span_debug!("response headers" => response.inner().headers().iter().trace_all_debug());
+        }
+
         let io_handler = response.make_io_handler(Rocket::extract_io_handler);
         if let (Some((proto, handler)), Some(upgrade)) = (io_handler, upgrade) {
             let upgrade = upgrade.map_ok(IoStream::from).map_err(io::Error::other);

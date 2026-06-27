@@ -168,11 +168,11 @@ impl Rocket<Orbit> {
         response: &mut Response<'r>,
         // io_stream: impl Future<Output = io::Result<IoStream>> + Send,
     ) -> Option<(String, Box<dyn IoHandler + 'r>)> {
-        let upgrades = request.headers().get("upgrade");
+        let upgrades = request.header_values("upgrade");
         let Ok(upgrade) = response.search_upgrades(upgrades) else {
             info!(
                 upgrades = %Formatter(|f| f.debug_list()
-                    .entries(request.headers().get("upgrade"))
+                    .entries(request.header_values("upgrade"))
                     .finish()),
                 "request wants upgrade but no i/o handler matched\n\
                 refusing to upgrade request"
