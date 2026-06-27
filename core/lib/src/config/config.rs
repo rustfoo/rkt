@@ -128,6 +128,16 @@ pub struct Config {
     /// Whether to use colors and emoji when logging. **(default:
     /// [`CliColors::Auto`])**
     pub cli_colors: CliColors,
+    /// Whether to log incoming request and outgoing response headers at the
+    /// `debug` level.
+    ///
+    /// Formatting headers for logging requires materializing the full header
+    /// map, a cost paid on _every_ request when enabled. It is therefore gated
+    /// separately from [`Config::log_level`] and defaults to off. Enable it via
+    /// `ROCKET_DEBUG_HEADERS=1` or `debug_headers = true` in `Rocket.toml`.
+    ///
+    /// **(default: `false`)**
+    pub debug_headers: bool,
     /// PRIVATE: This structure may grow (but never change otherwise) in a
     /// non-breaking release. As such, constructing this structure should
     /// _always_ be done using a public constructor or update syntax:
@@ -202,6 +212,7 @@ impl Config {
             log_level: Some(Level::INFO),
             log_format: TraceFormat::Pretty,
             cli_colors: CliColors::Auto,
+            debug_headers: false,
             __non_exhaustive: (),
         }
     }

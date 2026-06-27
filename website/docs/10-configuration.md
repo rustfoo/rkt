@@ -34,6 +34,7 @@ values:
 | `keep_alive`         | `u32`              | Keep-alive timeout seconds; disabled when `0`.  | `5`                           |
 | `log_level`          | [`LogLevel`]       | Max level to log. (off/normal/debug/critical)   | `normal`/`critical`           |
 | `cli_colors`         | [`CliColors`]      | Whether to use colors and emoji when logging.   | `"auto"`                      |
+| `debug_headers`      | `bool`             | Whether to log request/response headers.        | `false`                       |
 | `secret_key`         | [`SecretKey`]      | Secret key for signing and encrypting values.   | `None`                        |
 | `tls`                | [`TlsConfig`]      | TLS configuration, if any.                      | `None`                        |
 | `limits`             | [`Limits`]         | Streaming read size limits.                     | [`Limits::default()`]         |
@@ -162,6 +163,7 @@ proxy_proto_header = false # set to `false` (the default) to disable
 log_level = "normal"
 temp_dir = "/tmp"
 cli_colors = true
+debug_headers = false # set to `true` to log request/response headers
 # NOTE: Don't (!) use this key! Generate your own and keep it private!
 #       e.g. via `head -c64 /dev/urandom | base64`
 secret_key = "hPrYyЭRiMyµ5sBB1π+CMæ1køFsåqKvBiQJxBVHQk="
@@ -465,6 +467,33 @@ synchronous database queries.
 
 [`spawn_blocking`]: https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html
 [`TempFile`]: https://docs.rs/rkt/latest/rkt/fs/enum.TempFile.html
+
+### Header Logging
+
+For performance, Rocket only inspects the request headers a handler actually
+uses, reading individual values (such as `Content-Type` and `Accept`) directly
+from the parsed request without copying the entire header map. Requests whose
+handlers never touch the headers avoid that work entirely.
+
+Logging every request and response header defeats this optimization: it forces
+the full header map to be materialized and formatted on _every_ request. Because
+that cost is independent of the desired `log_level`, header logging is gated
+behind its own `debug_headers` parameter, which defaults to `false`:
+
+```toml
+[default]
+debug_headers = true
+```
+
+Or via the environment:
+
+```sh
+ROCKET_DEBUG_HEADERS=true cargo run
+```
+
+When enabled, request and response headers are emitted at the `debug` log level,
+so [`log_level`](#default-provider) must also permit `debug` output for the
+headers to appear.
 
 ## Extracting Values
 

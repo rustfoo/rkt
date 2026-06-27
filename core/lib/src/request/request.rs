@@ -1,5 +1,6 @@
 use std::borrow::Cow;
 use std::future::Future;
+use std::mem::transmute;
 use std::net::IpAddr;
 use std::ops::RangeFrom;
 use std::str::FromStr;
@@ -32,7 +33,21 @@ use crate::listener::{Certificates, Endpoint};
 pub struct Request<'r> {
     method: AtomicMethod,
     uri: Origin<'r>,
-    headers: HeaderMap<'r>,
+    /// Rocket's view of the request headers. Built lazily on first access (see
+    /// [`Request::headers`]) so that requests whose handlers never inspect
+    /// headers avoid copying hyper's already-parsed map into Rocket's own. For
+    /// locally-constructed requests this starts empty and is mutated directly.
+    ///
+    /// The cell stores `HeaderMap<'static>` rather than `HeaderMap<'r>` so that
+    /// its interior mutability does not make `Request<'r>` invariant over `'r`;
+    /// the erased-request machinery (`erased.rs`) requires `Request` to stay
+    /// covariant. Every entry actually borrows from `header_src` (a `&'r ..`)
+    /// or from values inserted through the `&'r mut` view, so the lifetime is
+    /// narrowed back to `'r` at every access in `headers`/`headers_mut`.
+    headers: InitCell<HeaderMap<'static>>,
+    /// The source for lazy header materialization: hyper's parsed header map.
+    /// `None` for requests not built from a hyper request (e.g. local/test).
+    header_src: Option<&'r http::HeaderMap>,
     pub(crate) version: Option<HttpVersion>,
     pub(crate) errors: Vec<RequestError>,
     pub(crate) connection: ConnectionMeta,
@@ -100,7 +115,8 @@ impl<'r> Request<'r> {
         Request {
             uri,
             method: AtomicMethod::new(method),
-            headers: HeaderMap::new(),
+            headers: InitCell::new(),
+            header_src: None,
             version,
             errors: Vec::new(),
             connection: ConnectionMeta::default(),
@@ -463,7 +479,7 @@ impl<'r> Request<'r> {
             .config
             .proxy_proto_header
             .as_ref()
-            .and_then(|header| self.headers().get_one(header.as_str()))
+            .and_then(|header| self.header(header.as_str()))
             .map(ProxyProto::from)
     }
 
@@ -577,6 +593,12 @@ impl<'r> Request<'r> {
 
     /// Returns a [`HeaderMap`] of all of the headers in `self`.
     ///
+    /// For requests received over the network, calling this builds Rocket's
+    /// full header map from the connection's parsed headers. If you only need to
+    /// read one or a few headers, prefer [`Request::header()`] or
+    /// [`Request::header_values()`], which read individual values without that
+    /// up-front cost.
+    ///
     /// # Example
     ///
     /// ```rust
@@ -591,7 +613,106 @@ impl<'r> Request<'r> {
     /// ```
     #[inline(always)]
     pub fn headers(&self) -> &HeaderMap<'r> {
-        &self.headers
+        let src = self.header_src;
+        let map = self.headers.get_or_init(move || {
+            let map = match src {
+                Some(src) => convert_headers(src),
+                None => HeaderMap::new(),
+            };
+
+            // SAFETY: We widen `'r` to `'static` only for storage; the cell is
+            // private and every read narrows it back to `'r` (below and in
+            // `headers_mut`). Entries borrow from `header_src`/inserted values,
+            // all valid for `'r`, and `'r` outlives this cell (it lives in
+            // `Request<'r>`), so no entry can dangle.
+            unsafe { transmute::<HeaderMap<'r>, HeaderMap<'static>>(map) }
+        });
+
+        // SAFETY: Narrow the lifetime we widened on insertion back to `'r`.
+        unsafe { transmute::<&HeaderMap<'static>, &HeaderMap<'r>>(map) }
+    }
+
+    /// Returns a mutable reference to the (lazily materialized) header map.
+    #[inline(always)]
+    fn headers_mut(&mut self) -> &mut HeaderMap<'r> {
+        // Ensure the lazy map is materialized before handing out a `&mut`.
+        self.headers();
+        let map = self
+            .headers
+            .try_get_mut()
+            .expect("`headers()` initialized the cell above");
+
+        // SAFETY: As in `headers`; narrow the stored `'static` back to `'r`.
+        // Values inserted through this view satisfy `'h: 'r`, so they remain
+        // valid for `'r` and the widening is reversible.
+        unsafe { transmute::<&mut HeaderMap<'static>, &mut HeaderMap<'r>>(map) }
+    }
+
+    /// Returns the first value of the header with name `name`, if any.
+    ///
+    /// Unlike [`Request::headers()`], this does **not** force Rocket's full
+    /// [`HeaderMap`] to be built: for requests received over the network, the
+    /// value is read directly from the connection's already-parsed headers.
+    /// Prefer this (or [`Request::header_values()`]) over `headers().get_one()`
+    /// when you only need to inspect a header or two, as is typical in
+    /// [`FromRequest`](crate::request::FromRequest) implementations.
+    ///
+    /// Header values that aren't valid UTF-8 are treated as absent.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use rkt::http::Header;
+    ///
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let req = c.get("/").header(Header::new("X-Custom", "value"));
+    /// # let req = req.inner();
+    /// assert_eq!(req.header("X-Custom"), Some("value"));
+    /// assert_eq!(req.header("X-Missing"), None);
+    /// ```
+    #[inline]
+    pub fn header(&self, name: &str) -> Option<&str> {
+        if let Some(headers) = self.headers.try_get() {
+            return headers.get_one(name);
+        }
+
+        self.header_src
+            .and_then(|src| src.get(name))
+            .and_then(|value| std::str::from_utf8(value.as_bytes()).ok())
+    }
+
+    /// Returns an iterator over all values of the header with name `name`.
+    ///
+    /// Like [`Request::header()`], this avoids materializing Rocket's full
+    /// [`HeaderMap`], reading directly from the connection's parsed headers for
+    /// network requests. Values that aren't valid UTF-8 are skipped.
+    ///
+    /// # Example
+    ///
+    /// ```rust
+    /// use rkt::http::Header;
+    ///
+    /// # let c = rkt::local::blocking::Client::debug_with(vec![]).unwrap();
+    /// # let req = c.get("/")
+    /// #     .header(Header::new("X-Custom", "a"))
+    /// #     .header(Header::new("X-Custom", "b"));
+    /// # let req = req.inner();
+    /// let values: Vec<_> = req.header_values("X-Custom").collect();
+    /// assert_eq!(values, vec!["a", "b"]);
+    /// ```
+    #[inline]
+    pub fn header_values<'a>(&'a self, name: &'a str) -> impl Iterator<Item = &'a str> {
+        let materialized = self.headers.try_get();
+        let from_rocket = materialized.into_iter().flat_map(move |h| h.get(name));
+        let from_hyper = materialized
+            .is_none()
+            .then_some(self.header_src)
+            .flatten()
+            .into_iter()
+            .flat_map(move |src| src.get_all(name))
+            .filter_map(|value| std::str::from_utf8(value.as_bytes()).ok());
+
+        from_rocket.chain(from_hyper)
     }
 
     /// Add `header` to `self`'s headers. The type of `header` can be any type
@@ -616,7 +737,7 @@ impl<'r> Request<'r> {
     pub fn add_header<'h: 'r, H: Into<Header<'h>>>(&mut self, header: H) {
         let header = header.into();
         self.bust_header_cache(&header, false);
-        self.headers.add(header);
+        self.headers_mut().add(header);
     }
 
     /// Replaces the value of the header with name `header.name` with
@@ -645,7 +766,7 @@ impl<'r> Request<'r> {
     pub fn replace_header<'h: 'r, H: Into<Header<'h>>>(&mut self, header: H) {
         let header = header.into();
         self.bust_header_cache(&header, true);
-        self.headers.replace(header);
+        self.headers_mut().replace(header);
     }
 
     /// Returns the Content-Type header of `self`. If the header is not present,
@@ -668,8 +789,7 @@ impl<'r> Request<'r> {
         self.state
             .content_type
             .get_or_init(|| {
-                self.headers()
-                    .get_one("Content-Type")
+                self.header("Content-Type")
                     .and_then(|v| v.parse().ok())
             })
             .as_ref()
@@ -693,8 +813,7 @@ impl<'r> Request<'r> {
         self.state
             .accept
             .get_or_init(|| {
-                self.headers()
-                    .get_one("Accept")
+                self.header("Accept")
                     .and_then(|v| v.parse().ok())
             })
             .as_ref()
@@ -1233,22 +1352,50 @@ impl<'r> Request<'r> {
             }
         }
 
-        // Set the rest of the headers. This is rather unfortunate and slow.
-        for (header, value) in hyper.headers.iter() {
-            // FIXME: This is rather unfortunate. Header values needn't be UTF8.
-            let Ok(value) = std::str::from_utf8(value.as_bytes()) else {
-                warn!(%header, "dropping header with invalid UTF-8");
-                continue;
-            };
-
-            request.add_header(Header::new(header.as_str(), value));
+        // Update the cookie jar's "secure" context from the proxy-proto header,
+        // if one is configured. This mirrors `bust_header_cache`, which performs
+        // the same update for headers added via `add_header` — a path that real
+        // (non-local) requests no longer take now that headers are lazy. Reading
+        // directly from hyper avoids materializing Rocket's `HeaderMap`.
+        if let Some(proto_header) = rocket.config.proxy_proto_header.as_ref() {
+            if let Some(proto) = hyper
+                .headers
+                .get(proto_header.as_str())
+                .and_then(|value| std::str::from_utf8(value.as_bytes()).ok())
+            {
+                request.state.cookies.state.secure |= ProxyProto::from(proto).is_https();
+            }
         }
+
+        // Point at hyper's already-parsed header map; Rocket's own `HeaderMap`
+        // is built lazily on first `headers()` access (see `convert_headers`),
+        // avoiding a full copy for handlers that never inspect headers.
+        request.header_src = Some(&hyper.headers);
 
         match request.errors.is_empty() {
             true => Ok(request),
             false => Err(request),
         }
     }
+}
+
+/// Copies hyper's parsed headers into Rocket's `HeaderMap`, borrowing names and
+/// values (no string allocation) for the lifetime of the source. Headers whose
+/// values aren't valid UTF-8 are dropped with a warning, as Rocket's `HeaderMap`
+/// stores `str` values. Called lazily on first `Request::headers` access.
+fn convert_headers(src: &http::HeaderMap) -> HeaderMap<'_> {
+    let mut headers = HeaderMap::new();
+    for (header, value) in src.iter() {
+        // FIXME: This is rather unfortunate. Header values needn't be UTF8.
+        let Ok(value) = std::str::from_utf8(value.as_bytes()) else {
+            warn!(%header, "dropping header with invalid UTF-8");
+            continue;
+        };
+
+        headers.add(Header::new(header.as_str(), value));
+    }
+
+    headers
 }
 
 #[derive(Debug, Clone)]
