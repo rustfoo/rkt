@@ -15,7 +15,7 @@ COLORS = {
     "actix": {"bg": "rgba(60,  180, 100, 0.75)", "border": "rgba(60,  180, 100, 1)"},
 }
 
-API_SCENARIOS    = ["ping", "hello", "query", "headers", "state"]
+API_SCENARIOS    = ["ping", "hello", "query", "headers", "headers-heavy", "state"]
 FILE_SCENARIOS   = ["file-small", "file-large"]
 
 def load(framework, scenario):
