@@ -23,7 +23,7 @@ ACTIX_PORT=8002
 DURATION=30
 CONCURRENCY=100
 PARALLEL=false
-SCENARIOS="ping,hello,state,query,headers,file-small,file-large"
+SCENARIOS="ping,hello,state,query,headers,headers-heavy,file-small,file-large"
 
 usage() {
     echo "Usage: $0 [--parallel] [-d seconds] [-c connections] [-s scenario,...]"
@@ -33,7 +33,7 @@ usage() {
     echo "  -c N          Concurrent connections (default: 100)"
     echo "  -s LIST       Comma-separated scenarios to run (default: all)"
     echo
-    echo "Scenarios: ping, hello, state, query, headers, file-small, file-large"
+    echo "Scenarios: ping, hello, state, query, headers, headers-heavy, file-small, file-large"
     exit 0
 }
 
@@ -132,6 +132,11 @@ scenario_url() {
         state)      echo "http://localhost:$port/state/key-42" ;;
         query)      echo "http://localhost:$port/query?msg=hello&n=42" ;;
         headers)    echo "http://localhost:$port/headers" ;;
+        # headers-heavy hits /ping (a no-op route that never reads headers) but
+        # sends a large, realistic header set. Same route/response as `ping`, so
+        # the delta between the two scenarios isolates pure per-request header
+        # handling cost — the path lazy-header materialization aims to avoid.
+        headers-heavy) echo "http://localhost:$port/ping" ;;
         file-small) echo "http://localhost:$port/files/small.txt" ;;
         file-large) echo "http://localhost:$port/files/large.bin" ;;
         *) echo "Unknown scenario: $scenario" >&2; exit 1 ;;
@@ -145,6 +150,30 @@ run_oha() {
 
     if [[ $scenario == "headers" ]]; then
         extra_flags+=(-H "X-Bench-Id: bench-run-001")
+    fi
+
+    # A realistic browser/proxy header set (~16 headers on top of Host, which
+    # oha sends automatically). The route ignores all of these; they exist only
+    # to make per-request header handling a measurable share of the work.
+    if [[ $scenario == "headers-heavy" ]]; then
+        extra_flags+=(
+            -H "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+            -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8"
+            -H "Accept-Language: en-GB,en-US;q=0.9,en;q=0.8"
+            -H "Accept-Encoding: gzip, deflate, br"
+            -H "Cache-Control: no-cache"
+            -H "Pragma: no-cache"
+            -H "Referer: https://example.com/some/previous/page?with=query"
+            -H "Origin: https://example.com"
+            -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJiZW5jaCJ9.signature-placeholder-value"
+            -H "Cookie: session=8f3a2b1c9d4e5f60718293a4b5c6d7e8; csrftoken=abc123def456ghi789; theme=dark; locale=en-GB; consent=1"
+            -H "X-Forwarded-For: 203.0.113.7, 198.51.100.42"
+            -H "X-Forwarded-Proto: https"
+            -H "X-Forwarded-Host: example.com"
+            -H "X-Request-Id: 9b2c4d6e-8f01-4a23-b567-89abcdef0123"
+            -H "DNT: 1"
+            -H "Upgrade-Insecure-Requests: 1"
+        )
     fi
 
     oha -z "${DURATION}s" -c "$CONCURRENCY" --no-tui --output-format json \
