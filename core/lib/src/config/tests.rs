@@ -2,7 +2,6 @@ use figment::{Figment, Profile};
 use pretty_assertions::assert_eq;
 use tracing::Level;
 
-// use crate::log::LogLevel;
 use crate::config::{CliColors, Config};
 use crate::data::{Limits, ToByteUnit};
 

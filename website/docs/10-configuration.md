@@ -32,7 +32,7 @@ values:
 | `ip_header`          | `string`, `false`  | IP header to inspect to get [client's real IP]. | `"X-Real-IP"`                 |
 | `proxy_proto_header` | `string`, `false`  | Header identifying [client to proxy protocol].  | `None`                        |
 | `keep_alive`         | `u32`              | Keep-alive timeout seconds; disabled when `0`.  | `5`                           |
-| `log_level`          | [`LogLevel`]       | Max level to log. (off/normal/debug/critical)   | `normal`/`critical`           |
+| `log_level`          | [`Level`]          | Max level to log. (off/error/warn/info/debug/trace, or 0-5) | `info`/`error`    |
 | `cli_colors`         | [`CliColors`]      | Whether to use colors and emoji when logging.   | `"auto"`                      |
 | `debug_headers`      | `bool`             | Whether to log request/response headers.        | `false`                       |
 | `secret_key`         | [`SecretKey`]      | Secret key for signing and encrypting values.   | `None`                        |
@@ -73,7 +73,7 @@ profile supplant any values with the same name in any profile.
 [`Json`]: https://docs.rs/figment/latest/figment/providers/struct.Json.html
 [`Figment`]: https://docs.rs/figment/latest/figment/struct.Figment.html
 [`Deserialize`]: https://docs.rs/rkt/latest/rkt/serde/trait.Deserialize.html
-[`LogLevel`]: https://docs.rs/rkt/latest/rkt/config/enum.LogLevel.html
+[`Level`]: https://docs.rs/rkt/latest/rkt/config/enum.Level.html
 [`Limits`]: https://docs.rs/rkt/latest/rkt/data/struct.Limits.html
 [`Limits::default()`]: https://docs.rs/rkt/latest/rkt/data/struct.Limits.html#impl-Default-for-Limits
 [`SecretKey`]: https://docs.rs/rkt/latest/rkt/config/struct.SecretKey.html
@@ -97,7 +97,7 @@ sources in ascending priority order:
 The selected profile is the value of the `ROCKET_PROFILE` environment variable,
 or if it is not set, "debug" when compiled in debug mode and "release" when
 compiled in release mode. With the exception of `log_level`, which changes from
-`normal` in debug to `critical` in release, all of the default configuration
+`info` in debug to `error` in release, all of the default configuration
 values are the same in all profiles. What's more, all configuration values
 _have_ defaults, so no configuration is needed to get started.
 
@@ -160,7 +160,7 @@ keep_alive = 5
 ident = "Rocket"
 ip_header = "X-Real-IP" # set to `false` to disable
 proxy_proto_header = false # set to `false` (the default) to disable
-log_level = "normal"
+log_level = "info"
 temp_dir = "/tmp"
 cli_colors = true
 debug_headers = false # set to `true` to log request/response headers
@@ -342,7 +342,7 @@ enabled and support configured via the `tls.mutual` config parameter:
    ```
 
 The `tls.mutual` parameter is expected to be a dictionary that deserializes into a
-[`MutualTls`] structure:
+[`MtlsConfig`] structure:
 
 | key         | required  | type                                                        |
 |-------------|-----------|-------------------------------------------------------------|
