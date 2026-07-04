@@ -2,7 +2,7 @@ error: need at least one field
  --> tests/ui-fail-stable/responder.rs:4:1
   |
 4 | struct Thing1;
-  | ^^^^^^^^^^^^^^
+  | ^^^^^^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `Responder`␛[0m
  --> tests/ui-fail-stable/responder.rs:3:10
@@ -44,7 +44,7 @@ error: only one lifetime is supported
   --> tests/ui-fail-stable/responder.rs:16:14
    |
 16 | struct Thing4<'a, 'b>(&'a str, &'b str);
-   |              ^^^^^^^^
+   |              ^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `Responder`␛[0m
   --> tests/ui-fail-stable/responder.rs:15:10

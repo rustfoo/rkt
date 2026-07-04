@@ -2,7 +2,7 @@ error: enums are not supported
  --> tests/ui-fail-stable/from_form.rs:4:1
   |
 4 | enum Thing { }
-  | ^^^^^^^^^^^^^^
+  | ^^^^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
  --> tests/ui-fail-stable/from_form.rs:3:10
@@ -16,7 +16,7 @@ error: at least one field is required
  --> tests/ui-fail-stable/from_form.rs:7:1
   |
 7 | struct Foo1;
-  | ^^^^^^^^^^^^
+  | ^^^^^^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
  --> tests/ui-fail-stable/from_form.rs:6:10
@@ -93,14 +93,13 @@ error: ␛[1;34m[␛[0m␛[1;36mhelp␛[0m␛[1;34m] ␛[0m␛[1;39mdeclared in 
   --> tests/ui-fail-stable/from_form.rs:36:5
    |
 36 |     foo: usize,
-   |     ^^^^^^^^^^
+   |     ^^^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mprevious field with conflicting name␛[0m
   --> tests/ui-fail-stable/from_form.rs:34:5
    |
-34 | /     #[field(name = "foo")]
-35 | |     field: String,
-   | |_________________^
+34 |     #[field(name = "foo")]
+   |     ^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
   --> tests/ui-fail-stable/from_form.rs:32:10
@@ -119,16 +118,14 @@ error: field name conflicts with previous name
 error: ␛[1;34m[␛[0m␛[1;36mhelp␛[0m␛[1;34m] ␛[0m␛[1;39mdeclared in this field␛[0m
   --> tests/ui-fail-stable/from_form.rs:43:5
    |
-43 | /     #[field(name = "hello")]
-44 | |     other: String,
-   | |_________________^
+43 |     #[field(name = "hello")]
+   |     ^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mprevious field with conflicting name␛[0m
   --> tests/ui-fail-stable/from_form.rs:41:5
    |
-41 | /     #[field(name = "hello")]
-42 | |     first: String,
-   | |_________________^
+41 |     #[field(name = "hello")]
+   |     ^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
   --> tests/ui-fail-stable/from_form.rs:39:10
@@ -147,15 +144,14 @@ error: field name conflicts with previous name
 error: ␛[1;34m[␛[0m␛[1;36mhelp␛[0m␛[1;34m] ␛[0m␛[1;39mdeclared in this field␛[0m
   --> tests/ui-fail-stable/from_form.rs:50:5
    |
-50 | /     #[field(name = "first")]
-51 | |     other: String,
-   | |_________________^
+50 |     #[field(name = "first")]
+   |     ^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mprevious field with conflicting name␛[0m
   --> tests/ui-fail-stable/from_form.rs:49:5
    |
 49 |     first: String,
-   |     ^^^^^^^^^^^^^
+   |     ^^^^^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
   --> tests/ui-fail-stable/from_form.rs:47:10
@@ -169,7 +165,7 @@ error: unexpected attribute parameter: `field`
   --> tests/ui-fail-stable/from_form.rs:56:28
    |
 56 |     #[field(name = "blah", field = "bloo")]
-   |                            ^^^^^^^^^^^^^^
+   |                            ^^^^^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
   --> tests/ui-fail-stable/from_form.rs:54:10
@@ -225,7 +221,7 @@ error: unexpected attribute parameter: `beep`
   --> tests/ui-fail-stable/from_form.rs:80:13
    |
 80 |     #[field(beep = "bop")]
-   |             ^^^^^^^^^^^^
+   |             ^^^^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
   --> tests/ui-fail-stable/from_form.rs:78:10
@@ -238,10 +234,8 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
 error: field has conflicting names
   --> tests/ui-fail-stable/from_form.rs:86:5
    |
-86 | /     #[field(name = "blah")]
-87 | |     #[field(name = "blah")]
-88 | |     my_field: String,
-   | |____________________^
+86 |     #[field(name = "blah")]
+   |     ^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthis field name...␛[0m
   --> tests/ui-fail-stable/from_form.rs:86:20
@@ -399,7 +393,7 @@ error: duplicate attribute parameter: default
    --> tests/ui-fail-stable/from_form.rs:177:26
     |
 177 |     #[field(default = 1, default = 2)]
-    |                          ^^^^^^^^^^^
+    |                          ^^^^^^^
 
 error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
    --> tests/ui-fail-stable/from_form.rs:175:10
@@ -590,6 +584,7 @@ error[E0277]: the trait bound `bool: From<&str>` is not satisfied
     = help: `bool` implements trait `From<T>`:
               From<format_description::parse::format_item::HourBase>
               From<format_description::parse::format_item::MonthCaseSensitive>
+              From<format_description::parse::format_item::OptionalFormat>
               From<format_description::parse::format_item::PeriodCase>
               From<format_description::parse::format_item::PeriodCaseSensitive>
               From<format_description::parse::format_item::SignBehavior>
