@@ -546,6 +546,7 @@ error[E0277]: the trait bound `bool: From<&str>` is not satisfied
     = help: `bool` implements trait `From<T>`:
               From<format_description::parse::format_item::HourBase>
               From<format_description::parse::format_item::MonthCaseSensitive>
+              From<format_description::parse::format_item::OptionalFormat>
               From<format_description::parse::format_item::PeriodCase>
               From<format_description::parse::format_item::PeriodCaseSensitive>
               From<format_description::parse::format_item::SignBehavior>

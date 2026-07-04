@@ -25,6 +25,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   default; set `debug_headers = true` (or `ROCKET_DEBUG_HEADERS=true`) to
   restore the previous behavior.
 
+### Removed
+
+- Codegen UI tests that only asserted `rustc`'s own type-error output
+  (`route-type-errors`, `catch_type_errors`, `from_form_type_errors`,
+  `responder-types`, `typed-uri-bad-type`, `uri_display_type_errors`). These
+  broke on nearly every toolchain update without guarding any of the macros'
+  own diagnostics, which remain covered by the surviving UI tests.
+
 ## 1.0.1 - 2026-06-23
 
 ### Fixed

@@ -50,26 +50,26 @@ error: unexpected keyed parameter: expected literal or identifier
   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:27:7
    |
 27 | #[get(data = "<foo>", "/")]
-   |       ^^^^^^^^^^^^^^
+   |       ^^^^
 
 error: unexpected attribute parameter: `unknown`
   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:30:12
    |
 30 | #[get("/", unknown = "foo")]
-   |            ^^^^^^^^^^^^^^^
+   |            ^^^^^^^
 
 error: expected key/value `key = value`
   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:33:12
    |
 33 | #[get("/", ...)]
-   |            ^^^
+   |            ^
 
 error: handler arguments must be named
        ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mto name an ignored handler argument, use `_name`␛[0m
   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:39:7
    |
 39 | fn c1(_: usize) {}
-   |       ^^^^^^^^
+   |       ^
 
 error: invalid value: expected string literal
   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:43:7
@@ -181,17 +181,17 @@ error: expected literal, found bare path "FIX"
 
 error: invalid route URI: expected token '/' but found 'h' at index 0
        ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected URI in origin form: "/path/<param>"␛[0m
-   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:101:10
+   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:101:9
     |
 101 | #[route("hi", "/")]
-    |          ^
+    |         ^^^^
 
 error: invalid route URI: expected token '/' but found 'G' at index 0
        ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected URI in origin form: "/path/<param>"␛[0m
-   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:104:10
+   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:104:9
     |
 104 | #[route("GET", "/")]
-    |          ^
+    |         ^^^^^
 
 error: invalid value: expected string literal
    --> tests/ui-fail-stable/route-attribute-general-syntax.rs:107:9
