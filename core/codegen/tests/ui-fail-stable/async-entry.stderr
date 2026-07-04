@@ -10,7 +10,7 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthis functio
  --> tests/ui-fail-stable/async-entry.rs:5:5
   |
 5 |     fn foo() { }
-  |     ^^^^^^^^
+  |     ^^
 
 error: attribute can only be applied to `async` functions
   --> tests/ui-fail-stable/async-entry.rs:16:5
@@ -24,7 +24,7 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthis functio
   --> tests/ui-fail-stable/async-entry.rs:17:5
    |
 17 |     fn main() {
-   |     ^^^^^^^^^
+   |     ^^
 
 error: attribute cannot be applied to `main` function
        ␛[1;34m= ␛[0m␛[1;32mnote␛[0m␛[39m: ␛[0m␛[1;39mthis attribute generates a `main` function␛[0m
@@ -53,7 +53,7 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthis functio
   --> tests/ui-fail-stable/async-entry.rs:57:5
    |
 57 |     async fn rocket() {
-   |     ^^^^^^^^^^^^^^^^^
+   |     ^^^^^
 
 error: attribute can only be applied to functions that return a value
   --> tests/ui-fail-stable/async-entry.rs:64:5
@@ -67,7 +67,7 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthis functio
   --> tests/ui-fail-stable/async-entry.rs:65:5
    |
 65 |     fn rocket() {
-   |     ^^^^^^^^^^^
+   |     ^^
 
 error: attribute cannot be applied to `main` function
        ␛[1;34m= ␛[0m␛[1;32mnote␛[0m␛[39m: ␛[0m␛[1;39mthis attribute generates a `main` function␛[0m
