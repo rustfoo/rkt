@@ -17,7 +17,7 @@ use crate::shutdown::{ShutdownConfig, TripWire};
 /// [`ShutdownConfig`](crate::config::ShutdownConfig).
 ///
 /// [`Rocket::launch()`]: crate::Rocket::launch()
-/// [automatic triggers]: crate::shutdown::Shutdown#triggers
+/// [automatic triggers]: crate::config::ShutdownConfig#triggers
 ///
 /// # Detecting Shutdown
 ///

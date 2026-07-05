@@ -121,7 +121,7 @@ events is briefly described below and in details in the [`Fairing`] trait docs:
     of all fairings is awaited before resuming shutdown.
 
 [ignition]: https://docs.rs/rkt/latest/rkt/struct.Rocket.html#method.ignite
-[shutdown is triggered]: https://docs.rs/rkt/latest/rkt/config/struct.Shutdown.html#triggers
+[shutdown is triggered]: https://docs.rs/rkt/latest/rkt/shutdown/struct.ShutdownConfig.html#triggers
 
 ## Implementing
 
