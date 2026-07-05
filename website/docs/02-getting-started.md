@@ -38,7 +38,7 @@ Now, add rkt as a dependency in your `Cargo.toml`:
 
 ```toml
 [dependencies]
-rkt = "1.0.1"
+rkt = "1.1.0"
 ```
 
 Modify `src/main.rs` so that it contains the code for the rkt `Hello, world!`

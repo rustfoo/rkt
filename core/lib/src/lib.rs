@@ -25,7 +25,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rkt = { package = version = "1.0.0" }
+//! rkt = { package = version = "1.1.0" }
 //! ```
 //!
 //! See the [guide](https://rkt.rs/guide) for more information on how
@@ -69,14 +69,14 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rkt = { version = "1.0.0", features = ["secrets", "tls", "json"] }
+//! rkt = { version = "1.1.0", features = ["secrets", "tls", "json"] }
 //! ```
 //!
 //! Conversely, HTTP/2 can be disabled:
 //!
 //! ```toml
 //! [dependencies]
-//! rkt = { version = "1.0.0", default-features = false }
+//! rkt = { version = "1.1.0", default-features = false }
 //! ```
 //!
 //! [subscriber]: crate::trace::subscriber
