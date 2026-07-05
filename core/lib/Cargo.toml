@@ -37,9 +37,12 @@ pre-release-replacements = [
   { file = "src/lib.rs",                                search = 'rkt = \{ package = version = "[0-9][0-9A-Za-z.-]*"', replace = 'rkt = { package = version = "{{version}}"' },
   { file = "src/lib.rs",                                search = 'rkt = \{ version = "[0-9][0-9A-Za-z.-]*"',          replace = 'rkt = { version = "{{version}}"' },
   { file = "src/listener/quic.rs",                      search = 'rkt = \{ version = "[0-9][0-9A-Za-z.-]*"',          replace = 'rkt = { version = "{{version}}"' },
-  { file = "src/serde/json.rs",                         search = '\[dependencies\.rkt\]\nversion = "[0-9][0-9A-Za-z.-]*"', replace = '[dependencies.rkt]\nversion = "{{version}}"' },
-  { file = "src/serde/msgpack.rs",                      search = '\[dependencies\.rocket\]\nversion = "[0-9][0-9A-Za-z.-]*"', replace = '[dependencies.rocket]\nversion = "{{version}}"' },
-  { file = "src/serde/uuid.rs",                         search = '\[dependencies\.rocket\]\nversion = "[0-9][0-9A-Za-z.-]*"', replace = '[dependencies.rocket]\nversion = "{{version}}"' },
+  { file = "src/serde/json.rs",                         search = '\[dependencies\.rkt\]\n//! version = "[0-9][0-9A-Za-z.-]*"', replace = '''[dependencies.rkt]
+//! version = "{{version}}"''' },
+  { file = "src/serde/msgpack.rs",                      search = '\[dependencies\.rkt\]\n//! version = "[0-9][0-9A-Za-z.-]*"', replace = '''[dependencies.rkt]
+//! version = "{{version}}"''' },
+  { file = "src/serde/uuid.rs",                         search = '\[dependencies\.rkt\]\n//! version = "[0-9][0-9A-Za-z.-]*"', replace = '''[dependencies.rkt]
+//! version = "{{version}}"''' },
   { file = "../codegen/src/lib.rs",                     search = 'rkt = \{ version = "[0-9][0-9A-Za-z.-]*"',          replace = 'rkt = { version = "{{version}}"' },
 ]
 

@@ -6,8 +6,8 @@
 //! in `Cargo.toml` as follows:
 //!
 //! ```toml
-//! [dependencies.rocket]
-//! version = "1.0.0"
+//! [dependencies.rkt]
+//! version = "1.1.0"
 //! features = ["uuid"]
 //! ```
 //!
