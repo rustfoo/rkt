@@ -36,7 +36,7 @@ Add `rkt` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-rkt = "1.0.1"
+rkt = "1.1.0"
 ```
 
 ## Crates

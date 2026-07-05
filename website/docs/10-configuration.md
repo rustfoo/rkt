@@ -250,7 +250,7 @@ Security). To enable TLS support:
 
      ```toml,ignore
      [dependencies]
-     rkt = { version = "1.0.1", features = ["tls"] }
+     rkt = { version = "1.1.0", features = ["tls"] }
      ```
 
   2. Configure a TLS certificate chain and private key via the `tls.key` and
@@ -326,7 +326,7 @@ enabled and support configured via the `tls.mutual` config parameter:
 
    ```toml,ignore
    [dependencies]
-   rkt = { version = "1.0.1", features = ["mtls"] }
+   rkt = { version = "1.1.0", features = ["mtls"] }
    ```
 
    This implicitly enables the `tls` feature.

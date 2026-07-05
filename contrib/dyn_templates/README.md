@@ -22,7 +22,7 @@ and automatically reloads templates when compiled in debug mode. It supports [Ha
 
      ```toml
      [dependencies.rkt_dyn_templates]
-     version = "1.0.1"
+     version = "1.1.0"
      features = ["handlebars", "tera", "minijinja"]
      ```
 
