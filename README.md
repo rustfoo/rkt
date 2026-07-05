@@ -2,7 +2,7 @@
 
 [![Build Status](https://github.com/rustfoo/rkt/workflows/CI/badge.svg)](https://github.com/rustfoo/rkt/actions)
 [![Current Crates.io Version](https://img.shields.io/crates/v/rkt.svg)](https://crates.io/crates/rkt)
-[![Minimum Rust Version](https://img.shields.io/badge/rustc-1.82.0+-orange.svg)](https://www.rust-lang.org/)
+[![Minimum Rust Version](https://img.shields.io/badge/rustc-1.88.0+-orange.svg)](https://www.rust-lang.org/)
 
 **rkt** is an async web framework for Rust with a focus on usability, security, extensibility, and speed.
 
