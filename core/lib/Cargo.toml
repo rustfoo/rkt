@@ -59,6 +59,7 @@ msgpack = ["rmp-serde"]
 uuid = ["uuid_", "rkt_http/uuid"]
 tls = ["rustls", "tokio-rustls", "rustls-pki-types"]
 mtls = ["tls", "x509-parser"]
+proxy-proto = []
 tokio-macros = ["tokio/macros"]
 trace = ["tracing-subscriber", "tinyvec", "thread_local", "rustls?/logging", "tokio-rustls?/logging", "multer/log", "s2n-quic-h3?/tracing"]
 

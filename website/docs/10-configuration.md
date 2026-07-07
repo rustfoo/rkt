@@ -31,6 +31,7 @@ values:
 | `ident`              | `string`, `false`  | If and how to identify via the `Server` header. | `"Rocket"`                    |
 | `ip_header`          | `string`, `false`  | IP header to inspect to get [client's real IP]. | `"X-Real-IP"`                 |
 | `proxy_proto_header` | `string`, `false`  | Header identifying [client to proxy protocol].  | `None`                        |
+| `proxy_protocol`*    | `bool`             | Require a [PROXY protocol] preamble.            | `false`                       |
 | `keep_alive`         | `u32`              | Keep-alive timeout seconds; disabled when `0`.  | `5`                           |
 | `log_level`          | [`Level`]          | Max level to log. (off/error/warn/info/debug/trace, or 0-5) | `info`/`error`    |
 | `cli_colors`         | [`CliColors`]      | Whether to use colors and emoji when logging.   | `"auto"`                      |
@@ -44,10 +45,13 @@ values:
 
 
 <small>* Note: the `workers`, `max_blocking`, and `shutdown.force` configuration
-parameters are only read from the [default provider](#default-provider).</small>
+parameters are only read from the [default provider](#default-provider), and
+the `proxy_protocol` parameter is only read when the `proxy-proto` crate
+feature is enabled.</small>
 
 [client's real IP]: https://docs.rs/rkt/latest/rkt/request/struct.Request.html#method.real_ip
 [client to proxy protocol]: https://docs.rs/rkt/latest/rkt/request/struct.Request.html#method.proxy_proto
+[PROXY protocol]: #proxy-protocol
 
 ### Profiles
 
@@ -409,6 +413,48 @@ proxy_proto_header = "X-Forwarded-Proto"
 [`ProxyProto`]: https://docs.rs/rkt/latest/rkt/http/enum.ProxyProto.html
 [`CookieJar`]: https://docs.rs/rkt/latest/rkt/http/struct.CookieJar.html
 [`Request::context_is_likely_secure()`]: https://docs.rs/rkt/latest/rkt/request/struct.Request.html#method.context_is_likely_secure
+
+### PROXY Protocol
+
+The [PROXY protocol][PROXY protocol spec] allows a TCP proxy or load balancer — HAProxy, AWS NLB,
+Fly.io, and others — to convey the original client address to a backend server
+by prefixing each proxied connection with a small preamble. Because the
+preamble is sent on the raw transport before any application bytes, it works
+below HTTP and TLS, where headers like `X-Forwarded-For` or `X-Real-IP` are
+unavailable or would require the proxy to terminate TLS.
+
+With the `proxy-proto` crate feature enabled, setting the `proxy_protocol`
+configuration parameter (env `ROCKET_PROXY_PROTOCOL`) to `true` requires every
+incoming connection to begin with a PROXY protocol v1 or v2 preamble; the
+version is detected automatically. The forwarded address becomes the
+connection's peer endpoint, so [`Request::remote()`] and
+[`Request::client_ip()`] report the original client address:
+
+```toml,ignore
+proxy_protocol = true
+```
+
+::::warning[Only enable `proxy_protocol` when _all_ connections arrive through a trusted proxy that always sends the preamble.]
+
+As the protocol specification requires, a connection that does not begin
+with a valid preamble is rejected. If the preamble were optional, a client
+able to bypass the proxy could spoof an arbitrary client address. This also
+means that with `proxy_protocol` enabled, direct connections — a plain
+`curl` against the port, for instance — are rejected; use
+`curl --haproxy-protocol` or equivalent to connect directly. Proxy health
+checks that speak the protocol, such as HAProxy's v2 `LOCAL` connections,
+are accepted.
+
+::::
+
+Note that despite the similar name, the `proxy_proto_header` parameter
+described in [Proxied TLS](#proxied-tls) is unrelated: it reads an HTTP header
+such as `X-Forwarded-Proto` to determine the client's TLS context, while
+`proxy_protocol` operates at the TCP level to recover the client's address.
+
+[PROXY protocol spec]: https://www.haproxy.org/download/2.9/doc/proxy-protocol.txt
+[`Request::remote()`]: https://docs.rs/rkt/latest/rkt/request/struct.Request.html#method.remote
+[`Request::client_ip()`]: https://docs.rs/rkt/latest/rkt/request/struct.Request.html#method.client_ip
 
 ### Crypto Providers
 

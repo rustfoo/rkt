@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Support for the [PROXY protocol] (v1 and v2) behind the new `proxy-proto`
+  crate feature. Setting the `proxy_protocol` configuration option (env
+  `ROCKET_PROXY_PROTOCOL`) to `true` requires every connection to begin with a
+  PROXY protocol preamble, as sent by proxies and load balancers like HAProxy
+  and AWS NLB. The forwarded client address becomes the connection's peer
+  endpoint, so `Request::remote()` and `Request::client_ip()` report the
+  original client address. Only enable this when all connections arrive
+  through a trusted proxy that always sends the preamble; connections without
+  a valid preamble are rejected, as the protocol specification requires.
+
+[PROXY protocol]: https://www.haproxy.org/download/2.9/doc/proxy-protocol.txt
+
 ## 1.1.0 - 2026-07-07
 
 ### Added

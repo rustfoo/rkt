@@ -26,8 +26,8 @@ mod private {
     type UnixListener = TcpListener;
 
     pub type Listener = Either<
-        Either<TlsListener<TcpListener>, TlsListener<UnixListener>>,
-        Either<TcpListener, UnixListener>,
+        Either<TlsListener<Base<TcpListener>>, TlsListener<Base<UnixListener>>>,
+        Either<Base<TcpListener>, Base<UnixListener>>,
     >;
 
     /// The default connection listener.
@@ -36,11 +36,20 @@ mod private {
     ///
     /// Reads the following optional configuration parameters:
     ///
-    /// | parameter   | type              | default               |
-    /// | ----------- | ----------------- | --------------------- |
-    /// | `address`   | [`Endpoint`]      | `tcp:127.0.0.1:8000`  |
-    /// | `tls`       | [`TlsConfig`]     | None                  |
-    /// | `reuse`     | boolean           | `true`                |
+    /// | parameter        | type              | default               |
+    /// | ---------------- | ----------------- | --------------------- |
+    /// | `address`        | [`Endpoint`]      | `tcp:127.0.0.1:8000`  |
+    /// | `tls`            | [`TlsConfig`]     | None                  |
+    /// | `reuse`          | boolean           | `true`                |
+    /// | `proxy_protocol` | boolean           | `false`               |
+    ///
+    /// The `proxy_protocol` parameter is read only when the `proxy-proto`
+    /// crate feature is enabled. When set to `true`, every connection must
+    /// begin with a [PROXY protocol] v1 or v2 preamble, and the forwarded
+    /// address becomes the connection's peer [`Endpoint`]. See
+    /// [`listener::proxy`](crate::listener::proxy) for details.
+    ///
+    /// [PROXY protocol]: https://www.haproxy.org/download/2.9/doc/proxy-protocol.txt
     ///
     /// # Listener
     ///
@@ -64,6 +73,15 @@ mod private {
     #[cfg(doc)]
     pub struct DefaultListener(());
 }
+
+/// The transport listener `T`, wrapped in a
+/// [`ProxyProtocolListener`](crate::listener::proxy::ProxyProtocolListener)
+/// when PROXY protocol support is compiled in. The wrapper passes connections
+/// through unmodified unless `proxy_protocol` is configured.
+#[cfg(feature = "proxy-proto")]
+type Base<T> = crate::listener::proxy::ProxyProtocolListener<T>;
+#[cfg(not(feature = "proxy-proto"))]
+type Base<T> = T;
 
 #[derive(Deserialize)]
 struct Config {
@@ -122,21 +140,21 @@ impl Bind for DefaultListener {
         match config.address {
             #[cfg(feature = "tls")]
             Endpoint::Tcp(_) if config.tls.is_some() => {
-                let listener = <TlsListener<TcpListener> as Bind>::bind(rocket).await?;
+                let listener = <TlsListener<Base<TcpListener>> as Bind>::bind(rocket).await?;
                 Ok(Left(Left(listener)))
             }
             Endpoint::Tcp(_) => {
-                let listener = <TcpListener as Bind>::bind(rocket).await?;
+                let listener = <Base<TcpListener> as Bind>::bind(rocket).await?;
                 Ok(Right(Left(listener)))
             }
             #[cfg(all(unix, feature = "tls"))]
             Endpoint::Unix(_) if config.tls.is_some() => {
-                let listener = <TlsListener<UnixListener> as Bind>::bind(rocket).await?;
+                let listener = <TlsListener<Base<UnixListener>> as Bind>::bind(rocket).await?;
                 Ok(Left(Right(listener)))
             }
             #[cfg(unix)]
             Endpoint::Unix(_) => {
-                let listener = <UnixListener as Bind>::bind(rocket).await?;
+                let listener = <Base<UnixListener> as Bind>::bind(rocket).await?;
                 Ok(Right(Right(listener)))
             }
             endpoint => Err(Error::Unsupported(endpoint)),
@@ -180,6 +198,13 @@ impl From<crate::tls::Error> for Error {
 impl From<Either<figment::Error, std::io::Error>> for Error {
     fn from(value: Either<figment::Error, std::io::Error>) -> Self {
         value.either(Error::Config, Error::Io)
+    }
+}
+
+#[cfg(feature = "proxy-proto")]
+impl From<Either<figment::Error, Either<figment::Error, std::io::Error>>> for Error {
+    fn from(value: Either<figment::Error, Either<figment::Error, std::io::Error>>) -> Self {
+        value.either(Error::Config, Error::from)
     }
 }
 

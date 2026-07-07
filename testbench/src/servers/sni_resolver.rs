@@ -3,8 +3,8 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
 use reqwest::tls::TlsInfo;
-use rkt::http::Header;
 use rkt::http::uri::Host;
+use rkt::http::Header;
 use rkt::tls::{ClientHello, Resolver, ServerConfig, TlsConfig};
 
 use crate::prelude::*;

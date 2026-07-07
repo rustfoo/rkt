@@ -64,6 +64,7 @@
 //! | `uuid`          | No       | Support for [UUID value parsing and (de)serialization]. |
 //! | `tokio-macros`  | No       | Enables the `macros` feature in the exported `tokio`    |
 //! | `http3-preview` | No       | Experimental preview support for [HTTP/3].              |
+//! | `proxy-proto`   | No       | Support for the [PROXY protocol] (v1 and v2).           |
 //!
 //! Disabled features can be selectively enabled in `Cargo.toml`:
 //!
@@ -87,6 +88,7 @@
 //! [TLS]: https://rkt.rs/guide/configuration/#tls
 //! [mutual TLS]: crate::mtls
 //! [HTTP/3]: crate::listener::quic
+//! [PROXY protocol]: crate::listener::proxy
 //!
 //! ## Configuration
 //!
