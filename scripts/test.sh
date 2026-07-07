@@ -110,6 +110,7 @@ function test_core() {
     secrets
     tls
     mtls
+    proxy-proto
     json
     msgpack
     uuid
