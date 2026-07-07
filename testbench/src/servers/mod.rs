@@ -4,6 +4,7 @@ pub mod ignite_failure;
 pub mod infinite_stream;
 pub mod mtls;
 pub mod no_content;
+pub mod proxy_proto;
 pub mod sni_resolver;
 pub mod tls;
 pub mod tls_resolver;

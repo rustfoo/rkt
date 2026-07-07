@@ -218,9 +218,19 @@ Our recommendation for a direct self-managed deployment is to:
     Additionally, the scheme is forwarded via `X-Forwarded-Proto`, but it must
     be explicitly configured via [`proxy_proto_header`] for Rocket to consider.
 
+    If your proxy or load balancer operates at the TCP level (HAProxy in TCP
+    mode, AWS NLB, and others) or you prefer not to rely on HTTP headers,
+    Rocket can instead recover the client address from a [PROXY protocol]
+    preamble: enable the `proxy-proto` crate feature and set the
+    [`proxy_protocol`] configuration parameter to `true`. Ensure that your
+    proxy sends the preamble on every connection (for example, HAProxy's
+    `send-proxy-v2` directive), as connections without one are rejected.
+
 [`cargo-zigbuild`]: https://github.com/rust-cross/cargo-zigbuild
 [`ip_header`]: https://docs.rs/rkt/latest/rkt/config/struct.Config.html#structfield.ip_header
 [`proxy_proto_header`]: https://docs.rs/rkt/latest/rkt/config/struct.Config.html#structfield.proxy_proto_header
+[PROXY protocol]: https://www.haproxy.org/download/2.9/doc/proxy-protocol.txt
+[`proxy_protocol`]: ./configuration/#proxy-protocol
 
 ### Containerization
 

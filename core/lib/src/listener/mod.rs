@@ -6,6 +6,9 @@ mod default;
 mod endpoint;
 mod listener;
 
+#[cfg(feature = "proxy-proto")]
+#[cfg_attr(nightly, doc(cfg(feature = "proxy-proto")))]
+pub mod proxy;
 #[cfg(feature = "http3-preview")]
 pub mod quic;
 pub mod tcp;

@@ -3,7 +3,6 @@ use std::sync::Arc;
 
 use futures::TryFutureExt;
 use rustls::server::{Acceptor, ServerConfig};
-use tokio::io::{AsyncRead, AsyncWrite};
 use tokio_rustls::LazyConfigAcceptor;
 
 use super::resolver::DynResolver;
@@ -21,10 +20,7 @@ pub struct TlsListener<L> {
     default: Arc<ServerConfig>,
 }
 
-impl<L> TlsListener<L>
-where
-    L: Listener<Accept = <L as Listener>::Connection>,
-{
+impl<L: Listener> TlsListener<L> {
     pub async fn from(listener: L, config: TlsConfig) -> Result<TlsListener<L>> {
         Ok(TlsListener {
             default: Arc::new(config.server_config().await?),
@@ -34,10 +30,7 @@ where
     }
 }
 
-impl<L: Bind> Bind for TlsListener<L>
-where
-    L: Listener<Accept = <L as Listener>::Connection>,
-{
+impl<L: Bind> Bind for TlsListener<L> {
     type Error = Error;
 
     async fn bind(rocket: &Rocket<Ignite>) -> Result<Self, Self::Error> {
@@ -57,12 +50,8 @@ where
     }
 }
 
-impl<L> Listener for TlsListener<L>
-where
-    L: Listener<Accept = <L as Listener>::Connection>,
-    L::Connection: AsyncRead + AsyncWrite,
-{
-    type Accept = L::Connection;
+impl<L: Listener> Listener for TlsListener<L> {
+    type Accept = L::Accept;
 
     type Connection = TlsStream<L::Connection>;
 
@@ -70,7 +59,8 @@ where
         self.listener.accept().await
     }
 
-    async fn connect(&self, conn: L::Connection) -> io::Result<Self::Connection> {
+    async fn connect(&self, accept: L::Accept) -> io::Result<Self::Connection> {
+        let conn = self.listener.connect(accept).await?;
         let acceptor = LazyConfigAcceptor::new(Acceptor::default(), conn);
         let handshake = acceptor.await?;
         let hello = handshake.client_hello();
