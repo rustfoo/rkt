@@ -245,6 +245,11 @@ also choose to have a configure limit via the `limits` parameter. The
 [`Json`](https://docs.rs/rkt/latest/rkt/serde/json/struct.Json.html) type, for instance, uses the
 `limits.json` parameter.
 
+A guard that hits its limit stops reading: the client keeps sending the rest of
+the body, but the server never reads it. See
+[capped uploads](./requests/#capped-uploads) for what that means for the
+response the client receives.
+
 ### TLS
 
 Rocket includes built-in, native support for TLS >= 1.2 (Transport Layer

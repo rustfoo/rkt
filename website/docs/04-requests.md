@@ -907,6 +907,76 @@ willing to accept from the client when `open`ing a data stream. The
 such a value as idiomatic as `128.kibibytes()`.
 :::
 
+### Capped Uploads
+
+A guard that reaches its limit doesn't have to fail outright.
+[`Capped<T>`](https://docs.rs/rkt/latest/rkt/data/struct.Capped.html) records how many bytes were
+read and whether the value is complete, so a route can decide for itself what an
+over-sized upload means:
+
+```rust
+# #[macro_use] extern crate rkt;
+
+use rkt::data::Capped;
+use rkt::fs::TempFile;
+use rkt::http::Status;
+
+#[post("/upload", data = "<file>")]
+async fn upload(mut file: Capped<TempFile<'_>>) -> std::io::Result<Status> {
+    if !file.is_complete() {
+        return Ok(Status::PayloadTooLarge);
+    }
+
+    # let permanent_location = "/tmp/perm.txt";
+    file.persist_to(permanent_location).await?;
+    Ok(Status::Ok)
+}
+```
+
+Responding this way means responding early. The guard stopped reading at the
+limit, so the rest of the body is still on its way. HTTP/1.1 has no way to
+cancel a single request, so the only way to stop the client sending is to close
+the connection. [RFC 9110 §15.5.14] says as much about `413`:
+
+> The server MAY terminate the request, if the protocol version in use allows
+> it; otherwise, the server MAY close the connection.
+
+Closing mid-upload risks losing the response, as [RFC 9112 §9.6] describes:
+
+> If a server performs an immediate close of a TCP connection, there is a
+> significant risk that the client will not be able to read the last HTTP
+> response. [...] the reset packet might erase the client's unacknowledged input
+> buffers before they can be read and interpreted by the client's HTTP parser.
+
+So the `413` your application produced and logged may never reach the client.
+Firefox reports the reset as `NS_ERROR_NET_RESET`, and some browsers retry the
+upload. Whether it happens depends on how much body is left and how quickly it
+arrives, so a route that reliably returns `413` on `localhost` can still fail
+for users on slower connections. The staged close RFC 9112 §9.6 recommends —
+half-close, then keep reading — only helps if the client finishes uploading
+quickly, so it is not a general fix.
+
+If clients must see the rejection, don't respond mid-body:
+
+  * **Serve over HTTP/2.** It cancels one request without disturbing the
+    connection or the response. Per [RFC 9113 §8.1], a server may send
+    `RST_STREAM` with `NO_ERROR` after a complete response, and clients "MUST
+    NOT discard responses" because of it. rkt enables HTTP/2 by default;
+    browsers use it only over TLS.
+  * **Reject before the body arrives.** A [request guard](#request-guards) that
+    checks `Content-Length` runs before any data guard. A client that sent
+    `Expect: 100-continue` ([RFC 9110 §10.1.1]) then gets the final status
+    instead of a `100 (Continue)` and never sends the body. Browsers don't send
+    `Expect`, so this helps API clients like `curl`.
+  * **Check the size in the browser** before starting the upload.
+  * **Raise the limit and reject after reading the whole body.** A response sent
+    once the body is consumed is delivered normally.
+
+[RFC 9110 §10.1.1]: https://www.rfc-editor.org/rfc/rfc9110.html#section-10.1.1
+[RFC 9110 §15.5.14]: https://www.rfc-editor.org/rfc/rfc9110.html#section-15.5.14
+[RFC 9112 §9.6]: https://www.rfc-editor.org/rfc/rfc9112.html#section-9.6
+[RFC 9113 §8.1]: https://www.rfc-editor.org/rfc/rfc9113.html#section-8.1
+
 ## Forms
 
 Forms are one of the most common types of data handled in web applications, and
