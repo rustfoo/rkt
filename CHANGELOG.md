@@ -18,6 +18,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   original client address. Only enable this when all connections arrive
   through a trusted proxy that always sends the preamble; connections without
   a valid preamble are rejected, as the protocol specification requires.
+- Documentation for capped uploads explaining expected behavior for HTTP/1.1
+  connections in the event of the upload byte limit being reached.
 
 [PROXY protocol]: https://www.haproxy.org/download/2.9/doc/proxy-protocol.txt
 
