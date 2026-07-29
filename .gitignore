@@ -29,5 +29,8 @@ scripts/redirect.html
 # Backup files.
 *.bak
 
+# Roadmap notes (local planning, not tracked).
+roadmap/
+
 # Uploads in pastebin example.
 examples/pastebin/upload/*
