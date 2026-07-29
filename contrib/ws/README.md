@@ -16,7 +16,7 @@ This crate provides WebSocket support for rkt via integration with rkt's
 
      ```toml
      [dependencies]
-     ws = { package = "rkt_ws", version = "1.1.0" }
+     ws = { package = "rkt_ws", version = "1.2.0" }
      ```
 
    2. Use it!
