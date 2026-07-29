@@ -7,7 +7,7 @@
 # core/lib/Cargo.toml so they run exactly once (cargo-release otherwise applies
 # workspace-level replacements once per crate, resolving paths per-crate).
 #
-# Release a new version with, e.g.:  cargo release 1.0.2 --execute
+# Release a new version with, e.g.:  cargo release 1.0.2 --execute --no-publish
 # (omit --execute for a dry run).
 
 # Bump every crate in the workspace together.
