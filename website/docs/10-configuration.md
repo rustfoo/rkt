@@ -361,12 +361,11 @@ The `tls.mutual` parameter is expected to be a dictionary that deserializes into
 [`MtlsConfig`]: https://docs.rs/rkt/latest/rkt/mtls/struct.MtlsConfig.html
 [`mtls`]: https://docs.rs/rkt/latest/rkt/mtls/index.html
 
-Rocket reports if TLS and/or mTLS are enabled at launch time:
+Rocket reports if TLS and/or mTLS are enabled as part of the endpoint it
+announces at launch time:
 
 ```text
-🔧 Configured for debug.
-   ...
-   >> tls: enabled w/mtls
+🚀 Rocket has launched on https://127.0.0.1:8000 (TCP + mTLS)
 ```
 
 Once mutual TLS is properly enabled, the [`mtls::Certificate`] request guard can

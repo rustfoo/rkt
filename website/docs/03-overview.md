@@ -171,19 +171,32 @@ Running the application, the console shows:
 
 ```sh
 > cargo run
-🔧 Configured for debug.
-   >> address: 127.0.0.1
-   >> port: 8000
+🔧 config (profile: debug)
+   >> http2: true
+   >> log_level: INFO
+   >> log_format: Pretty
+   >> cli_colors: auto
    >> workers: [..]
-   >> keep-alive: 5s
+   >> max_blocking: 512
+   >> ident: Rocket
+   >> ip_header: X-Real-IP
    >> limits: [..]
-   >> tls: disabled
-   >> temp dir: /tmp
-   >> log level: normal
-   >> cli colors: true
-🛰  Routes:
-   >> (world) GET /hello/world
-🚀 Rocket has launched from http://127.0.0.1:8000
+   >> temp_dir: /tmp
+   >> keep_alive: 5
+   >> shutdown.ctrlc: true
+   >> shutdown.signals: {"SIGTERM"}
+   >> shutdown.grace: 2
+   >> shutdown.mercy: 3
+   >> shutdown.force: true
+📬 routes (count: 1)
+   >> route:  -9 GET /hello/world (world src/main.rs:3)
+📦 fairings (count: 1)
+   >> fairing: Shield liftoff, response, singleton
+🛡️ shield (policies: 3)
+   >> header: X-Content-Type-Options: nosniff
+   >> header: X-Frame-Options: SAMEORIGIN
+   >> header: Permissions-Policy: interest-cohort=()
+🚀 Rocket has launched on http://127.0.0.1:8000
 ```
 
 :::tip[`#[launch]` infers the return type!]
