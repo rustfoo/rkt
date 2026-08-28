@@ -1,11 +1,16 @@
 use std::collections::HashMap;
+use std::convert::Infallible;
 use std::net::SocketAddr;
 use std::sync::{Arc, RwLock};
 
 use axum::extract::{Path, Query, State};
-use axum::http::{HeaderMap, StatusCode};
+use axum::http::{header, HeaderMap, StatusCode};
+use axum::response::IntoResponse;
 use axum::routing::get;
-use axum::{Json, Router};
+use axum::{
+    body::{Body, Bytes},
+    Json, Router,
+};
 use serde::{Deserialize, Serialize};
 use tower_http::services::ServeDir;
 
@@ -44,7 +49,41 @@ struct QueryResponse {
 }
 
 async fn query(Query(params): Query<QueryParams>) -> Json<QueryResponse> {
-    Json(QueryResponse { msg: params.msg, n: params.n })
+    Json(QueryResponse {
+        msg: params.msg,
+        n: params.n,
+    })
+}
+
+static MEMORY_1K: [u8; 1024] = [b'x'; 1024];
+static MEMORY_64K: [u8; 64 * 1024] = [b'x'; 64 * 1024];
+static MEMORY_1M: [u8; 1024 * 1024] = [b'x'; 1024 * 1024];
+static STREAM_CHUNK: [u8; 1024] = [b'x'; 1024];
+
+async fn memory_1k() -> Bytes {
+    Bytes::from_static(&MEMORY_1K)
+}
+
+async fn memory_64k() -> Bytes {
+    Bytes::from_static(&MEMORY_64K)
+}
+
+async fn memory_1m() -> Bytes {
+    Bytes::from_static(&MEMORY_1M)
+}
+
+async fn stream_slow() -> impl IntoResponse {
+    let stream = async_stream::stream! {
+        for _ in 0..16 {
+            tokio::time::sleep(std::time::Duration::from_millis(5)).await;
+            yield Ok::<_, Infallible>(Bytes::from_static(&STREAM_CHUNK));
+        }
+    };
+
+    (
+        [(header::CONTENT_TYPE, "application/octet-stream")],
+        Body::from_stream(stream),
+    )
 }
 
 #[derive(Serialize)]
@@ -67,6 +106,14 @@ async fn headers_handler(headers: HeaderMap) -> Json<HeadersResponse> {
     Json(HeadersResponse { id, accept })
 }
 
+async fn headers_full(headers: HeaderMap) -> String {
+    headers
+        .iter()
+        .map(|(name, value)| name.as_str().len() + value.as_bytes().len())
+        .sum::<usize>()
+        .to_string()
+}
+
 #[tokio::main]
 async fn main() {
     let port: u16 = std::env::args()
@@ -85,7 +132,13 @@ async fn main() {
         .route("/hello", get(hello))
         .route("/state/{key}", get(state_get))
         .route("/query", get(query))
+        .route("/query-owned", get(query))
         .route("/headers", get(headers_handler))
+        .route("/headers-full", get(headers_full))
+        .route("/memory/1k", get(memory_1k))
+        .route("/memory/64k", get(memory_64k))
+        .route("/memory/1m", get(memory_1m))
+        .route("/stream-slow", get(stream_slow))
         .nest_service("/files", ServeDir::new("./static"))
         .with_state(map);
 

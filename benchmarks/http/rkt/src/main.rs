@@ -10,7 +10,9 @@ use rkt::figment::Figment;
 use rkt::fs::FileServer;
 use rkt::http::Status;
 use rkt::request::{FromRequest, Outcome, Request};
+use rkt::response::stream::ByteStream;
 use rkt::serde::json::Json;
+use rkt::tokio::time::{sleep, Duration};
 use rkt::{Config, State};
 use serde::Serialize;
 
@@ -50,6 +52,47 @@ fn query(msg: &str, n: u32) -> Json<QueryResponse<'_>> {
     Json(QueryResponse { msg, n })
 }
 
+#[derive(Serialize)]
+struct OwnedQueryResponse {
+    msg: String,
+    n: u32,
+}
+
+#[get("/query-owned?<msg>&<n>")]
+fn query_owned(msg: String, n: u32) -> Json<OwnedQueryResponse> {
+    Json(OwnedQueryResponse { msg, n })
+}
+
+static MEMORY_1K: [u8; 1024] = [b'x'; 1024];
+static MEMORY_64K: [u8; 64 * 1024] = [b'x'; 64 * 1024];
+static MEMORY_1M: [u8; 1024 * 1024] = [b'x'; 1024 * 1024];
+static STREAM_CHUNK: [u8; 1024] = [b'x'; 1024];
+
+#[get("/memory/1k")]
+fn memory_1k() -> &'static [u8] {
+    &MEMORY_1K
+}
+
+#[get("/memory/64k")]
+fn memory_64k() -> &'static [u8] {
+    &MEMORY_64K
+}
+
+#[get("/memory/1m")]
+fn memory_1m() -> &'static [u8] {
+    &MEMORY_1M
+}
+
+#[get("/stream-slow")]
+fn stream_slow() -> ByteStream![&'static [u8]] {
+    ByteStream! {
+        for _ in 0..16 {
+            sleep(Duration::from_millis(5)).await;
+            yield &STREAM_CHUNK[..];
+        }
+    }
+}
+
 struct BenchHeaders {
     bench_id: String,
     accept: String,
@@ -60,7 +103,11 @@ impl<'r> FromRequest<'r> for BenchHeaders {
     type Error = ();
 
     async fn from_request(req: &'r Request<'_>) -> Outcome<Self, ()> {
-        let bench_id = req.headers().get_one("X-Bench-Id").unwrap_or("").to_string();
+        let bench_id = req
+            .headers()
+            .get_one("X-Bench-Id")
+            .unwrap_or("")
+            .to_string();
         let accept = req.headers().get_one("Accept").unwrap_or("").to_string();
         Outcome::Success(BenchHeaders { bench_id, accept })
     }
@@ -70,6 +117,27 @@ impl<'r> FromRequest<'r> for BenchHeaders {
 struct HeadersResponse {
     id: String,
     accept: String,
+}
+
+struct FullHeaders(usize);
+
+#[async_trait]
+impl<'r> FromRequest<'r> for FullHeaders {
+    type Error = ();
+
+    async fn from_request(req: &'r Request<'_>) -> Outcome<Self, ()> {
+        let size = req
+            .headers()
+            .iter()
+            .map(|header| header.name().len() + header.value().len())
+            .sum();
+        Outcome::Success(FullHeaders(size))
+    }
+}
+
+#[get("/headers-full")]
+fn headers_full(headers: FullHeaders) -> String {
+    headers.0.to_string()
 }
 
 #[get("/headers")]
@@ -108,7 +176,22 @@ async fn main() -> Result<(), rkt::Error> {
 
     rkt::custom(figment)
         .manage(map)
-        .mount("/", routes![ping, hello, state_get, query, headers_route])
+        .mount(
+            "/",
+            routes![
+                ping,
+                hello,
+                state_get,
+                query,
+                query_owned,
+                headers_route,
+                headers_full,
+                memory_1k,
+                memory_64k,
+                memory_1m,
+                stream_slow,
+            ],
+        )
         .mount("/files", FileServer::new("./static"))
         .launch()
         .await?;
