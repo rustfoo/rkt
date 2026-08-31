@@ -16,6 +16,12 @@
 //!      features = ["handlebars", "tera", "minijinja"]
 //!      ```
 //!
+//!      Tera has two features: `tera` for Tera 2.x, and `tera1` for the
+//!      deprecated Tera 1.x. Enable one. They are not mutually exclusive --
+//!      Cargo features must stay additive -- but `tera` wins if both end up
+//!      enabled, and `rkt_dyn_templates::tera` then refers to Tera 2.x.
+//!      Note that Tera 2 no longer escapes `/` in autoescaped templates.
+//!
 //!   2. Write your templates inside of the [configurable]
 //!      `${ROCKET_ROOT}/templates`. The filename _must_ end with an extension
 //!      corresponding to an enabled engine. The second-to-last extension should
@@ -28,7 +34,7 @@
 //!      | [MiniJinja]  | `.j2`     | `${ROCKET_ROOT}/templates/index.html.j2`   |
 //!
 //!      [configurable]: #configuration
-//!      [Tera]: https://docs.rs/crate/tera/1
+//!      [Tera]: https://docs.rs/crate/tera/2
 //!      [Handlebars]: https://docs.rs/crate/handlebars/6
 //!      [MiniJinja]: https://docs.rs/minijinja/2
 //!
@@ -184,8 +190,15 @@
 extern crate rkt;
 
 #[doc(inline)]
+#[cfg(all(feature = "tera1", not(feature = "tera")))]
+/// The tera templating engine library, reexported.
+pub use tera1 as tera;
+
+#[doc(inline)]
 #[cfg(feature = "tera")]
 /// The tera templating engine library, reexported.
+///
+/// This is Tera 2.x, selected by the `tera` feature.
 pub use tera;
 
 #[doc(inline)]

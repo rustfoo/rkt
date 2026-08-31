@@ -5,10 +5,12 @@ use rkt::serde::Serialize;
 
 use crate::template::TemplateInfo;
 
-#[cfg(feature = "tera")]
+#[cfg(any(feature = "tera1", feature = "tera"))]
 mod tera;
-#[cfg(feature = "tera")]
-use ::tera::Tera;
+// Not `::tera::Tera`: the `tera1`/`tera` choice is made in `self::tera`, and
+// this reexport follows it.
+#[cfg(any(feature = "tera1", feature = "tera"))]
+use self::tera::Tera;
 
 #[cfg(feature = "handlebars")]
 mod handlebars;
@@ -21,7 +23,12 @@ mod minijinja;
 use ::minijinja::Environment;
 
 #[cfg_attr(
-    not(any(feature = "tera", feature = "handlebars", feature = "minijinja")),
+    not(any(
+        feature = "tera1",
+        feature = "tera",
+        feature = "handlebars",
+        feature = "minijinja"
+    )),
     allow(dead_code)
 )]
 pub(crate) trait Engine: Send + Sync + Sized + 'static {
@@ -37,11 +44,13 @@ pub(crate) trait Engine: Send + Sync + Sized + 'static {
 /// types from the respective templating engine library. These types should be
 /// imported from the reexported crate at the root of `rkt_dyn_templates` to
 /// avoid version mismatches. For instance, when registering a Tera filter, the
-/// [`tera::Value`] and [`tera::Result`] types are required. Import them from
-/// `rkt_dyn_templates::tera`. The example below illustrates this:
+/// [`tera::Value`] and result types are required. Import them from
+/// `rkt_dyn_templates::tera`. The example below illustrates this.
+///
+/// Tera 1.x, via the `tera1` feature:
 ///
 /// ```rust
-/// # #[cfg(feature = "tera")] {
+/// # #[cfg(all(feature = "tera1", not(feature = "tera")))] {
 /// use std::collections::HashMap;
 ///
 /// use rkt_dyn_templates::{Template, Engines};
@@ -65,16 +74,41 @@ pub(crate) trait Engine: Send + Sync + Sized + 'static {
 /// # }
 /// ```
 ///
+/// Tera 2.x, via the `tera` feature, where a filter is any function of the
+/// right shape:
+///
+/// ```rust
+/// # #[cfg(feature = "tera")] {
+/// use rkt_dyn_templates::{Template, Engines};
+/// use rkt_dyn_templates::tera::{Kwargs, State};
+///
+/// fn my_filter(value: i64, _: Kwargs, _: &State) -> i64 {
+///     # /*
+///     ...
+///     # */ unimplemented!();
+/// }
+///
+/// fn main() {
+///     rkt::build()
+///         // ...
+///         .attach(Template::custom(|engines: &mut Engines| {
+///             engines.tera.register_filter("my_filter", my_filter);
+///         }))
+///         // ...
+///         # ;
+/// }
+/// # }
+/// ```
+///
 /// [`tera::Value`]: crate::tera::Value
-/// [`tera::Result`]: crate::tera::Result
 ///
 pub struct Engines {
     /// A `Tera` templating engine.
     ///
-    /// This field is only available when the `tera` feature is enabled. When
+    /// This field is available when the `tera` or `tera1` feature is enabled. When
     /// calling methods on the `Tera` instance, ensure you use types imported
     /// from `rkt_dyn_templates::tera` to avoid version mismatches.
-    #[cfg(feature = "tera")]
+    #[cfg(any(feature = "tera1", feature = "tera"))]
     pub tera: Tera,
 
     /// The Handlebars templating engine.
@@ -97,12 +131,17 @@ pub struct Engines {
 }
 
 #[cfg_attr(
-    not(any(feature = "tera", feature = "handlebars", feature = "minijinja")),
+    not(any(
+        feature = "tera1",
+        feature = "tera",
+        feature = "handlebars",
+        feature = "minijinja"
+    )),
     allow(dead_code)
 )]
 impl Engines {
     pub(crate) const ENABLED_EXTENSIONS: &'static [&'static str] = &[
-        #[cfg(feature = "tera")]
+        #[cfg(any(feature = "tera1", feature = "tera"))]
         Tera::EXT,
         #[cfg(feature = "handlebars")]
         Handlebars::EXT,
@@ -122,7 +161,7 @@ impl Engines {
         }
 
         Some(Engines {
-            #[cfg(feature = "tera")]
+            #[cfg(any(feature = "tera1", feature = "tera"))]
             tera: inner::<Tera>(_templates)?,
             #[cfg(feature = "handlebars")]
             handlebars: inner::<Handlebars<'static>>(_templates)?,
@@ -132,7 +171,12 @@ impl Engines {
     }
 
     #[cfg_attr(
-        not(any(feature = "tera", feature = "handlebars", feature = "minijinja")),
+        not(any(
+            feature = "tera1",
+            feature = "tera",
+            feature = "handlebars",
+            feature = "minijinja"
+        )),
         allow(unused_variables)
     )]
     pub(crate) fn render<C: Serialize>(
@@ -141,7 +185,7 @@ impl Engines {
         info: &TemplateInfo,
         context: C,
     ) -> Option<String> {
-        #[cfg(feature = "tera")]
+        #[cfg(any(feature = "tera1", feature = "tera"))]
         {
             if info.engine_ext == Tera::EXT {
                 return Engine::render(&self.tera, name, context);
@@ -167,7 +211,7 @@ impl Engines {
 
     /// Returns iterator over template (name, engine_extension).
     pub(crate) fn templates(&self) -> impl Iterator<Item = (&str, &'static str)> {
-        #[cfg(feature = "tera")]
+        #[cfg(any(feature = "tera1", feature = "tera"))]
         let tera = self.tera.get_template_names().map(|name| (name, Tera::EXT));
 
         #[cfg(feature = "handlebars")]
@@ -183,7 +227,7 @@ impl Engines {
             .templates()
             .map(|(name, _)| (name, Environment::EXT));
 
-        #[cfg(not(feature = "tera"))]
+        #[cfg(not(any(feature = "tera1", feature = "tera")))]
         let tera = std::iter::empty();
         #[cfg(not(feature = "handlebars"))]
         let handlebars = std::iter::empty();
