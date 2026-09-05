@@ -19,7 +19,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rkt = { version = "1.2.0" }
+//! rkt = { version = "1.3.0" }
 //! ```
 //!
 //! And to import all macros, attributes, and derives via `#[macro_use]` in the

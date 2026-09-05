@@ -144,7 +144,7 @@ impl<T> Form<T> {
     /// # Example
     ///
     /// ```rust
-/// #[macro_use] extern crate rkt;
+    /// #[macro_use] extern crate rkt;
     /// use rkt::form::Form;
     ///
     /// #[derive(FromForm)]

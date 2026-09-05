@@ -1,12 +1,12 @@
 use std::pin::Pin;
 use std::task::{Context, Poll};
 
-use rkt::data::IoStream;
-use rkt::futures::stream::{FusedStream, Stream};
-use rkt::futures::{Sink, SinkExt, StreamExt};
+use crate::data::IoStream;
+use futures::stream::{FusedStream, Stream};
+use futures::{Sink, SinkExt, StreamExt};
 
-use crate::frame::{CloseFrame, Message};
-use crate::result::{Error, Result};
+use super::frame::{CloseFrame, Message};
+use super::result::{Error, Result};
 
 /// A readable and writeable WebSocket [`Message`] `async` stream.
 ///
@@ -16,7 +16,7 @@ use crate::result::{Error, Result};
 ///
 /// ```rust
 /// # use rkt::get;
-/// # use rkt_ws as ws;
+/// # use rkt::ws;
 /// use rkt::futures::{SinkExt, StreamExt};
 ///
 /// #[get("/echo/manual")]
@@ -36,8 +36,8 @@ use crate::result::{Error, Result};
 pub struct DuplexStream(tokio_tungstenite::WebSocketStream<IoStream>);
 
 impl DuplexStream {
-    pub(crate) async fn new(stream: IoStream, config: crate::Config) -> Self {
-        use crate::tungstenite::protocol::Role;
+    pub(crate) async fn new(stream: IoStream, config: super::Config) -> Self {
+        use super::tungstenite::protocol::Role;
         use tokio_tungstenite::WebSocketStream;
 
         let inner = WebSocketStream::from_raw_socket(stream, Role::Server, Some(config));

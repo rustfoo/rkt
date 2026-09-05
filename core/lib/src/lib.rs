@@ -25,7 +25,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rkt = "1.2.0"
+//! rkt = "1.3.0"
 //! ```
 //!
 //! See the [guide](https://rkt.rs/guide) for more information on how
@@ -62,6 +62,7 @@
 //! | `json`          | No       | Support for [JSON (de)serialization].                   |
 //! | `msgpack`       | No       | Support for [MessagePack (de)serialization].            |
 //! | `uuid`          | No       | Support for [UUID value parsing and (de)serialization]. |
+//! | `ws`            | No       | First-class WebSocket support.                          |
 //! | `tokio-macros`  | No       | Enables the `macros` feature in the exported `tokio`    |
 //! | `http3-preview` | No       | Experimental preview support for [HTTP/3].              |
 //! | `proxy-proto`   | No       | Support for the [PROXY protocol] (v1 and v2).           |
@@ -70,14 +71,14 @@
 //!
 //! ```toml
 //! [dependencies]
-//! rkt = { version = "1.2.0", features = ["secrets", "tls", "json"] }
+//! rkt = { version = "1.3.0", features = ["secrets", "tls", "json"] }
 //! ```
 //!
 //! Conversely, HTTP/2 can be disabled:
 //!
 //! ```toml
 //! [dependencies]
-//! rkt = { version = "1.2.0", default-features = false }
+//! rkt = { version = "1.3.0", default-features = false }
 //! ```
 //!
 //! [subscriber]: crate::trace::subscriber
@@ -152,6 +153,9 @@ pub mod shutdown;
 #[cfg(feature = "tls")]
 #[cfg_attr(nightly, doc(cfg(feature = "tls")))]
 pub mod tls;
+#[cfg(feature = "ws")]
+#[cfg_attr(nightly, doc(cfg(feature = "ws")))]
+pub mod ws;
 
 mod erased;
 mod lifecycle;

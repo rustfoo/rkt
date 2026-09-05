@@ -1,14 +1,14 @@
 use std::io;
 
-use rkt::data::{IoHandler, IoStream};
-use rkt::futures::{self, future::BoxFuture, stream::SplitStream, SinkExt, StreamExt};
-use rkt::http::Status;
-use rkt::request::{FromRequest, Outcome, Request};
-use rkt::response::{self, Responder, Response};
+use crate::data::{IoHandler, IoStream};
+use futures::{future::BoxFuture, stream::SplitStream, SinkExt, StreamExt};
+use crate::http::Status;
+use crate::request::{FromRequest, Outcome, Request};
+use crate::response::{self, Responder, Response};
 
-use crate::result::{Error, Result};
-use crate::stream::DuplexStream;
-use crate::{Config, Message};
+use super::result::{Error, Result};
+use super::stream::DuplexStream;
+use super::{Config, Message};
 
 /// A request guard identifying WebSocket requests. Converts into a [`Channel`]
 /// or [`MessageStream`].
@@ -21,7 +21,7 @@ use crate::{Config, Message};
 /// initiate via the `WebSocket` request guard. The guard identifies valid
 /// WebSocket connection requests and, if the request is valid, succeeds to be
 /// converted into a streaming WebSocket response via
-/// [`Stream!`](crate::Stream!), [`WebSocket::channel()`], or
+/// [`Stream!`](super::Stream!), [`WebSocket::channel()`], or
 /// [`WebSocket::stream()`]. The connection can be configured via
 /// [`WebSocket::config()`]; see [`Config`] for details on configuring a
 /// connection.
@@ -42,7 +42,7 @@ impl WebSocket {
     ///
     /// ```rust
     /// # use rkt::get;
-    /// # use rkt_ws as ws;
+    /// # use rkt::ws;
     /// #
     /// #[get("/echo")]
     /// fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
@@ -69,7 +69,7 @@ impl WebSocket {
     /// The `handler` must return a `Box`ed and `Pin`ned future: calling
     /// [`Box::pin()`] with a future does just this as is the preferred
     /// mechanism to create a `Box<Pin<Future>>`. The future must return a
-    /// [`Result<()>`](crate::result::Result). The WebSocket connection is
+    /// [`Result<()>`](super::result::Result). The WebSocket connection is
     /// closed successfully if the future returns `Ok` and with an error if
     /// the future returns `Err`.
     ///
@@ -83,7 +83,7 @@ impl WebSocket {
     ///
     /// ```rust
     /// # use rkt::get;
-    /// # use rkt_ws as ws;
+    /// # use rkt::ws;
     /// use rkt::futures::{SinkExt, StreamExt};
     ///
     /// #[get("/hello/<name>")]
@@ -120,7 +120,7 @@ impl WebSocket {
     ///
     /// This method takes a `FnOnce` `stream` that consumes a read-only stream
     /// and returns a stream of [`Message`]s. While the returned stream can be
-    /// constructed in any manner, the [`Stream!`](crate::Stream!) macro is the
+    /// constructed in any manner, the [`Stream!`](super::Stream!) macro is the
     /// preferred method. In any case, the stream must be `Send`.
     ///
     /// The returned stream must emit items of type `Result<Message>`. Items
@@ -132,7 +132,7 @@ impl WebSocket {
     ///
     /// ```rust
     /// # use rkt::get;
-    /// # use rkt_ws as ws;
+    /// # use rkt::ws;
     ///
     /// // Use `Stream!`, which internally calls `WebSocket::stream()`.
     /// #[get("/echo?stream")]
@@ -180,7 +180,7 @@ impl WebSocket {
     ///
     /// ```rust
     /// # use rkt::get;
-    /// # use rkt_ws as ws;
+    /// # use rkt::ws;
     /// #
     /// #[get("/echo")]
     /// fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
@@ -208,20 +208,20 @@ pub struct Channel<'r> {
 /// [`Stream!`] macro, which expands to both the type itself and an expression
 /// which evaluates to this type. See [`Stream!`] for details.
 ///
-/// [`Stream!`]: crate::Stream!
+/// [`Stream!`]: super::Stream!
 // TODO: Get rid of this or `Channel` via a single `enum`.
 pub struct MessageStream<'r, S> {
     ws: WebSocket,
     handler: Box<dyn FnOnce(SplitStream<DuplexStream>) -> S + Send + 'r>,
 }
 
-#[rkt::async_trait]
+#[crate::async_trait]
 impl<'r> FromRequest<'r> for WebSocket {
     type Error = std::convert::Infallible;
 
     async fn from_request(req: &'r Request<'_>) -> Outcome<Self, Self::Error> {
-        use crate::tungstenite::handshake::derive_accept_key;
-        use rkt::http::uncased::eq;
+        use super::tungstenite::handshake::derive_accept_key;
+        use crate::http::uncased::eq;
 
         let headers = req.headers();
         let is_upgrade = headers
@@ -269,7 +269,7 @@ where
     }
 }
 
-#[rkt::async_trait]
+#[crate::async_trait]
 impl IoHandler for Channel<'_> {
     async fn io(self: Box<Self>, io: IoStream) -> io::Result<()> {
         let stream = DuplexStream::new(io, self.ws.config).await;
@@ -278,7 +278,7 @@ impl IoHandler for Channel<'_> {
     }
 }
 
-#[rkt::async_trait]
+#[crate::async_trait]
 impl<'r, S> IoHandler for MessageStream<'r, S>
 where
     S: futures::Stream<Item = Result<Message>> + Send + 'r,
@@ -286,7 +286,7 @@ where
     async fn io(self: Box<Self>, io: IoStream) -> io::Result<()> {
         let (mut sink, source) = DuplexStream::new(io, self.ws.config).await.split();
         let stream = (self.handler)(source);
-        rkt::tokio::pin!(stream);
+        tokio::pin!(stream);
         while let Some(msg) = stream.next().await {
             let result = match msg {
                 Ok(msg) if msg.is_close() => return Ok(()),

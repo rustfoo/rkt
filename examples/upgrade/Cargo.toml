@@ -6,5 +6,4 @@ edition = "2021"
 publish = false
 
 [dependencies]
-rkt = { path = "../../core/lib" }
-ws = { package = "rkt_ws", path = "../../contrib/ws" }
+rkt = { path = "../../core/lib", features = ["ws"] }

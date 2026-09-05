@@ -335,7 +335,9 @@ fn parse_preamble(buf: &[u8]) -> io::Result<Preamble> {
         return parse_v1(buf);
     }
 
-    Err(invalid("connection does not begin with a v1 or v2 preamble"))
+    Err(invalid(
+        "connection does not begin with a v1 or v2 preamble",
+    ))
 }
 
 /// Parse a v1 (human-readable) preamble. The caller has verified that `buf`
@@ -455,9 +457,7 @@ fn parse_v2(buf: &[u8]) -> io::Result<Preamble> {
         return Ok(Preamble::Incomplete);
     }
 
-    let complete = |remote| {
-        Ok(Preamble::Complete { remote, consumed })
-    };
+    let complete = |remote| Ok(Preamble::Complete { remote, consumed });
 
     // For LOCAL, the receiver must use the real connection endpoints; for
     // AF_UNSPEC, the sender provided no usable address. Either way, any
@@ -487,7 +487,10 @@ fn parse_v2(buf: &[u8]) -> io::Result<Preamble> {
             let mut octets = [0u8; 16];
             octets.copy_from_slice(&addr[..16]);
             let port = u16::from_be_bytes([addr[32], addr[33]]);
-            complete(Remote::Inet(SocketAddr::new(Ipv6Addr::from(octets).into(), port)))
+            complete(Remote::Inet(SocketAddr::new(
+                Ipv6Addr::from(octets).into(),
+                port,
+            )))
         }
         V2_AF_UNIX => {
             if addr.len() < 216 {
@@ -794,7 +797,11 @@ mod tests {
         let (remote, buffer) = read_preamble(&mut server).await?;
         writer.await.unwrap();
 
-        let mut stream = ProxyProtocolStream { inner: server, remote: remote.clone(), buffer };
+        let mut stream = ProxyProtocolStream {
+            inner: server,
+            remote: remote.clone(),
+            buffer,
+        };
         let mut rest = Vec::new();
         stream.read_to_end(&mut rest).await?;
         Ok((remote, rest))
@@ -807,7 +814,10 @@ mod tests {
         input.extend_from_slice(payload);
 
         let (remote, rest) = read_from(&input).await.unwrap();
-        assert_eq!(remote, Some(Endpoint::Tcp("1.2.3.4:56324".parse().unwrap())));
+        assert_eq!(
+            remote,
+            Some(Endpoint::Tcp("1.2.3.4:56324".parse().unwrap()))
+        );
         assert_eq!(rest, payload);
     }
 
@@ -819,14 +829,20 @@ mod tests {
         input.extend_from_slice(payload);
 
         let (mut client, mut server) = tokio::io::duplex(1024);
-        tokio::io::AsyncWriteExt::write_all(&mut client, &input).await.unwrap();
+        tokio::io::AsyncWriteExt::write_all(&mut client, &input)
+            .await
+            .unwrap();
         drop(client);
 
         let (remote, buffer) = read_preamble(&mut server).await.unwrap();
         assert_eq!(remote, Some(Endpoint::Tcp("9.8.7.6:1234".parse().unwrap())));
 
         // drain replayed + live bytes through 3-byte reads
-        let mut stream = ProxyProtocolStream { inner: server, remote, buffer };
+        let mut stream = ProxyProtocolStream {
+            inner: server,
+            remote,
+            buffer,
+        };
         let mut rest = Vec::new();
         let mut chunk = [0u8; 3];
         loop {
@@ -856,7 +872,11 @@ mod tests {
     #[tokio::test]
     async fn stream_write_passthrough() {
         let (mut client, server) = tokio::io::duplex(64);
-        let mut stream = ProxyProtocolStream { inner: server, remote: None, buffer: None };
+        let mut stream = ProxyProtocolStream {
+            inner: server,
+            remote: None,
+            buffer: None,
+        };
 
         use tokio::io::AsyncWriteExt;
         stream.write_all(b"hello").await.unwrap();

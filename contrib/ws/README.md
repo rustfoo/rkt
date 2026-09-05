@@ -1,35 +1,18 @@
-# `ws` [![ci.svg]][ci] [![crates.io]][crate] [![docs.svg]][crate docs]
+# `rkt_ws` (deprecated)
 
-[crates.io]: https://img.shields.io/crates/v/rkt_ws.svg
-[crate]: https://crates.io/crates/rkt_ws
-[docs.svg]: https://img.shields.io/badge/web-master-red.svg?style=flat&label=docs&colorB=d33847
-[crate docs]: https://docs.rs/rkt_ws/latest/rkt_ws/
-[ci.svg]: https://github.com/rustfoo/rkt/workflows/CI/badge.svg
-[ci]: https://github.com/rustfoo/rkt/actions
+WebSocket support now lives in [`rkt::ws`](https://docs.rs/rkt/latest/rkt/ws/).
 
-This crate provides WebSocket support for rkt via integration with rkt's
-[connection upgrades] API.
+```toml
+[dependencies]
+rkt = { version = "1.3.0", features = ["ws"] }
+```
 
-# Usage
+Replace `rkt_ws` or `ws` imports with `rkt::ws`:
 
-  1. Depend on `rkt_ws`, renamed here to `ws`:
+```rust
+use rkt::ws::{WebSocket, Stream};
+```
 
-     ```toml
-     [dependencies]
-     ws = { package = "rkt_ws", version = "1.2.0" }
-     ```
-
-   2. Use it!
-
-      ```rust
-      #[get("/echo")]
-      fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
-          ws::Stream! { ws =>
-              for await message in ws {
-                  yield message?;
-              }
-          }
-      }
-      ```
-
-See the [crate docs] for full details.
+`rkt_ws` remains a source-compatible compatibility shim for one full minor
+release cycle and will be removed in the following minor release. Its legacy
+`tungstenite` feature remains a no-op compatibility alias.

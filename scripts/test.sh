@@ -87,19 +87,16 @@ function test_contrib() {
     minijinja
   )
 
-  WS_FEATURES=(
-    tungstenite
-  )
-
   for feature in "${DYN_TEMPLATES_FEATURES[@]}"; do
     echo ":: Building and testing dyn_templates [$feature]..."
     $CARGO test -p rkt_dyn_templates --no-default-features --features $feature $@
   done
 
-  for feature in "${WS_FEATURES[@]}"; do
-    echo ":: Building and testing ws [$feature]..."
-    $CARGO test -p rkt_ws --no-default-features --features $feature $@
-  done
+  # `rkt_ws` is a deprecated shim over `rkt::ws`; its `tungstenite` feature is a
+  # no-op alias. Check both feature states so the alias can't break consumers.
+  echo ":: Building and testing ws compatibility shim..."
+  $CARGO test -p rkt_ws $@
+  $CARGO test -p rkt_ws --no-default-features $@
 }
 
 function test_core() {
@@ -114,6 +111,7 @@ function test_core() {
     json
     msgpack
     uuid
+    ws
     trace
   )
 
