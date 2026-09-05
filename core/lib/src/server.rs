@@ -39,8 +39,7 @@ impl Rocket<Orbit> {
         // `span_debug!` runs its closure even when the subscriber discards
         // `DEBUG` events, so also check that the level is enabled to avoid
         // materializing and formatting headers that will never be logged.
-        let debug_headers = self.config.debug_headers
-            && tracing::enabled!(tracing::Level::DEBUG);
+        let debug_headers = self.config.debug_headers && tracing::enabled!(tracing::Level::DEBUG);
         let request = ErasedRequest::new(self, parts, |rocket, parts| {
             Request::from_hyp(rocket, parts, connection).unwrap_or_else(|e| e)
         });

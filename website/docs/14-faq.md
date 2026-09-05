@@ -38,7 +38,8 @@ mainly consists of:
 
 The goal is for functionality like templating, sessions, ORMs, and so on to be
 implemented entirely outside of Rocket while maintaining a first-class feel and
-experience. Indeed, crates like [`rkt_dyn_templates`] and [`rkt_ws`]
+experience. Indeed, crates like [`rkt_dyn_templates`] and optional modules
+like [`rkt::ws`]
 do just this. As a result, Rocket is neither "bare-bones" nor is it a kitchen
 sink for all possible features.
 
@@ -75,7 +76,7 @@ trade-off is worth it. Rocket will never compromise security, correctness, or
 usability to "win" at benchmarks of any sort.
 
 [`rkt_dyn_templates`]: https://docs.rs/rkt_dyn_templates/latest/rkt_dyn_templates/
-[`rkt_ws`]: https://docs.rs/rkt_ws/latest/rkt_ws/
+[`rkt::ws`]: https://docs.rs/rkt/latest/rkt/ws/
 </div>
 </details>
 
@@ -276,9 +277,10 @@ Can I, and if so how, do I use WebSockets?
 </summary>
 <div class="content">
 
-You can! WebSocket support is provided by the officially maintained
-[`rkt_ws`](https://docs.rs/rkt_ws/latest/rkt_ws/) crate. You'll find all the docs you need
-there.
+You can! Enable the `ws` feature on `rkt` and use
+[`rkt::ws`](https://docs.rs/rkt/latest/rkt/ws/). The API documentation there
+includes channel and stream examples. `rkt_ws` remains a deprecated migration
+shim for one full minor release cycle.
 
 Rocket _also_ supports [Server-Sent Events], which allows for real-time
 _unidirectional_ communication from the server to the client. The protocol is a
@@ -641,7 +643,7 @@ is to depend on a `contrib` library from git while also depending on a
 `crates.io` version of Rocket or vice-versa:
 
 ```toml
-rkt = { version = "1.2.0" }
+rkt = { version = "1.3.0" }
 rkt_dyn_templates = { git = "https://github.com/rustfoo/rkt.git" }
 ```
 

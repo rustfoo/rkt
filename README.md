@@ -36,7 +36,7 @@ Add `rkt` to your `Cargo.toml`:
 
 ```toml
 [dependencies]
-rkt = "1.2.0"
+rkt = "1.3.0"
 ```
 
 ## Crates
@@ -45,7 +45,6 @@ rkt = "1.2.0"
 |-------|-------------|------|
 | `rkt` | Core framework | [![docs.rs](https://img.shields.io/docsrs/rkt)](https://docs.rs/rkt) |
 | `rkt_dyn_templates` | Dynamic template rendering (Tera, Handlebars, MiniJinja) | [![docs.rs](https://img.shields.io/docsrs/rkt_dyn_templates)](https://docs.rs/rkt_dyn_templates) |
-| `rkt_ws` | WebSocket support | [![docs.rs](https://img.shields.io/docsrs/rkt_ws)](https://docs.rs/rkt_ws) |
 
 ## Features
 
@@ -53,7 +52,7 @@ rkt = "1.2.0"
 - **HTTP/3 preview** — via s2n-quic (enable with `http3-preview`)
 - **TLS & mTLS** — via Rustls (enable with `tls` / `mtls`)
 - **Secret cookies** — signed and encrypted cookie support (enable with `secrets`)
-- **WebSockets** — first-class support via `rkt_ws`
+- **WebSockets** — first-class support via `rkt::ws` (enable with `ws`)
 - **Dynamic templates** — Tera, Handlebars, and MiniJinja via `rkt_dyn_templates`
 - **Tracing** — structured logging via the `tracing` ecosystem
 - **Type-safe routing** — compile-time checked routes, guards, and responders

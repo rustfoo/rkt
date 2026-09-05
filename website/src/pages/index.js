@@ -49,7 +49,7 @@ const FEATURES = [
   {
     title: 'WebSockets',
     description:
-      'WebSocket support via rkt_ws, using the same handler style as HTTP routes.',
+      'Built-in WebSocket support via rkt::ws; enable it with the ws feature.',
   },
   {
     title: 'Fairings',
@@ -69,12 +69,6 @@ const CRATES = [
     description: 'Core framework: routing, request guards, responders, fairings, TLS.',
     link: 'https://docs.rs/rkt',
     linkLabel: 'docs.rs/rkt',
-  },
-  {
-    name: 'rkt_ws',
-    description: 'WebSocket support.',
-    link: 'https://docs.rs/rkt_ws',
-    linkLabel: 'docs.rs/rkt_ws',
   },
   {
     name: 'rkt_dyn_templates',
@@ -179,7 +173,7 @@ function QuickStart() {
             </Link>
           </div>
           <div className={styles.quickStartCode}>
-            <CodeBlock language="toml" title="Cargo.toml">{`[dependencies]\nrkt = "1.2.0"`}</CodeBlock>
+            <CodeBlock language="toml" title="Cargo.toml">{`[dependencies]\nrkt = "1.3.0"`}</CodeBlock>
             <CodeBlock language="rust" title="src/main.rs">{TYPED_EXAMPLE}</CodeBlock>
           </div>
         </div>

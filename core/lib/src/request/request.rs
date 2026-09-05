@@ -809,10 +809,7 @@ impl<'r> Request<'r> {
     pub fn content_type(&self) -> Option<&ContentType> {
         self.state
             .content_type
-            .get_or_init(|| {
-                self.header("Content-Type")
-                    .and_then(|v| v.parse().ok())
-            })
+            .get_or_init(|| self.header("Content-Type").and_then(|v| v.parse().ok()))
             .as_ref()
     }
 
@@ -833,10 +830,7 @@ impl<'r> Request<'r> {
     pub fn accept(&self) -> Option<&Accept> {
         self.state
             .accept
-            .get_or_init(|| {
-                self.header("Accept")
-                    .and_then(|v| v.parse().ok())
-            })
+            .get_or_init(|| self.header("Accept").and_then(|v| v.parse().ok()))
             .as_ref()
     }
 

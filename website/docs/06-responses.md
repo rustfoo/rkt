@@ -440,13 +440,12 @@ how to detect and handle graceful shutdown requests.
 
 ### WebSockets
 
-Enabled by Rocket's support for [HTTP connection upgrades], the official
-[`rkt_ws`] crate implements first-class support for WebSockets. Working with
-`rkt_ws` to implement an echo server looks like this:
+Enable rkt's built-in WebSocket support with `features = ["ws"]`. It uses
+[HTTP connection upgrades] internally; an echo server looks like this:
 
 ```rust
 # use rkt::get;
-use rkt_ws::{WebSocket, Stream};
+use rkt::ws::{WebSocket, Stream};
 
 #[get("/echo")]
 fn echo_compose(ws: WebSocket) -> Stream!['static] {
@@ -454,12 +453,12 @@ fn echo_compose(ws: WebSocket) -> Stream!['static] {
 }
 ```
 
-As with `async` streams, `rkt_ws` also supports using generator syntax for
+As with `async` streams, `rkt::ws` also supports using generator syntax for
 WebSocket messages:
 
 ```rust
 # use rkt::get;
-use rkt_ws::{WebSocket, Stream};
+use rkt::ws::{WebSocket, Stream};
 
 #[get("/echo")]
 fn echo_stream(ws: WebSocket) -> Stream!['static] {
@@ -471,10 +470,12 @@ fn echo_stream(ws: WebSocket) -> Stream!['static] {
 }
 ```
 
-For complete usage details, see the [`rkt_ws`] documentation.
+For complete usage details, see the [`rkt::ws`] documentation. The former
+`rkt_ws` crate is a deprecated compatibility shim for one full minor release
+cycle.
 
 [HTTP connection upgrades]: https://docs.rs/rkt/latest/rkt/response/struct.Response.html#upgrading
-[`rkt_ws`]: https://docs.rs/rkt_ws/latest/rkt_ws/
+[`rkt::ws`]: https://docs.rs/rkt/latest/rkt/ws/
 
 ### JSON
 

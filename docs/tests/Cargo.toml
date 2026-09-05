@@ -10,10 +10,10 @@ missing_docs = "allow"
 missing_abi = "allow"
 
 [dependencies]
-rkt = { workspace = true, features = ["secrets"] }
+rkt = { workspace = true, features = ["secrets", "ws"] }
 
 [dev-dependencies]
-rkt = { workspace = true, features = ["secrets", "json", "mtls"] }
+rkt = { workspace = true, features = ["secrets", "json", "mtls", "ws"] }
 figment = { version = "0.10.17", features = ["toml", "env"] }
 tokio = { version = "1", features = ["macros", "io-std"] }
 rand = "0.10"
@@ -28,6 +28,3 @@ features = ["sqlite", "macros", "migrate", "runtime-tokio"]
 [dev-dependencies.rkt_dyn_templates]
 path = "../../contrib/dyn_templates"
 features = ["tera"]
-
-[dev-dependencies.rkt_ws]
-path = "../../contrib/ws"

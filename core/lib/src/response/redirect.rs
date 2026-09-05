@@ -24,7 +24,7 @@ use crate::response::{self, Responder, Response};
 /// valid URI:
 ///
 /// ```rust
-    /// #[macro_use] extern crate rkt;
+/// #[macro_use] extern crate rkt;
 /// use rkt::response::Redirect;
 ///
 /// #[get("/hello/<name>/<age>")]

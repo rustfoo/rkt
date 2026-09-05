@@ -2,6 +2,7 @@
 
 use rkt::fs::{self, FileServer};
 use rkt::futures::{SinkExt, StreamExt};
+use rkt::ws;
 
 #[get("/echo?stream", rank = 1)]
 fn echo_stream(ws: ws::WebSocket) -> ws::Stream!['static] {
