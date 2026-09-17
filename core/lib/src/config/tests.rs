@@ -290,6 +290,235 @@ fn test_debug_headers() {
 }
 
 #[test]
+fn test_body_policy_defaults() {
+    use std::time::Duration;
+
+    use crate::data::BodyProgress;
+
+    figment::Jail::expect_with(|_| {
+        let config = Config::from(Config::figment());
+        assert_eq!(config.body_timeout, None);
+        assert_eq!(config.body_min_rate, None);
+        assert_eq!(config.body_grace, None);
+        assert_eq!(config.body_limit, 8.mebibytes());
+        assert_eq!(config.body_policy, None);
+
+        let policy = config.body_policy();
+        assert_eq!(policy.progress, BodyProgress::Timeout(Duration::from_secs(60)));
+        assert_eq!(policy.limit, 8.mebibytes());
+
+        Ok(())
+    })
+}
+
+#[test]
+fn test_body_policy_toml() {
+    use std::time::Duration;
+
+    use crate::data::{BodyPolicySetting, BodyProgress};
+
+    figment::Jail::expect_with(|jail| {
+        jail.create_file(
+            "Rocket.toml",
+            r#"
+                [default]
+                body_timeout = "1m30s"
+                body_limit = "2MiB"
+            "#,
+        )?;
+
+        let config = Config::from(Config::figment());
+        assert_eq!(config.body_timeout.map(|t| *t), Some(Duration::from_secs(90)));
+        assert_eq!(config.body_limit, 2.mebibytes());
+        assert_eq!(
+            config.body_policy(),
+            crate::data::BodyPolicy {
+                progress: BodyProgress::Timeout(Duration::from_secs(90)),
+                limit: 2.mebibytes(),
+            }
+        );
+
+        // A bare integer is a count of seconds, as in a duration string.
+        jail.create_file(
+            "Rocket.toml",
+            r#"
+                [default]
+                body_timeout = 30
+            "#,
+        )?;
+
+        let config = Config::from(Config::figment());
+        assert_eq!(config.body_timeout.map(|t| *t), Some(Duration::from_secs(30)));
+
+        jail.create_file(
+            "Rocket.toml",
+            r#"
+                [default]
+                body_min_rate = "8KiB/s"
+                body_grace = "250ms"
+            "#,
+        )?;
+
+        let config = Config::from(Config::figment());
+        assert_eq!(config.body_min_rate, Some("8KiB/s".parse().unwrap()));
+        assert_eq!(config.body_grace.map(|g| *g), Some(Duration::from_millis(250)));
+        assert_eq!(
+            config.body_policy().progress,
+            BodyProgress::MinRate {
+                rate: "8KiB/s".parse().unwrap(),
+                grace: Duration::from_millis(250),
+            }
+        );
+
+        // Without a grace period, the minimum rate takes the default grace.
+        jail.create_file(
+            "Rocket.toml",
+            r#"
+                [default]
+                body_min_rate = "8KiB/s"
+            "#,
+        )?;
+
+        let config = Config::from(Config::figment());
+        assert_eq!(
+            config.body_policy().progress,
+            BodyProgress::MinRate {
+                rate: "8KiB/s".parse().unwrap(),
+                grace: Duration::from_secs(15),
+            }
+        );
+
+        jail.create_file(
+            "Rocket.toml",
+            r#"
+                [default]
+                body_policy = "unlimited"
+            "#,
+        )?;
+
+        let config = Config::from(Config::figment());
+        assert_eq!(config.body_policy, Some(BodyPolicySetting::Unlimited));
+        assert_eq!(config.body_policy().progress, BodyProgress::Unlimited);
+
+        Ok(())
+    })
+}
+
+#[test]
+fn test_body_policy_env() {
+    use std::time::Duration;
+
+    figment::Jail::expect_with(|jail| {
+        jail.set_env("ROCKET_BODY_TIMEOUT", "45s");
+        let config = Config::from(Config::figment());
+        assert_eq!(config.body_timeout.map(|t| *t), Some(Duration::from_secs(45)));
+
+        jail.set_env("ROCKET_BODY_TIMEOUT", 45);
+        let config = Config::from(Config::figment());
+        assert_eq!(config.body_timeout.map(|t| *t), Some(Duration::from_secs(45)));
+
+        jail.set_env("ROCKET_BODY_LIMIT", "16MiB");
+        let config = Config::from(Config::figment());
+        assert_eq!(config.body_limit, 16.mebibytes());
+
+        Ok(())
+    })
+}
+
+#[test]
+fn test_body_policy_rejects_bad_values() {
+    figment::Jail::expect_with(|jail| {
+        for value in ["0s", "-5s", "soon", "1s1s", ""] {
+            jail.set_env("ROCKET_BODY_TIMEOUT", format!("\"{value}\""));
+            assert!(Config::figment().extract::<Config>().is_err(), "{value:?} parsed");
+        }
+
+        jail.set_env("ROCKET_BODY_TIMEOUT", 0);
+        assert!(Config::figment().extract::<Config>().is_err());
+        jail.set_env("ROCKET_BODY_TIMEOUT", -1);
+        assert!(Config::figment().extract::<Config>().is_err());
+
+        Ok(())
+    })
+}
+
+#[test]
+fn test_body_policy_round_trip() {
+    use std::time::Duration;
+
+    use crate::config::ConfigDuration;
+
+    figment::Jail::expect_with(|_| {
+        let original = Config {
+            body_min_rate: Some("8KiB/s".parse().unwrap()),
+            body_grace: Some(ConfigDuration(Duration::from_millis(1500))),
+            body_limit: 5.gibibytes(),
+            ..Config::default()
+        };
+
+        let config = Config::from(Figment::from(original.clone()));
+        assert_eq!(config, original);
+
+        Ok(())
+    })
+}
+
+#[test]
+fn test_body_policy_mutual_exclusion() {
+    use std::time::Duration;
+
+    use crate::config::ConfigDuration;
+    use crate::data::BodyPolicySetting;
+    use crate::http::Rate;
+
+    let timeout = Some(ConfigDuration(Duration::from_secs(30)));
+    let rate = Some("1KiB/s".parse::<Rate>().unwrap());
+    let unlimited = Some(BodyPolicySetting::Unlimited);
+
+    let accepted = [
+        Config::default(),
+        Config { body_timeout: timeout, ..Config::default() },
+        Config { body_min_rate: rate, ..Config::default() },
+        Config { body_min_rate: rate, body_grace: timeout, ..Config::default() },
+        Config { body_policy: unlimited, ..Config::default() },
+    ];
+
+    for config in accepted {
+        config.validate_body_policy().expect("valid body policy");
+    }
+
+    let rejected = [
+        Config { body_timeout: timeout, body_min_rate: rate, ..Config::default() },
+        Config { body_timeout: timeout, body_policy: unlimited, ..Config::default() },
+        Config { body_min_rate: rate, body_policy: unlimited, ..Config::default() },
+        Config { body_grace: timeout, ..Config::default() },
+        Config { body_grace: timeout, body_policy: unlimited, ..Config::default() },
+    ];
+
+    for config in rejected {
+        config.validate_body_policy().expect_err("invalid body policy");
+    }
+}
+
+#[test]
+fn test_err_on_conflicting_body_policy() {
+    figment::Jail::expect_with(|jail| {
+        jail.create_file(
+            "Rocket.toml",
+            r#"
+                [default]
+                body_timeout = "30s"
+                body_min_rate = "1KiB/s"
+            "#,
+        )?;
+
+        let rocket = crate::custom(Config::figment());
+        crate::local::blocking::Client::untracked(rocket).expect_err("conflicting body policy");
+        Ok(())
+    })
+}
+
+#[test]
 fn test_profiles_merge() {
     figment::Jail::expect_with(|jail| {
         jail.create_file(

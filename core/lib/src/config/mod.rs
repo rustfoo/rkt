@@ -114,12 +114,14 @@
 mod ident;
 mod cli_colors;
 mod config;
+mod duration;
 mod http_header;
 #[cfg(test)]
 mod tests;
 
 pub use cli_colors::CliColors;
 pub use config::Config;
+pub use duration::ConfigDuration;
 pub use ident::Ident;
 
 pub use crate::shutdown::ShutdownConfig;

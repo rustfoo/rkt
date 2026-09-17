@@ -556,6 +556,9 @@ impl Rocket<Build> {
         let mut config = Config::try_from(&self.figment).map_err(ErrorKind::Config)?;
         crate::trace::init(&config);
 
+        // Check for body policy key combinations the deserializer can't reject.
+        config.validate_body_policy().map_err(ErrorKind::Config)?;
+
         // Check for safely configured secrets.
         #[cfg(feature = "secrets")]
         if !config.secret_key.is_provided() {

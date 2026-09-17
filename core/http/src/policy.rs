@@ -291,6 +291,40 @@ impl fmt::Display for Rate {
     }
 }
 
+#[cfg(feature = "serde")]
+mod serde_impl {
+    use super::*;
+
+    use serde::de::{Deserialize, Deserializer, Error, Unexpected, Visitor};
+    use serde::ser::{Serialize, Serializer};
+
+    impl Serialize for Rate {
+        fn serialize<S: Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+            serializer.serialize_str(&self.to_string())
+        }
+    }
+
+    struct DeVisitor;
+
+    impl<'de> Visitor<'de> for DeVisitor {
+        type Value = Rate;
+
+        fn expecting(&self, formatter: &mut fmt::Formatter<'_>) -> fmt::Result {
+            write!(formatter, "a rate string such as `8KiB/s`")
+        }
+
+        fn visit_str<E: Error>(self, v: &str) -> Result<Self::Value, E> {
+            Rate::from_str(v).map_err(|_| E::invalid_value(Unexpected::Str(v), &self))
+        }
+    }
+
+    impl<'de> Deserialize<'de> for Rate {
+        fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+            deserializer.deserialize_str(DeVisitor)
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
