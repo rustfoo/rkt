@@ -167,7 +167,7 @@ impl<'r, 'i> MultipartParser<'r, 'i> {
                 request: self.request,
                 name: NameView::new(name),
                 file_name: file_name.map(crate::fs::FileName::new),
-                data: Data::from(field),
+                data: Data::from_field(field),
             })
         } else {
             let (mut buf, len) = match field.name() {

@@ -10,8 +10,9 @@ use tokio::fs::File;
 use tokio::io::{AsyncRead, AsyncReadExt, AsyncWrite, ReadBuf, Take};
 use tokio_util::io::StreamReader;
 
+use crate::data::policy::PolicedStream;
 use crate::data::transform::Transform;
-use crate::data::{Capped, N};
+use crate::data::{BodyPolicyError, Capped, N};
 use crate::util::Chain;
 
 use super::peekable::Peekable;
@@ -63,8 +64,9 @@ pub struct TransformReader<'r> {
 /// Limited, pre-buffered reader to the underlying data stream.
 pub type BaseReader<'r> = Take<Chain<Cursor<Vec<u8>>, RawReader<'r>>>;
 
-/// Direct reader to the underlying data stream. Not limited in any manner.
-pub type RawReader<'r> = StreamReader<RawStream<'r>, Bytes>;
+/// Direct reader to the underlying data stream. Not limited in size by any
+/// data guard, but subject to the body policy via [`PolicedStream`].
+pub type RawReader<'r> = StreamReader<PolicedStream<'r>, Bytes>;
 
 /// Raw underlying data stream.
 #[allow(clippy::large_enum_variant)]
@@ -74,6 +76,8 @@ pub enum RawStream<'r> {
     #[cfg(feature = "http3-preview")]
     H3Body(crate::listener::Cancellable<crate::listener::quic::QuicRx>),
     Multipart(multer::Field<'r>),
+    #[cfg(test)]
+    Test(Pin<Box<dyn Stream<Item = io::Result<Bytes>> + Send + Sync + 'r>>),
 }
 
 impl<'r> TransformReader<'r> {
@@ -361,8 +365,10 @@ impl Stream for RawStream<'_> {
                 .map_err(io::Error::other),
             #[cfg(feature = "http3-preview")]
             RawStream::H3Body(stream) => Pin::new(stream).poll_next(cx),
-            RawStream::Multipart(s) => Pin::new(s).poll_next(cx).map_err(io::Error::other),
+            RawStream::Multipart(s) => Pin::new(s).poll_next(cx).map_err(multipart_error),
             RawStream::Empty => Poll::Ready(None),
+            #[cfg(test)]
+            RawStream::Test(stream) => stream.as_mut().poll_next(cx),
         }
     }
 
@@ -377,8 +383,26 @@ impl Stream for RawStream<'_> {
             RawStream::H3Body(_) => (0, Some(0)),
             RawStream::Multipart(mp) => mp.size_hint(),
             RawStream::Empty => (0, Some(0)),
+            #[cfg(test)]
+            RawStream::Test(stream) => stream.size_hint(),
         }
     }
+}
+
+/// Converts an error from reading a multipart field into an `io::Error`.
+///
+/// A field is read through the [`DataStream`] of the enclosing body, so a body
+/// policy failure reaches the field wrapped by multer. Unwrap it so that it
+/// surfaces as the same distinct [`BodyPolicyError`] `io::Error` it would from
+/// the body itself.
+fn multipart_error(error: multer::Error) -> io::Error {
+    if let multer::Error::StreamReadFailed(source) = &error {
+        if let Some(e) = source.downcast_ref::<io::Error>().and_then(BodyPolicyError::from_io) {
+            return io::Error::from(*e);
+        }
+    }
+
+    io::Error::other(error)
 }
 
 impl std::fmt::Display for RawStream<'_> {
@@ -389,6 +413,8 @@ impl std::fmt::Display for RawStream<'_> {
             #[cfg(feature = "http3-preview")]
             RawStream::H3Body(_) => f.write_str("http3 quic stream"),
             RawStream::Multipart(_) => f.write_str("multipart form field"),
+            #[cfg(test)]
+            RawStream::Test(_) => f.write_str("test stream"),
         }
     }
 }

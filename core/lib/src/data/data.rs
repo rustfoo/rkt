@@ -3,8 +3,9 @@ use std::pin::Pin;
 
 use crate::data::data_stream::{DataStream, RawReader, RawStream};
 use crate::data::peekable::Peekable;
+use crate::data::policy::PolicedStream;
 use crate::data::transform::{InPlaceMap, Inspect, Transform, TransformBuf};
-use crate::data::ByteUnit;
+use crate::data::{BodyPolicy, ByteUnit};
 
 /// Type representing the body data of a request.
 ///
@@ -38,13 +39,21 @@ use crate::data::ByteUnit;
 /// The `peek` method returns a slice containing at most 512 bytes of buffered
 /// body data. This enables partially or fully reading from a `Data` object
 /// without consuming the `Data` object.
+///
+/// # Body Policy
+///
+/// Every read of body data, whether via `peek` or via the stream returned by
+/// `open`, is subject to the [`BodyPolicy`] in effect: the body must arrive
+/// within the configured progress bound and must not exceed the hard size
+/// limit. A read that violates the policy fails with an [`io::Error`] carrying
+/// a [`BodyPolicyError`](crate::data::BodyPolicyError), and every read
+/// thereafter fails with the same error. The body clock starts when the body
+/// becomes available and is never restarted by forwarding or opening the data.
 pub struct Data<'r> {
     stream: Peekable<512, RawReader<'r>>,
     transforms: Vec<Pin<Box<dyn Transform + Send + Sync + 'r>>>,
 }
 
-// TODO: Before `async`, we had a read timeout of 5s. Such a short read timeout
-// is likely no longer necessary, but an idle timeout should be implemented.
 impl<'r> Data<'r> {
     #[inline]
     pub(crate) fn new(stream: Peekable<512, RawReader<'r>>) -> Self {
@@ -54,19 +63,34 @@ impl<'r> Data<'r> {
         }
     }
 
+    /// Creates a `Data` for a request body that has just become available.
+    /// The body clock starts now, and `policy` is enforced on every read.
     #[inline]
-    pub(crate) fn from<S: Into<RawStream<'r>>>(stream: S) -> Data<'r> {
-        Data::new(Peekable::new(RawReader::new(stream.into())))
+    pub(crate) fn from<S: Into<RawStream<'r>>>(stream: S, policy: BodyPolicy) -> Data<'r> {
+        let stream = PolicedStream::new(stream.into(), policy);
+        Data::new(Peekable::new(RawReader::new(stream)))
+    }
+
+    /// Creates a `Data` for a multipart field of a larger body. The field is
+    /// read through that body's stream, which counts and bounds every byte it
+    /// yields, so the field itself enforces no policy of its own.
+    #[inline]
+    pub(crate) fn from_field(field: multer::Field<'r>) -> Data<'r> {
+        let stream = PolicedStream::inherited(field.into());
+        Data::new(Peekable::new(RawReader::new(stream)))
     }
 
     /// This creates a `data` object from a local data source `data`.
+    ///
+    /// The data is already in hand, so the progress bound of `policy` cannot
+    /// be violated, but its size limit is applied as it would be to a received
+    /// body: if `data` exceeds the limit, reading past it fails.
     #[inline]
-    pub(crate) fn local(data: Vec<u8>) -> Data<'r> {
-        Data::new(Peekable::with_buffer(
-            data,
-            true,
-            RawReader::new(RawStream::Empty),
-        ))
+    pub(crate) fn local(data: Vec<u8>, policy: BodyPolicy) -> Data<'r> {
+        let mut stream = PolicedStream::new(RawStream::Empty, policy);
+        // A failure is recorded in the stream and surfaces from its first read.
+        let _ = stream.count(data.len());
+        Data::new(Peekable::with_buffer(data, true, RawReader::new(stream)))
     }
 
     /// Returns the raw data stream, limited to `limit` bytes.

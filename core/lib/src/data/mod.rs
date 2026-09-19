@@ -17,7 +17,7 @@ pub use self::data_stream::DataStream;
 pub use self::from_data::{FromData, Outcome};
 pub use self::io_stream::{IoHandler, IoStream};
 pub use self::limits::Limits;
-pub use self::policy::{BodyPolicy, BodyPolicySetting, BodyProgress};
+pub use self::policy::{BodyPolicy, BodyPolicyError, BodyPolicySetting, BodyProgress};
 pub use self::transform::{Transform, TransformBuf};
 pub use ubyte::{ByteUnit, ToByteUnit};
 

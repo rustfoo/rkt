@@ -106,7 +106,10 @@ impl ErasedRequest {
         T: Send + Sync + 'static,
         D: for<'r> Into<RawStream<'r>>,
     {
-        let mut data: Data<'_> = Data::from(raw_stream);
+        // The body is available now that the headers have been received, so
+        // the body clock starts here, under the globally configured policy.
+        let policy = self._rocket.config().body_policy();
+        let mut data: Data<'_> = Data::from(raw_stream, policy);
         let mut parent = Arc::new(self);
         let token: T = {
             let parent: &mut ErasedRequest = Arc::get_mut(&mut parent).unwrap();
