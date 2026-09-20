@@ -12,7 +12,7 @@ use tokio::time::{Instant, Sleep};
 use crate::config::Config;
 use crate::data::data_stream::RawStream;
 use crate::data::ByteUnit;
-use crate::http::{format_duration, Rate};
+use crate::http::{format_duration, Rate, Status};
 
 /// The progress deadline applied when no progress policy is configured.
 const DEFAULT_TIMEOUT: Duration = Duration::from_secs(60);
@@ -210,6 +210,15 @@ pub enum BodyPolicyError {
         /// the limit.
         received: u64,
     },
+    /// The body was declared, via `Content-Length`, to be larger than the
+    /// [`BodyPolicy::limit`] allows. The body was rejected before any of it
+    /// was read.
+    DeclaredTooLarge {
+        /// The hard limit on the size of the body.
+        limit: ByteUnit,
+        /// The declared size of the body.
+        declared: u64,
+    },
 }
 
 impl BodyPolicyError {
@@ -255,26 +264,40 @@ impl BodyPolicyError {
             BodyPolicyError::Timeout { .. } | BodyPolicyError::MinRate { .. } => {
                 io::ErrorKind::TimedOut
             }
-            BodyPolicyError::LimitExceeded { .. } => io::ErrorKind::FileTooLarge,
+            BodyPolicyError::LimitExceeded { .. } | BodyPolicyError::DeclaredTooLarge { .. } => {
+                io::ErrorKind::FileTooLarge
+            }
+        }
+    }
+
+    /// The HTTP status that answers this failure: `408 Request Timeout` for a
+    /// progress failure and `413 Content Too Large` for a size failure.
+    pub(crate) fn status(&self) -> Status {
+        match self.kind() {
+            io::ErrorKind::TimedOut => Status::RequestTimeout,
+            _ => Status::PayloadTooLarge,
         }
     }
 
     /// The time that had elapsed since the body became available when the
-    /// failure occurred.
+    /// failure occurred. Zero for a body rejected before being read.
     pub fn elapsed(&self) -> Duration {
         match *self {
             BodyPolicyError::Timeout { elapsed, .. }
             | BodyPolicyError::MinRate { elapsed, .. }
             | BodyPolicyError::LimitExceeded { elapsed, .. } => elapsed,
+            BodyPolicyError::DeclaredTooLarge { .. } => Duration::ZERO,
         }
     }
 
-    /// The number of payload bytes received when the failure occurred.
+    /// The number of payload bytes received when the failure occurred. Zero
+    /// for a body rejected before being read.
     pub fn received(&self) -> u64 {
         match *self {
             BodyPolicyError::Timeout { received, .. }
             | BodyPolicyError::MinRate { received, .. }
             | BodyPolicyError::LimitExceeded { received, .. } => received,
+            BodyPolicyError::DeclaredTooLarge { .. } => 0,
         }
     }
 }
@@ -297,6 +320,11 @@ impl fmt::Display for BodyPolicyError {
             BodyPolicyError::LimitExceeded { limit, .. } => write!(
                 f,
                 "request body exceeds the {limit} limit: {received} received after {elapsed}"
+            ),
+            BodyPolicyError::DeclaredTooLarge { limit, declared } => write!(
+                f,
+                "request body declared as {} exceeds the {limit} limit",
+                ByteUnit::from(*declared)
             ),
         }
     }
@@ -351,7 +379,7 @@ impl<'r> PolicedStream<'r> {
     /// Creates a policed stream for a body that has just become available.
     /// The body clock starts now.
     pub(crate) fn new(stream: RawStream<'r>, policy: BodyPolicy) -> Self {
-        Self {
+        let mut this = Self {
             stream,
             policy: Some(policy),
             origin: Instant::now(),
@@ -359,7 +387,30 @@ impl<'r> PolicedStream<'r> {
             complete: false,
             failure: None,
             sleep: None,
+        };
+
+        // A body that declares, via `Content-Length`, that it will carry more
+        // than the limit allows is rejected before a byte of it is read.
+        let (declared, _) = this.stream.size_hint();
+        this.declare(declared as u64);
+        this
+    }
+
+    /// Records a size failure if a body declared to be `declared` bytes long
+    /// exceeds the hard limit. Nothing is counted as received: the declared
+    /// bytes have not been read, and if the body is rejected, never will be.
+    pub(crate) fn declare(&mut self, declared: u64) {
+        if let Some(policy) = self.policy {
+            if declared > policy.limit {
+                let limit = policy.limit;
+                self.fail(BodyPolicyError::DeclaredTooLarge { limit, declared });
+            }
         }
+    }
+
+    /// The failure that has terminated this body, if any.
+    pub(crate) fn failure(&self) -> Option<BodyPolicyError> {
+        self.failure
     }
 
     /// Creates a stream for a portion of a body, such as a multipart field,
@@ -846,18 +897,82 @@ mod tests {
     }
 
     #[tokio::test(start_paused = true)]
-    async fn local_data_counts_toward_hard_limit() {
+    async fn local_data_is_declared_against_hard_limit() {
         let data = Data::local(vec![0; 20], timeout(60, 10.bytes()));
+        let failure = data.policy_failure().expect("rejected on creation");
+        assert_eq!(failure, BodyPolicyError::DeclaredTooLarge { limit: 10.bytes(), declared: 20 });
         let result = data.open(100.bytes()).into_bytes().await;
-        assert!(matches!(
-            policy_error(&result),
-            BodyPolicyError::LimitExceeded { received: 20, .. }
-        ));
+        assert_eq!(policy_error(&result), failure);
 
         let data = Data::local(vec![0; 10], timeout(60, 10.bytes()));
+        assert!(data.policy_failure().is_none());
         let bytes = data.open(100.bytes()).into_bytes().await.unwrap();
         assert!(bytes.is_complete());
         assert_eq!(bytes.len(), 10);
+    }
+
+    /// A body declaring `hint` bytes. With no channel behind it, it must never
+    /// be polled: doing so panics.
+    struct Declared(usize, Option<Channel>);
+
+    impl Stream for Declared {
+        type Item = io::Result<Bytes>;
+
+        fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+            match &mut self.1 {
+                Some(channel) => Pin::new(channel).poll_next(cx),
+                None => panic!("a rejected body was read"),
+            }
+        }
+
+        fn size_hint(&self) -> (usize, Option<usize>) {
+            (self.0, Some(self.0))
+        }
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn declared_size_over_limit_is_rejected_unread() {
+        let stream = RawStream::Test(Box::pin(Declared(11, None)));
+        let mut data = Data::from(stream, timeout(60, 10.bytes()));
+        let expected = BodyPolicyError::DeclaredTooLarge { limit: 10.bytes(), declared: 11 };
+        assert_eq!(data.policy_failure(), Some(expected));
+        assert_eq!(expected.received(), 0);
+        assert_eq!(expected.elapsed(), Duration::ZERO);
+        assert_eq!(expected.kind(), io::ErrorKind::FileTooLarge);
+        assert_eq!(expected.status(), Status::PayloadTooLarge);
+
+        // `peek` swallows the error; `open` surfaces it. Neither reads.
+        assert!(data.peek(4).await.is_empty());
+        let result = data.open(100.bytes()).into_bytes().await;
+        assert_eq!(policy_error(&result), expected);
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn declared_size_at_limit_is_accepted() {
+        let (tx, rx) = mpsc::channel(64);
+        let stream = RawStream::Test(Box::pin(Declared(10, Some(Channel(rx)))));
+        let data = Data::from(stream, timeout(60, 10.bytes()));
+        assert!(data.policy_failure().is_none());
+
+        send(&tx, &[0; 10]);
+        drop(tx);
+        let bytes = data.open(100.bytes()).into_bytes().await.unwrap();
+        assert!(bytes.is_complete());
+        assert_eq!(bytes.len(), 10);
+    }
+
+    #[test]
+    fn failure_status() {
+        let rate = Rate { bytes: 1, per: Duration::from_secs(1) };
+        let (elapsed, received, grace) = (Duration::ZERO, 0, Duration::ZERO);
+        let timeout = BodyPolicyError::Timeout { timeout: elapsed, elapsed, received };
+        let min_rate = BodyPolicyError::MinRate { rate, grace, elapsed, received };
+        let exceeded = BodyPolicyError::LimitExceeded { limit: 1.bytes(), elapsed, received };
+        let declared = BodyPolicyError::DeclaredTooLarge { limit: 1.bytes(), declared: 2 };
+        assert_eq!(timeout.status(), Status::RequestTimeout);
+        assert_eq!(min_rate.status(), Status::RequestTimeout);
+        assert_eq!(exceeded.status(), Status::PayloadTooLarge);
+        assert_eq!(declared.status(), Status::PayloadTooLarge);
     }
 
     #[test]

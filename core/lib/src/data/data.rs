@@ -5,7 +5,7 @@ use crate::data::data_stream::{DataStream, RawReader, RawStream};
 use crate::data::peekable::Peekable;
 use crate::data::policy::PolicedStream;
 use crate::data::transform::{InPlaceMap, Inspect, Transform, TransformBuf};
-use crate::data::{BodyPolicy, ByteUnit};
+use crate::data::{BodyPolicy, BodyPolicyError, ByteUnit};
 
 /// Type representing the body data of a request.
 ///
@@ -84,13 +84,27 @@ impl<'r> Data<'r> {
     ///
     /// The data is already in hand, so the progress bound of `policy` cannot
     /// be violated, but its size limit is applied as it would be to a received
-    /// body: if `data` exceeds the limit, reading past it fails.
+    /// body of the same declared length: if `data` exceeds the limit, the body
+    /// is rejected before being read, and otherwise its bytes count as
+    /// received.
     #[inline]
     pub(crate) fn local(data: Vec<u8>, policy: BodyPolicy) -> Data<'r> {
         let mut stream = PolicedStream::new(RawStream::Empty, policy);
-        // A failure is recorded in the stream and surfaces from its first read.
-        let _ = stream.count(data.len());
+        stream.declare(data.len() as u64);
+        if stream.failure().is_none() {
+            // Cannot fail: the declared length was within the limit.
+            let _ = stream.count(data.len());
+        }
+
         Data::new(Peekable::with_buffer(data, true, RawReader::new(stream)))
+    }
+
+    /// Returns the policy failure that has terminated this body, if any: one
+    /// recorded when the body was created, because it was declared larger than
+    /// the hard limit, or by an earlier read that violated the policy.
+    #[inline]
+    pub(crate) fn policy_failure(&self) -> Option<BodyPolicyError> {
+        self.stream.reader.get_ref().failure()
     }
 
     /// Returns the raw data stream, limited to `limit` bytes.

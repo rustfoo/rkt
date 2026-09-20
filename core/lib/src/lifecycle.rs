@@ -105,22 +105,32 @@ impl Rocket<Orbit> {
         // Remember if the request is `HEAD` for later body stripping.
         let was_head_request = request.method() == Method::Head;
 
-        // Route the request and run the user's handlers.
-        let mut response = match self.route(request, data).await {
-            Outcome::Success(response) => response,
-            Outcome::Forward((data, _)) if request.method() == Method::Head => {
-                tracing::Span::current().record("autohandled", true);
+        // Route the request and run the user's handlers. A body already known
+        // to violate its policy, because it was declared larger than the hard
+        // limit or failed while a request fairing read it, is not routed at
+        // all: the response is the failure's status.
+        let mut response = if let Some(failure) = data.policy_failure() {
+            info!(%failure, "request body rejected");
+            self.dispatch_error(failure.status(), request).await
+        } else {
+            match self.route(request, data).await {
+                Outcome::Success(response) => response,
+                Outcome::Forward((data, _)) if request.method() == Method::Head => {
+                    tracing::Span::current().record("autohandled", true);
 
-                // Dispatch the request again with Method `GET`.
-                request._set_method(Method::Get);
-                match self.route(request, data).await {
-                    Outcome::Success(response) => response,
-                    Outcome::Error(status) => self.dispatch_error(status, request).await,
-                    Outcome::Forward((_, status)) => self.dispatch_error(status, request).await,
+                    // Dispatch the request again with Method `GET`.
+                    request._set_method(Method::Get);
+                    match self.route(request, data).await {
+                        Outcome::Success(response) => response,
+                        Outcome::Error(status) => self.dispatch_error(status, request).await,
+                        Outcome::Forward((_, status)) => {
+                            self.dispatch_error(status, request).await
+                        }
+                    }
                 }
+                Outcome::Forward((_, status)) => self.dispatch_error(status, request).await,
+                Outcome::Error(status) => self.dispatch_error(status, request).await,
             }
-            Outcome::Forward((_, status)) => self.dispatch_error(status, request).await,
-            Outcome::Error(status) => self.dispatch_error(status, request).await,
         };
 
         // Set the cookies. Note that error responses will only include cookies
