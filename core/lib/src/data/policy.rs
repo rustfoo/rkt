@@ -1,5 +1,6 @@
 use std::future::Future;
 use std::pin::Pin;
+use std::sync::{Arc, OnceLock};
 use std::task::{Context, Poll};
 use std::time::Duration;
 use std::{fmt, io};
@@ -349,6 +350,27 @@ fn time_for(rate: Rate, bytes: u64) -> Duration {
     }
 }
 
+/// The failure that has terminated a body, shared between the body's stream
+/// and whoever needs to know its fate after the stream has been consumed: a
+/// data guard takes the [`Data`](crate::data::Data) by value, so the failure
+/// it swallowed can only be recovered from here. Write-once: the first failure
+/// is the one that terminated the body.
+#[derive(Debug, Clone, Default)]
+pub(crate) struct FailureSlot(Arc<OnceLock<BodyPolicyError>>);
+
+impl FailureSlot {
+    /// The failure that has terminated the body, if any.
+    pub(crate) fn get(&self) -> Option<BodyPolicyError> {
+        self.0.get().copied()
+    }
+
+    /// Records `error` unless a failure is already recorded, returning the
+    /// failure that terminated the body.
+    fn record(&self, error: BodyPolicyError) -> BodyPolicyError {
+        *self.0.get_or_init(|| error)
+    }
+}
+
 /// A [`RawStream`] whose payload is subject to a [`BodyPolicy`].
 ///
 /// This is the single point through which every payload byte of a request body
@@ -370,7 +392,7 @@ pub struct PolicedStream<'r> {
     origin: Instant,
     received: u64,
     complete: bool,
-    failure: Option<BodyPolicyError>,
+    failure: FailureSlot,
     /// Armed at the current deadline while the underlying stream is pending.
     sleep: Option<Pin<Box<Sleep>>>,
 }
@@ -385,7 +407,7 @@ impl<'r> PolicedStream<'r> {
             origin: Instant::now(),
             received: 0,
             complete: false,
-            failure: None,
+            failure: FailureSlot::default(),
             sleep: None,
         };
 
@@ -410,7 +432,12 @@ impl<'r> PolicedStream<'r> {
 
     /// The failure that has terminated this body, if any.
     pub(crate) fn failure(&self) -> Option<BodyPolicyError> {
-        self.failure
+        self.failure.get()
+    }
+
+    /// A handle to this body's failure that outlives the stream.
+    pub(crate) fn failure_slot(&self) -> FailureSlot {
+        self.failure.clone()
     }
 
     /// Creates a stream for a portion of a body, such as a multipart field,
@@ -423,7 +450,7 @@ impl<'r> PolicedStream<'r> {
             origin: Instant::now(),
             received: 0,
             complete: false,
-            failure: None,
+            failure: FailureSlot::default(),
             sleep: None,
         }
     }
@@ -481,7 +508,7 @@ impl<'r> PolicedStream<'r> {
     /// Records `error` as the terminal failure of this body and returns it as
     /// the `io::Error` to surface.
     fn fail(&mut self, error: BodyPolicyError) -> io::Error {
-        self.failure = Some(error);
+        let error = self.failure.record(error);
         self.sleep = None;
         error.into()
     }
@@ -510,7 +537,7 @@ impl Stream for PolicedStream<'_> {
 
     fn poll_next(self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
         let this = self.get_mut();
-        if let Some(error) = this.failure {
+        if let Some(error) = this.failure.get() {
             return Poll::Ready(Some(Err(error.into())));
         }
 
@@ -899,13 +926,13 @@ mod tests {
     #[tokio::test(start_paused = true)]
     async fn local_data_is_declared_against_hard_limit() {
         let data = Data::local(vec![0; 20], timeout(60, 10.bytes()));
-        let failure = data.policy_failure().expect("rejected on creation");
+        let failure = data.policy_failure_slot().get().expect("rejected on creation");
         assert_eq!(failure, BodyPolicyError::DeclaredTooLarge { limit: 10.bytes(), declared: 20 });
         let result = data.open(100.bytes()).into_bytes().await;
         assert_eq!(policy_error(&result), failure);
 
         let data = Data::local(vec![0; 10], timeout(60, 10.bytes()));
-        assert!(data.policy_failure().is_none());
+        assert!(data.policy_failure_slot().get().is_none());
         let bytes = data.open(100.bytes()).into_bytes().await.unwrap();
         assert!(bytes.is_complete());
         assert_eq!(bytes.len(), 10);
@@ -935,7 +962,7 @@ mod tests {
         let stream = RawStream::Test(Box::pin(Declared(11, None)));
         let mut data = Data::from(stream, timeout(60, 10.bytes()));
         let expected = BodyPolicyError::DeclaredTooLarge { limit: 10.bytes(), declared: 11 };
-        assert_eq!(data.policy_failure(), Some(expected));
+        assert_eq!(data.policy_failure_slot().get(), Some(expected));
         assert_eq!(expected.received(), 0);
         assert_eq!(expected.elapsed(), Duration::ZERO);
         assert_eq!(expected.kind(), io::ErrorKind::FileTooLarge);
@@ -952,7 +979,7 @@ mod tests {
         let (tx, rx) = mpsc::channel(64);
         let stream = RawStream::Test(Box::pin(Declared(10, Some(Channel(rx)))));
         let data = Data::from(stream, timeout(60, 10.bytes()));
-        assert!(data.policy_failure().is_none());
+        assert!(data.policy_failure_slot().get().is_none());
 
         send(&tx, &[0; 10]);
         drop(tx);
@@ -973,6 +1000,115 @@ mod tests {
         assert_eq!(min_rate.status(), Status::RequestTimeout);
         assert_eq!(exceeded.status(), Status::PayloadTooLarge);
         assert_eq!(declared.status(), Status::PayloadTooLarge);
+    }
+
+    #[tokio::test(start_paused = true)]
+    async fn failure_slot_outlives_the_data() {
+        let (tx, data) = body(timeout(60, 10.bytes()));
+        let slot = data.policy_failure_slot();
+        assert!(slot.get().is_none());
+
+        send(&tx, &[0; 11]);
+        let result = data.open(100.bytes()).into_bytes().await;
+        let failure = policy_error(&result);
+        assert!(matches!(failure, BodyPolicyError::LimitExceeded { received: 11, .. }));
+
+        // The data and its stream are gone; the slot still knows.
+        assert_eq!(slot.get(), Some(failure));
+    }
+
+    /// Dispatch tests: a data guard that reads a failing body swallows the
+    /// error as its own, but the client is answered with the failure's status.
+    /// The body is a chunked stream, which declares no length and so passes
+    /// the `Content-Length` check that would otherwise reject it unread.
+    mod dispatch {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+
+        use tokio::sync::mpsc;
+        use ubyte::ToByteUnit;
+
+        use super::{send, timeout, Channel};
+        use crate::data::data_stream::RawStream;
+        use crate::data::Data;
+        use crate::http::{Method, Status};
+        use crate::local::asynchronous::Client;
+        use crate::{Build, Rocket, State};
+
+        /// The number of times `recover` has run.
+        struct Handled(AtomicUsize);
+
+        /// Reads the body through the `String` guard, which reports a policy
+        /// failure as a `400 Bad Request`.
+        #[crate::post("/guard", data = "<body>")]
+        fn guard(body: String) -> String {
+            body
+        }
+
+        /// Reads the body itself and succeeds regardless of the outcome.
+        #[crate::post("/recover", data = "<body>")]
+        async fn recover(body: Data<'_>, handled: &State<Handled>) -> &'static str {
+            handled.0.fetch_add(1, Ordering::SeqCst);
+            let _ = body.open(1.kibibytes()).into_string().await;
+            "recovered"
+        }
+
+        fn rocket() -> Rocket<Build> {
+            crate::custom(crate::Config::debug_default())
+                .manage(Handled(AtomicUsize::new(0)))
+                .mount("/", crate::routes![guard, recover])
+        }
+
+        /// Dispatches a `POST` to `path` whose body is `stream`, policed by
+        /// `policy`, and returns the response status.
+        async fn dispatch(path: &str, stream: Channel, policy: super::BodyPolicy) -> Status {
+            let client = Client::debug(rocket()).await.unwrap();
+            let rocket = client.rocket();
+            let local = client.req(Method::Post, path);
+            let mut request = local.inner().clone();
+            let mut data = Data::from(RawStream::Test(Box::pin(stream)), policy);
+            let token = rocket.preprocess(&mut request, &mut data).await;
+            let response = rocket.dispatch(token, &request, data).await;
+            let handled = rocket.state::<Handled>().unwrap().0.load(Ordering::SeqCst);
+            assert_eq!(handled, (path == "/recover") as usize);
+            response.status()
+        }
+
+        #[tokio::test(start_paused = true)]
+        async fn guard_swallowed_size_failure_answers_413() {
+            let (tx, rx) = mpsc::channel(64);
+            send(&tx, &[b'a'; 11]);
+            drop(tx);
+            let status = dispatch("/guard", Channel(rx), timeout(60, 10.bytes())).await;
+            assert_eq!(status, Status::PayloadTooLarge);
+        }
+
+        #[tokio::test(start_paused = true)]
+        async fn guard_swallowed_progress_failure_answers_408() {
+            let (tx, rx) = mpsc::channel(64);
+            send(&tx, b"partial");
+            // The sender is kept: the body stalls until the timeout elapses.
+            let status = dispatch("/guard", Channel(rx), timeout(60, 10.bytes())).await;
+            assert_eq!(status, Status::RequestTimeout);
+            drop(tx);
+        }
+
+        #[tokio::test(start_paused = true)]
+        async fn guard_without_failure_is_not_remapped() {
+            let (tx, rx) = mpsc::channel(64);
+            send(&tx, b"hello");
+            drop(tx);
+            let status = dispatch("/guard", Channel(rx), timeout(60, 10.bytes())).await;
+            assert_eq!(status, Status::Ok);
+        }
+
+        #[tokio::test(start_paused = true)]
+        async fn handler_success_is_not_overridden() {
+            let (tx, rx) = mpsc::channel(64);
+            send(&tx, &[b'a'; 11]);
+            drop(tx);
+            let status = dispatch("/recover", Channel(rx), timeout(60, 10.bytes())).await;
+            assert_eq!(status, Status::Ok);
+        }
     }
 
     #[test]

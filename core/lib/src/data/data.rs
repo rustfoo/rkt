@@ -5,7 +5,8 @@ use crate::data::data_stream::{DataStream, RawReader, RawStream};
 use crate::data::peekable::Peekable;
 use crate::data::policy::PolicedStream;
 use crate::data::transform::{InPlaceMap, Inspect, Transform, TransformBuf};
-use crate::data::{BodyPolicy, BodyPolicyError, ByteUnit};
+use crate::data::policy::FailureSlot;
+use crate::data::{BodyPolicy, ByteUnit};
 
 /// Type representing the body data of a request.
 ///
@@ -99,12 +100,14 @@ impl<'r> Data<'r> {
         Data::new(Peekable::with_buffer(data, true, RawReader::new(stream)))
     }
 
-    /// Returns the policy failure that has terminated this body, if any: one
-    /// recorded when the body was created, because it was declared larger than
-    /// the hard limit, or by an earlier read that violated the policy.
+    /// Returns a handle to the policy failure that has terminated this body,
+    /// if any: one recorded when the body was created, because it was declared
+    /// larger than the hard limit, or by a read that violated the policy. The
+    /// handle remains readable after the `Data` has been consumed, such as by
+    /// a data guard, and reports a failure recorded after it was taken.
     #[inline]
-    pub(crate) fn policy_failure(&self) -> Option<BodyPolicyError> {
-        self.stream.reader.get_ref().failure()
+    pub(crate) fn policy_failure_slot(&self) -> FailureSlot {
+        self.stream.reader.get_ref().failure_slot()
     }
 
     /// Returns the raw data stream, limited to `limit` bytes.
