@@ -5,13 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 1.2.0 - 2026-07-29
+## Unreleased
 
 ### Added
 
 - Built-in WebSocket support behind rkt's optional `ws` feature, available as
   `rkt::ws`. The `rkt_ws` crate remains a deprecated compatibility shim for one
   full minor release cycle.
+
+### Fixed
+
+- Multipart file parts sent without a `Content-Type` are no longer corrupted by
+  UTF-8 decoding. A part with a `filename` is now treated as data, defaulting to
+  `application/octet-stream`.
+
+## 1.2.0 - 2026-07-29
+
+### Added
+
 - Support for the [PROXY protocol] (v1 and v2) behind the new `proxy-proto`
   crate feature. Setting the `proxy_protocol` configuration option (env
   `ROCKET_PROXY_PROTOCOL`) to `true` requires every connection to begin with a

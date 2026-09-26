@@ -9,8 +9,8 @@ use crate::{Data, Request};
 /// A form field with a string value.
 ///
 /// rkt preprocesses all form fields into either [`ValueField`]s or
-/// [`DataField`]s. All fields from url-encoded forms, and fields without
-/// Content-Types from multipart forms, are preprocessed as a `ValueField`.
+/// [`DataField`]s. All fields from url-encoded forms, and multipart fields with
+/// neither a `Content-Type` nor a file name, are preprocessed as a `ValueField`.
 #[derive(Debug, Clone)]
 pub struct ValueField<'r> {
     /// The (decoded) name of the form field.
@@ -22,16 +22,18 @@ pub struct ValueField<'r> {
 /// A multipart form field with an underlying data stream.
 ///
 /// rkt preprocesses all form fields into either [`ValueField`]s or
-/// [`DataField`]s. Multipart form fields with a `Content-Type` are preprocessed
-/// as a `DataField`. The underlying data is _not_ read into memory, but
-/// instead, streamable from the contained [`Data`] structure.
+/// [`DataField`]s. Multipart form fields with a `Content-Type`, or with a file
+/// name in their `Content-Disposition`, are preprocessed as a `DataField`. The
+/// underlying data is _not_ read into memory, but instead, streamable from the
+/// contained [`Data`] structure.
 pub struct DataField<'r, 'i> {
     /// The (decoded) name of the form field.
     pub name: NameView<'r>,
     /// The form fields's file name.
     pub file_name: Option<&'r FileName>,
     /// The form field's Content-Type, as submitted, which may or may not
-    /// reflect on `data`.
+    /// reflect on `data`. A file field that submitted no `Content-Type` is
+    /// reported as [`ContentType::Binary`], the default for a file part.
     pub content_type: ContentType,
     /// The request in which the form field was submitted.
     pub request: &'r Request<'i>,
