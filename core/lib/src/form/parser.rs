@@ -3,7 +3,7 @@ use multer::Multipart;
 
 use crate::data::{Data, Limits, Outcome};
 use crate::form::prelude::*;
-use crate::http::{RawStr, Status};
+use crate::http::{ContentType, RawStr, Status};
 use crate::request::{local_cache_once, Request};
 
 type Result<'r, T> = std::result::Result<T, Error<'r>>;
@@ -148,9 +148,19 @@ impl<'r, 'i> MultipartParser<'r, 'i> {
             }
         };
 
-        // A field with a content-type is data; one without is "value".
+        // A field with a content-type or a file name is data; one without is
+        // "value". RFC 7578 §4.4 defaults a part to `text/plain`, which would
+        // lossily decode a file's bytes as text, so a file part that declared no
+        // content-type falls back to binary here — the type that section
+        // recommends for file data that isn't otherwise labeled.
         trace!(?field, "multipart field");
         let content_type = field.content_type().and_then(|m| m.as_ref().parse().ok());
+        let content_type = match (content_type, field.file_name()) {
+            (Some(content_type), _) => Some(content_type),
+            (None, Some(_)) => Some(ContentType::Binary),
+            (None, None) => None,
+        };
+
         let field = if let Some(content_type) = content_type {
             let (name, file_name) = match (field.name(), field.file_name()) {
                 (None, None) => ("", None),
