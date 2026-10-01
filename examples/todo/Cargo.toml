@@ -18,4 +18,4 @@ path = "../../contrib/dyn_templates"
 features = ["tera"]
 
 [dev-dependencies]
-rand = "0.10"
+rand = "0.10.2"
