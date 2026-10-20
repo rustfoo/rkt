@@ -105,22 +105,48 @@ impl Rocket<Orbit> {
         // Remember if the request is `HEAD` for later body stripping.
         let was_head_request = request.method() == Method::Head;
 
-        // Route the request and run the user's handlers.
-        let mut response = match self.route(request, data).await {
-            Outcome::Success(response) => response,
-            Outcome::Forward((data, _)) if request.method() == Method::Head => {
-                tracing::Span::current().record("autohandled", true);
+        // The body's failure outlives the `Data`, which a data guard consumes.
+        let failure = data.policy_failure_slot();
 
-                // Dispatch the request again with Method `GET`.
-                request._set_method(Method::Get);
-                match self.route(request, data).await {
-                    Outcome::Success(response) => response,
-                    Outcome::Error(status) => self.dispatch_error(status, request).await,
-                    Outcome::Forward((_, status)) => self.dispatch_error(status, request).await,
+        // The status that answers a request whose routing ended in `status`:
+        // if the body violated its policy, the failure's status instead. A
+        // guard that read the body reports a failure as its own error, and a
+        // client that sent too much or too slowly is told so, not that its
+        // request was malformed. A handler that succeeds regardless keeps its
+        // response.
+        let status = |status: Status| match failure.get() {
+            Some(failure) => {
+                info!(%failure, "request body rejected");
+                failure.status()
+            }
+            None => status,
+        };
+
+        // Route the request and run the user's handlers. A body already known
+        // to violate its policy, because it was declared larger than the hard
+        // limit or failed while a request fairing read it, is not routed at
+        // all: the response is the failure's status.
+        let mut response = if failure.get().is_some() {
+            self.dispatch_error(status(Status::BadRequest), request).await
+        } else {
+            match self.route(request, data).await {
+                Outcome::Success(response) => response,
+                Outcome::Forward((data, _)) if request.method() == Method::Head => {
+                    tracing::Span::current().record("autohandled", true);
+
+                    // Dispatch the request again with Method `GET`.
+                    request._set_method(Method::Get);
+                    match self.route(request, data).await {
+                        Outcome::Success(response) => response,
+                        Outcome::Error(s) | Outcome::Forward((_, s)) => {
+                            self.dispatch_error(status(s), request).await
+                        }
+                    }
+                }
+                Outcome::Error(s) | Outcome::Forward((_, s)) => {
+                    self.dispatch_error(status(s), request).await
                 }
             }
-            Outcome::Forward((_, status)) => self.dispatch_error(status, request).await,
-            Outcome::Error(status) => self.dispatch_error(status, request).await,
         };
 
         // Set the cookies. Note that error responses will only include cookies

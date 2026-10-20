@@ -8,6 +8,7 @@ mod from_data;
 mod io_stream;
 mod limits;
 mod peekable;
+mod policy;
 mod transform;
 
 pub use self::capped::{Capped, N};
@@ -16,6 +17,7 @@ pub use self::data_stream::DataStream;
 pub use self::from_data::{FromData, Outcome};
 pub use self::io_stream::{IoHandler, IoStream};
 pub use self::limits::Limits;
+pub use self::policy::{BodyPolicy, BodyPolicyError, BodyPolicySetting, BodyProgress};
 pub use self::transform::{Transform, TransformBuf};
 pub use ubyte::{ByteUnit, ToByteUnit};
 

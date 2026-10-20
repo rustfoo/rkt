@@ -1,16 +1,73 @@
-error[E0463]: can't find crate for `rocket`
- --> tests/ui-fail-stable/catch.rs:1:14
+error: expected `fn`
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m`#[catch]` can only be used on functions␛[0m
+ --> tests/ui-fail-stable/catch.rs:6:1
   |
-1 | #[macro_use] extern crate rocket;
-  |              ^^^^^^^^^^^^^^^^^^^^ can't find crate
+6 | struct Catcher(String);
+  | ^^^^^^
 
-error[E0428]: the name `e5` is defined multiple times
-  --> tests/ui-fail-stable/catch.rs:27:1
+error: expected `fn`
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m`#[catch]` can only be used on functions␛[0m
+ --> tests/ui-fail-stable/catch.rs:9:7
+  |
+9 | const CATCH: &str = "Catcher";
+  |       ^^^^^
+
+error: expected integer or `default`, found string literal
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m`#[catch]` expects a status code int or `default`: `#[catch(404)]` or `#[catch(default)]`␛[0m
+  --> tests/ui-fail-stable/catch.rs:11:9
    |
-24 | fn e5(_request: &Request) { }
-   | ------------------------- previous definition of the value `e5` here
-...
-27 | fn e5(_request: &Request) { }
-   | ^^^^^^^^^^^^^^^^^^^^^^^^^ `e5` redefined here
+11 | #[catch("404")]
+   |         ^^^^^
+
+error: unexpected keyed parameter: expected literal or identifier
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m`#[catch]` expects a status code int or `default`: `#[catch(404)]` or `#[catch(default)]`␛[0m
+  --> tests/ui-fail-stable/catch.rs:14:9
    |
-   = note: `e5` must be defined only once in the value namespace of this module
+14 | #[catch(code = "404")]
+   |         ^^^^
+
+error: unexpected keyed parameter: expected literal or identifier
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m`#[catch]` expects a status code int or `default`: `#[catch(404)]` or `#[catch(default)]`␛[0m
+  --> tests/ui-fail-stable/catch.rs:17:9
+   |
+17 | #[catch(code = 404)]
+   |         ^^^^
+
+error: status must be in range [100, 599]
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m`#[catch]` expects a status code int or `default`: `#[catch(404)]` or `#[catch(default)]`␛[0m
+  --> tests/ui-fail-stable/catch.rs:20:9
+   |
+20 | #[catch(99)]
+   |         ^^
+
+error: status must be in range [100, 599]
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m`#[catch]` expects a status code int or `default`: `#[catch(404)]` or `#[catch(default)]`␛[0m
+  --> tests/ui-fail-stable/catch.rs:23:9
+   |
+23 | #[catch(600)]
+   |         ^^^
+
+error: unexpected attribute parameter: `message`
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m`#[catch]` expects a status code int or `default`: `#[catch(404)]` or `#[catch(default)]`␛[0m
+  --> tests/ui-fail-stable/catch.rs:26:14
+   |
+26 | #[catch(400, message = "foo")]
+   |              ^^^^^^^
+
+error[E0308]: arguments to this function are incorrect
+  --> tests/ui-fail-stable/catch.rs:30:4
+   |
+30 | fn f3(_request: &Request, _other: bool) { }
+   |    ^^           -                 ---- argument #2 of type `bool` is missing
+   |                 |
+   |                 unexpected argument #1 of type `Status`
+   |
+note: function defined here
+  --> tests/ui-fail-stable/catch.rs:30:4
+   |
+30 | fn f3(_request: &Request, _other: bool) { }
+   |    ^^                     ------------
+help: provide the argument
+   |
+30 | fn f3(bool, /* bool */)(_request: &Request, _other: bool) { }
+   |      ++++++++++++++++++

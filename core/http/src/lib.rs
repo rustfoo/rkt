@@ -16,6 +16,7 @@ pub mod uri;
 mod header;
 mod method;
 mod parse;
+mod policy;
 mod raw_str;
 mod status;
 
@@ -38,6 +39,8 @@ pub mod private {
 
 pub use crate::header::*;
 pub use crate::method::Method;
+pub use crate::policy::{format_duration, parse_duration};
+pub use crate::policy::{DurationParseError, Rate, RateParseError};
 pub use crate::raw_str::{RawStr, RawStrBuf};
 pub use crate::status::{Status, StatusClass};
 

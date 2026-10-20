@@ -1,0 +1,228 @@
+error: `body_min_rate` cannot be used with `body_timeout`
+ --> tests/ui-fail-nightly/route-body-policy.rs:4:50
+  |
+4 | #[post("/", data = "<_d>", body_timeout = "30s", body_min_rate = "8KiB/s")]
+  |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+note: the progress policy was first set here
+ --> tests/ui-fail-nightly/route-body-policy.rs:4:28
+  |
+4 | #[post("/", data = "<_d>", body_timeout = "30s", body_min_rate = "8KiB/s")]
+  |                            ^^^^^^^^^^^^^^^^^^^^
+  = help: a route can have only one of `body_timeout`, `body_min_rate`, and `body_policy`
+
+error: `body_policy` cannot be used with `body_timeout`
+ --> tests/ui-fail-nightly/route-body-policy.rs:7:50
+  |
+7 | #[post("/", data = "<_d>", body_timeout = "30s", body_policy = "unlimited")]
+  |                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+note: the progress policy was first set here
+ --> tests/ui-fail-nightly/route-body-policy.rs:7:28
+  |
+7 | #[post("/", data = "<_d>", body_timeout = "30s", body_policy = "unlimited")]
+  |                            ^^^^^^^^^^^^^^^^^^^^
+  = help: a route can have only one of `body_timeout`, `body_min_rate`, and `body_policy`
+
+error: `body_policy` cannot be used with `body_min_rate`
+  --> tests/ui-fail-nightly/route-body-policy.rs:10:54
+   |
+10 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_policy = "unlimited")]
+   |                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+note: the progress policy was first set here
+  --> tests/ui-fail-nightly/route-body-policy.rs:10:28
+   |
+10 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_policy = "unlimited")]
+   |                            ^^^^^^^^^^^^^^^^^^^^^^^^
+   = help: a route can have only one of `body_timeout`, `body_min_rate`, and `body_policy`
+
+error: `body_policy` cannot be used with `body_timeout`
+  --> tests/ui-fail-nightly/route-body-policy.rs:13:28
+   |
+13 | #[post("/", data = "<_d>", body_policy = "unlimited", body_timeout = "30s")]
+   |                            ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+note: the progress policy was first set here
+  --> tests/ui-fail-nightly/route-body-policy.rs:13:55
+   |
+13 | #[post("/", data = "<_d>", body_policy = "unlimited", body_timeout = "30s")]
+   |                                                       ^^^^^^^^^^^^^^^^^^^^
+   = help: a route can have only one of `body_timeout`, `body_min_rate`, and `body_policy`
+
+error: `body_grace` requires `body_min_rate`
+  --> tests/ui-fail-nightly/route-body-policy.rs:17:28
+   |
+17 | #[post("/", data = "<_d>", body_grace = "30s")]
+   |                            ^^^^^^^^^^^^^^^^^^
+   |
+   = help: the grace period applies only to rate-based body policies
+
+error: `body_grace` requires `body_min_rate`
+  --> tests/ui-fail-nightly/route-body-policy.rs:20:50
+   |
+20 | #[post("/", data = "<_d>", body_timeout = "30s", body_grace = "30s")]
+   |                                                  ^^^^^^^^^^^^^^^^^^
+   |
+   = help: the grace period applies only to rate-based body policies
+
+error: `body_grace` requires `body_min_rate`
+  --> tests/ui-fail-nightly/route-body-policy.rs:23:55
+   |
+23 | #[post("/", data = "<_d>", body_policy = "unlimited", body_grace = "30s")]
+   |                                                       ^^^^^^^^^^^^^^^^^^
+   |
+   = help: the grace period applies only to rate-based body policies
+
+error: invalid duration: unexpected character 's'
+  --> tests/ui-fail-nightly/route-body-policy.rs:27:43
+   |
+27 | #[post("/", data = "<_d>", body_timeout = "soon")]
+   |                                           ^^^^^^
+   |
+   = help: expected a duration such as "30s", "250ms", or "1m30s"
+
+error: invalid duration: unknown duration unit: expected one of `h`, `m`, `s`, `ms`
+  --> tests/ui-fail-nightly/route-body-policy.rs:30:43
+   |
+30 | #[post("/", data = "<_d>", body_timeout = "30 seconds")]
+   |                                           ^^^^^^^^^^^^
+   |
+   = help: expected a duration such as "30s", "250ms", or "1m30s"
+
+error: invalid rate: a rate must be a size and a period separated by `/`, as in `8KiB/s`
+  --> tests/ui-fail-nightly/route-body-policy.rs:33:44
+   |
+33 | #[post("/", data = "<_d>", body_min_rate = "8KiB")]
+   |                                            ^^^^^^
+   |
+   = help: expected a rate such as "8KiB/s" or "1MiB/10s"
+
+error: invalid rate: invalid rate size: unexpected character 'f' at index `0`
+  --> tests/ui-fail-nightly/route-body-policy.rs:36:44
+   |
+36 | #[post("/", data = "<_d>", body_min_rate = "fast/s")]
+   |                                            ^^^^^^^^
+   |
+   = help: expected a rate such as "8KiB/s" or "1MiB/10s"
+
+error: invalid duration: unexpected character 'l'
+  --> tests/ui-fail-nightly/route-body-policy.rs:39:67
+   |
+39 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_grace = "later")]
+   |                                                                   ^^^^^^^
+   |
+   = help: expected a duration such as "30s", "250ms", or "1m30s"
+
+error: invalid body limit: unexpected character 'l' at index `0`
+  --> tests/ui-fail-nightly/route-body-policy.rs:42:41
+   |
+42 | #[post("/", data = "<_d>", body_limit = "lots")]
+   |                                         ^^^^^^
+   |
+   = help: expected a byte size such as "2MiB" or "64KiB"
+
+error: invalid value: expected string literal
+  --> tests/ui-fail-nightly/route-body-policy.rs:45:43
+   |
+45 | #[post("/", data = "<_d>", body_timeout = 30)]
+   |                                           ^^
+
+error: invalid body policy
+  --> tests/ui-fail-nightly/route-body-policy.rs:49:42
+   |
+49 | #[post("/", data = "<_d>", body_policy = "limited")]
+   |                                          ^^^^^^^^^
+   |
+   = help: the only supported body policy is "unlimited"
+
+error: invalid body policy
+  --> tests/ui-fail-nightly/route-body-policy.rs:52:42
+   |
+52 | #[post("/", data = "<_d>", body_policy = "")]
+   |                                          ^^
+   |
+   = help: the only supported body policy is "unlimited"
+
+error: invalid duration: duration must be non-zero
+  --> tests/ui-fail-nightly/route-body-policy.rs:56:43
+   |
+56 | #[post("/", data = "<_d>", body_timeout = "0s")]
+   |                                           ^^^^
+   |
+   = help: expected a duration such as "30s", "250ms", or "1m30s"
+
+error: invalid rate: rate size must be non-zero
+  --> tests/ui-fail-nightly/route-body-policy.rs:59:44
+   |
+59 | #[post("/", data = "<_d>", body_min_rate = "0/s")]
+   |                                            ^^^^^
+   |
+   = help: expected a rate such as "8KiB/s" or "1MiB/10s"
+
+error: invalid rate: invalid rate period: duration must be non-zero
+  --> tests/ui-fail-nightly/route-body-policy.rs:62:44
+   |
+62 | #[post("/", data = "<_d>", body_min_rate = "8KiB/0s")]
+   |                                            ^^^^^^^^^
+   |
+   = help: expected a rate such as "8KiB/s" or "1MiB/10s"
+
+error: invalid duration: duration must be non-zero
+  --> tests/ui-fail-nightly/route-body-policy.rs:65:67
+   |
+65 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_grace = "0s")]
+   |                                                                   ^^^^
+   |
+   = help: expected a duration such as "30s", "250ms", or "1m30s"
+
+error: body limit must be non-zero
+  --> tests/ui-fail-nightly/route-body-policy.rs:68:41
+   |
+68 | #[post("/", data = "<_d>", body_limit = "0B")]
+   |                                         ^^^^
+   |
+   = help: the default body limit is finite and nonzero; use a non-zero size
+
+error: duplicate attribute parameter: body_timeout
+  --> tests/ui-fail-nightly/route-body-policy.rs:72:50
+   |
+72 | #[post("/", data = "<_d>", body_timeout = "30s", body_timeout = "60s")]
+   |                                                  ^^^^^^^^^^^^^^^^^^^^
+
+error: duplicate attribute parameter: body_min_rate
+  --> tests/ui-fail-nightly/route-body-policy.rs:75:54
+   |
+75 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_min_rate = "1KiB/s")]
+   |                                                      ^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: duplicate attribute parameter: body_grace
+  --> tests/ui-fail-nightly/route-body-policy.rs:78:73
+   |
+78 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_grace = "1s", body_grace = "2s")]
+   |                                                                         ^^^^^^^^^^^^^^^^^
+
+error: duplicate attribute parameter: body_policy
+  --> tests/ui-fail-nightly/route-body-policy.rs:81:55
+   |
+81 | #[post("/", data = "<_d>", body_policy = "unlimited", body_policy = "unlimited")]
+   |                                                       ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error: duplicate attribute parameter: body_limit
+  --> tests/ui-fail-nightly/route-body-policy.rs:84:49
+   |
+84 | #[post("/", data = "<_d>", body_limit = "1MiB", body_limit = "2MiB")]
+   |                                                 ^^^^^^^^^^^^^^^^^^^
+
+error: `body_policy` cannot be used with `body_timeout`
+  --> tests/ui-fail-nightly/route-body-policy.rs:88:66
+   |
+88 | #[route("/", method = POST, data = "<_d>", body_timeout = "30s", body_policy = "unlimited")]
+   |                                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+note: the progress policy was first set here
+  --> tests/ui-fail-nightly/route-body-policy.rs:88:44
+   |
+88 | #[route("/", method = POST, data = "<_d>", body_timeout = "30s", body_policy = "unlimited")]
+   |                                            ^^^^^^^^^^^^^^^^^^^^
+   = help: a route can have only one of `body_timeout`, `body_min_rate`, and `body_policy`

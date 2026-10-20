@@ -5,8 +5,9 @@ use serde::{Deserialize, Serialize};
 
 #[cfg(feature = "secrets")]
 use crate::config::SecretKey;
-use crate::config::{CliColors, Ident, Level, ShutdownConfig, TraceFormat};
-use crate::data::Limits;
+use crate::config::{CliColors, ConfigDuration, Ident, Level, ShutdownConfig, TraceFormat};
+use crate::data::{BodyPolicySetting, ByteUnit, Limits, ToByteUnit};
+use crate::http::Rate;
 use crate::http::uncased::Uncased;
 use crate::request::{self, FromRequest, Request};
 
@@ -138,6 +139,44 @@ pub struct Config {
     ///
     /// **(default: `false`)**
     pub debug_headers: bool,
+    /// Maximum time a request body may take to be received in full, measured
+    /// from the moment the body becomes available.
+    ///
+    /// Mutually exclusive with [`Config::body_min_rate`] and
+    /// [`Config::body_policy`]. When none of the three is set, a `60s` deadline
+    /// applies; see [`Config::body_policy()`] for the resolved policy.
+    ///
+    /// **(default: `None`, resolving to `"60s"`)**
+    pub body_timeout: Option<ConfigDuration>,
+    /// Minimum average rate, such as `"8KiB/s"`, at which a request body must
+    /// be received once [`Config::body_grace`] has elapsed.
+    ///
+    /// Mutually exclusive with [`Config::body_timeout`] and
+    /// [`Config::body_policy`].
+    ///
+    /// **(default: `None`)**
+    pub body_min_rate: Option<Rate>,
+    /// Initial period during which [`Config::body_min_rate`] is not enforced.
+    ///
+    /// Only meaningful alongside [`Config::body_min_rate`]; setting it without
+    /// one is a configuration error.
+    ///
+    /// **(default: `None`, resolving to `"15s"`)**
+    pub body_grace: Option<ConfigDuration>,
+    /// Hard limit on the size of a complete request body, enforced regardless
+    /// of which data guard reads it. **(default: `8MiB`)**
+    ///
+    /// This is independent of the progress policy and of the per-guard
+    /// [`Config::limits`]: the allowance for a guard is the stricter of the two.
+    pub body_limit: ByteUnit,
+    /// Set to `"unlimited"` to impose no bound on the time taken to receive a
+    /// request body. [`Config::body_limit`] continues to apply.
+    ///
+    /// Mutually exclusive with [`Config::body_timeout`] and
+    /// [`Config::body_min_rate`].
+    ///
+    /// **(default: `None`)**
+    pub body_policy: Option<BodyPolicySetting>,
     /// PRIVATE: This structure may grow (but never change otherwise) in a
     /// non-breaking release. As such, constructing this structure should
     /// _always_ be done using a public constructor or update syntax:
@@ -213,6 +252,11 @@ impl Config {
             log_format: TraceFormat::Pretty,
             cli_colors: CliColors::Auto,
             debug_headers: false,
+            body_timeout: None,
+            body_min_rate: None,
+            body_grace: None,
+            body_limit: 8.mebibytes(),
+            body_policy: None,
             __non_exhaustive: (),
         }
     }
@@ -394,6 +438,21 @@ impl Config {
     /// The stringy parameter name for setting/extracting [`Config::debug_headers`].
     pub const DEBUG_HEADERS: &'static str = "debug_headers";
 
+    /// The stringy parameter name for setting/extracting [`Config::body_timeout`].
+    pub const BODY_TIMEOUT: &'static str = "body_timeout";
+
+    /// The stringy parameter name for setting/extracting [`Config::body_min_rate`].
+    pub const BODY_MIN_RATE: &'static str = "body_min_rate";
+
+    /// The stringy parameter name for setting/extracting [`Config::body_grace`].
+    pub const BODY_GRACE: &'static str = "body_grace";
+
+    /// The stringy parameter name for setting/extracting [`Config::body_limit`].
+    pub const BODY_LIMIT: &'static str = "body_limit";
+
+    /// The stringy parameter name for setting/extracting [`Config::body_policy`].
+    pub const BODY_POLICY: &'static str = "body_policy";
+
     /// An array of all of the stringy parameter names.
     pub const PARAMETERS: &'static [&'static str] = &[
         Self::WORKERS,
@@ -410,6 +469,11 @@ impl Config {
         Self::SHUTDOWN,
         Self::CLI_COLORS,
         Self::DEBUG_HEADERS,
+        Self::BODY_TIMEOUT,
+        Self::BODY_MIN_RATE,
+        Self::BODY_GRACE,
+        Self::BODY_LIMIT,
+        Self::BODY_POLICY,
     ];
 
     /// The stringy parameter name for setting/extracting [`Config::profile`].
@@ -421,8 +485,8 @@ impl Config {
     pub(crate) const DEPRECATED_KEYS: &'static [(&'static str, Option<&'static str>)] = &[
         ("env", Some(Self::PROFILE)),
         ("log", Some(Self::LOG_LEVEL)),
-        ("read_timeout", None),
-        ("write_timeout", None),
+        ("read_timeout", Some(Self::BODY_TIMEOUT)),
+        ("write_timeout", Some(Self::BODY_TIMEOUT)),
     ];
 
     /// Secret keys that have been used in docs or leaked otherwise.

@@ -93,12 +93,17 @@ impl Trace for Figment {
         // Check for now deprecated config values.
         for (key, replacement) in Config::DEPRECATED_KEYS {
             if let Some(source) = self.find_metadata(key) {
+                let advice = match replacement {
+                    Some(new) => format!("use `{new}` instead"),
+                    None => "it has no meaning".to_string(),
+                };
+
                 event! { Level::WARN, "deprecated",
                     key,
                     replacement,
                     %source.name,
                     source.source = source.source.as_ref().map(display),
-                    "config key `{key}` is deprecated and has no meaning"
+                    "config key `{key}` is deprecated: {advice}"
                 }
             }
         }
@@ -137,6 +142,8 @@ impl Trace for Config {
                 shutdown.grace = self.shutdown.grace,
                 shutdown.mercy = self.shutdown.mercy,
                 shutdown.force = self.shutdown.force,
+            body_policy = %self.body_policy().progress,
+            body_limit = %self.body_limit,
         }
 
         #[cfg(feature = "secrets")]
