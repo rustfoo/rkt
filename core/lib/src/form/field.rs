@@ -33,7 +33,7 @@ pub struct DataField<'r, 'i> {
     pub file_name: Option<&'r FileName>,
     /// The form field's Content-Type, as submitted, which may or may not
     /// reflect on `data`. A file field that submitted no `Content-Type` is
-    /// reported as [`ContentType::Binary`], the default for a file part.
+    /// reported as [`ContentType::Binary`], rkt's fallback for a file part.
     pub content_type: ContentType,
     /// The request in which the form field was submitted.
     pub request: &'r Request<'i>,
