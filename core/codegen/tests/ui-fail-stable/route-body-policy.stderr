@@ -1,0 +1,212 @@
+error: `body_min_rate` cannot be used with `body_timeout`
+ --> tests/ui-fail-stable/route-body-policy.rs:4:50
+  |
+4 | #[post("/", data = "<_d>", body_timeout = "30s", body_min_rate = "8KiB/s")]
+  |                                                  ^^^^^^^^^^^^^
+
+error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthe progress policy was first set here␛[0m
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39ma route can have only one of `body_timeout`, `body_min_rate`, and `body_policy`␛[0m
+ --> tests/ui-fail-stable/route-body-policy.rs:4:28
+  |
+4 | #[post("/", data = "<_d>", body_timeout = "30s", body_min_rate = "8KiB/s")]
+  |                            ^^^^^^^^^^^^
+
+error: `body_policy` cannot be used with `body_timeout`
+ --> tests/ui-fail-stable/route-body-policy.rs:7:50
+  |
+7 | #[post("/", data = "<_d>", body_timeout = "30s", body_policy = "unlimited")]
+  |                                                  ^^^^^^^^^^^
+
+error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthe progress policy was first set here␛[0m
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39ma route can have only one of `body_timeout`, `body_min_rate`, and `body_policy`␛[0m
+ --> tests/ui-fail-stable/route-body-policy.rs:7:28
+  |
+7 | #[post("/", data = "<_d>", body_timeout = "30s", body_policy = "unlimited")]
+  |                            ^^^^^^^^^^^^
+
+error: `body_policy` cannot be used with `body_min_rate`
+  --> tests/ui-fail-stable/route-body-policy.rs:10:54
+   |
+10 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_policy = "unlimited")]
+   |                                                      ^^^^^^^^^^^
+
+error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthe progress policy was first set here␛[0m
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39ma route can have only one of `body_timeout`, `body_min_rate`, and `body_policy`␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:10:28
+   |
+10 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_policy = "unlimited")]
+   |                            ^^^^^^^^^^^^^
+
+error: `body_policy` cannot be used with `body_timeout`
+  --> tests/ui-fail-stable/route-body-policy.rs:13:28
+   |
+13 | #[post("/", data = "<_d>", body_policy = "unlimited", body_timeout = "30s")]
+   |                            ^^^^^^^^^^^
+
+error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthe progress policy was first set here␛[0m
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39ma route can have only one of `body_timeout`, `body_min_rate`, and `body_policy`␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:13:55
+   |
+13 | #[post("/", data = "<_d>", body_policy = "unlimited", body_timeout = "30s")]
+   |                                                       ^^^^^^^^^^^^
+
+error: `body_grace` requires `body_min_rate`
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mthe grace period applies only to rate-based body policies␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:17:28
+   |
+17 | #[post("/", data = "<_d>", body_grace = "30s")]
+   |                            ^^^^^^^^^^
+
+error: `body_grace` requires `body_min_rate`
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mthe grace period applies only to rate-based body policies␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:20:50
+   |
+20 | #[post("/", data = "<_d>", body_timeout = "30s", body_grace = "30s")]
+   |                                                  ^^^^^^^^^^
+
+error: `body_grace` requires `body_min_rate`
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mthe grace period applies only to rate-based body policies␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:23:55
+   |
+23 | #[post("/", data = "<_d>", body_policy = "unlimited", body_grace = "30s")]
+   |                                                       ^^^^^^^^^^
+
+error: invalid duration: unexpected character 's'
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected a duration such as "30s", "250ms", or "1m30s"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:27:43
+   |
+27 | #[post("/", data = "<_d>", body_timeout = "soon")]
+   |                                           ^^^^^^
+
+error: invalid duration: unknown duration unit: expected one of `h`, `m`, `s`, `ms`
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected a duration such as "30s", "250ms", or "1m30s"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:30:43
+   |
+30 | #[post("/", data = "<_d>", body_timeout = "30 seconds")]
+   |                                           ^^^^^^^^^^^^
+
+error: invalid rate: a rate must be a size and a period separated by `/`, as in `8KiB/s`
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected a rate such as "8KiB/s" or "1MiB/10s"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:33:44
+   |
+33 | #[post("/", data = "<_d>", body_min_rate = "8KiB")]
+   |                                            ^^^^^^
+
+error: invalid rate: invalid rate size: unexpected character 'f' at index `0`
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected a rate such as "8KiB/s" or "1MiB/10s"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:36:44
+   |
+36 | #[post("/", data = "<_d>", body_min_rate = "fast/s")]
+   |                                            ^^^^^^^^
+
+error: invalid duration: unexpected character 'l'
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected a duration such as "30s", "250ms", or "1m30s"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:39:67
+   |
+39 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_grace = "later")]
+   |                                                                   ^^^^^^^
+
+error: invalid body limit: unexpected character 'l' at index `0`
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected a byte size such as "2MiB" or "64KiB"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:42:41
+   |
+42 | #[post("/", data = "<_d>", body_limit = "lots")]
+   |                                         ^^^^^^
+
+error: invalid value: expected string literal
+  --> tests/ui-fail-stable/route-body-policy.rs:45:43
+   |
+45 | #[post("/", data = "<_d>", body_timeout = 30)]
+   |                                           ^^
+
+error: invalid body policy
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mthe only supported body policy is "unlimited"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:49:42
+   |
+49 | #[post("/", data = "<_d>", body_policy = "limited")]
+   |                                          ^^^^^^^^^
+
+error: invalid body policy
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mthe only supported body policy is "unlimited"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:52:42
+   |
+52 | #[post("/", data = "<_d>", body_policy = "")]
+   |                                          ^^
+
+error: invalid duration: duration must be non-zero
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected a duration such as "30s", "250ms", or "1m30s"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:56:43
+   |
+56 | #[post("/", data = "<_d>", body_timeout = "0s")]
+   |                                           ^^^^
+
+error: invalid rate: rate size must be non-zero
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected a rate such as "8KiB/s" or "1MiB/10s"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:59:44
+   |
+59 | #[post("/", data = "<_d>", body_min_rate = "0/s")]
+   |                                            ^^^^^
+
+error: invalid rate: invalid rate period: duration must be non-zero
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected a rate such as "8KiB/s" or "1MiB/10s"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:62:44
+   |
+62 | #[post("/", data = "<_d>", body_min_rate = "8KiB/0s")]
+   |                                            ^^^^^^^^^
+
+error: invalid duration: duration must be non-zero
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected a duration such as "30s", "250ms", or "1m30s"␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:65:67
+   |
+65 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_grace = "0s")]
+   |                                                                   ^^^^
+
+error: body limit must be non-zero
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mthe default body limit is finite and nonzero; use a non-zero size␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:68:41
+   |
+68 | #[post("/", data = "<_d>", body_limit = "0B")]
+   |                                         ^^^^
+
+error: duplicate attribute parameter: body_timeout
+  --> tests/ui-fail-stable/route-body-policy.rs:72:50
+   |
+72 | #[post("/", data = "<_d>", body_timeout = "30s", body_timeout = "60s")]
+   |                                                  ^^^^^^^^^^^^
+
+error: duplicate attribute parameter: body_min_rate
+  --> tests/ui-fail-stable/route-body-policy.rs:75:54
+   |
+75 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_min_rate = "1KiB/s")]
+   |                                                      ^^^^^^^^^^^^^
+
+error: duplicate attribute parameter: body_grace
+  --> tests/ui-fail-stable/route-body-policy.rs:78:73
+   |
+78 | #[post("/", data = "<_d>", body_min_rate = "8KiB/s", body_grace = "1s", body_grace = "2s")]
+   |                                                                         ^^^^^^^^^^
+
+error: duplicate attribute parameter: body_policy
+  --> tests/ui-fail-stable/route-body-policy.rs:81:55
+   |
+81 | #[post("/", data = "<_d>", body_policy = "unlimited", body_policy = "unlimited")]
+   |                                                       ^^^^^^^^^^^
+
+error: duplicate attribute parameter: body_limit
+  --> tests/ui-fail-stable/route-body-policy.rs:84:49
+   |
+84 | #[post("/", data = "<_d>", body_limit = "1MiB", body_limit = "2MiB")]
+   |                                                 ^^^^^^^^^^
+
+error: `body_policy` cannot be used with `body_timeout`
+  --> tests/ui-fail-stable/route-body-policy.rs:88:66
+   |
+88 | #[route("/", method = POST, data = "<_d>", body_timeout = "30s", body_policy = "unlimited")]
+   |                                                                  ^^^^^^^^^^^
+
+error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthe progress policy was first set here␛[0m
+       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39ma route can have only one of `body_timeout`, `body_min_rate`, and `body_policy`␛[0m
+  --> tests/ui-fail-stable/route-body-policy.rs:88:44
+   |
+88 | #[route("/", method = POST, data = "<_d>", body_timeout = "30s", body_policy = "unlimited")]
+   |                                            ^^^^^^^^^^^^

@@ -513,6 +513,11 @@ fn incomplete_route(
         data: method_attribute.data,
         format: method_attribute.format,
         rank: method_attribute.rank,
+        body_timeout: method_attribute.body_timeout,
+        body_min_rate: method_attribute.body_min_rate,
+        body_grace: method_attribute.body_grace,
+        body_policy: method_attribute.body_policy,
+        body_limit: method_attribute.body_limit,
     };
 
     codegen_route(Route::from(attribute, function)?)

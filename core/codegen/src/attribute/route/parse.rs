@@ -2,14 +2,16 @@ use devise::ext::{SpanDiagnosticExt, TypeExt};
 use devise::{FromMeta, Result, SpanWrapped, Spanned};
 use indexmap::{IndexMap, IndexSet};
 use proc_macro2::Span;
+use ubyte::ByteUnit;
 
 use crate::attribute::param::{Dynamic, Guard, Parameter};
 use crate::attribute::suppress::Lint;
 use crate::http::ext::IntoOwned;
+use crate::http::{parse_duration, Rate};
 use crate::http::uri::{fmt, Origin};
 use crate::http_codegen::{MediaType, Method};
 use crate::name::Name;
-use crate::proc_macro_ext::Diagnostics;
+use crate::proc_macro_ext::{Diagnostics, StringLit};
 use crate::syn_ext::FnArgExt;
 
 /// This structure represents the parsed `route` attribute and associated items.
@@ -48,6 +50,12 @@ pub struct Attribute {
     pub data: Option<SpanWrapped<Dynamic>>,
     pub format: Option<MediaType>,
     pub rank: Option<isize>,
+    pub body_timeout: Option<SpanWrapped<BodyTimeout>>,
+    pub body_min_rate: Option<SpanWrapped<BodyMinRate>>,
+    pub body_grace: Option<SpanWrapped<BodyGrace>>,
+    pub body_policy: Option<SpanWrapped<BodyPolicy>>,
+    #[allow(dead_code)] // Emitted as route metadata in a later step.
+    pub body_limit: Option<SpanWrapped<BodyLimit>>,
 }
 
 /// The parsed `#[method(..)]` (e.g, `get`, `put`, etc.) attribute.
@@ -58,6 +66,98 @@ pub struct MethodAttribute {
     pub data: Option<SpanWrapped<Dynamic>>,
     pub format: Option<MediaType>,
     pub rank: Option<isize>,
+    pub body_timeout: Option<SpanWrapped<BodyTimeout>>,
+    pub body_min_rate: Option<SpanWrapped<BodyMinRate>>,
+    pub body_grace: Option<SpanWrapped<BodyGrace>>,
+    pub body_policy: Option<SpanWrapped<BodyPolicy>>,
+    pub body_limit: Option<SpanWrapped<BodyLimit>>,
+}
+
+/// The parsed value of `body_timeout`: a non-zero duration.
+#[derive(Debug, Clone, Copy)]
+#[allow(dead_code)] // Emitted as route metadata in a later step.
+pub struct BodyTimeout(pub std::time::Duration);
+
+/// The parsed value of `body_min_rate`: a non-zero rate.
+#[derive(Debug, Clone, Copy)]
+#[allow(dead_code)] // Emitted as route metadata in a later step.
+pub struct BodyMinRate(pub Rate);
+
+/// The parsed value of `body_grace`: a non-zero duration.
+#[derive(Debug, Clone, Copy)]
+#[allow(dead_code)] // Emitted as route metadata in a later step.
+pub struct BodyGrace(pub std::time::Duration);
+
+/// The parsed value of `body_policy`: only `"unlimited"` is accepted.
+#[derive(Debug, Clone, Copy)]
+pub struct BodyPolicy;
+
+/// The parsed value of `body_limit`: a non-zero number of bytes.
+#[derive(Debug, Clone, Copy)]
+#[allow(dead_code)] // Emitted as route metadata in a later step.
+pub struct BodyLimit(pub ByteUnit);
+
+fn parse_body_duration(meta: &devise::MetaItem) -> Result<std::time::Duration> {
+    let string = StringLit::from_meta(meta)?;
+    parse_duration(&string).map_err(|e| {
+        string.span()
+            .error(format!("invalid duration: {}", e))
+            .help("expected a duration such as \"30s\", \"250ms\", or \"1m30s\"")
+    })
+}
+
+impl FromMeta for BodyTimeout {
+    fn from_meta(meta: &devise::MetaItem) -> Result<Self> {
+        parse_body_duration(meta).map(BodyTimeout)
+    }
+}
+
+impl FromMeta for BodyGrace {
+    fn from_meta(meta: &devise::MetaItem) -> Result<Self> {
+        parse_body_duration(meta).map(BodyGrace)
+    }
+}
+
+impl FromMeta for BodyMinRate {
+    fn from_meta(meta: &devise::MetaItem) -> Result<Self> {
+        let string = StringLit::from_meta(meta)?;
+        string.parse::<Rate>().map(BodyMinRate).map_err(|e| {
+            string.span()
+                .error(format!("invalid rate: {}", e))
+                .help("expected a rate such as \"8KiB/s\" or \"1MiB/10s\"")
+        })
+    }
+}
+
+impl FromMeta for BodyPolicy {
+    fn from_meta(meta: &devise::MetaItem) -> Result<Self> {
+        let string = StringLit::from_meta(meta)?;
+        match &*string {
+            "unlimited" => Ok(BodyPolicy),
+            _ => Err(string.span()
+                .error("invalid body policy")
+                .help("the only supported body policy is \"unlimited\"")),
+        }
+    }
+}
+
+impl FromMeta for BodyLimit {
+    fn from_meta(meta: &devise::MetaItem) -> Result<Self> {
+        let string = StringLit::from_meta(meta)?;
+        let limit = string.parse::<ByteUnit>().map_err(|e| {
+            string.span()
+                .error(format!("invalid body limit: {}", e))
+                .help("expected a byte size such as \"2MiB\" or \"64KiB\"")
+        })?;
+
+        if limit.as_u64() == 0 {
+            return Err(string.span()
+                .error("body limit must be non-zero")
+                .help("the default body limit is finite and nonzero; use a non-zero size"));
+        }
+
+        Ok(BodyLimit(limit))
+    }
 }
 
 #[derive(Debug)]
@@ -166,6 +266,34 @@ impl Route {
                 }
                 _ => { /* okay */ }
             }
+        }
+
+        // Validate the body policy options: at most one progress policy, and
+        // a grace period only alongside a minimum rate.
+        let progress = [
+            attr.body_timeout.as_ref().map(|o| ("body_timeout", o.full_span)),
+            attr.body_min_rate.as_ref().map(|o| ("body_min_rate", o.full_span)),
+            attr.body_policy.as_ref().map(|o| ("body_policy", o.full_span)),
+        ];
+
+        let mut progress = progress.into_iter().flatten();
+        if let Some((first, first_span)) = progress.next() {
+            for (name, span) in progress {
+                diags.push(
+                    span.error(format!("`{}` cannot be used with `{}`", name, first))
+                        .span_note(first_span, "the progress policy was first set here")
+                        .help("a route can have only one of `body_timeout`, `body_min_rate`, \
+                               and `body_policy`"),
+                );
+            }
+        }
+
+        if let (Some(grace), None) = (&attr.body_grace, &attr.body_min_rate) {
+            diags.push(
+                grace.full_span
+                    .error("`body_grace` requires `body_min_rate`")
+                    .help("the grace period applies only to rate-based body policies"),
+            );
         }
 
         // Check the validity of function arguments.
