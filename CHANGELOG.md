@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Multipart file parts sent without a `Content-Type` are no longer corrupted by
   UTF-8 decoding. A part with a `filename` is now treated as data, defaulting to
   `application/octet-stream`.
+- Removed dependency on ref-swap crate
 
 ## 1.2.0 - 2026-07-29
 

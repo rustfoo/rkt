@@ -1,16 +1,19 @@
+use std::sync::atomic::{AtomicUsize, Ordering};
+
 use crate::http::Method;
 
-pub struct AtomicMethod(ref_swap::RefSwap<'static, Method>);
+// Method discriminants follow ALL_VARIANTS order; checked for every variant below.
+pub struct AtomicMethod(AtomicUsize);
 
 impl AtomicMethod {
     #[inline]
     pub fn new(value: Method) -> Self {
-        Self(ref_swap::RefSwap::new(value.as_ref()))
+        Self(AtomicUsize::new(value as usize))
     }
 
     #[inline]
     pub fn load(&self) -> Method {
-        *self.0.load(std::sync::atomic::Ordering::Acquire)
+        Method::ALL_VARIANTS[self.0.load(Ordering::Acquire)]
     }
 
     #[inline]
@@ -21,13 +24,32 @@ impl AtomicMethod {
     #[inline]
     pub fn store(&self, new: Method) {
         self.0
-            .store(new.as_ref(), std::sync::atomic::Ordering::Release)
+            .store(new as usize, Ordering::Release)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn all_methods_round_trip() {
+        for (index, &method) in Method::ALL_VARIANTS.iter().enumerate() {
+            assert_eq!(method as usize, index);
+            let mut atomic = AtomicMethod::new(method);
+            assert_eq!(atomic.load(), method);
+            let cloned = atomic.clone();
+            atomic.set(Method::Get);
+            assert_eq!(atomic.load(), Method::Get);
+            atomic.store(method);
+            assert_eq!(atomic.load(), method);
+            assert_eq!(cloned.load(), method);
+        }
     }
 }
 
 impl Clone for AtomicMethod {
     fn clone(&self) -> Self {
-        let inner = self.0.load(std::sync::atomic::Ordering::Acquire);
-        Self(ref_swap::RefSwap::new(inner))
+        Self::new(self.load())
     }
 }
