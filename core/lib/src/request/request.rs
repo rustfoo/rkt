@@ -4,12 +4,11 @@ use std::mem::transmute;
 use std::net::IpAddr;
 use std::ops::RangeFrom;
 use std::str::FromStr;
-use std::sync::{atomic::Ordering, Arc};
+use std::sync::{atomic::{AtomicUsize, Ordering}, Arc};
 use std::{fmt, io};
 
 use futures::future::BoxFuture;
 use http::Version;
-use ref_swap::OptionRefSwap;
 use rkt_http::HttpVersion;
 use state::{InitCell, TypeMap};
 
@@ -89,7 +88,8 @@ impl ConnectionMeta {
 /// Information derived from the request.
 pub(crate) struct RequestState<'r> {
     pub rocket: &'r Rocket<Orbit>,
-    pub route: OptionRefSwap<'r, Route>,
+    // Index into the owning Rocket router; MAX means routing has not started.
+    pub route: AtomicUsize,
     pub cookies: CookieJar<'r>,
     pub accept: InitCell<Option<Accept>>,
     pub content_type: InitCell<Option<ContentType>>,
@@ -101,7 +101,7 @@ impl Clone for RequestState<'_> {
     fn clone(&self) -> Self {
         RequestState {
             rocket: self.rocket,
-            route: OptionRefSwap::new(self.route.load(Ordering::Acquire)),
+            route: AtomicUsize::new(self.route.load(Ordering::Acquire)),
             cookies: self.cookies.clone(),
             accept: self.accept.clone(),
             content_type: self.content_type.clone(),
@@ -130,7 +130,7 @@ impl<'r> Request<'r> {
             connection: ConnectionMeta::default(),
             state: RequestState {
                 rocket,
-                route: OptionRefSwap::new(None),
+                route: AtomicUsize::new(usize::MAX),
                 cookies: CookieJar::new(None, rocket),
                 accept: InitCell::new(),
                 content_type: InitCell::new(),
@@ -966,7 +966,7 @@ impl<'r> Request<'r> {
     /// ```
     #[inline(always)]
     pub fn route(&self) -> Option<&'r Route> {
-        self.state.route.load(Ordering::Acquire)
+        self.rocket().router.routes.get(self.state.route.load(Ordering::Acquire))
     }
 
     /// Invokes the request guard implementation for `T`, returning its outcome.
@@ -1258,10 +1258,10 @@ impl<'r> Request<'r> {
     }
 
     /// Set `self`'s parameters given that the route used to reach this request
-    /// was `route`. Use during routing when attempting a given route.
+    /// has index `route` in the owning router. Use when attempting a route.
     #[inline(always)]
-    pub(crate) fn set_route(&self, route: &'r Route) {
-        self.state.route.store(Some(route), Ordering::Release)
+    pub(crate) fn set_route(&self, route: usize) {
+        self.state.route.store(route, Ordering::Release)
     }
 
     #[inline(always)]
