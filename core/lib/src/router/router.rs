@@ -99,13 +99,20 @@ impl Router<Finalized> {
         &'a self,
         req: &'r Request<'r>,
     ) -> impl Iterator<Item = &'a Route> + 'r {
+        self.route_with_indices(req).map(|(_, route)| route)
+    }
+
+    pub fn route_with_indices<'r, 'a: 'r>(
+        &'a self,
+        req: &'r Request<'r>,
+    ) -> impl Iterator<Item = (usize, &'a Route)> + 'r {
         // Note that routes are presorted by ascending rank on each `add` and
         // that all routes with `None` methods have been cloned into all methods.
         self.route_map
             .get(&req.method())
             .into_iter()
-            .flat_map(move |routes| routes.iter().map(move |&i| &self.routes[i]))
-            .filter(move |r| r.matches(req))
+            .flat_map(move |routes| routes.iter().map(move |&i| (i, &self.routes[i])))
+            .filter(move |(_, r)| r.matches(req))
     }
 
     // For many catchers, using aho-corasick or similar should be much faster.
