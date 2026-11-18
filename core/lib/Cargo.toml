@@ -34,7 +34,7 @@ pre-release-replacements = [
   { file = "../../website/docs/04-requests.md",         search = 'rkt = \{ version = "[0-9][0-9A-Za-z.-]*"',          replace = 'rkt = { version = "{{version}}"' },
   { file = "../../contrib/ws/README.md",                search = 'package = "rkt_ws", version = "[0-9][0-9A-Za-z.-]*"', replace = 'package = "rkt_ws", version = "{{version}}"' },
   { file = "../../contrib/dyn_templates/README.md",     search = 'version = "[0-9][0-9A-Za-z.-]*"',                   replace = 'version = "{{version}}"' },
-  { file = "src/lib.rs",                                search = 'rkt = \{ package = version = "[0-9][0-9A-Za-z.-]*"', replace = 'rkt = { package = version = "{{version}}"' },
+  { file = "src/lib.rs",                                search = 'rkt = "[0-9][0-9A-Za-z.-]*"',                       replace = 'rkt = "{{version}}"' },
   { file = "src/lib.rs",                                search = 'rkt = \{ version = "[0-9][0-9A-Za-z.-]*"',          replace = 'rkt = { version = "{{version}}"' },
   { file = "src/listener/quic.rs",                      search = 'rkt = \{ version = "[0-9][0-9A-Za-z.-]*"',          replace = 'rkt = { version = "{{version}}"' },
   { file = "src/serde/json.rs",                         search = '\[dependencies\.rkt\]\n//! version = "[0-9][0-9A-Za-z.-]*"', replace = '''[dependencies.rkt]
