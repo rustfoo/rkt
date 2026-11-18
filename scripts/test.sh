@@ -81,7 +81,10 @@ function indir() {
 }
 
 function test_contrib() {
+  # `tera1` and `tera` are alternatives, so each needs its own run: the
+  # workspace `--all-features` pass only ever exercises `tera`.
   DYN_TEMPLATES_FEATURES=(
+    tera1
     tera
     handlebars
     minijinja

@@ -1,7 +1,6 @@
 #[macro_use]
 extern crate rkt;
 
-
 use std::path::{Path, PathBuf};
 
 use rkt::figment::value::Value;
@@ -208,7 +207,7 @@ fn test_context_macro() {
     }
 }
 
-#[cfg(feature = "tera")]
+#[cfg(any(feature = "tera1", feature = "tera"))]
 mod tera_tests {
     use super::*;
     use pretty_assertions::assert_eq;
@@ -217,8 +216,20 @@ mod tera_tests {
     use std::collections::HashMap;
 
     const UNESCAPED_EXPECTED: &str = "\nh_start\ntitle: _test_\nh_end\n\n\n<script />\n\nfoot";
+
+    // Tera 1 escapes `/` as `&#x2F;`; Tera 2 leaves it as-is. Both escape the
+    // characters that actually delimit markup, so this is a rendering
+    // difference between the engines, not a difference in what is escaped.
+    #[cfg(all(feature = "tera1", not(feature = "tera")))]
+    const ESCAPED_CONTENT: &str = "&lt;script &#x2F;&gt;";
+    #[cfg(feature = "tera")]
+    const ESCAPED_CONTENT: &str = "&lt;script /&gt;";
+
+    #[cfg(all(feature = "tera1", not(feature = "tera")))]
     const ESCAPED_EXPECTED: &str =
         "\nh_start\ntitle: _test_\nh_end\n\n\n&lt;script &#x2F;&gt;\n\nfoot";
+    #[cfg(feature = "tera")]
+    const ESCAPED_EXPECTED: &str = "\nh_start\ntitle: _test_\nh_end\n\n\n&lt;script /&gt;\n\nfoot";
 
     #[async_test]
     async fn test_tera_templates() {
@@ -259,6 +270,87 @@ mod tera_tests {
         let req = client.get("/");
         let metadata = Metadata::from_request(&req).await.unwrap();
         assert!(metadata.contains_template("tera/[test]/html_test"));
+    }
+
+    /// Every data type in `AUTOESCAPE_SUFFIXES` must escape, and nothing else
+    /// may. Templates discovered on disk are registered under an
+    /// extension-free name, so this is decided by their path alone: if Tera
+    /// ever stops preferring the path over the name, these all fail.
+    #[async_test]
+    async fn test_tera_autoescape_by_data_type() {
+        use rkt::local::asynchronous::Client;
+
+        let client = Client::debug(rocket()).await.unwrap();
+        let req = client.get("/");
+        let metadata = Metadata::from_request(&req).await.unwrap();
+
+        let mut map = HashMap::new();
+        map.insert("title", "_test_");
+        map.insert("content", "<script />");
+
+        let escaped = [
+            ("tera/html_test", ContentType::HTML),
+            ("tera/htm_test", ContentType::HTML),
+            ("tera/xml_test", ContentType::XML),
+            // A nested directory must not change the outcome.
+            ("tera/[test]/html_test", ContentType::HTML),
+        ];
+
+        for (name, content_type) in escaped {
+            assert_eq!(
+                Template::show(client.rocket(), name, &map),
+                Some(ESCAPED_EXPECTED.into()),
+                "{name} was not autoescaped"
+            );
+
+            assert_eq!(
+                metadata.render(name, &map),
+                Some((content_type, ESCAPED_EXPECTED.into())),
+                "{name} was not autoescaped"
+            );
+        }
+
+        assert_eq!(
+            Template::show(client.rocket(), "tera/txt_test", &map),
+            Some(UNESCAPED_EXPECTED.into()),
+            "tera/txt_test was autoescaped"
+        );
+    }
+
+    /// Raw templates carry no path, so Tera matches their registered name.
+    /// This is the only thing the bare `.html`/`.htm`/`.xml` half of
+    /// `AUTOESCAPE_SUFFIXES` covers.
+    #[async_test]
+    async fn test_tera_autoescape_raw_templates() {
+        use rkt::local::asynchronous::Client;
+
+        let figment = Config::figment().merge(("template_dir", template_root()));
+        let rocket = rkt::custom(figment).attach(Template::custom(|engines| {
+            for name in ["raw.html", "raw.htm", "raw.xml", "raw"] {
+                engines
+                    .tera
+                    .add_raw_template(name, "{{ content }}")
+                    .expect("raw template registers");
+            }
+        }));
+
+        let client = Client::debug(rocket).await.unwrap();
+        let map = HashMap::from([("content", "<script />")]);
+
+        for name in ["raw.html", "raw.htm", "raw.xml"] {
+            assert_eq!(
+                Template::show(client.rocket(), name, &map),
+                Some(ESCAPED_CONTENT.into()),
+                "{name} was not autoescaped"
+            );
+        }
+
+        // An extension-free name has nothing to match against.
+        assert_eq!(
+            Template::show(client.rocket(), "raw", &map),
+            Some("<script />".into()),
+            "raw was autoescaped"
+        );
     }
 
     // u128 is not supported. enable when it is.
