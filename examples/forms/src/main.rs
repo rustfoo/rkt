@@ -95,3 +95,22 @@ fn rocket() -> _ {
         .attach(Template::fairing())
         .mount("/", FileServer::new(relative!("/static")))
 }
+
+#[test]
+fn renders_form_components() {
+    use rkt::local::blocking::Client;
+
+    let client = Client::debug(rocket()).unwrap();
+    let response = client.get("/").dispatch();
+    assert_eq!(response.status(), Status::Ok);
+    assert!(response.into_string().unwrap().contains("name=\"account.name\""));
+
+    let response = client.post("/")
+        .header(ContentType::Form)
+        .body("account.name=Sample%20Name&submission.rights=Reserved")
+        .dispatch();
+    assert_eq!(response.status(), Status::UnprocessableEntity);
+    let body = response.into_string().unwrap();
+    assert!(body.contains("value='Sample Name'"));
+    assert!(body.contains("selected"));
+}

@@ -35,7 +35,6 @@ fn rocket() -> _ {
         .register("/minijinja", catchers![minijinja::not_found])
         .attach(Template::custom(|engines| {
             hbs::customize(&mut engines.handlebars);
-            tera::customize(&mut engines.tera);
             minijinja::customize(&mut engines.minijinja);
         }))
 }

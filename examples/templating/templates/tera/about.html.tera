@@ -1,0 +1,7 @@
+{% extends "tera/base" %}
+
+{% block content %}
+  <section id="about">
+    <h1>About - Here's another page!</h1>
+  </section>
+{% endblock content %}

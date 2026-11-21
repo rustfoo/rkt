@@ -10,7 +10,7 @@ use rkt::serde::Serialize;
 use rkt::trace::Trace;
 use rkt::{Ignite, Orbit, Rocket, Sentinel};
 
-use crate::context::{Context, ContextManager};
+use crate::context::{Callbacks, Context, ContextManager};
 use crate::fairing::TemplateFairing;
 use crate::Engines;
 
@@ -79,6 +79,19 @@ impl Template {
     /// templating engines via the function `f`. Note that only the enabled
     /// templating engines will be accessible from the `Engines` type.
     ///
+    /// `f` runs on startup and on each debug reload, after templates are
+    /// loaded from disk, so it can inspect them and register templates that
+    /// extend or include them. Unlike Tera 1, Tera 2 rejects templates that
+    /// use a filter, test, or function that isn't registered. If Tera rejects
+    /// its template files for that reason, `f` runs before Tera loads them
+    /// instead, so filters, tests, and functions that `f` registers can be
+    /// used in template files. In that case, Tera templates that `f`
+    /// registers can't extend or include Tera template files, and they
+    /// replace Tera template files with the same name. Templates for other
+    /// engines are always loaded before `f` runs. To control what runs before
+    /// and after Tera loads its template files, use
+    /// [`Template::try_custom_with_preload()`].
+    ///
     /// This method does not allow the function `f` to fail. If `f` is fallible,
     /// use [`Template::try_custom()`] instead.
     ///
@@ -114,7 +127,8 @@ impl Template {
     /// This variant of [`Template::custom()`] allows a fallible `f`. If `f`
     /// returns an error during initialization, it will cancel the launch. If
     /// `f` returns an error during template reloading (in debug mode), then the
-    /// newly-reloaded templates are discarded.
+    /// newly-reloaded templates are discarded. `f` runs at the same points as
+    /// in [`Template::custom()`].
     ///
     /// # Example
     ///
@@ -138,8 +152,35 @@ impl Template {
     where
         F: Fn(&mut Engines) -> Result<(), Box<dyn std::error::Error>>,
     {
+        TemplateFairing { callbacks: Callbacks::Legacy(Box::new(f)) }
+    }
+
+    /// Returns a templating fairing with two fallible customization callbacks.
+    ///
+    /// `before_load` runs before Tera loads templates from disk. Use it to
+    /// register filters, tests, and functions used by those templates.
+    /// Templates loaded by other engines are already available at this stage.
+    /// A Tera template registered here replaces a Tera template file with the
+    /// same name, and a warning is logged.
+    ///
+    /// `after_load` runs once Tera has loaded its disk templates. It can
+    /// register templates that extend or include disk templates. Filters,
+    /// tests, and functions used by disk templates must be registered in
+    /// `before_load`: Tera rejects the templates before `after_load` runs.
+    ///
+    /// Both callbacks run on startup and each debug reload. An error cancels
+    /// startup or discards the newly loaded templates on reload. Unlike
+    /// [`Template::try_custom()`], the order never changes.
+    pub fn try_custom_with_preload<B, A>(before_load: B, after_load: A) -> impl Fairing
+    where
+        B: Fn(&mut Engines) -> Result<(), Box<dyn std::error::Error>> + Send + Sync + 'static,
+        A: Fn(&mut Engines) -> Result<(), Box<dyn std::error::Error>> + Send + Sync + 'static,
+    {
         TemplateFairing {
-            callback: Box::new(f),
+            callbacks: Callbacks::Staged {
+                before_load: Box::new(before_load),
+                after_load: Box::new(after_load),
+            },
         }
     }
 
@@ -265,7 +306,14 @@ impl Template {
             Status::InternalServerError
         })?;
 
-        let string = ctxt.engines.render(template, info, value).ok_or_else(|| {
+        let rendered = ctxt.engines.render(
+            template,
+            info,
+            value,
+            #[cfg(feature = "tera")]
+            &ctxt.tera_disk,
+        );
+        let string = rendered.ok_or_else(|| {
             error!(template, "template failed to render");
             Status::InternalServerError
         })?;

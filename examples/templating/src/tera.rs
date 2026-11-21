@@ -1,7 +1,7 @@
 use rkt::Request;
 use rkt::response::Redirect;
 
-use rkt_dyn_templates::{Template, tera::Tera, context};
+use rkt_dyn_templates::{Template, context};
 
 #[get("/")]
 pub fn index() -> Redirect {
@@ -19,7 +19,7 @@ pub fn hello(name: &str) -> Template {
 
 #[get("/about")]
 pub fn about() -> Template {
-    Template::render("tera/about.html", context! {
+    Template::render("tera/about", context! {
         title: "About",
     })
 }
@@ -29,16 +29,4 @@ pub fn not_found(req: &Request<'_>) -> Template {
     Template::render("tera/error/404", context! {
         uri: req.uri()
     })
-}
-
-pub fn customize(tera: &mut Tera) {
-    tera.add_raw_template("tera/about.html", r#"
-        {% extends "tera/base" %}
-
-        {% block content %}
-            <section id="about">
-              <h1>About - Here's another page!</h1>
-            </section>
-        {% endblock content %}
-    "#).expect("valid Tera template");
 }

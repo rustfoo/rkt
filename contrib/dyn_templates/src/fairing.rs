@@ -3,19 +3,15 @@ use rkt::figment::{value::magic::RelativePathBuf, Source};
 use rkt::trace::Trace;
 use rkt::{Build, Orbit, Rocket};
 
-use crate::context::{Callback, Context, ContextManager};
+use crate::context::{Callbacks, Context, ContextManager};
 use crate::engine::Engines;
 use crate::template::DEFAULT_TEMPLATE_DIR;
 
-/// The TemplateFairing initializes the template system on attach, running
-/// custom_callback after templates have been loaded. In debug mode, the fairing
-/// checks for modifications to templates before every request and reloads them
+/// The TemplateFairing initializes the template system on attach. In debug
+/// mode, the fairing checks for modifications to templates before every request and reloads them
 /// if necessary.
 pub struct TemplateFairing {
-    /// The user-provided customization callback, allowing the use of
-    /// functionality specific to individual template engines. In debug mode,
-    /// this callback might be run multiple times as templates are reloaded.
-    pub callback: Callback,
+    pub callbacks: Callbacks,
 }
 
 #[rkt::async_trait]
@@ -51,7 +47,7 @@ impl Fairing for TemplateFairing {
             }
         };
 
-        if let Some(ctxt) = Context::initialize(&path, &self.callback) {
+        if let Some(ctxt) = Context::initialize(&path, &self.callbacks) {
             Ok(rocket.manage(ContextManager::new(ctxt)))
         } else {
             error!("Template initialization failed. Aborting launch.");
@@ -77,6 +73,6 @@ impl Fairing for TemplateFairing {
             .state::<ContextManager>()
             .expect("Template ContextManager registered in on_ignite");
 
-        cm.reload_if_needed(&self.callback);
+        cm.reload_if_needed(&self.callbacks);
     }
 }
