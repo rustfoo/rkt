@@ -4,7 +4,7 @@ error: enums are not supported
 4 | enum Thing { }
   | ^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
  --> tests/ui-fail-stable/from_form.rs:3:10
   |
 3 | #[derive(FromForm)]
@@ -18,7 +18,7 @@ error: at least one field is required
 7 | struct Foo1;
   | ^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
  --> tests/ui-fail-stable/from_form.rs:6:10
   |
 6 | #[derive(FromForm)]
@@ -32,7 +32,7 @@ error: at least one field is required
 10 | struct Foo2 {  }
    |             ^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
  --> tests/ui-fail-stable/from_form.rs:9:10
   |
 9 | #[derive(FromForm)]
@@ -46,7 +46,7 @@ error: tuple struct must have exactly one field
 16 | struct Foo4(usize, usize, usize);
    |            ^^^^^^^^^^^^^^^^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:15:10
    |
 15 | #[derive(FromForm)]
@@ -60,7 +60,7 @@ error: only one lifetime is supported
 19 | struct NextTodoTask<'f, 'a> {
    |                         ^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:18:10
    |
 18 | #[derive(FromForm)]
@@ -69,13 +69,13 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
    = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: invalid form field name
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mfield name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'␛[0m
+       = help: field name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'
   --> tests/ui-fail-stable/from_form.rs:28:20
    |
 28 |     #[field(name = "isindex")]
    |                    ^^^^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:26:10
    |
 26 | #[derive(FromForm)]
@@ -89,19 +89,19 @@ error: field name conflicts with previous name
 36 |     foo: usize,
    |     ^^^
 
-error: ␛[1;34m[␛[0m␛[1;36mhelp␛[0m␛[1;34m] ␛[0m␛[1;39mdeclared in this field␛[0m
+error: [help] declared in this field
   --> tests/ui-fail-stable/from_form.rs:36:5
    |
 36 |     foo: usize,
    |     ^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mprevious field with conflicting name␛[0m
+error: [note] previous field with conflicting name
   --> tests/ui-fail-stable/from_form.rs:34:5
    |
 34 |     #[field(name = "foo")]
    |     ^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:32:10
    |
 32 | #[derive(FromForm)]
@@ -115,19 +115,19 @@ error: field name conflicts with previous name
 43 |     #[field(name = "hello")]
    |                    ^^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;36mhelp␛[0m␛[1;34m] ␛[0m␛[1;39mdeclared in this field␛[0m
+error: [help] declared in this field
   --> tests/ui-fail-stable/from_form.rs:43:5
    |
 43 |     #[field(name = "hello")]
    |     ^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mprevious field with conflicting name␛[0m
+error: [note] previous field with conflicting name
   --> tests/ui-fail-stable/from_form.rs:41:5
    |
 41 |     #[field(name = "hello")]
    |     ^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:39:10
    |
 39 | #[derive(FromForm)]
@@ -141,19 +141,19 @@ error: field name conflicts with previous name
 50 |     #[field(name = "first")]
    |                    ^^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;36mhelp␛[0m␛[1;34m] ␛[0m␛[1;39mdeclared in this field␛[0m
+error: [help] declared in this field
   --> tests/ui-fail-stable/from_form.rs:50:5
    |
 50 |     #[field(name = "first")]
    |     ^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mprevious field with conflicting name␛[0m
+error: [note] previous field with conflicting name
   --> tests/ui-fail-stable/from_form.rs:49:5
    |
 49 |     first: String,
    |     ^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:47:10
    |
 47 | #[derive(FromForm)]
@@ -167,7 +167,7 @@ error: unexpected attribute parameter: `field`
 56 |     #[field(name = "blah", field = "bloo")]
    |                            ^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:54:10
    |
 54 | #[derive(FromForm)]
@@ -181,7 +181,7 @@ error: expected list `#[field(..)]`, found bare path "field"
 62 |     #[field]
    |       ^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:60:10
    |
 60 | #[derive(FromForm)]
@@ -195,7 +195,7 @@ error: expected key/value `key = value`
 68 |     #[field("blah")]
    |             ^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:66:10
    |
 66 | #[derive(FromForm)]
@@ -209,7 +209,7 @@ error: expected key/value `key = value`
 74 |     #[field(123)]
    |             ^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:72:10
    |
 72 | #[derive(FromForm)]
@@ -223,7 +223,7 @@ error: unexpected attribute parameter: `beep`
 80 |     #[field(beep = "bop")]
    |             ^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:78:10
    |
 78 | #[derive(FromForm)]
@@ -237,19 +237,19 @@ error: field has conflicting names
 86 |     #[field(name = "blah")]
    |     ^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mthis field name...␛[0m
+error: [note] this field name...
   --> tests/ui-fail-stable/from_form.rs:86:20
    |
 86 |     #[field(name = "blah")]
    |                    ^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39m...conflicts with this field name␛[0m
+error: [note] ...conflicts with this field name
   --> tests/ui-fail-stable/from_form.rs:87:20
    |
 87 |     #[field(name = "blah")]
    |                    ^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:84:10
    |
 84 | #[derive(FromForm)]
@@ -263,7 +263,7 @@ error: expected list `#[attr(..)]`, found bare boolean literal
 93 |     #[field(name = true)]
    |                    ^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:91:10
    |
 91 | #[derive(FromForm)]
@@ -277,7 +277,7 @@ error: expected expression, found bare path "name"
 99 |     #[field(name)]
    |             ^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
   --> tests/ui-fail-stable/from_form.rs:97:10
    |
 97 | #[derive(FromForm)]
@@ -291,7 +291,7 @@ error: expected list `#[attr(..)]`, found bare integer literal
 105 |     #[field(name = 123)]
     |                    ^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:103:10
     |
 103 | #[derive(FromForm)]
@@ -300,13 +300,13 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: invalid form field name
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mfield name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'␛[0m
+       = help: field name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'
    --> tests/ui-fail-stable/from_form.rs:111:20
     |
 111 |     #[field(name = "hello&world")]
     |                    ^^^^^^^^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:109:10
     |
 109 | #[derive(FromForm)]
@@ -315,13 +315,13 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: invalid form field name
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mfield name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'␛[0m
+       = help: field name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'
    --> tests/ui-fail-stable/from_form.rs:117:20
     |
 117 |     #[field(name = "!@#$%^&*()_")]
     |                    ^^^^^^^^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:115:10
     |
 115 | #[derive(FromForm)]
@@ -330,13 +330,13 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: invalid form field name
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mfield name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'␛[0m
+       = help: field name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'
    --> tests/ui-fail-stable/from_form.rs:123:20
     |
 123 |     #[field(name = "?")]
     |                    ^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:121:10
     |
 121 | #[derive(FromForm)]
@@ -345,13 +345,13 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: invalid form field name
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mfield name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'␛[0m
+       = help: field name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'
    --> tests/ui-fail-stable/from_form.rs:129:20
     |
 129 |     #[field(name = "")]
     |                    ^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:127:10
     |
 127 | #[derive(FromForm)]
@@ -360,13 +360,13 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: invalid form field name
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mfield name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'␛[0m
+       = help: field name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'
    --> tests/ui-fail-stable/from_form.rs:135:20
     |
 135 |     #[field(name = "a&b")]
     |                    ^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:133:10
     |
 133 | #[derive(FromForm)]
@@ -375,13 +375,13 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: invalid form field name
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mfield name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'␛[0m
+       = help: field name cannot be `isindex` or contain '&', '=', '?', '.', '[', ']'
    --> tests/ui-fail-stable/from_form.rs:141:20
     |
 141 |     #[field(name = "a=")]
     |                    ^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:139:10
     |
 139 | #[derive(FromForm)]
@@ -395,7 +395,7 @@ error: duplicate attribute parameter: default
 177 |     #[field(default = 1, default = 2)]
     |                          ^^^^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:175:10
     |
 175 | #[derive(FromForm)]
@@ -404,7 +404,7 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: duplicate default field expression
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mat most one `default` or `default_with` is allowed␛[0m
+       = help: at most one `default` or `default_with` is allowed
    --> tests/ui-fail-stable/from_form.rs:184:23
     |
 181 | #[derive(FromForm)]
@@ -415,7 +415,7 @@ error: duplicate default field expression
     |
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:181:10
     |
 181 | #[derive(FromForm)]
@@ -424,7 +424,7 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: duplicate default expressions
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39monly one of `default` or `default_with` must be used␛[0m
+       = help: only one of `default` or `default_with` must be used
    --> tests/ui-fail-stable/from_form.rs:190:23
     |
 188 | #[derive(FromForm)]
@@ -435,13 +435,13 @@ error: duplicate default expressions
     |
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mother default expression is here␛[0m
+error: [note] other default expression is here
    --> tests/ui-fail-stable/from_form.rs:190:41
     |
 190 |     #[field(default = 1, default_with = None)]
     |                                         ^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:188:10
     |
 188 | #[derive(FromForm)]
@@ -450,7 +450,7 @@ error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurr
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: duplicate default expressions
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39monly one of `default` or `default_with` must be used␛[0m
+       = help: only one of `default` or `default_with` must be used
    --> tests/ui-fail-stable/from_form.rs:197:23
     |
 194 | #[derive(FromForm)]
@@ -461,13 +461,13 @@ error: duplicate default expressions
     |
     = note: this error originates in the derive macro `FromForm` (in Nightly builds, run with -Z macro-backtrace for more info)
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39mother default expression is here␛[0m
+error: [note] other default expression is here
    --> tests/ui-fail-stable/from_form.rs:196:28
     |
 196 |     #[field(default_with = None)]
     |                            ^^^^
 
-error: ␛[1;34m[␛[0m␛[1;32mnote␛[0m␛[1;34m] ␛[0m␛[1;39merror occurred while deriving `FromForm`␛[0m
+error: [note] error occurred while deriving `FromForm`
    --> tests/ui-fail-stable/from_form.rs:194:10
     |
 194 | #[derive(FromForm)]
