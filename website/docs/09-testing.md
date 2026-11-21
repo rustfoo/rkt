@@ -76,6 +76,7 @@ a few below:
   * [`into_bytes`]: reads the body data into a `Vec<u8>`.
   * [`into_json`]: deserializes the body data on-the-fly as JSON.
   * [`into_msgpack`]: deserializes the body data on-the-fly as MessagePack.
+  * [`into_xml`]: deserializes the body data as XML.
 
 [`LocalResponse`]: https://docs.rs/rkt/latest/rkt/local/blocking/struct.LocalResponse.html
 [`status`]: https://docs.rs/rkt/latest/rkt/local/blocking/struct.LocalResponse.html#method.status
@@ -85,6 +86,7 @@ a few below:
 [`into_bytes`]: https://docs.rs/rkt/latest/rkt/local/blocking/struct.LocalResponse.html#method.into_bytes
 [`into_json`]: https://docs.rs/rkt/latest/rkt/local/blocking/struct.LocalResponse.html#method.into_json
 [`into_msgpack`]: https://docs.rs/rkt/latest/rkt/local/blocking/struct.LocalResponse.html#method.into_msgpack
+[`into_xml`]: https://docs.rs/rkt/latest/rkt/local/blocking/struct.LocalResponse.html#method.into_xml
 
 These methods are typically used in combination with the `assert_eq!` or
 `assert!` macros as follows:

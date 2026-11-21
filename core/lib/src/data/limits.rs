@@ -62,10 +62,12 @@ use crate::http::uncased::Uncased;
 /// | `bytes`           | 8KiB    | [`Vec<u8>`]  | data guard                            |
 /// | `bytes`           | 8KiB    | [`&[u8]`]    | data guard or form field              |
 /// | `json`            | 1MiB    | [`Json`]     | JSON data and form payloads           |
+/// | `xml`             | 1MiB    | [`Xml`]      | XML data and form payloads            |
 /// | `msgpack`         | 1MiB    | [`MsgPack`]  | MessagePack data and form payloads    |
 ///
 /// [`TempFile`]: crate::fs::TempFile
 /// [`Json`]: crate::serde::json::Json
+/// [`Xml`]: crate::serde::xml::Xml
 /// [`MsgPack`]: crate::serde::msgpack::MsgPack
 ///
 /// # Usage
@@ -135,6 +137,7 @@ impl Default for Limits {
             .limit("string", Limits::STRING)
             .limit("bytes", Limits::BYTES)
             .limit("json", Limits::JSON)
+            .limit("xml", Limits::XML)
             .limit("msgpack", Limits::MESSAGE_PACK)
     }
 }
@@ -157,6 +160,9 @@ impl Limits {
 
     /// Default limit for JSON payloads.
     pub const JSON: ByteUnit = ByteUnit::Mebibyte(1);
+
+    /// Default limit for XML payloads.
+    pub const XML: ByteUnit = ByteUnit::Mebibyte(1);
 
     /// Default limit for MessagePack payloads.
     pub const MESSAGE_PACK: ByteUnit = ByteUnit::Mebibyte(1);

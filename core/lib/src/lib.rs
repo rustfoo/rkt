@@ -60,6 +60,7 @@
 //! | `tls`           | No       | Support for [TLS] encrypted connections.                |
 //! | `mtls`          | No       | Support for verified clients via [mutual TLS].          |
 //! | `json`          | No       | Support for [JSON (de)serialization].                   |
+//! | `xml`           | No       | Support for [XML (de)serialization].                    |
 //! | `msgpack`       | No       | Support for [MessagePack (de)serialization].            |
 //! | `uuid`          | No       | Support for [UUID value parsing and (de)serialization]. |
 //! | `ws`            | No       | First-class WebSocket support.                          |
@@ -83,6 +84,7 @@
 //!
 //! [subscriber]: crate::trace::subscriber
 //! [JSON (de)serialization]: crate::serde::json
+//! [XML (de)serialization]: crate::serde::xml
 //! [MessagePack (de)serialization]: crate::serde::msgpack
 //! [UUID value parsing and (de)serialization]: crate::serde::uuid
 //! [private cookies]: https://rkt.rs/guide/requests/#private-cookies

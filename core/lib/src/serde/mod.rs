@@ -1,6 +1,7 @@
 //! Serialization and deserialization support.
 //!
 //! * JSON support is provided by the [`Json`](json::Json) type.
+//! * XML support is provided by the [`Xml`](xml::Xml) type.
 //! * MessagePack support is provided by the [`MsgPack`](msgpack::MsgPack) type.
 //! * UUID support is provided by the [`UUID`](uuid) type.
 //!
@@ -46,6 +47,10 @@ pub use serde::*;
 #[cfg(feature = "json")]
 #[cfg_attr(nightly, doc(cfg(feature = "json")))]
 pub mod json;
+
+#[cfg(feature = "xml")]
+#[cfg_attr(nightly, doc(cfg(feature = "xml")))]
+pub mod xml;
 
 #[cfg(feature = "msgpack")]
 #[cfg_attr(nightly, doc(cfg(feature = "msgpack")))]

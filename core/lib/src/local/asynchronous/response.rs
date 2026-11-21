@@ -143,6 +143,14 @@ impl LocalResponse<'_> {
             .ok()
     }
 
+    #[cfg(feature = "xml")]
+    async fn _into_xml<T>(self) -> Option<T>
+    where
+        T: Send + serde::de::DeserializeOwned + 'static,
+    {
+        self.blocking_read(|r| crate::serde::xml::from_reader(r)).await?.ok()
+    }
+
     #[cfg(feature = "msgpack")]
     async fn _into_msgpack<T>(self) -> Option<T>
     where
@@ -151,7 +159,7 @@ impl LocalResponse<'_> {
         self.blocking_read(|r| rmp_serde::from_read(r)).await?.ok()
     }
 
-    #[cfg(any(feature = "json", feature = "msgpack"))]
+    #[cfg(any(feature = "json", feature = "xml", feature = "msgpack"))]
     async fn blocking_read<T, F>(mut self, f: F) -> Option<T>
     where
         T: Send + 'static,
