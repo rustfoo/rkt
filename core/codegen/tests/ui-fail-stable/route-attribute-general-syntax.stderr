@@ -7,28 +7,28 @@ error: missing expected parameter: `uri`
   = note: this error originates in the attribute macro `get` (in Nightly builds, run with -Z macro-backtrace for more info)
 
 error: expected `fn`
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m#[get] can only be used on functions␛[0m
+       = help: #[get] can only be used on functions
  --> tests/ui-fail-stable/route-attribute-general-syntax.rs:9:1
   |
 9 | struct S;
   | ^^^^^^
 
 error: expected `fn`
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m#[get] can only be used on functions␛[0m
+       = help: #[get] can only be used on functions
   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:12:1
    |
 12 | enum A {  }
    | ^^^^
 
 error: expected `fn`
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m#[get] can only be used on functions␛[0m
+       = help: #[get] can only be used on functions
   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:15:1
    |
 15 | trait Foo {  }
    | ^^^^^
 
 error: expected `fn`
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39m#[get] can only be used on functions␛[0m
+       = help: #[get] can only be used on functions
   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:18:1
    |
 18 | impl S {  }
@@ -65,7 +65,7 @@ error: expected key/value `key = value`
    |            ^
 
 error: handler arguments must be named
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mto name an ignored handler argument, use `_name`␛[0m
+       = help: to name an ignored handler argument, use `_name`
   --> tests/ui-fail-stable/route-attribute-general-syntax.rs:39:7
    |
 39 | fn c1(_: usize) {}
@@ -180,14 +180,14 @@ error: expected literal, found bare path "FIX"
    |         ^^^
 
 error: invalid route URI: expected token '/' but found 'h' at index 0
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected URI in origin form: "/path/<param>"␛[0m
+       = help: expected URI in origin form: "/path/<param>"
    --> tests/ui-fail-stable/route-attribute-general-syntax.rs:101:9
     |
 101 | #[route("hi", "/")]
     |         ^^^^
 
 error: invalid route URI: expected token '/' but found 'G' at index 0
-       ␛[1;34m= ␛[0m␛[1;36mhelp␛[0m␛[39m: ␛[0m␛[1;39mexpected URI in origin form: "/path/<param>"␛[0m
+       = help: expected URI in origin form: "/path/<param>"
    --> tests/ui-fail-stable/route-attribute-general-syntax.rs:104:9
     |
 104 | #[route("GET", "/")]
