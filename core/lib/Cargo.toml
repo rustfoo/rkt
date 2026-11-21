@@ -40,6 +40,8 @@ pre-release-replacements = [
   { file = "src/listener/quic.rs",                      search = 'rkt = \{ version = "[0-9][0-9A-Za-z.-]*"',          replace = 'rkt = { version = "{{version}}"' },
   { file = "src/serde/json.rs",                         search = '\[dependencies\.rkt\]\n//! version = "[0-9][0-9A-Za-z.-]*"', replace = '''[dependencies.rkt]
 //! version = "{{version}}"''' },
+  { file = "src/serde/xml.rs",                          search = '\[dependencies\.rkt\]\n//! version = "[0-9][0-9A-Za-z.-]*"', replace = '''[dependencies.rkt]
+//! version = "{{version}}"''' },
   { file = "src/serde/msgpack.rs",                      search = '\[dependencies\.rkt\]\n//! version = "[0-9][0-9A-Za-z.-]*"', replace = '''[dependencies.rkt]
 //! version = "{{version}}"''' },
   { file = "src/serde/uuid.rs",                         search = '\[dependencies\.rkt\]\n//! version = "[0-9][0-9A-Za-z.-]*"', replace = '''[dependencies.rkt]
@@ -56,6 +58,7 @@ http2 = ["hyper/http2", "hyper-util/http2"]
 http3-preview = ["s2n-quic", "s2n-quic-h3", "tls"]
 secrets = ["cookie/private", "cookie/key-expansion"]
 json = ["serde_json"]
+xml = ["quick-xml"]
 msgpack = ["rmp-serde"]
 uuid = ["uuid_", "rkt_http/uuid"]
 tls = ["rustls", "tokio-rustls", "rustls-pki-types"]
@@ -68,6 +71,7 @@ ws = ["tokio-tungstenite"]
 [dependencies]
 # Optional serialization dependencies.
 serde_json = { version = "1.0.26", optional = true }
+quick-xml = { version = "0.42", optional = true, features = ["serialize"] }
 rmp-serde = { version = "1", optional = true }
 uuid_ = { package = "uuid", version = "1", optional = true, features = ["serde"] }
 

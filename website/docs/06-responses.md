@@ -367,6 +367,7 @@ are:
   * [`Flash`] - Sets a "flash" cookie that is removed when accessed.
   * [`Json`] - Automatically serializes values into JSON.
   * [`MsgPack`] - Automatically serializes values into MessagePack.
+  * [`Xml`] - Automatically serializes values into XML.
   * [`Template`] - Renders a dynamic template using Handlebars, Tera or MiniJinja.
 
 [`status`]: https://docs.rs/rkt/latest/rkt/response/status/
@@ -376,6 +377,7 @@ are:
 [`Redirect`]: https://docs.rs/rkt/latest/rkt/response/struct.Redirect.html
 [`Flash`]: https://docs.rs/rkt/latest/rkt/response/struct.Flash.html
 [`MsgPack`]: https://docs.rs/rkt/latest/rkt/serde/msgpack/struct.MsgPack.html
+[`Xml`]: https://docs.rs/rkt/latest/rkt/serde/xml/struct.Xml.html
 [`Template`]: https://docs.rs/rkt_dyn_templates/latest/rkt_dyn_templates/struct.Template.html
 
 ### Async Streams

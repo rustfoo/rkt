@@ -109,6 +109,7 @@ function test_core() {
     mtls
     proxy-proto
     json
+    xml
     msgpack
     uuid
     ws
