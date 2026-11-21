@@ -11,7 +11,7 @@ This crate adds support for dynamic template rendering to rkt. It
 automatically discovers templates, provides a `Responder` to render templates,
 and automatically reloads templates when compiled in debug mode. It supports [Handlebars], [Tera] and [MiniJinja].
 
-[Tera]: https://docs.rs/crate/tera/1
+[Tera]: https://docs.rs/crate/tera/2
 [Handlebars]: https://docs.rs/crate/handlebars/6
 [MiniJinja]: https://docs.rs/minijinja/2
 
@@ -49,3 +49,18 @@ and automatically reloads templates when compiled in debug mode. It supports [Ha
      ```
 
 See the [crate docs] for full details.
+
+## Upgrading to Tera 2
+
+The `tera` feature uses Tera 2. Replace template macros with components and
+update custom filters, tests, and functions to the new API. The
+[Tera migration guide](https://github.com/Keats/tera/blob/master/MIGRATION.md)
+describes the syntax and API changes.
+
+Tera 2 checks that the filters, tests, and functions a template uses are
+registered when the template loads, not when it renders. Ones registered in
+`Template::custom()` or `Template::try_custom()` keep working in template
+files. A callback that both registers them and adds Tera templates that extend
+or include template files must be split with
+`Template::try_custom_with_preload()`: register filters, tests, and functions
+in `before_load`, and add the templates in `after_load`.

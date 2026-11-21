@@ -218,7 +218,7 @@ mod tera_tests {
 
     const UNESCAPED_EXPECTED: &str = "\nh_start\ntitle: _test_\nh_end\n\n\n<script />\n\nfoot";
     const ESCAPED_EXPECTED: &str =
-        "\nh_start\ntitle: _test_\nh_end\n\n\n&lt;script &#x2F;&gt;\n\nfoot";
+        "\nh_start\ntitle: _test_\nh_end\n\n\n&lt;script /&gt;\n\nfoot";
 
     #[async_test]
     async fn test_tera_templates() {
@@ -259,6 +259,165 @@ mod tera_tests {
         let req = client.get("/");
         let metadata = Metadata::from_request(&req).await.unwrap();
         assert!(metadata.contains_template("tera/[test]/html_test"));
+    }
+
+    #[test]
+    fn test_tera_escaping() {
+        use rkt::local::blocking::Client;
+
+        let root = tempfile::tempdir().unwrap();
+        let dir = root.path().join("sub");
+        std::fs::create_dir(&dir).unwrap();
+        for file in ["b.xml.tera", "c.htm.tera", "d.txt.tera", "e.tera"] {
+            std::fs::write(dir.join(file), "{{ v }}").unwrap();
+        }
+
+        std::fs::write(root.path().join("a.html.tera"), "{{ v }}").unwrap();
+        std::fs::write(dir.join("a.txt.tera"), "{{ v }}").unwrap();
+        std::fs::write(
+            root.path().join("base.html.tera"),
+            "{% block text %}{% endblock %}",
+        ).unwrap();
+        std::fs::write(
+            root.path().join("child.html.tera"),
+            r#"{% extends "base" %}{% block text %}{% include "sub/a" %}{% endblock %}"#,
+        ).unwrap();
+
+        let figment = Config::figment().merge(("template_dir", root.path()));
+        let rocket = rkt::custom(figment)
+            .attach(Template::custom(|engines| {
+                for name in ["raw.html", "raw.html.tera", "raw.htm.tera", "raw.xml.tera", "raw"] {
+                    engines.tera.add_raw_template(name, "{{ v }}").unwrap();
+                }
+
+                engines.tera.add_raw_template("raw-child.html.tera",
+                    r#"{% extends "base" %}{% block text %}{{ v }}{% endblock %}"#,
+                ).unwrap();
+            }));
+
+        let client = Client::debug(rocket).unwrap();
+        let render = |name| Template::show(client.rocket(), name, context! { v: "<b>" });
+        for name in [
+            "a", "sub/b", "sub/c", "child", "raw.html",
+            "raw.html.tera", "raw.htm.tera", "raw.xml.tera", "raw-child.html.tera",
+        ] {
+            assert_eq!(render(name).unwrap(), "&lt;b&gt;", "{name} should be escaped");
+        }
+
+        for name in ["sub/a", "sub/d", "sub/e", "raw"] {
+            assert_eq!(render(name).unwrap(), "<b>", "{name} should not be escaped");
+        }
+    }
+
+    #[test]
+    fn file_backed_tera_template_uses_custom_filter() {
+        use rkt::local::blocking::Client;
+        use rkt_dyn_templates::tera::{self, Value};
+
+        fn decorate(value: &Value, _: tera::Kwargs, _: &tera::State) -> tera::TeraResult<Value> {
+            Ok(Value::from(format!("[{}]", value.as_str().unwrap())))
+        }
+
+        let root = tempfile::tempdir().unwrap();
+        std::fs::write(root.path().join("filtered.txt.tera"), "{{ v | decorate }}").unwrap();
+        let figment = Config::figment().merge(("template_dir", root.path()));
+        let rocket = rkt::custom(figment).attach(Template::try_custom_with_preload(
+            |engines| {
+                engines.tera.register_filter("decorate", decorate);
+                Ok(())
+            },
+            |engines| {
+                assert!(engines.tera.contains_template("filtered"));
+                Ok(())
+            },
+        ));
+
+        let client = Client::debug(rocket).unwrap();
+        let rendered = Template::show(client.rocket(), "filtered", context! { v: "value" });
+        assert_eq!(rendered.as_deref(), Some("[value]"));
+    }
+
+    #[test]
+    fn custom_registers_tera_items_used_by_template_files() {
+        use std::sync::atomic::{AtomicUsize, Ordering};
+        use std::sync::Arc;
+
+        use rkt::local::blocking::Client;
+        use rkt_dyn_templates::tera::{self, Value};
+
+        fn decorate(value: &Value, _: tera::Kwargs, _: &tera::State) -> tera::TeraResult<Value> {
+            Ok(Value::from(format!("[{}]", value.as_str().unwrap())))
+        }
+
+        let root = tempfile::tempdir().unwrap();
+        std::fs::write(
+            root.path().join("filtered.txt.tera"),
+            "{{ v | decorate }}{% if v is short %}!{% endif %}{{ stamp() }}",
+        ).unwrap();
+
+        let calls = Arc::new(AtomicUsize::new(0));
+        let callback_calls = calls.clone();
+        let figment = Config::figment().merge(("template_dir", root.path()));
+        let rocket = rkt::custom(figment).attach(Template::custom(move |engines| {
+            callback_calls.fetch_add(1, Ordering::SeqCst);
+            engines.tera.register_filter("decorate", decorate);
+            engines.tera.register_test("short", |v: &str, _: tera::Kwargs, _: &tera::State| {
+                v.len() < 10
+            });
+            engines.tera.register_function("stamp", |_: tera::Kwargs, _: &tera::State| "#");
+        }));
+
+        let client = Client::debug(rocket).unwrap();
+        let rendered = Template::show(client.rocket(), "filtered", context! { v: "value" });
+        assert_eq!(rendered.as_deref(), Some("[value]!#"));
+        assert_eq!(calls.load(Ordering::SeqCst), 1, "callback runs once per load");
+    }
+
+    #[async_test]
+    async fn registered_tera_template_shadows_template_file() {
+        use rkt::local::asynchronous::Client;
+
+        let root = tempfile::tempdir().unwrap();
+        // Named `report`: the file escapes HTML, the registered template doesn't.
+        std::fs::write(root.path().join("report.html.tera"), "file {{ v }}").unwrap();
+        // Named `page.html`: the file doesn't escape HTML, the registered one does.
+        std::fs::write(root.path().join("page.html.txt.tera"), "file {{ v }}").unwrap();
+
+        let figment = Config::figment().merge(("template_dir", root.path()));
+        let rocket = rkt::custom(figment).attach(Template::try_custom_with_preload(
+            |engines| {
+                engines.tera.add_raw_template("report", "raw {{ v }}")?;
+                engines.tera.add_raw_template("page.html", "raw {{ v }}")?;
+                Ok(())
+            },
+            |_| Ok(()),
+        ));
+
+        let client = Client::debug(rocket).await.unwrap();
+        let req = client.get("/");
+        let metadata = Metadata::from_request(&req).await.unwrap();
+        let render = |name| metadata.render(name, context! { v: "<b>" }).unwrap();
+
+        assert_eq!(render("report"), (ContentType::Text, "raw <b>".into()));
+        assert_eq!(render("page.html"), (ContentType::HTML, "raw &lt;b&gt;".into()));
+    }
+
+    #[cfg(unix)]
+    #[test]
+    fn tera_escapes_templates_under_non_utf8_paths() {
+        use std::ffi::OsStr;
+        use std::os::unix::ffi::OsStrExt;
+
+        let root = tempfile::tempdir().unwrap();
+        let dir = root.path().join(OsStr::from_bytes(b"templates-\xff"));
+        std::fs::create_dir(&dir).unwrap();
+        std::fs::write(dir.join("index.html.tera"), "{{ v }}").unwrap();
+
+        let figment = Config::figment().merge(("template_dir", root.path()));
+        let rocket = rkt::custom(figment).attach(Template::fairing());
+        let client = rkt::local::blocking::Client::debug(rocket).unwrap();
+        let rendered = Template::show(client.rocket(), "templates-�/index", context! { v: "<b>" });
+        assert_eq!(rendered.as_deref(), Some("&lt;b&gt;"));
     }
 
     // u128 is not supported. enable when it is.

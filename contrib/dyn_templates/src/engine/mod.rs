@@ -9,6 +9,8 @@ use crate::template::TemplateInfo;
 mod tera;
 #[cfg(feature = "tera")]
 use ::tera::Tera;
+#[cfg(feature = "tera")]
+pub(crate) use self::tera::DiskRenderers;
 
 #[cfg(feature = "handlebars")]
 mod handlebars;
@@ -19,6 +21,30 @@ use ::handlebars::Handlebars;
 mod minijinja;
 #[cfg(feature = "minijinja")]
 use ::minijinja::Environment;
+
+/// An error from [`Engines::load()`] that hasn't been logged yet.
+#[cfg_attr(not(feature = "tera"), allow(dead_code))]
+pub(crate) struct LoadError {
+    #[cfg(feature = "tera")]
+    tera: ::tera::Error,
+}
+
+impl LoadError {
+    /// Whether templates use a filter, test, or function that isn't
+    /// registered.
+    pub(crate) fn is_unregistered_reference(&self) -> bool {
+        #[cfg(feature = "tera")]
+        return tera::is_unregistered_reference(&self.tera);
+
+        #[cfg(not(feature = "tera"))]
+        false
+    }
+
+    pub(crate) fn log(&self) {
+        #[cfg(feature = "tera")]
+        tera::log_load_error(&self.tera);
+    }
+}
 
 #[cfg_attr(
     not(any(feature = "tera", feature = "handlebars", feature = "minijinja")),
@@ -37,17 +63,15 @@ pub(crate) trait Engine: Send + Sync + Sized + 'static {
 /// types from the respective templating engine library. These types should be
 /// imported from the reexported crate at the root of `rkt_dyn_templates` to
 /// avoid version mismatches. For instance, when registering a Tera filter, the
-/// [`tera::Value`] and [`tera::Result`] types are required. Import them from
+/// [`tera::Value`] and [`tera::TeraResult`] types are required. Import them from
 /// `rkt_dyn_templates::tera`. The example below illustrates this:
 ///
 /// ```rust
 /// # #[cfg(feature = "tera")] {
-/// use std::collections::HashMap;
-///
 /// use rkt_dyn_templates::{Template, Engines};
 /// use rkt_dyn_templates::tera::{self, Value};
 ///
-/// fn my_filter(value: &Value, _: &HashMap<String, Value>) -> tera::Result<Value> {
+/// fn my_filter(value: &Value, _: tera::Kwargs, _: &tera::State) -> tera::TeraResult<Value> {
 ///     # /*
 ///     ...
 ///     # */ unimplemented!();
@@ -66,14 +90,19 @@ pub(crate) trait Engine: Send + Sync + Sized + 'static {
 /// ```
 ///
 /// [`tera::Value`]: crate::tera::Value
-/// [`tera::Result`]: crate::tera::Result
+/// [`tera::TeraResult`]: crate::tera::TeraResult
 ///
 pub struct Engines {
     /// A `Tera` templating engine.
     ///
     /// This field is only available when the `tera` feature is enabled. When
     /// calling methods on the `Tera` instance, ensure you use types imported
-    /// from `rkt_dyn_templates::tera` to avoid version mismatches.
+    /// from `rkt_dyn_templates::tera` to avoid version mismatches. When
+    /// rendering through Rocket, file-backed Tera templates use the file's
+    /// extension to select HTML escaping. Templates registered directly with
+    /// Tera use the suffixes configured by `Tera::autoescape_on()`. A template
+    /// registered before Tera loads template files replaces a file with the
+    /// same name, and a warning is logged.
     #[cfg(feature = "tera")]
     pub tera: Tera,
 
@@ -110,25 +139,46 @@ impl Engines {
         Environment::EXT,
     ];
 
+    fn files<E: Engine>(templates: &HashMap<String, TemplateInfo>)
+        -> impl Iterator<Item = (&str, &Path)>
+    {
+        templates.iter()
+            .filter(|(_, info)| info.engine_ext == E::EXT)
+            .filter_map(|(name, info)| Some((name.as_str(), info.path.as_deref()?)))
+    }
+
     pub(crate) fn init(_templates: &HashMap<String, TemplateInfo>) -> Option<Engines> {
-        fn inner<E: Engine>(templates: &HashMap<String, TemplateInfo>) -> Option<E> {
-            let named_templates = templates
-                .iter()
-                .filter(|&(_, i)| i.engine_ext == E::EXT)
-                .filter_map(|(k, i)| Some((k.as_str(), i.path.as_ref()?)))
-                .map(|(k, p)| (k, p.as_path()));
-
-            E::init(named_templates)
-        }
-
         Some(Engines {
             #[cfg(feature = "tera")]
-            tera: inner::<Tera>(_templates)?,
+            tera: Tera::init(Self::files::<Tera>(_templates))?,
             #[cfg(feature = "handlebars")]
-            handlebars: inner::<Handlebars<'static>>(_templates)?,
+            handlebars: Handlebars::init(Self::files::<Handlebars<'static>>(_templates))?,
             #[cfg(feature = "minijinja")]
-            minijinja: inner::<Environment<'static>>(_templates)?,
+            minijinja: Environment::init(Self::files::<Environment<'static>>(_templates))?,
         })
+    }
+
+    /// Loads the template files that engines don't load in `init()`, which
+    /// are Tera's. Templates already registered with Tera shadow files with
+    /// the same name; those files' entries are removed from `templates`.
+    pub(crate) fn load(&mut self, _templates: &mut HashMap<String, TemplateInfo>)
+        -> Result<(), LoadError>
+    {
+        #[cfg(feature = "tera")]
+        {
+            tera::remove_shadowed(&self.tera, _templates);
+            tera::load(&mut self.tera, Self::files::<Tera>(_templates))
+                .map_err(|tera| LoadError { tera })?;
+        }
+
+        Ok(())
+    }
+
+    #[cfg(feature = "tera")]
+    pub(crate) fn disk_renderers(&self, templates: &HashMap<String, TemplateInfo>)
+        -> DiskRenderers
+    {
+        DiskRenderers::new(&self.tera, Self::files::<Tera>(templates).map(|(_, path)| path))
     }
 
     #[cfg_attr(
@@ -140,11 +190,16 @@ impl Engines {
         name: &str,
         info: &TemplateInfo,
         context: C,
+        #[cfg(feature = "tera")] tera_disk: &DiskRenderers,
     ) -> Option<String> {
         #[cfg(feature = "tera")]
         {
             if info.engine_ext == Tera::EXT {
-                return Engine::render(&self.tera, name, context);
+                let tera = info.path.as_deref()
+                    .and_then(|path| tera_disk.for_path(path))
+                    .unwrap_or(&self.tera);
+
+                return Engine::render(tera, name, context);
             }
         }
 

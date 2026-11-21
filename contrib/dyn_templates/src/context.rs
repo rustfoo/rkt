@@ -11,6 +11,20 @@ use rkt::http::ContentType;
 pub(crate) type Callback =
     Box<dyn Fn(&mut Engines) -> Result<(), Box<dyn Error>> + Send + Sync + 'static>;
 
+/// The customization callbacks of the templating fairing.
+pub(crate) enum Callbacks {
+    /// From `Template::custom()` and `Template::try_custom()`. The callback
+    /// runs after Tera loads template files, like it did with Tera 1. Tera 2
+    /// rejects files that use filters, tests, or functions that aren't
+    /// registered, so if that's why loading fails, the callback runs first.
+    Legacy(Callback),
+    /// From `Template::try_custom_with_preload()`.
+    Staged {
+        before_load: Callback,
+        after_load: Callback,
+    },
+}
+
 pub(crate) struct Context {
     /// The root of the template directory.
     pub root: PathBuf,
@@ -18,6 +32,9 @@ pub(crate) struct Context {
     pub templates: HashMap<String, TemplateInfo>,
     /// Loaded template engines
     pub engines: Engines,
+    /// Tera renderers configured for the content extensions of disk templates.
+    #[cfg(feature = "tera")]
+    pub tera_disk: crate::engine::DiskRenderers,
 }
 
 pub(crate) use self::manager::ContextManager;
@@ -26,7 +43,7 @@ impl Context {
     /// Load all of the templates at `root`, initialize them using the relevant
     /// template engine, and store all of the initialized state in a `Context`
     /// structure, which is returned if all goes well.
-    pub fn initialize(root: &Path, callback: &Callback) -> Option<Context> {
+    pub fn initialize(root: &Path, callbacks: &Callbacks) -> Option<Context> {
         fn is_file_with_ext(entry: &walkdir::DirEntry, ext: &str) -> bool {
             let is_file = entry.file_type().is_file();
             let has_ext = entry.path().extension().is_some_and(|e| e == ext);
@@ -80,10 +97,53 @@ impl Context {
         }
 
         let mut engines = Engines::init(&templates)?;
-        if let Err(reason) = callback(&mut engines) {
-            error!(%reason, "template customization callback failed");
-            return None;
+        match callbacks {
+            Callbacks::Staged { before_load, after_load } => {
+                if let Err(reason) = before_load(&mut engines) {
+                    error!(%reason, "pre-load template customization callback failed");
+                    return None;
+                }
+
+                engines.load(&mut templates).map_err(|e| e.log()).ok()?;
+                if let Err(reason) = after_load(&mut engines) {
+                    error!(%reason, "post-load template customization callback failed");
+                    return None;
+                }
+            }
+            Callbacks::Legacy(callback) => match engines.load(&mut templates) {
+                Ok(()) => {
+                    if let Err(reason) = callback(&mut engines) {
+                        error!(%reason, "template customization callback failed");
+                        return None;
+                    }
+                }
+                Err(e) if e.is_unregistered_reference() => {
+                    // A failed load leaves the engines unchanged, so the
+                    // callback still runs only once.
+                    debug!("Tera templates use unregistered filters, tests, or functions\n\
+                        running the customization callback before loading Tera templates");
+
+                    if let Err(reason) = callback(&mut engines) {
+                        error!(%reason, "template customization callback failed");
+                        error!("note: the callback ran before Tera loaded template files \
+                            because they use filters, tests, or functions that weren't \
+                            registered yet.\n\
+                            To register those and also add Tera templates that use template \
+                            files, use `Template::try_custom_with_preload()`.");
+                        return None;
+                    }
+
+                    engines.load(&mut templates).map_err(|e| e.log()).ok()?;
+                }
+                Err(e) => {
+                    e.log();
+                    return None;
+                }
+            },
         }
+
+        #[cfg(feature = "tera")]
+        let tera_disk = engines.disk_renderers(&templates);
 
         for (name, engine_ext) in engines.templates() {
             if !templates.contains_key(name) {
@@ -106,6 +166,8 @@ impl Context {
             root,
             templates,
             engines,
+            #[cfg(feature = "tera")]
+            tera_disk,
         })
     }
 }
@@ -142,7 +204,7 @@ mod manager {
 
     use notify::{recommended_watcher, Error, Event, RecommendedWatcher, RecursiveMode, Watcher};
 
-    use super::{Callback, Context};
+    use super::{Callbacks, Context};
 
     /// Wraps a Context. With `cfg(debug_assertions)` active, this structure
     /// additionally provides a method to reload the context at runtime.
@@ -192,9 +254,9 @@ mod manager {
 
         /// Checks whether any template files have changed on disk. If there
         /// have been changes since the last reload, all templates are
-        /// reinitialized from disk and the user's customization callback is run
+        /// reinitialized from disk and the user's customization callbacks are run
         /// again.
-        pub fn reload_if_needed(&self, callback: &Callback) {
+        pub fn reload_if_needed(&self, callbacks: &Callbacks) {
             let templates_changes = self
                 .watcher
                 .as_ref()
@@ -203,7 +265,7 @@ mod manager {
             if let Some(true) = templates_changes {
                 debug!("template change detected: reloading templates");
                 let root = self.context().root.clone();
-                if let Some(new_ctxt) = Context::initialize(&root, callback) {
+                if let Some(new_ctxt) = Context::initialize(&root, callbacks) {
                     *self.context_mut() = new_ctxt;
                 } else {
                     warn!(
