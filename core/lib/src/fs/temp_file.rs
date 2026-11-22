@@ -493,14 +493,13 @@ impl<'v> TempFile<'v> {
         }
     }
 
-    /// Returns the Content-Type of the file as specified in the form field.
+    /// Returns the Content-Type of the file, if known.
     ///
     /// A multipart data form field can optionally specify the content-type of a
     /// file. A browser will typically sniff the file's extension to set the
-    /// content-type. This method returns that value, if it was specified. A file
-    /// field that specified none reports [`ContentType::Binary`], the default
-    /// for a file part, so an omitted header is indistinguishable from an
-    /// explicit `application/octet-stream`.
+    /// content-type. This method returns the submitted value when specified.
+    /// Multipart data fields without a Content-Type report
+    /// [`ContentType::Binary`]. Value fields report `None`.
     ///
     /// ```rust
     /// #[macro_use] extern crate rkt;
