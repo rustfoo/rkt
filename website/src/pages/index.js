@@ -39,7 +39,7 @@ const FEATURES = [
   {
     title: 'Async',
     description:
-      'Built on Tokio and Hyper. HTTP/1.1 and HTTP/2 are built in. HTTP/3 is available as a preview feature via s2n-quic.',
+      'Built on Tokio and Hyper. HTTP/1.1 and HTTP/2 are built in. HTTP/3 is available as a preview feature via Quinn.',
   },
   {
     title: 'TLS and mTLS',

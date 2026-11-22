@@ -55,7 +55,7 @@ workspace = true
 [features]
 default = ["http2", "tokio-macros", "trace"]
 http2 = ["hyper/http2", "hyper-util/http2"]
-http3-preview = ["s2n-quic", "s2n-quic-h3", "tls"]
+http3-preview = ["quinn", "h3", "h3-quinn", "tls"]
 secrets = ["cookie/private", "cookie/key-expansion"]
 json = ["serde_json"]
 xml = ["quick-xml"]
@@ -65,7 +65,7 @@ tls = ["rustls", "tokio-rustls", "rustls-pki-types"]
 mtls = ["tls", "x509-parser"]
 proxy-proto = []
 tokio-macros = ["tokio/macros"]
-trace = ["tracing-subscriber", "tinyvec", "thread_local", "rustls?/logging", "tokio-rustls?/logging", "multer/log", "s2n-quic-h3?/tracing"]
+trace = ["tracing-subscriber", "tinyvec", "thread_local", "rustls?/logging", "tokio-rustls?/logging", "multer/log", "h3?/tracing", "h3-quinn?/tracing"]
 ws = ["tokio-tungstenite"]
 
 [dependencies]
@@ -152,15 +152,18 @@ optional = true
 version = "1.13"
 optional = true
 
-[dependencies.s2n-quic]
-version = "1.51"
+[dependencies.quinn]
+version = "0.11.12"
 default-features = false
-features = ["provider-address-token-default", "provider-tls-rustls"]
+features = ["runtime-tokio", "rustls-ring"]
 optional = true
 
-[dependencies.s2n-quic-h3]
-version = "0.1.0"
-package = "s2n-quic-h3-community"
+[dependencies.h3]
+version = "0.0.8"
+optional = true
+
+[dependencies.h3-quinn]
+version = "0.0.10"
 optional = true
 
 [target.'cfg(unix)'.dependencies]

@@ -1,6 +1,6 @@
-//! Experimental support for Quic and HTTP/3.
+//! Experimental support for QUIC and HTTP/3.
 //!
-//! To enable rkt's experimental support for HTTP/3 and Quic, enable the
+//! To enable rkt's experimental support for HTTP/3 and QUIC, enable the
 //! `http3-preview` feature and provide a valid TLS configuration:
 //!
 //! ```toml
@@ -14,204 +14,105 @@
 //! key = "private/rsa_sha256_key.pem"
 //! ```
 //!
-//! The launch message confirms that rkt is serving traffic over Quic in
+//! The launch message confirms that rkt is serving traffic over QUIC in
 //! addition to TCP:
 //!
 //! ```sh
-//! > 🚀 rkt has launched on https://127.0.0.1:8000 (QUIC + mTLS)
+//! > 🚀 rkt has launched on https://127.0.0.1:8000 (QUIC)
 //! ```
 //!
-//! mTLS is not yet supported via this implementation.
+//! QUIC listens on UDP. The TCP listener's `proxy_protocol` setting applies
+//! only to TCP connections.
+//!
+//! TLS [`Resolver`]s are not yet supported over QUIC. When one is attached,
+//! HTTP/3 is not started, and only HTTP/1 and HTTP/2 are served.
+//!
+//! [`Resolver`]: crate::tls::Resolver
 
-use std::fmt;
 use std::io;
 use std::net::SocketAddr;
-use std::pin::pin;
+use std::pin::{pin, Pin};
+use std::sync::Arc;
+use std::task::{ready, Context, Poll};
 
-use quic_h3::h3;
-use s2n_quic as quic;
-use s2n_quic_h3 as quic_h3;
+use bytes::{Buf, Bytes};
+use futures::{Stream, StreamExt};
+use h3::server::RequestStream;
+use quinn::crypto::rustls::QuicServerConfig;
 
-use bytes::Bytes;
-use futures::Stream;
-use tokio::sync::Mutex;
-use tokio_stream::StreamExt;
-
-use crate::listener::Endpoint;
+use crate::listener::{AsyncCancel, Certificates};
 use crate::tls::{Error, TlsConfig};
 
-type H3Conn = h3::server::Connection<quic_h3::Connection, bytes::Bytes>;
+pub(crate) type Connection = h3::server::Connection<h3_quinn::Connection, Bytes>;
+pub(crate) type QuicTx = RequestStream<h3_quinn::SendStream<Bytes>, Bytes>;
 
-pub struct QuicListener {
-    endpoint: SocketAddr,
-    listener: Mutex<quic::Server>,
-    tls: TlsConfig,
+/// The receiving half of an HTTP/3 request stream.
+pub struct QuicRx(pub(crate) RequestStream<h3_quinn::RecvStream, Bytes>);
+
+pub(crate) async fn bind(address: SocketAddr, tls: &TlsConfig) -> Result<quinn::Endpoint, Error> {
+    let mut tls = tls.server_config().await?;
+    tls.alpn_protocols = vec![b"h3".to_vec()];
+    let crypto = QuicServerConfig::try_from(tls).map_err(|e| Error::Bind(Box::new(e)))?;
+    let server = quinn::ServerConfig::with_crypto(Arc::new(crypto));
+    Ok(quinn::Endpoint::server(server, address)?)
 }
 
-pub struct H3Stream(H3Conn, quic::connection::Result<SocketAddr>);
-
-pub struct H3Connection {
-    pub(crate) remote: quic::connection::Result<SocketAddr>,
-    pub(crate) parts: http::request::Parts,
-    pub(crate) tx: QuicTx,
-    pub(crate) rx: QuicRx,
-}
-
-#[doc(hidden)]
-pub struct QuicRx(h3::server::RequestStream<quic_h3::RecvStream, Bytes>);
-
-#[doc(hidden)]
-pub struct QuicTx(h3::server::RequestStream<quic_h3::SendStream<Bytes>, Bytes>);
-
-impl QuicListener {
-    pub async fn bind(address: SocketAddr, tls: TlsConfig) -> Result<Self, Error> {
-        use quic::provider::tls::rustls::Server as H3TlsServer;
-
-        let cert_chain = tls
-            .load_certs()?
-            .into_iter()
-            .map(|v| v.to_vec())
-            .collect::<Vec<_>>();
-
-        let h3tls = H3TlsServer::builder()
-            .with_application_protocols(["h3"].into_iter())
-            .map_err(|e| Error::Bind(e))?
-            .with_certificate(cert_chain, tls.load_key()?.secret_der())
-            .map_err(|e| Error::Bind(e))?
-            .with_prefer_server_cipher_suite_order(tls.prefer_server_cipher_order)
-            .map_err(|e| Error::Bind(e))?
-            .build()
-            .map_err(|e| Error::Bind(e))?;
-
-        let listener = quic::Server::builder()
-            .with_tls(h3tls)?
-            .with_io(address)?
-            .start()
-            .map_err(|e| Error::Bind(Box::new(e)))?;
-
-        Ok(QuicListener {
-            tls,
-            endpoint: listener.local_addr()?,
-            listener: Mutex::new(listener),
-        })
-    }
-}
-
-impl QuicListener {
-    pub async fn accept(&self) -> Option<quic::Connection> {
-        self.listener.lock().await.accept().await
-    }
-
-    pub async fn connect(&self, accept: quic::Connection) -> io::Result<H3Stream> {
-        let remote = accept.remote_addr();
-        let quic_conn = quic_h3::Connection::new(accept);
-        let conn = H3Conn::new(quic_conn).await.map_err(io::Error::other)?;
-        Ok(H3Stream(conn, remote))
-    }
-
-    pub fn endpoint(&self) -> io::Result<Endpoint> {
-        Ok(Endpoint::Quic(self.endpoint).with_tls(&self.tls))
-    }
-}
-
-impl H3Stream {
-    pub async fn accept(&mut self) -> io::Result<Option<H3Connection>> {
-        let remote = self.1;
-        let ((parts, _), (tx, rx)) = match self.0.accept().await {
-            Ok(Some((req, stream))) => (req.into_parts(), stream.split()),
-            Ok(None) => return Ok(None),
-            Err(e) => {
-                if matches!(e.try_get_code().map(|c| c.value()), Some(0 | 0x100)) {
-                    return Ok(None);
-                }
-
-                return Err(io::Error::other(e));
-            }
-        };
-
-        Ok(Some(H3Connection {
-            remote,
-            parts,
-            tx: QuicTx(tx),
-            rx: QuicRx(rx),
-        }))
-    }
-}
-
-impl QuicTx {
-    pub async fn send_response<S>(&mut self, response: http::Response<S>) -> io::Result<()>
-    where
-        S: Stream<Item = io::Result<Bytes>>,
+pub(crate) fn certificates(conn: &quinn::Connection) -> Option<Certificates<'static>> {
+    #[cfg(feature = "mtls")]
     {
-        let (parts, body) = response.into_parts();
-        let response = http::Response::from_parts(parts, ());
-        self.0
-            .send_response(response)
-            .await
-            .map_err(io::Error::other)?;
-
-        let mut body = pin!(body);
-        while let Some(bytes) = body.next().await {
-            let bytes = bytes.map_err(io::Error::other)?;
-            self.0.send_data(bytes).await.map_err(io::Error::other)?;
-        }
-
-        self.0.finish().await.map_err(io::Error::other)
+        let certs = conn.peer_identity()?;
+        let certs = certs
+            .downcast::<Vec<rustls::pki_types::CertificateDer<'static>>>()
+            .ok()?;
+        Some(Certificates::from(*certs))
     }
 
-    pub fn cancel(&mut self) {
-        self.0.stop_stream(h3::error::Code::H3_NO_ERROR);
+    #[cfg(not(feature = "mtls"))]
+    {
+        let _ = conn;
+        None
     }
 }
 
-// FIXME: Expose certificates when possible.
-impl H3Connection {
-    pub fn endpoint(&self) -> io::Result<Endpoint> {
-        Ok(Endpoint::Quic(self.remote?).assume_tls())
-    }
+pub(crate) fn server_name(conn: &quinn::Connection) -> Option<String> {
+    let data = conn.handshake_data()?;
+    data.downcast::<quinn::crypto::rustls::HandshakeData>()
+        .ok()?
+        .server_name
 }
 
-mod async_traits {
-    use std::io;
-    use std::pin::Pin;
-    use std::task::{ready, Context, Poll};
+pub(crate) async fn send_response<S>(tx: &mut QuicTx, response: http::Response<S>) -> io::Result<()>
+where
+    S: Stream<Item = io::Result<Bytes>>,
+{
+    let (parts, body) = response.into_parts();
+    tx.send_response(http::Response::from_parts(parts, ()))
+        .await
+        .map_err(io::Error::other)?;
 
-    use super::{Bytes, QuicRx};
-    use crate::listener::AsyncCancel;
-
-    use futures::Stream;
-    use s2n_quic_h3::h3;
-
-    impl Stream for QuicRx {
-        type Item = io::Result<Bytes>;
-
-        fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
-            use bytes::Buf;
-
-            match ready!(self.0.poll_recv_data(cx)) {
-                Ok(Some(mut buf)) => Poll::Ready(Some(Ok(buf.copy_to_bytes(buf.remaining())))),
-                Ok(None) => Poll::Ready(None),
-                Err(e) => Poll::Ready(Some(Err(io::Error::other(e)))),
-            }
-        }
+    let mut body = pin!(body);
+    while let Some(chunk) = body.next().await {
+        tx.send_data(chunk?).await.map_err(io::Error::other)?;
     }
 
-    impl AsyncCancel for QuicRx {
-        fn poll_cancel(mut self: Pin<&mut Self>, _: &mut Context<'_>) -> Poll<io::Result<()>> {
-            self.0.stop_sending(h3::error::Code::H3_NO_ERROR);
-            Poll::Ready(Ok(()))
+    tx.finish().await.map_err(io::Error::other)
+}
+
+impl Stream for QuicRx {
+    type Item = io::Result<Bytes>;
+
+    fn poll_next(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Option<Self::Item>> {
+        match ready!(self.0.poll_recv_data(cx)) {
+            Ok(Some(mut buf)) => Poll::Ready(Some(Ok(buf.copy_to_bytes(buf.remaining())))),
+            Ok(None) => Poll::Ready(None),
+            Err(e) => Poll::Ready(Some(Err(io::Error::other(e)))),
         }
     }
 }
 
-impl fmt::Debug for H3Stream {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_tuple("H3Stream").finish()
-    }
-}
-
-impl fmt::Debug for H3Connection {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.debug_struct("H3Connection").finish()
+impl AsyncCancel for QuicRx {
+    fn poll_cancel(mut self: Pin<&mut Self>, _: &mut Context<'_>) -> Poll<io::Result<()>> {
+        self.0.stop_sending(h3::error::Code::H3_NO_ERROR);
+        Poll::Ready(Ok(()))
     }
 }

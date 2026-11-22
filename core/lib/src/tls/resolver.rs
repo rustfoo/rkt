@@ -16,6 +16,12 @@ pub struct Fairing<T: ?Sized>(PhantomData<T>);
 
 /// A dynamic TLS configuration resolver.
 ///
+/// # HTTP/3
+///
+/// Resolvers are not yet supported over HTTP/3 (QUIC). When a resolver is
+/// attached, rkt does not start HTTP/3 even if the `http3-preview` feature is
+/// enabled, and serves HTTP/1 and HTTP/2 only.
+///
 /// # Example
 ///
 /// This is an async trait. Implement it as follows:
