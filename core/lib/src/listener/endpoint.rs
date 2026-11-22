@@ -66,7 +66,7 @@ impl Endpoint {
     pub fn quic(&self) -> Option<net::SocketAddr> {
         match self {
             Endpoint::Quic(addr) => Some(*addr),
-            Endpoint::Tls(addr, _) => addr.tcp(),
+            Endpoint::Tls(addr, _) => addr.quic(),
             _ => None,
         }
     }

@@ -49,7 +49,7 @@ rkt = "1.3.0"
 ## Features
 
 - **HTTP/1.1 & HTTP/2** — built on Hyper
-- **HTTP/3 preview** — via s2n-quic (enable with `http3-preview`)
+- **HTTP/3 preview** — via Quinn (enable with `http3-preview`)
 - **TLS & mTLS** — via Rustls (enable with `tls` / `mtls`)
 - **Secret cookies** — signed and encrypted cookie support (enable with `secrets`)
 - **WebSockets** — first-class support via `rkt::ws` (enable with `ws`)

@@ -86,17 +86,8 @@ impl Rocket<Orbit> {
         builder.body(ReaderStream::with_capacity(response, chunk_size))
     }
 
-    pub(crate) fn alt_svc(&self) -> Option<&'static str> {
-        cfg!(feature = "http3-preview").then(|| {
-            static ALT_SVC: state::InitCell<Option<String>> = state::InitCell::new();
-
-            ALT_SVC
-                .get_or_init(|| {
-                    let addr = self.endpoints().find_map(|v| v.quic())?;
-                    Some(format!("h3=\":{}\"", addr.port()))
-                })
-                .as_deref()
-        })?
+    pub(crate) fn alt_svc(&self) -> Option<&str> {
+        self.alt_svc.as_deref()
     }
 }
 
@@ -132,29 +123,37 @@ impl Rocket<Ignite> {
         let endpoint = listener.endpoint()?;
 
         #[cfg(feature = "http3-preview")]
-        if let (Some(addr), Some(tls)) = (endpoint.tcp(), endpoint.tls_config()) {
-            use crate::error::ErrorKind;
+        match (endpoint.tcp(), endpoint.tls_config()) {
+            // QUIC can't consult a `Resolver`: rather than serve HTTP/3 with
+            // the default TLS configuration, don't serve HTTP/3 at all.
+            (Some(_), Some(tls)) if tls.resolver.is_some() => warn!(
+                "HTTP/3 is disabled: a TLS resolver is attached, and resolvers \
+                are not yet supported over QUIC.\n\
+                Serving HTTP/1 + HTTP/2 only."
+            ),
+            (Some(addr), Some(tls)) => {
+                use crate::error::ErrorKind;
 
-            let h3listener = crate::listener::quic::QuicListener::bind(addr, tls.clone())
-                .map_err(|e| ErrorKind::Bind(Some(endpoint.clone()), Box::new(e)))
-                .await?;
+                let quic = crate::listener::quic::bind(addr, tls)
+                    .map_err(|e| ErrorKind::Bind(Some(endpoint.clone()), Box::new(e)))
+                    .await?;
 
-            let rocket = self.into_orbit(vec![h3listener.endpoint()?, endpoint]);
-            let rocket = orbit_callback(rocket).await?;
+                let quic_endpoint =
+                    crate::listener::Endpoint::Quic(quic.local_addr()?).with_tls(tls);
+                let rocket = self.into_orbit(vec![quic_endpoint, endpoint]);
+                let rocket = orbit_callback(rocket).await?;
 
-            let http12 = tokio::task::spawn(rocket.clone().serve12(listener));
-            let http3 = tokio::task::spawn(rocket.clone().serve3(h3listener));
-            let (r1, r2) = tokio::join!(http12, http3);
-            r1.map_err(|e| ErrorKind::Liftoff(Err(rocket.clone()), e))??;
-            r2.map_err(|e| ErrorKind::Liftoff(Err(rocket.clone()), e))??;
-            return Ok(rocket);
-        }
-
-        if cfg!(feature = "http3-preview") {
-            warn!(
+                let http12 = tokio::task::spawn(rocket.clone().serve12(listener));
+                let http3 = tokio::task::spawn(rocket.clone().serve3(quic));
+                let (r1, r2) = futures::join!(http12, http3);
+                r1.map_err(|e| ErrorKind::Liftoff(Err(rocket.clone()), e))??;
+                r2.map_err(|e| ErrorKind::Liftoff(Err(rocket.clone()), e))??;
+                return Ok(rocket);
+            }
+            _ => warn!(
                 "HTTP/3 cannot start without a valid TCP + TLS configuration.\n\
                 Falling back to HTTP/1 + HTTP/2 server."
-            );
+            ),
         }
 
         let rocket = self.into_orbit(vec![endpoint]);
@@ -229,29 +228,91 @@ impl Rocket<Orbit> {
     }
 
     #[cfg(feature = "http3-preview")]
-    async fn serve3(self: Arc<Self>, listener: crate::listener::quic::QuicListener) -> Result<()> {
-        let rocket = self.clone();
-        let listener = Arc::new(listener);
-        while let Some(Some(accept)) = listener.accept().race(rocket.shutdown()).await.left() {
-            let (listener, rocket) = (listener.clone(), rocket.clone());
+    async fn serve3(self: Arc<Self>, endpoint: quinn::Endpoint) -> Result<()> {
+        use std::future::IntoFuture;
+
+        use either::Either;
+
+        use crate::listener::{quic, Endpoint};
+
+        while let Some(Some(incoming)) = endpoint.accept().race(self.shutdown()).await.left() {
+            let rocket = self.clone();
             spawn_inspect(|e: &io::Error| log_server_error(e), async move {
-                let mut stream = listener.connect(accept).race_io(rocket.shutdown()).await?;
-                while let Some(mut conn) = stream.accept().race_io(rocket.shutdown()).await? {
-                    let rocket = rocket.clone();
+                let conn = incoming
+                    .into_future()
+                    .map_err(io::Error::other)
+                    .race_io(rocket.shutdown())
+                    .await?;
+                let remote = Endpoint::Quic(conn.remote_address()).assume_tls();
+                let certs = quic::certificates(&conn);
+                let sni = quic::server_name(&conn);
+                let meta = ConnectionMeta::new(Ok(remote), certs, sni.as_deref());
+                let mut h3 = quic::Connection::new(h3_quinn::Connection::new(conn.clone()))
+                    .map_err(io::Error::other)
+                    .race_io(rocket.shutdown())
+                    .await?;
+
+                loop {
+                    let resolver = match h3.accept().race(rocket.shutdown()).await {
+                        Either::Left(Ok(Some(resolver))) => resolver,
+                        Either::Left(Ok(None)) => break,
+                        Either::Left(Err(e)) if is_h3_disconnect(&e) => break,
+                        Either::Left(Err(e)) => return Err(io::Error::other(e)),
+                        Either::Right(_) => {
+                            // Send GOAWAY and let in-flight requests finish within grace.
+                            //
+                            // h3 0.0.8 only forgets a request stream once it
+                            // resolves, and has no API to forget one that
+                            // failed to resolve. Such a stream keeps `accept()`
+                            // from reporting completion, so we may wait for the
+                            // client to close the connection or for the grace
+                            // period to elapse, but no longer.
+                            h3.shutdown(0)
+                                .map_err(io::Error::other)
+                                .race_io(rocket.shutdown.grace.clone())
+                                .await?;
+                            let _ = h3.accept().race(rocket.shutdown.grace.clone()).await;
+                            break;
+                        }
+                    };
+
+                    let (rocket, meta) = (rocket.clone(), meta.clone());
                     spawn_inspect(|e: &io::Error| log_server_error(e), async move {
-                        let meta = ConnectionMeta::new(conn.endpoint(), None, None);
-                        let rx = conn.rx.cancellable(rocket.shutdown.clone());
+                        // A failed resolution only affects this stream: h3 resets
+                        // or drops the stream, and for connection-level errors,
+                        // records the error so that the next `h3.accept()` above
+                        // closes the connection with the appropriate code.
+                        //
+                        // Like HTTP/1's header read timeout, bound how long the
+                        // client may take to send headers. Race grace, not the
+                        // shutdown start, so that requests accepted before
+                        // GOAWAY are still served.
+                        let (request, stream) = tokio::time::timeout(
+                            Duration::from_secs(15),
+                            resolver.resolve_request(),
+                        )
+                        .map_err(|_| {
+                            io::Error::new(io::ErrorKind::TimedOut, "request header timeout")
+                        })
+                        .and_then(|resolved| async { resolved.map_err(io::Error::other) })
+                        .race_io(rocket.shutdown.grace.clone())
+                        .await?;
+                        let (mut tx, rx) = stream.split();
+                        let rx = quic::QuicRx(rx).cancellable(rocket.shutdown.clone());
                         let response = rocket
                             .clone()
-                            .service(conn.parts, rx, None, meta)
+                            .service(request.into_parts().0, rx, None, meta)
                             .map_err(io::Error::other)
                             .race_io(rocket.shutdown.mercy.clone())
                             .await?;
 
-                        let grace = rocket.shutdown.grace.clone();
-                        match conn.tx.send_response(response).race(grace).await.left() {
+                        match quic::send_response(&mut tx, response)
+                            .race(rocket.shutdown.grace.clone())
+                            .await
+                            .left()
+                        {
                             Some(result) => result,
-                            None => Ok(conn.tx.cancel()),
+                            None => Ok(tx.stop_stream(h3::error::Code::H3_REQUEST_CANCELLED)),
                         }
                     });
                 }
@@ -260,6 +321,52 @@ impl Rocket<Orbit> {
             });
         }
 
+        endpoint.set_server_config(None);
+        if endpoint
+            .wait_idle()
+            .race(self.shutdown.mercy.clone())
+            .await
+            .left()
+            .is_none()
+        {
+            endpoint.close(
+                h3::error::Code::H3_NO_ERROR.value().try_into().unwrap(),
+                b"shutdown",
+            );
+
+            // Give the endpoint a moment to send CONNECTION_CLOSE to peers.
+            let _ = tokio::time::timeout(Duration::from_secs(1), endpoint.wait_idle()).await;
+        }
+
         Ok(())
+    }
+}
+
+/// Returns `true` if `e` is a normal end to an HTTP/3 connection: a graceful
+/// close by either side (`H3_NO_ERROR` or code 0), an idle timeout, or a
+/// connection that was closed locally.
+#[cfg(feature = "http3-preview")]
+fn is_h3_disconnect(e: &h3::error::ConnectionError) -> bool {
+    use h3::error::ConnectionError;
+    use h3::quic::ConnectionErrorIncoming;
+
+    match e {
+        _ if e.is_h3_no_error() => true,
+        ConnectionError::Timeout { .. } => true,
+        ConnectionError::Remote {
+            0: ConnectionErrorIncoming::ApplicationClose { error_code: 0 },
+            ..
+        } => true,
+        ConnectionError::Remote {
+            0: ConnectionErrorIncoming::Undefined(e),
+            ..
+        } => match e.downcast_ref::<quinn::ConnectionError>() {
+            Some(quinn::ConnectionError::LocallyClosed | quinn::ConnectionError::TimedOut) => true,
+            Some(quinn::ConnectionError::ConnectionClosed(close)) => {
+                close.error_code == quinn::TransportErrorCode::NO_ERROR
+            }
+            _ => false,
+        },
+        _ => false,
     }
 }
