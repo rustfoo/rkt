@@ -29,7 +29,7 @@ values:
 | `workers`*           | `usize`            | Number of threads to use for executing futures. | cpu core count                |
 | `max_blocking`*      | `usize`            | Limit on threads to start for blocking tasks.   | `512`                         |
 | `ident`              | `string`, `false`  | If and how to identify via the `Server` header. | `"Rocket"`                    |
-| `ip_header`          | `string`, `false`  | IP header to inspect to get [client's real IP]. | `"X-Real-IP"`                 |
+| `ip_header`          | `string`, `false`  | [HTTP header to read for the client IP].         | `"X-Real-IP"`                 |
 | `proxy_proto_header` | `string`, `false`  | Header identifying [client to proxy protocol].  | `None`                        |
 | `proxy_protocol`*    | `bool`             | Require a [PROXY protocol] preamble.            | `false`                       |
 | `keep_alive`         | `u32`              | Keep-alive timeout seconds; disabled when `0`.  | `5`                           |
@@ -49,7 +49,7 @@ parameters are only read from the [default provider](#default-provider), and
 the `proxy_protocol` parameter is only read when the `proxy-proto` crate
 feature is enabled.</small>
 
-[client's real IP]: https://docs.rs/rkt/latest/rkt/request/struct.Request.html#method.real_ip
+[HTTP header to read for the client IP]: https://docs.rs/rkt/latest/rkt/config/struct.Config.html#structfield.ip_header
 [client to proxy protocol]: https://docs.rs/rkt/latest/rkt/request/struct.Request.html#method.proxy_proto
 [PROXY protocol]: #proxy-protocol
 
@@ -431,11 +431,13 @@ With the `proxy-proto` crate feature enabled, setting the `proxy_protocol`
 configuration parameter (env `ROCKET_PROXY_PROTOCOL`) to `true` requires every
 incoming connection to begin with a PROXY protocol v1 or v2 preamble; the
 version is detected automatically. The forwarded address becomes the
-connection's peer endpoint, so [`Request::remote()`] and
-[`Request::client_ip()`] report the original client address:
+connection's peer endpoint, which [`Request::remote()`] returns. Set
+`ip_header = false` to make [`Request::client_ip()`] and the `IpAddr` guard
+use that address, since a valid configured HTTP header takes precedence.
 
 ```toml,ignore
 proxy_protocol = true
+ip_header = false
 ```
 
 ::::warning[Only enable `proxy_protocol` when _all_ connections arrive through a trusted proxy that always sends the preamble.]

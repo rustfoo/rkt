@@ -78,6 +78,12 @@ pub struct Config {
     /// or `None`. Deserialization semantics are identical to those of [`Ident`]
     /// except that the value must syntactically be a valid HTTP header name.
     ///
+    /// **Warning:** Clients can supply this header themselves. Trust it only
+    /// when all requests arrive through a trusted proxy that overwrites it.
+    /// Otherwise, set `ip_header = false` in configuration or set this field
+    /// to `None`. This setting affects [`Request::client_ip()`] and the
+    /// `IpAddr` request guard.
+    ///
     /// **(default: `"X-Real-IP"`)**
     #[serde(deserialize_with = "crate::config::http_header::deserialize")]
     pub ip_header: Option<Uncased<'static>>,

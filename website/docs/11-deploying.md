@@ -213,18 +213,24 @@ Our recommendation for a direct self-managed deployment is to:
     }
     ```
 
-    Note that we configure NGINX to forward the actual remote IP via the
-    `X-Real-IP` header, which Rocket uses by default via [`ip_header`].
-    Additionally, the scheme is forwarded via `X-Forwarded-Proto`, but it must
-    be explicitly configured via [`proxy_proto_header`] for Rocket to consider.
+    The `proxy_set_header X-Real-IP $remote_addr` directive overwrites any
+    client-supplied `X-Real-IP` header. rkt reads this header by default via
+    [`ip_header`]. Trust it only when all requests reach the application through
+    a trusted proxy that overwrites it. Otherwise, set `ip_header = false` in
+    `Rocket.toml`.
+
+    NGINX also forwards the scheme via `X-Forwarded-Proto`. Configure
+    [`proxy_proto_header`] to make Rocket read it.
 
     If your proxy or load balancer operates at the TCP level (HAProxy in TCP
     mode, AWS NLB, and others) or you prefer not to rely on HTTP headers,
     Rocket can instead recover the client address from a [PROXY protocol]
     preamble: enable the `proxy-proto` crate feature and set the
-    [`proxy_protocol`] configuration parameter to `true`. Ensure that your
-    proxy sends the preamble on every connection (for example, HAProxy's
-    `send-proxy-v2` directive), as connections without one are rejected.
+    [`proxy_protocol`] configuration parameter to `true`. Set `ip_header = false`
+    so a valid HTTP header cannot take precedence over the address from the
+    preamble. Ensure that your proxy sends the preamble on every connection
+    (for example, with HAProxy's `send-proxy-v2` directive). Rocket rejects
+    connections without a preamble.
 
 [`cargo-zigbuild`]: https://github.com/rust-cross/cargo-zigbuild
 [`ip_header`]: https://docs.rs/rkt/latest/rkt/config/struct.Config.html#structfield.ip_header
