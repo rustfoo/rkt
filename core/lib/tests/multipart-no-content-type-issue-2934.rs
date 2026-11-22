@@ -60,3 +60,48 @@ fn file_part_without_content_type_preserves_bytes() {
     expected.extend(&payload);
     assert_eq!(response.into_bytes().unwrap(), expected);
 }
+
+#[rkt::post("/bytes", data = "<form>")]
+fn bytes(form: Form<&[u8]>) -> Vec<u8> {
+    form.to_vec()
+}
+
+fn assert_untyped_part_preserves_bytes(payload: &[u8]) {
+    use rkt::http::Status;
+    use rkt::local::blocking::Client;
+
+    let mut body =
+        b"--X-BOUNDARY\r\nContent-Disposition: form-data; name=\"value\"\r\n\r\n".to_vec();
+    body.extend_from_slice(payload);
+    body.extend_from_slice(b"\r\n--X-BOUNDARY--\r\n");
+
+    let client = Client::debug_with(routes![bytes]).unwrap();
+    let response = client
+        .post("/bytes")
+        .header(
+            "multipart/form-data; boundary=X-BOUNDARY"
+                .parse::<ContentType>()
+                .unwrap(),
+        )
+        .body(body)
+        .dispatch();
+
+    assert_eq!(response.status(), Status::Ok);
+    assert_eq!(response.into_bytes().unwrap(), payload);
+}
+
+#[test]
+fn filename_less_part_preserves_binary_bytes() {
+    let payload: Vec<u8> = (0u8..=255).collect();
+    assert_untyped_part_preserves_bytes(&payload);
+}
+
+#[test]
+fn filename_less_part_preserves_utf8_bom() {
+    assert_untyped_part_preserves_bytes("\u{feff}héllo".as_bytes());
+}
+
+#[test]
+fn filename_less_part_preserves_empty_value() {
+    assert_untyped_part_preserves_bytes(b"");
+}

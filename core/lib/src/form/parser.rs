@@ -148,11 +148,8 @@ impl<'r, 'i> MultipartParser<'r, 'i> {
             }
         };
 
-        // A field with a content-type or a file name is data; one without is
-        // "value". RFC 7578 §4.4 defaults a part to `text/plain`, which would
-        // lossily decode a file's bytes as text, so a file part that declared no
-        // content-type falls back to binary here — the type that section
-        // recommends for file data that isn't otherwise labeled.
+        // A field with a content type or file name is streamed as data.
+        // Other fields are values if their bytes are valid UTF-8.
         trace!(?field, "multipart field");
         let content_type = field.content_type().and_then(|m| m.as_ref().parse().ok());
         let content_type = match (content_type, field.file_name()) {
@@ -185,13 +182,24 @@ impl<'r, 'i> MultipartParser<'r, 'i> {
                 None => (String::new(), 0),
             };
 
-            match field.text().await {
-                Ok(text) => buf.push_str(&text),
+            let bytes = match field.bytes().await {
+                Ok(bytes) => bytes,
                 Err(e) => return Some(Err(e.into())),
             };
 
-            let name_val = self.buffer.push_split(buf, len);
-            Either::Left(ValueField::from(name_val))
+            match std::str::from_utf8(&bytes) {
+                Ok(text) => {
+                    buf.push_str(text);
+                    Either::Left(ValueField::from(self.buffer.push_split(buf, len)))
+                }
+                Err(_) => Either::Right(DataField {
+                    content_type: ContentType::Binary,
+                    request: self.request,
+                    name: NameView::new(self.buffer.push(buf)),
+                    file_name: None,
+                    data: Data::local(bytes.into()),
+                }),
+            }
         };
 
         Some(Ok(field))

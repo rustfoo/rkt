@@ -9,8 +9,9 @@ use crate::{Data, Request};
 /// A form field with a string value.
 ///
 /// rkt preprocesses all form fields into either [`ValueField`]s or
-/// [`DataField`]s. All fields from url-encoded forms, and multipart fields with
-/// neither a `Content-Type` nor a file name, are preprocessed as a `ValueField`.
+/// [`DataField`]s. All URL-encoded form fields are value fields. Multipart
+/// fields are value fields if they have neither a `Content-Type` nor a file name
+/// and contain valid UTF-8. Multipart values preserve leading byte-order marks.
 #[derive(Debug, Clone)]
 pub struct ValueField<'r> {
     /// The (decoded) name of the form field.
@@ -22,18 +23,17 @@ pub struct ValueField<'r> {
 /// A multipart form field with an underlying data stream.
 ///
 /// rkt preprocesses all form fields into either [`ValueField`]s or
-/// [`DataField`]s. Multipart form fields with a `Content-Type`, or with a file
-/// name in their `Content-Disposition`, are preprocessed as a `DataField`. The
-/// underlying data is _not_ read into memory, but instead, streamable from the
-/// contained [`Data`] structure.
+/// [`DataField`]s. Multipart fields with a `Content-Type`, a file name, or
+/// invalid UTF-8 contents are data fields. Fields with a `Content-Type` or file
+/// name are streamed. Other fields are buffered to validate UTF-8. Both forms
+/// of data are readable through the contained [`Data`].
 pub struct DataField<'r, 'i> {
     /// The (decoded) name of the form field.
     pub name: NameView<'r>,
     /// The form fields's file name.
     pub file_name: Option<&'r FileName>,
-    /// The form field's Content-Type, as submitted, which may or may not
-    /// reflect on `data`. A file field that submitted no `Content-Type` is
-    /// reported as [`ContentType::Binary`], the default for a file part.
+    /// The form field's submitted Content-Type, or [`ContentType::Binary`]
+    /// when none was specified.
     pub content_type: ContentType,
     /// The request in which the form field was submitted.
     pub request: &'r Request<'i>,

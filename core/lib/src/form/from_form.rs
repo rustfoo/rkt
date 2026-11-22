@@ -206,9 +206,11 @@ use crate::http::uncased::AsUncased;
 /// are then pushed to the parser in [`FromForm::push_value()`] or
 /// [`FromForm::push_data()`], respectively. Both url-encoded forms and
 /// multipart forms are supported. All url-encoded form fields are preprocessed
-/// as [`ValueField`]s. Multipart form fields with a Content-Type, or with a file
-/// name, are processed as [`DataField`]s while those with neither are processed
-/// as [`ValueField`]s. `ValueField` field names and values are percent-decoded.
+/// as [`ValueField`]s, with their names and values percent-decoded.
+///
+/// Multipart fields with neither a Content-Type nor a file name are
+/// [`ValueField`]s if they contain valid UTF-8. All other multipart fields are
+/// [`DataField`]s. Multipart values preserve leading byte-order marks.
 ///
 /// [field wire format]: crate::form#field-wire-format
 ///
