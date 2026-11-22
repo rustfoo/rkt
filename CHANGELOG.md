@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- Opt-in XML support via the `xml` feature (`rkt::serde::xml::Xml`).
+- `Template::try_custom_with_preload()` in `rkt_dyn_templates`.
+
+### Changed
+
+- **Breaking:** `http3-preview` now uses Quinn instead of s2n-quic.
+- HTTP/3 is disabled when a TLS `Resolver` is attached.
+- **Breaking:** `rkt_dyn_templates` now uses Tera 2.
+
+### Fixed
+
+- `Alt-Svc` is now set per Rocket instance, not per process.
+
 ## 1.3.0 - 2026-11-18
 
 ### Added
