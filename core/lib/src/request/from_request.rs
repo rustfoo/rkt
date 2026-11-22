@@ -155,11 +155,15 @@ pub type Outcome<S, E> = outcome::Outcome<S, (Status, E), Status>;
 ///     [`Request::accept()`]. If the request didn't specify an `Accept`, the
 ///     request is forwarded with a 500 Internal Server Error status.
 ///
-///   * ***IpAddr**
+///   * **IpAddr**
 ///
-///     Extracts the client ip address of the incoming request as an [`IpAddr`]
+///     Extracts the client IP address of the incoming request as an [`IpAddr`]
 ///     via [`Request::client_ip()`]. If the client's IP address is not known,
 ///     the request is forwarded with a 500 Internal Server Error status.
+///
+///     **Warning:** By default, this address can come from a client-supplied
+///     `X-Real-IP` header. See [`Config::ip_header`](crate::Config::ip_header)
+///     before using this guard for access control.
 ///
 ///   * **ProxyProto**
 ///

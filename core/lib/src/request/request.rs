@@ -423,6 +423,9 @@ impl<'r> Request<'r> {
     /// [`ip_header`](crate::Config::ip_header) of the request if such a header
     /// is configured, exists and contains a valid IP address.
     ///
+    /// Trust this value only when all requests arrive through a trusted proxy
+    /// that overwrites the header. See [`Config::ip_header`](crate::Config::ip_header).
+    ///
     /// # Example
     ///
     /// ```rust
@@ -545,6 +548,12 @@ impl<'r> Request<'r> {
     /// If the `ip_header` exists and contains a valid IP address, that address
     /// is returned. Otherwise, if the address of the remote connection is
     /// known, that address is returned. Otherwise, `None` is returned.
+    ///
+    /// **Warning:** The default `X-Real-IP` header can contain a client-supplied
+    /// address. Before relying on this method for access control, ensure all
+    /// requests arrive through a trusted proxy that overwrites the configured
+    /// header, or disable it with `ip_header = false`. Use [`Request::remote()`]
+    /// to read the connection endpoint, if available.
     ///
     /// # Example
     ///
