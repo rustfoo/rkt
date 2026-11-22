@@ -94,6 +94,7 @@ impl Router<Pending> {
 }
 
 impl Router<Finalized> {
+    #[cfg(test)]
     #[track_caller]
     pub fn route<'r, 'a: 'r>(
         &'a self,
