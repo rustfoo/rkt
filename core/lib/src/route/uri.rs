@@ -108,7 +108,7 @@ impl<'a> RouteUri<'a> {
     /// INTERNAL!
     #[doc(hidden)]
     pub fn try_new(base: &str, uri: &str) -> Result<RouteUri<'static>> {
-        let mut base = Origin::parse(base)
+        let mut base = Origin::parse_base(base)
             .map_err(|e| e.into_owned())?
             .into_normalized()
             .into_owned();
@@ -177,15 +177,14 @@ impl<'a> RouteUri<'a> {
     /// use rkt::Route;
     /// use rkt::http::Method;
     /// # use rkt::route::dummy_handler as handler;
-    /// # use rkt::uri;
     ///
     /// let route = Route::new(Method::Get, "/foo/bar?a=1", handler);
     /// assert_eq!(route.uri.base(), "/");
     ///
-    /// let route = route.rebase(uri!("/boo"));
+    /// let route = route.rebase("/boo");
     /// assert_eq!(route.uri.base(), "/boo");
     ///
-    /// let route = route.rebase(uri!("/foo"));
+    /// let route = route.rebase("/foo");
     /// assert_eq!(route.uri.base(), "/foo/boo");
     /// ```
     #[inline(always)]
@@ -201,10 +200,9 @@ impl<'a> RouteUri<'a> {
     /// use rkt::Route;
     /// use rkt::http::Method;
     /// # use rkt::route::dummy_handler as handler;
-    /// # use rkt::uri;
     ///
     /// let route = Route::new(Method::Get, "/foo/bar?a=1", handler);
-    /// let route = route.rebase(uri!("/boo"));
+    /// let route = route.rebase("/boo");
     ///
     /// assert_eq!(route.uri, "/boo/foo/bar?a=1");
     /// assert_eq!(route.uri.base(), "/boo");

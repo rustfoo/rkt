@@ -227,13 +227,14 @@ impl Catcher {
     /// If the the current base is `/`, then the base is replaced by `base`.
     /// Otherwise, `base` is prefixed to the existing `base`.
     ///
+    /// Panics if `base` is not a valid route URI without dynamic parameters.
+    ///
     /// ```rust
     /// # extern crate rkt;
     /// use rkt::request::Request;
     /// use rkt::catcher::{Catcher, BoxFuture};
     /// use rkt::response::Responder;
     /// use rkt::http::Status;
-    /// # use rkt::uri;
     ///
     /// fn handle_404<'r>(status: Status, req: &'r Request<'_>) -> BoxFuture<'r> {
     ///    let res = (status, format!("404: {}", req.uri()));
@@ -244,30 +245,29 @@ impl Catcher {
     /// assert_eq!(catcher.base(), "/");
     ///
     /// // Since the base is `/`, rebasing replaces the base.
-    /// let rebased = catcher.rebase(uri!("/boo"));
+    /// let rebased = catcher.rebase("/boo");
     /// assert_eq!(rebased.base(), "/boo");
     ///
     /// // Now every rebase prefixes.
-    /// let rebased = rebased.rebase(uri!("/base"));
+    /// let rebased = rebased.rebase("/base");
     /// assert_eq!(rebased.base(), "/base/boo");
     ///
     /// // Note that trailing slashes have no effect and are thus removed:
     /// let catcher = Catcher::new(404, handle_404);
-    /// let rebased = catcher.rebase(uri!("/boo/"));
+    /// let rebased = catcher.rebase("/boo/");
     /// assert_eq!(rebased.base(), "/boo");
     /// ```
-    pub fn rebase(mut self, mut base: uri::Origin<'_>) -> Self {
-        self.base = if self.base.path() == "/" {
-            base.clear_query();
-            base.into_normalized_nontrailing().into_owned()
-        } else {
-            uri::Origin::parse_owned(format!("{}{}", base.path(), self.base))
-                .expect("catcher rebase: {new}{old} is valid origin URI")
-                .into_normalized_nontrailing()
+    #[track_caller]
+    pub fn rebase(self, base: &str) -> Self {
+        let base = uri::Origin::parse_base(base)
+            .expect("expected valid catcher base")
+            .into_normalized();
+        let new_base = match self.base.path().as_str() {
+            "/" => base.path().to_string(),
+            _ => format!("{}{}", base.path(), self.base),
         };
 
-        self.rank = rank(self.base());
-        self
+        self.map_base(|_| new_base).expect("catcher rebase: {new}{old} is valid base URI")
     }
 
     /// Maps the `base` of this catcher using `mapper`, returning a new
@@ -278,7 +278,7 @@ impl Catcher {
     /// `mapper` is called with the current base. The returned `String` is used
     /// as the new base if it is a valid URI. If the returned base URI contains
     /// a query, it is ignored. Returns an error if the base produced by
-    /// `mapper` is not a valid origin URI.
+    /// `mapper` is not a valid route URI without dynamic parameters.
     ///
     /// # Example
     ///
@@ -303,15 +303,19 @@ impl Catcher {
     /// let catcher = catcher.map_base(|base| format!("/foo{}", base)).unwrap();
     /// assert_eq!(catcher.base(), "/foo/bar");
     ///
-    /// let catcher = catcher.map_base(|base| format!("/foo ? {}", base));
+    /// let catcher = catcher.map_base(|base| format!("foo{}", base));
     /// assert!(catcher.is_err());
     /// ```
     pub fn map_base<'a, F>(mut self, mapper: F) -> Result<Self, uri::Error<'static>>
     where
         F: FnOnce(uri::Origin<'a>) -> String,
     {
-        let new_base = uri::Origin::parse_owned(mapper(self.base))?;
-        self.base = new_base.into_normalized_nontrailing();
+        let new_base = mapper(self.base);
+        self.base = uri::Origin::parse_base(&new_base)
+            .map_err(|e| e.into_owned())?
+            .into_normalized_nontrailing()
+            .into_owned();
+
         self.base.clear_query();
         self.rank = rank(self.base());
         Ok(self)

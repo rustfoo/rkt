@@ -28,6 +28,7 @@ values:
 | `port`               | `u16`              | Port to serve on.                               | `8000`                        |
 | `workers`*           | `usize`            | Number of threads to use for executing futures. | cpu core count                |
 | `max_blocking`*      | `usize`            | Limit on threads to start for blocking tasks.   | `512`                         |
+| `wake_interval`      | `u32`              | Runtime wake interval in milliseconds.          | `250`                         |
 | `ident`              | `string`, `false`  | If and how to identify via the `Server` header. | `"Rocket"`                    |
 | `ip_header`          | `string`, `false`  | [HTTP header to read for the client IP].         | `"X-Real-IP"`                 |
 | `proxy_proto_header` | `string`, `false`  | Header identifying [client to proxy protocol].  | `None`                        |
@@ -160,6 +161,7 @@ address = "127.0.0.1"
 port = 8000
 workers = 16
 max_blocking = 512
+wake_interval = 250
 keep_alive = 5
 ident = "Rocket"
 ip_header = "X-Real-IP" # set to `false` to disable
@@ -519,6 +521,18 @@ synchronous database queries.
 
 [`spawn_blocking`]: https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html
 [`TempFile`]: https://docs.rs/rkt/latest/rkt/fs/enum.TempFile.html
+
+### Wake Interval
+
+On multi-thread Tokio runtimes, rkt uses a separate thread to periodically
+wake an idle worker. That worker can process I/O and timers while another
+worker is blocked. Lower values can shorten stalls at the cost of more
+frequent wakeups.
+
+Set `wake_interval` to `0` to disable the waker. rkt skips it on
+current-thread runtimes. The workaround requires a free worker, so a
+single-worker multi-thread runtime still stalls when its worker is blocked.
+Run synchronous blocking work with [`spawn_blocking`].
 
 ### Header Logging
 

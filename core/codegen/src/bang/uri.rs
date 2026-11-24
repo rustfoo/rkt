@@ -10,6 +10,7 @@ use syn::{spanned::Spanned, Expr, Ident, Type};
 use crate::attribute::param::Parameter;
 use crate::bang::uri_parsing::*;
 use crate::exports::*;
+use crate::http::RawStr;
 use crate::http::uri::fmt;
 use crate::http_codegen::Optional;
 use crate::syn_ext::IdentExt;
@@ -163,7 +164,7 @@ fn explode_path<'a>(
     mut args: impl Iterator<Item = (&'a Ident, &'a Type)>,
 ) -> TokenStream {
     if internal.dynamic_path_params().count() == 0 {
-        let path = internal.route_uri.path().as_str();
+        let path = crate::http_codegen::encode_path(internal.route_uri.path());
         quote!(#_fmt::UriArgumentsKind::Static(#path))
     } else {
         let uri_display = quote!(#_fmt::UriDisplay<#_fmt::Path>);
@@ -193,20 +194,22 @@ fn explode_query<'a>(
     mut arg_exprs: impl Iterator<Item = &'a ArgExpr>,
     mut args: impl Iterator<Item = (&'a Ident, &'a Type)>,
 ) -> Option<TokenStream> {
-    let query = internal.route_uri.query()?.as_str();
+    let query = internal.route_uri.query()?;
     if internal.dynamic_query_params().count() == 0 {
+        let query = query.raw_segments()
+            .map(|s| encode_query_segment(s.as_str()))
+            .collect::<Vec<_>>()
+            .join("&");
+
         return Some(quote!(#_fmt::UriArgumentsKind::Static(#query)));
     }
 
     let query_arg = quote!(#_fmt::UriQueryArgument);
     let uri_display = quote!(#_fmt::UriDisplay<#_fmt::Query>);
     let dyn_exprs = internal.query_params.iter().filter_map(|param| {
-        if let Parameter::Static(source) = param {
-            return Some(quote!(#query_arg::Raw(#source)));
-        }
-
         let dynamic = match param {
             Parameter::Static(source) => {
+                let source = encode_query_segment(source);
                 return Some(quote!(#query_arg::Raw(#source)));
             }
             Parameter::Dynamic(ref seg) => seg,
@@ -243,6 +246,18 @@ fn explode_query<'a>(
     Some(quote!(#_fmt::UriArgumentsKind::Dynamic(&[#(#dyn_exprs),*])))
 }
 
+// Static route URI segments are never percent-decoded but are compared against
+// decoded request segments, so encode them like `UriDisplay` does for `str`:
+// `a%20b` becomes `a%2520b`, which decodes to `a%20b`. Names and values are
+// encoded separately.
+fn encode_query_segment(segment: &str) -> String {
+    let encode = |s: &str| RawStr::new(s).percent_encode().to_string();
+    match segment.split_once('=') {
+        Some((name, value)) => format!("{}={}", encode(name), encode(value)),
+        None => encode(segment),
+    }
+}
+
 pub fn _uri_internal_macro(input: TokenStream) -> Result<TokenStream> {
     // Parse the internal invocation and the user's URI param expressions.
     let internal = syn::parse2::<InternalUriParams>(input)?;
@@ -273,7 +288,7 @@ pub fn _uri_internal_macro(input: TokenStream) -> Result<TokenStream> {
         #[allow(unused_braces)] {
             #(#bindings)*
             let __builder = #_fmt::RouteUriBuilder::new(#path, #query);
-            __builder #prefix #suffix .render()
+            __builder #prefix #suffix .render().into_normalized()
         }
     ))
 }
