@@ -1,4 +1,7 @@
+use std::io;
+
 use rkt::{Build, Rocket};
+use rustls_pki_types::{pem::PemObject, CertificateDer};
 
 use testbench::{Error, Result};
 
@@ -58,7 +61,10 @@ pub fn read(path: &str) -> Result<Vec<u8>> {
 }
 
 pub fn cert(path: &str) -> Result<Vec<u8>> {
-    let mut data = std::io::Cursor::new(read(path)?);
-    let cert = rustls_pemfile::certs(&mut data).last();
-    Ok(cert.ok_or(Error::MissingCertificate)??.to_vec())
+    let data = read(path)?;
+    let cert = CertificateDer::pem_slice_iter(&data)
+        .last()
+        .ok_or(Error::MissingCertificate)?
+        .map_err(|error| io::Error::new(io::ErrorKind::InvalidData, error))?;
+    Ok(cert.to_vec())
 }
