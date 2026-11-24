@@ -10,6 +10,9 @@ use crate::data::Limits;
 use crate::http::uncased::Uncased;
 use crate::request::{self, FromRequest, Request};
 
+const DEFAULT_WAKE_INTERVAL: u32 = 250;
+const WAKE_INTERVAL_SERDE_DEFAULT: fn() -> u32 = || DEFAULT_WAKE_INTERVAL;
+
 /// rkt server configuration.
 ///
 /// See the [module level docs](crate::config) as well as the [configuration
@@ -66,6 +69,14 @@ pub struct Config {
     pub workers: usize,
     /// Limit on threads to start for blocking tasks. **(default: `512`)**
     pub max_blocking: usize,
+    /// Runtime wake interval in milliseconds. **(default: `250`)**
+    ///
+    /// On a multi-thread Tokio runtime, a separate thread periodically wakes
+    /// an idle worker so it can process I/O and timers if another worker is
+    /// blocked. Set this to `0` to disable periodic wakeups. A wakeup can help
+    /// only when a worker is available.
+    #[serde(default = "WAKE_INTERVAL_SERDE_DEFAULT")]
+    pub wake_interval: u32,
     /// How, if at all, to identify the server via the `Server` header.
     /// **(default: `"Rocket"`)**
     pub ident: Ident,
@@ -206,6 +217,7 @@ impl Config {
             profile: Self::DEBUG_PROFILE,
             workers: num_cpus::get(),
             max_blocking: 512,
+            wake_interval: DEFAULT_WAKE_INTERVAL,
             ident: Ident::default(),
             ip_header: Some(Uncased::from_borrowed("X-Real-IP")),
             proxy_proto_header: None,
@@ -364,6 +376,9 @@ impl Config {
     /// The stringy parameter name for setting/extracting [`Config::max_blocking`].
     pub const MAX_BLOCKING: &'static str = "max_blocking";
 
+    /// The stringy parameter name for setting/extracting [`Config::wake_interval`].
+    pub const WAKE_INTERVAL: &'static str = "wake_interval";
+
     /// The stringy parameter name for setting/extracting [`Config::keep_alive`].
     pub const KEEP_ALIVE: &'static str = "keep_alive";
 
@@ -404,6 +419,7 @@ impl Config {
     pub const PARAMETERS: &'static [&'static str] = &[
         Self::WORKERS,
         Self::MAX_BLOCKING,
+        Self::WAKE_INTERVAL,
         Self::KEEP_ALIVE,
         Self::IDENT,
         Self::IP_HEADER,

@@ -1,9 +1,24 @@
-use figment::{Figment, Profile};
+use figment::{providers::Serialized, Figment, Profile, Provider};
 use pretty_assertions::assert_eq;
 use tracing::Level;
 
 use crate::config::{CliColors, Config};
 use crate::data::{Limits, ToByteUnit};
+
+#[test]
+fn wake_interval_defaults_and_overrides() {
+    let mut data = Config::debug_default().data().unwrap();
+    let defaults = data.get_mut(&Profile::Default).unwrap();
+    defaults.remove(Config::WAKE_INTERVAL);
+    let legacy = Figment::from(Serialized::defaults(&*defaults));
+    assert_eq!(Config::from(legacy).wake_interval, 250);
+
+    let config = Figment::from(Config::debug_default());
+    for interval in [0u32, 25] {
+        let config = config.clone().merge((Config::WAKE_INTERVAL, interval));
+        assert_eq!(Config::from(config).wake_interval, interval);
+    }
+}
 
 #[test]
 fn test_figment_is_default() {

@@ -20,6 +20,7 @@ use crate::phase::{State, StateRef, StateRefMut, Stateful};
 use crate::router::Router;
 use crate::shutdown::{Shutdown, Stages};
 use crate::trace::{Trace, TraceAll};
+use crate::util::RuntimeWaker;
 use crate::{sentinel, shield::Shield, Catcher, Config, Route};
 
 /// The application server itself.
@@ -700,6 +701,8 @@ impl Rocket<Ignite> {
     }
 
     async fn _launch<L: Listener + 'static>(self, listener: L) -> Result<Rocket<Ignite>, Error> {
+        let interval = Duration::from_millis(self.config.wake_interval.into());
+        let _waker = RuntimeWaker::start(interval)?;
         let rocket = self
             .listen_and_serve(listener, |rocket| async move {
                 let rocket = Arc::new(rocket);

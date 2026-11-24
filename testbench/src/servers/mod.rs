@@ -9,3 +9,4 @@ pub mod sni_resolver;
 pub mod tls;
 pub mod tls_resolver;
 pub mod tracing;
+pub mod wake_interval;
