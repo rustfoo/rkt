@@ -19,10 +19,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** `rkt_dyn_templates` now uses Tera 2.
 - **Breaking:** Mount, register, and rebase take UTF-8 `&str` bases with literal percent signs.
 - **Breaking:** `uri!` encodes static route segments and rejects non-normalized literals.
+- Raised the minimum versions of `tempfile` to `3.4.0` and `async-stream` to
+  `0.3.3`.
 
 ### Fixed
 
 - `Alt-Svc` is now set per Rocket instance, not per process.
+
+### Security
+
+- Raised the minimum version of `bytes` to `1.11.1` to address
+  [RUSTSEC-2026-0007](https://rustsec.org/advisories/RUSTSEC-2026-0007.html).
+- The `tempfile` minimum also removes the dependency on `remove_dir_all` 0.5,
+  affected by [RUSTSEC-2023-0018](https://rustsec.org/advisories/RUSTSEC-2023-0018.html).
 
 ## 1.3.0 - 2026-11-18
 
