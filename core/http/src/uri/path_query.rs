@@ -117,7 +117,7 @@ impl<'a> Path<'a> {
     /// Normalizes `self`. If `absolute`, a starting  `/` is required. If
     /// `trail`, a trailing slash is allowed. Otherwise it is not.
     pub(crate) fn to_normalized(self, absolute: bool, trail: bool) -> Data<'static, fmt::Path> {
-        let raw = self.raw().trim();
+        let raw = self.raw();
         let mut path = String::with_capacity(raw.len());
 
         if absolute || raw.starts_with('/') {
@@ -166,8 +166,8 @@ impl<'a> Path<'a> {
     /// let segments: Vec<_> = uri.path().raw_segments().collect();
     /// assert_eq!(segments, &["a", ""]);
     ///
-    /// // Recall that `uri!()` normalizes static inputs.
-    /// let uri = uri!("//");
+    /// // Normalization removes empty segments.
+    /// let uri = Origin::parse("//").unwrap().into_normalized();
     /// let segments: Vec<_> = uri.path().raw_segments().collect();
     /// assert_eq!(segments, &[""]);
     ///
@@ -177,7 +177,7 @@ impl<'a> Path<'a> {
     /// ```
     #[inline]
     pub fn raw_segments(&self) -> impl DoubleEndedIterator<Item = &'a RawStr> {
-        let raw = self.raw().trim();
+        let raw = self.raw();
         raw.strip_prefix(fmt::Path::DELIMITER)
             .unwrap_or(raw)
             .split(fmt::Path::DELIMITER)
@@ -281,7 +281,7 @@ impl<'a> Query<'a> {
 
     /// Normalizes `self`.
     pub(crate) fn to_normalized(self) -> Data<'static, fmt::Query> {
-        let mut query = String::with_capacity(self.raw().trim().len());
+        let mut query = String::with_capacity(self.raw().len());
         for (i, seg) in self.raw_segments().filter(|s| !s.is_empty()).enumerate() {
             if i != 0 {
                 query.push('&');
@@ -324,8 +324,8 @@ impl<'a> Query<'a> {
     /// let query_segs: Vec<_> = uri.query().unwrap().raw_segments().collect();
     /// assert_eq!(query_segs, &["", ""]);
     ///
-    /// // Recall that `uri!()` normalizes, so this is equivalent to `/?`.
-    /// let uri = uri!("/?&");
+    /// // Normalization removes empty segments, producing `/?`.
+    /// let uri = Origin::parse("/?&").unwrap().into_normalized();
     /// let query_segs: Vec<_> = uri.query().unwrap().raw_segments().collect();
     /// assert!(query_segs.is_empty());
     ///
@@ -336,7 +336,7 @@ impl<'a> Query<'a> {
     /// ```
     #[inline]
     pub fn raw_segments(&self) -> impl Iterator<Item = &'a RawStr> {
-        let query = match self.raw().trim() {
+        let query = match self.raw() {
             q if q.is_empty() => None,
             q => Some(q),
         };

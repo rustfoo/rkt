@@ -17,6 +17,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Breaking:** `http3-preview` now uses Quinn instead of s2n-quic.
 - HTTP/3 is disabled when a TLS `Resolver` is attached.
 - **Breaking:** `rkt_dyn_templates` now uses Tera 2.
+- **Breaking:** Mount, register, and rebase take UTF-8 `&str` bases with literal percent signs.
+- **Breaking:** `uri!` encodes static route segments and rejects non-normalized literals.
 
 ### Fixed
 
